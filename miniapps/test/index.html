@@ -605,13 +605,12 @@ const CONFIG = {
   sheetUrl: "https://script.google.com/macros/s/AKfycbxzJaSclK7FTBSK0X7cAIJcscvwt9qyAGSsYGCrFHehtTvYPPEzTloDjCgsDj7v77n9jQ/exec",
   channelUrl: "https://t.me/+ot1pJz8KHlo2YTky",   // закрытый — для записавшихся
   publicChannel: "https://t.me/violamaro1",        // открытый — для тех, кто не эмпат
-  artemBusiness: "https://t.me/m/EzTv-9O6NDBi",   // готовое сообщение Артёму после результата
   botLink: "",      // https://t.me/имя_бота — возврат в чат
   /* Правовые страницы живут на сайте оплаты — тексты и редакции там одни на всё. */
   docs: {
-    consent: "https://violamaro.ru/consent",
-    privacy: "https://violamaro.ru/privacy",
-    ads:     "https://violamaro.ru/consent-ads"
+    consent: "https://violamaro.ru/consent/",
+    privacy: "https://violamaro.ru/privacy/",
+    ads:     "https://violamaro.ru/consent-ads/"
   },
   /* Редакция согласия на момент акцепта — та же, что на сайте. Меняется вместе с текстом. */
   docVersionConsent: "2026-08-10"
@@ -817,7 +816,8 @@ const OFFER = {
     "После заявки с вами свяжется команда Виолы Маро. Расскажут, как устроен практикум и какой тариф под вашу задачу, ответят на вопросы и помогут с оплатой — в том числе в рассрочку.",
     "И закрепят за вами <b>вход по самой низкой цене</b> — она держится до 18 сентября."
   ],
-  cta: "Попасть в анкету предзаписи",
+  cta: "Оставить заявку",
+  ctaNote: "<span class=\"hl\">Платить сейчас ничего не нужно.</span> Два поля — имя и телеграм."
 };
 
 /* ——— «ваши суперспособности»: выводим из ответов, а не раздаём всем одинаково.
@@ -1128,59 +1128,16 @@ function offer(r) {
       <div class="foot">
         <div class="before-cta">${OFFER.beforeCta.map(t => `<p>${t}</p>`).join("")}</div>
         <button class="go big" id="form">${OFFER.cta} <span aria-hidden="true">→</span></button>
+        <p class="cta-note">${OFFER.ctaNote}</p>
         <button class="ghost" id="back-res">← Вернуться к результату</button>
       </div>
     </div>`);
-  n.querySelector("#form").addEventListener("click", () => contactArtem_(r));
+  n.querySelector("#form").addEventListener("click", () => lead(r));
   n.querySelector("#back-res").addEventListener("click", () => result(r));
   render(n);
 }
 
-/* ——— обращение к Артёму после результата ——— */
-async function contactArtem_(r) {
-  const btn = document.querySelector("#form");
-  if (btn) { btn.disabled = true; btn.textContent = "Открываю Telegram…"; }
-
-  const tg = window.Telegram && window.Telegram.WebApp;
-  const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
-  if (!u.id) {
-    openTelegram_(CONFIG.artemBusiness);
-    return;
-  }
-  const payload = {
-    type: "contact",
-    test: "empat",
-    userId: u.id || "",
-    userLogin: u.username ? "@" + u.username : "",
-    userName: [u.first_name, u.last_name].filter(Boolean).join(" "),
-    rank: r.key,
-    percent: r.pct,
-    forks: forks,
-    istochnik: istochnik_()
-  };
-
-  try {
-    const res = await send_(payload);
-    const txt = await res.text();
-    const data = JSON.parse(txt);
-    if (!data || data.ok !== true) throw new Error((data && data.error) || "receiver error");
-    openTelegram_(CONFIG.artemBusiness);
-  } catch (e) {
-    if (btn) { btn.disabled = false; btn.innerHTML = 'Попасть в анкету предзаписи <span aria-hidden="true">→</span>'; }
-    alert("Не удалось зафиксировать обращение. Проверьте интернет и нажмите ещё раз.");
-  }
-}
-
-function openTelegram_(url) {
-  if (!url) return;
-  const tg = window.Telegram && window.Telegram.WebApp;
-  if (tg && tg.openTelegramLink) {
-    try { tg.openTelegramLink(url); return; } catch (e) {}
-  }
-  window.location.href = url;
-}
-
-/* Старая форма оставлена только как код для быстрого отката; из интерфейса она больше не вызывается. */
+/* ——— запись в первый поток: имя и телеграм берём у Телеграма, если он их знает ——— */
 function lead(r) {
   const tg = window.Telegram && window.Telegram.WebApp;
   const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
