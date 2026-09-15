@@ -1143,6 +1143,10 @@ async function contactArtem_(r) {
 
   const tg = window.Telegram && window.Telegram.WebApp;
   const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
+  if (!u.id) {
+    openTelegram_(CONFIG.artemBusiness);
+    return;
+  }
   const payload = {
     type: "contact",
     test: "empat",
