@@ -1233,7 +1233,6 @@ const CONFIG = {
   payUrl: "https://anny-nizh.getplatinum.ru/payment/VyfTEMo",
   payUrlUsd: "https://app.lava.top/products/b307a68e-b477-4396-add9-c340b3445088",
   teamChat: "https://t.me/m/LEHK_cjeNGU1",
-  artemBusiness: "https://t.me/m/PBFyBtE7ZDgy",   // готовое сообщение Артёму после результата
   publicChannel: "https://t.me/violamaro1",
   /* Закрытый канал предзаписи на «Прикладную эмпатию» — тот же, что на тесте
      «Эмпат ли вы». Обещан на экране заявки, открывается сразу после отправки. */
@@ -1242,10 +1241,10 @@ const CONFIG = {
   /* Правовые страницы живут на сайте оплаты — тексты и редакции там одни на всё. */
   careChat: "https://t.me/violamaroteam",   // отдел заботы, тот же, что на сайтах
   docs: {
-    offer:   "https://violamaro.ru/offer",
-    consent: "https://violamaro.ru/consent",
-    privacy: "https://violamaro.ru/privacy",
-    ads:     "https://violamaro.ru/consent-ads"
+    offer:   "https://violamaro.ru/offer/",
+    consent: "https://violamaro.ru/consent/",
+    privacy: "https://violamaro.ru/privacy/",
+    ads:     "https://violamaro.ru/consent-ads/"
   },
   /* Редакция согласия на момент акцепта, та же, что на сайте. Оферта здесь
      не принимается: её акцепт собирает страница оплаты. Ссылка на неё
@@ -2735,7 +2734,8 @@ const OFFER_AP = {
     "После заявки с вами свяжется команда Виолы Маро. Расскажут, как устроен практикум и какой тариф под вашу задачу, ответят на вопросы и помогут с оплатой — в том числе в рассрочку.",
     "И закрепят за вами <b>вход по самой низкой цене</b> — она держится до 18 сентября."
   ],
-  cta: "Попасть в анкету предзаписи",
+  cta: "Оставить заявку",
+  ctaNote: "<span class=\"hl\">Платить сейчас ничего не нужно.</span> Два поля — имя и телеграм."
 };
 
 function offer(r) {
@@ -2778,10 +2778,11 @@ function offer(r) {
       <div class="foot">
         <div class="before-cta">${OFFER_AP.beforeCta.map(t => `<p>${t}</p>`).join("")}</div>
         <button class="go big" id="form">${OFFER_AP.cta} <span aria-hidden="true">→</span></button>
+        <p class="cta-note">${OFFER_AP.ctaNote}</p>
         ${r ? `<button class="ghost" id="back-res">← Вернуться к результату</button>` : ""}
       </div>
     </div>`);
-  n.querySelector("#form").addEventListener("click", () => contactArtem_(r));
+  n.querySelector("#form").addEventListener("click", () => lead(r));
   /* Прямой вход на оффер по ссылке идёт без результата: возвращать человека
      некуда, поэтому кнопки «назад» там просто нет. */
   const back = n.querySelector("#back-res");
@@ -2790,53 +2791,6 @@ function offer(r) {
   render(n);
 }
 
-async function contactArtem_(r) {
-  const btn = document.querySelector("#form");
-  if (btn) { btn.disabled = true; btn.textContent = "Открываю Telegram…"; }
-
-  const tg = window.Telegram && window.Telegram.WebApp;
-  const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
-  if (!u.id) {
-    openTelegram_(CONFIG.artemBusiness);
-    return;
-  }
-  const payload = {
-    type: "contact",
-    test: "koleso",
-    userId: u.id || "",
-    userLogin: u.username ? "@" + u.username : "",
-    userName: [u.first_name, u.last_name].filter(Boolean).join(" "),
-    otdayu: r ? r.out : "",
-    ostaetsya: r ? r.inn : "",
-    zazor: r ? r.gap : "",
-    wheel: r ? r.wheel.map(c => ({ k: c.k, out: c.out, inn: c.inn })) : [],
-    worst: r ? r.worst.map(c => c.k).join(",") : "",
-    forks: forks,
-    istochnik: istochnik_()
-  };
-
-  try {
-    const res = await send_(payload);
-    const txt = await res.text();
-    const data = JSON.parse(txt);
-    if (!data || data.ok !== true) throw new Error((data && data.error) || "receiver error");
-    openTelegram_(CONFIG.artemBusiness);
-  } catch (e) {
-    if (btn) { btn.disabled = false; btn.innerHTML = 'Попасть в анкету предзаписи <span aria-hidden="true">→</span>'; }
-    alert("Не удалось зафиксировать обращение. Проверьте интернет и нажмите ещё раз.");
-  }
-}
-
-function openTelegram_(url) {
-  if (!url) return;
-  const tg = window.Telegram && window.Telegram.WebApp;
-  if (tg && tg.openTelegramLink) {
-    try { tg.openTelegramLink(url); return; } catch (e) {}
-  }
-  window.location.href = url;
-}
-
-/* Старая форма оставлена только как код для быстрого отката; из интерфейса она больше не вызывается. */
 function lead(r) {
   stage = "lead";
   const tg = window.Telegram && window.Telegram.WebApp;
