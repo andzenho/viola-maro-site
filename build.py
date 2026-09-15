@@ -48,6 +48,8 @@ OUT = os.path.join(ROOT, "site")
 
 TG_NAME = "@violamaroteam"          # аккаунт службы заботы
 TG = "https://t.me/" + TG_NAME[1:]  # ссылка и подпись — из одного места
+PRE_TG = "https://t.me/m/zKQo_FG5NmVi"
+ZAYAVKA_TG = "https://t.me/m/BUzhQQeSOWFi"
 EMAIL = "mg.ananizh@gmail.com"
 CARE_HOURS = "пн–пт, 10:00–18:00\u00a0МСК"
 
@@ -837,7 +839,7 @@ CTA_DARK = ('<a href="#zapis" data-open-form="Предзапись" style="align
             '0 0 0 8px rgba(201,168,127,.22), inset 0 1px 0 rgba(255,255,255,.14); '
             'transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;" '
             'style-hover="transform: translateY(-3px); filter: brightness(1.08);" '
-            'style-active="transform: translateY(-1px);">Попасть в предзапись'
+            'style-active="transform: translateY(-1px);">Попасть в анкету предзаписи'
             '<span style="display: inline-flex; align-items: center; justify-content: center; '
             'width: 34px; height: 34px; border-radius: 50%; '
             'background: linear-gradient(180deg, #F0DCBB, #C29A6C); color: #2A211C; '
@@ -1393,7 +1395,7 @@ def build_landing():
              "Сразу после заявки откроется закрытый канал Виолы. Команда свяжется с&nbsp;вами "
              "в&nbsp;Telegram: расскажет, как устроен практикум, ответит на&nbsp;вопросы "
              "и&nbsp;поможет оформить оплату."),
-            ("Перейти к оплате", "Попасть в предзапись"),
+            ("Перейти к оплате", "Попасть в анкету предзаписи"),
             ("Готово. Открываем страницу оплаты…", "Готово. Открываем закрытый канал…"),
         ):
             if old not in form:
@@ -1458,7 +1460,13 @@ def build_landing():
     form = ('<div id="lead-modal" class="modal" role="dialog" aria-modal="true" '
             'aria-labelledby="lead-title" data-after="%s" hidden>' % after + form + "</div>")
     form = form.replace('<h2 style="margin: 0; font-family:', '<h2 id="lead-title" style="margin: 0; font-family:', 1)
-    tpl = tpl[:o] + form + tpl[ce:]
+    # На предзаписи и странице заявки лид-формы больше нет: CTA сразу
+    # открывают соответствующую Telegram-анкету. Форму сохраняем только
+    # для режимов, где она по-прежнему нужна (оплата и бронь).
+    if MODE in ("pre", "zayavka"):
+        tpl = tpl[:o] + tpl[ce:]
+    else:
+        tpl = tpl[:o] + form + tpl[ce:]
 
     # ── кнопки тарифов открывают форму ─────────────────────────────────────
     # Ссылка на оплату одна на тариф: и прямая оплата, и рассрочка ведут
@@ -1562,12 +1570,12 @@ def build_landing():
 
         # Один призыв на все кнопки, как и было в исходном брифе: этой
         # аудитории не надо гадать, куда нажимать.
-        tpl = tpl.replace("Принять участие", "Попасть в предзапись")
+        tpl = tpl.replace("Принять участие", "Попасть в анкету предзаписи")
 
-        # Кнопки вели к тарифам, которых больше нет. Теперь открывают форму,
-        # а якорь остаётся запасным путём, если скрипт не отработал.
-        tpl = tpl.replace('href="#tarify"',
-                          'href="#zapis" data-open-form="Предзапись"')
+        # Лид-форма снята: все CTA предзаписи сразу открывают Telegram-анкету.
+        pre_link = 'href="%s" target="_blank" rel="noopener"' % PRE_TG
+        tpl = tpl.replace('href="#tarify"', pre_link)
+        tpl = tpl.replace('href="#zapis" data-open-form="Предзапись"', pre_link)
 
         # Липкая панель: вместо цены — состояние набора.
         tpl = tpl.replace("от 17&nbsp;900&nbsp;₽", "Предзапись открыта")
@@ -1609,6 +1617,15 @@ def build_landing():
         # Липкая панель обещала переход к оплате — теперь ведёт к заявке.
         tpl = tpl.replace("Продажи закрываются 29&nbsp;сентября в&nbsp;23:59",
                           "Оплату проводим вместе с&nbsp;командой")
+
+        # Формы больше нет. Все CTA, которые раньше скроллили к тарифам или
+        # открывали модалку, ведут прямо в Telegram-анкету заявки.
+        zayavka_link = 'href="%s" target="_blank" rel="noopener"' % ZAYAVKA_TG
+        tpl = tpl.replace('href="#tarify"', zayavka_link)
+        tpl = re.sub(
+            r'<button(?P<a>[^>]*) type="button" data-open-form="[^"]*" data-pay="[^"]*"(?P<b>[^>]*)>(?P<body>.*?)</button>',
+            lambda m: '<a%s %s%s>%s</a>' % (m.group('a'), zayavka_link, m.group('b'), m.group('body')),
+            tpl, flags=re.S)
 
     # Контакты команды — отдельным экраном перед финальным призывом,
     # на всех четырёх версиях страницы.
