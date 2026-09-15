@@ -44,9 +44,6 @@ jobs:
       - name: Собрать страницу заявки
         run: python3 build.py --mode zayavka --out site/zayavka --base /zayavka --noindex
 
-      - name: Собрать событие «Неудобные»
-        run: python3 build.py --mode neudobnye --out site/neudobnye --base /neudobnye --noindex
-
       - name: Добавить мини-аппы
         run: |
           mkdir -p site/test site/koleso

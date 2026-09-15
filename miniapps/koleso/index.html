@@ -2735,8 +2735,7 @@ const OFFER_AP = {
     "После заявки с вами свяжется команда Виолы Маро. Расскажут, как устроен практикум и какой тариф под вашу задачу, ответят на вопросы и помогут с оплатой — в том числе в рассрочку.",
     "И закрепят за вами <b>вход по самой низкой цене</b> — она держится до 18 сентября."
   ],
-  cta: "Написать Артёму",
-  ctaNote: "Откроется Telegram с готовым сообщением Артёму."
+  cta: "Попасть в анкету предзаписи",
 };
 
 function offer(r) {
@@ -2779,7 +2778,6 @@ function offer(r) {
       <div class="foot">
         <div class="before-cta">${OFFER_AP.beforeCta.map(t => `<p>${t}</p>`).join("")}</div>
         <button class="go big" id="form">${OFFER_AP.cta} <span aria-hidden="true">→</span></button>
-        <p class="cta-note">${OFFER_AP.ctaNote}</p>
         ${r ? `<button class="ghost" id="back-res">← Вернуться к результату</button>` : ""}
       </div>
     </div>`);
@@ -2820,7 +2818,7 @@ async function contactArtem_(r) {
     if (!data || data.ok !== true) throw new Error((data && data.error) || "receiver error");
     openTelegram_(CONFIG.artemBusiness);
   } catch (e) {
-    if (btn) { btn.disabled = false; btn.innerHTML = 'Написать Артёму <span aria-hidden="true">→</span>'; }
+    if (btn) { btn.disabled = false; btn.innerHTML = 'Попасть в анкету предзаписи <span aria-hidden="true">→</span>'; }
     alert("Не удалось зафиксировать обращение. Проверьте интернет и нажмите ещё раз.");
   }
 }
