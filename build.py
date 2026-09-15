@@ -20,10 +20,10 @@
   python3 build.py --mode zayavka --out site/zayavka   заявка: цены есть,
                                               оплаты на странице нет
 
-Сборка под домен pre.viola-maro.ru — предзапись в корне, оплата в /pay/,
+Сборка под домен violamaro.ru — предзапись в корне, оплата в /pay/,
 правовые страницы в одном экземпляре:
 
-  python3 build.py --mode pre --out dist --cname pre.viola-maro.ru
+  python3 build.py --mode pre --out dist --cname violamaro.ru
   python3 build.py --out dist/pay --base /pay --docs-root
 
 Куски для вставки в блок T123 Тильды:

@@ -8,7 +8,7 @@
 <meta name="description" content="Эмпат вы или нет — и как именно это у вас устроено: что вы считываете и во что вам это обходится. Три минуты, 24 утверждения.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Виола Маро">
-<meta property="og:url" content="https://pre.viola-maro.ru/test/">
+<meta property="og:url" content="https://violamaro.ru/test/">
 <meta property="og:title" content="Есть у вас способности эмпата?">
 <meta property="og:description" content="Эмпат вы или нет — и как именно это у вас устроено: что вы считываете и во что вам это обходится. Три минуты, 24 утверждения.">
 <meta name="twitter:card" content="summary">
@@ -43,7 +43,7 @@
       'style="font:inherit;padding:.7rem 1.1rem;color:#fff;background:#A2703C;border:0;border-radius:4px">' +
       'Открыть заново</button></p>' +
       '<p style="margin:0 0 .9rem;color:#5C5162">Не помогло — откройте ту же ссылку в обычном браузере: ' +
-      '<a href="https://pre.viola-maro.ru/test/" style="color:#A2703C">pre.viola-maro.ru/test</a></p>' +
+      '<a href="https://violamaro.ru/test/" style="color:#A2703C">violamaro.ru/test</a></p>' +
       '<p style="margin:0;font-size:.8rem;color:#8B7F92">Если и там не открылось, пришлите нам эту строку: ' +
       String(msg).replace(/</g, "&lt;").slice(0, 200) + '</p></div>';
   }
@@ -609,9 +609,9 @@ const CONFIG = {
   botLink: "",      // https://t.me/имя_бота — возврат в чат
   /* Правовые страницы живут на сайте оплаты — тексты и редакции там одни на всё. */
   docs: {
-    consent: "https://pre.viola-maro.ru/consent",
-    privacy: "https://pre.viola-maro.ru/privacy",
-    ads:     "https://pre.viola-maro.ru/consent-ads"
+    consent: "https://violamaro.ru/consent",
+    privacy: "https://violamaro.ru/privacy",
+    ads:     "https://violamaro.ru/consent-ads"
   },
   /* Редакция согласия на момент акцепта — та же, что на сайте. Меняется вместе с текстом. */
   docVersionConsent: "2026-08-10"
@@ -1143,6 +1143,10 @@ async function contactArtem_(r) {
 
   const tg = window.Telegram && window.Telegram.WebApp;
   const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
+  if (!u.id) {
+    openTelegram_(CONFIG.artemBusiness);
+    return;
+  }
   const payload = {
     type: "contact",
     test: "empat",
