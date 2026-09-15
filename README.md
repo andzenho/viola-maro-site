@@ -27,14 +27,14 @@ python3 build.py --mode zayavka         # страница заявки
 python3 build.py --mode neudobnye      # событие «Неудобные»
 ```
 
-### Боевая сборка под pre.viola-maro.ru
+### Боевая сборка под violamaro.ru
 
 Две команды подряд — получается папка `dist/`, которая заливается в корень
 домена как есть:
 
 ```sh
 rm -rf dist
-python3 build.py --mode pre --out dist --cname pre.viola-maro.ru
+python3 build.py --mode pre --out dist --cname violamaro.ru
 python3 build.py --out dist/pay --base /pay --docs-root
 python3 build.py --mode zayavka --out dist/zayavka --base /zayavka --docs-root --noindex
 python3 build.py --mode bron --out dist/bron --base /bron --docs-root --noindex
