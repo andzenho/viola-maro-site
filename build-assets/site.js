@@ -452,8 +452,27 @@
 
   function two(n) { return n < 10 ? '0' + n : String(n); }
 
+  function syncPrices(raised) {
+    document.querySelectorAll('[data-price-before][data-price-after]').forEach(function (node) {
+      node.textContent = node.getAttribute(raised ? 'data-price-after' : 'data-price-before');
+    });
+    document.querySelectorAll('[data-price-note]').forEach(function (node) {
+      node.textContent = node.getAttribute(raised ? 'data-after' : 'data-before');
+    });
+    document.querySelectorAll('[data-price-before-row]').forEach(function (node) {
+      node.style.setProperty('display', raised ? 'none' : 'grid', raised ? 'important' : '');
+    });
+    document.querySelectorAll('[data-price-after-label]').forEach(function (node) {
+      node.textContent = node.getAttribute(raised ? 'data-after' : 'data-before');
+    });
+    document.querySelectorAll('[data-price-delta]').forEach(function (node) {
+      node.style.setProperty('display', raised ? 'none' : '', raised ? 'important' : '');
+    });
+  }
+
   function tick() {
     var left = target - Date.now();
+    syncPrices(left <= 0);
     if (left <= 0) {
       if (band) band.hidden = true;
       clearInterval(timer);
