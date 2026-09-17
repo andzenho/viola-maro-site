@@ -15,16 +15,16 @@
   python3 build.py                          сборка под свой домен
   python3 build.py --base /Viola-Maro       сборка под подпуть (GitHub Pages)
   python3 build.py --noindex                запретить индексацию (превью)
-  python3 build.py --mode pre --out site/pre   версия предзаписи
+  python3 build.py --mode pre --out site/pre   редирект /pre → /zayavka
   python3 build.py --mode bron --out site/bron страница брони
   python3 build.py --mode zayavka --out site/zayavka   заявка: цены есть,
                                               оплаты на странице нет
 
-Сборка под домен violamaro.ru — предзапись в корне, оплата в /pay/,
+Сборка под домен violamaro.ru — оплата в корне, заявка в /zayavka/,
 правовые страницы в одном экземпляре:
 
-  python3 build.py --mode pre --out dist --cname violamaro.ru
-  python3 build.py --out dist/pay --base /pay --docs-root
+  python3 build.py --out dist --cname violamaro.ru
+  python3 build.py --mode pre --out dist/pre --base /pre --noindex
 
 Куски для вставки в блок T123 Тильды:
 
@@ -114,7 +114,7 @@ CNAME = ""
 TILDA_OUT = ""
 
 # Два сайта из одного шаблона. "pay" — продажа с тарифами и оплатой,
-# "pre" — предзапись: без цен, с блоком «что даёт предзапись» и заявкой
+# "pre" — служебный редирект со старого адреса /pre на /zayavka
 # вместо платежа. Девять экранов из одиннадцати у них общие, поэтому
 # копией файлов это делать нельзя: правки разъедутся на первой же неделе.
 MODE = "pay"
@@ -184,18 +184,13 @@ CHANNEL_URL = "https://t.me/+iIqJoSn2UBU3Yzky"
 NEUD_PAY_RUB = ""    # оплата в рублях (в ней же рассрочка)
 NEUD_PAY_INTL = ""   # оплата с зарубежной карты
 
-# Со второго окна подарки и цена заканчиваются одной датой — 18 сентября,
-# отдельных сроков больше нет: до неё держится цена второго окна и
-# действуют подарки, на неё же идёт таймер под первым экраном предзаписи
-# (он прячется, когда отметка пройдена).
-#
-# Даты цены живут в исходном шаблоне (карточки тарифов, финальный экран)
-# и здесь не трогаются. Здесь только про подарки: в их блоках стоит
-# «тем, кто оплатит до 18 сентября».
+# 23 сентября в 00:00 МСК цена растёт с 17 900 / 34 900 ₽
+# до 19 900 / 39 900 ₽. Таймер относится только к цене; подарки
+# после оплаты остаются частью программы без ограничения по сроку.
 #
 # Правовые документы не трогаются вовсе: в Приложении № 1 свои даты,
 # менять их может только юрист.
-GIFT_ISO = "2026-09-18T23:59:59+03:00"
+PRICE_ISO = "2026-09-23T00:00:00+03:00"
 
 ABS_ROOTS = ["assets/"] + [url for _s, url, _t in DOCS]
 
@@ -828,7 +823,7 @@ CTA_BOOK = ('<a href="#bron" data-open-form="Бронь места" data-pay="br
             'width: 34px; height: 34px; border-radius: 50%; background: rgba(42,33,28,.9); '
             'color: #F0DCBB; font-size: 16px; line-height: 1;">→</span></a>')
 
-CTA_DARK = ('<a href="#zapis" data-open-form="Предзапись" style="align-self: center; '
+CTA_DARK = ('<a href="#zapis" data-open-form="Заявка на участие" style="align-self: center; '
             'display: inline-flex; white-space: nowrap; align-items: center; gap: 14px; '
             'background: linear-gradient(165deg, #4E3C31 0%, #2B211C 100%); color: #F6F0E8; '
             'text-decoration: none; font-weight: 700; font-size: clamp(18px, 1.9vw, 22px); '
@@ -837,7 +832,7 @@ CTA_DARK = ('<a href="#zapis" data-open-form="Предзапись" style="align
             '0 0 0 8px rgba(201,168,127,.22), inset 0 1px 0 rgba(255,255,255,.14); '
             'transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;" '
             'style-hover="transform: translateY(-3px); filter: brightness(1.08);" '
-            'style-active="transform: translateY(-1px);">Попасть в предзапись'
+            'style-active="transform: translateY(-1px);">Оставить заявку'
             '<span style="display: inline-flex; align-items: center; justify-content: center; '
             'width: 34px; height: 34px; border-radius: 50%; '
             'background: linear-gradient(180deg, #F0DCBB, #C29A6C); color: #2A211C; '
@@ -867,8 +862,8 @@ ICON_GIFT = ('<span style="display: inline-flex; align-items: center; justify-co
 PRE_FOR_REQUEST = [
     ("Закрытый канал Виолы",
      "подкасты и материалы, которых нет в открытом доступе. Новое вы видите там первыми."),
-    ("Вход по самой низкой цене",
-     "она закрепляется за вами до 18&nbsp;сентября."),
+    ("Самая выгодная цена",
+     "она закрепляется за&nbsp;вами до&nbsp;23&nbsp;сентября."),
     ("Право сказать, что включить в программу",
      "в канале спросим, чего вам не хватает, и соберём из ваших ответов часть программы."),
     ("Разговор с командой Виолы Маро",
@@ -884,9 +879,9 @@ PRE_FOR_EARLY = [
      "и как из неё выходят."),
     ("Большой мастер-класс на узнавание себя",
      "там подробно разобрано то, что тест показал коротко."),
-    ("Терапевтический уикенд «Неудобные», 11–13&nbsp;сентября",
-     "отдельно билет больше не продаётся, запись всех трёх дней "
-     "остаётся у вас навсегда."),
+    ("Запись терапевтического уикенда «Неудобные»",
+     "три дня, 11–13 сентября. Отдельно запись не продаётся, "
+     "у вас она останется навсегда."),
 ]
 
 
@@ -963,7 +958,7 @@ def booking_screens():
 
 
 def gifts_block():
-    """Подарки за раннюю оплату — в шапку формы оплаты.
+    """Подарки после оплаты — в шапку формы оплаты.
 
     Человек видит их в момент, когда решает платить, а не страницей выше,
     где он их уже пролистал. Список тот же, что на странице предзаписи:
@@ -979,8 +974,10 @@ def gifts_block():
     return ('<div style="display: flex; flex-direction: column; gap: 13px; margin-top: 4px; '
             'padding-top: 18px; border-top: 1px solid rgba(246,240,232,.16);">'
             '<div style="font-size: 12px; letter-spacing: .18em; text-transform: uppercase; '
-            'color: #E9C98F;">Тем, кто оплатит до 18 сентября</div>'
-            + rows + "</div>")
+            'color: #E9C98F;">После оплаты</div>'
+            + rows
+            + '<p style="margin: 0; font-size: 15px; line-height: 1.5; color: #DCD1C4;">'
+              'Подарки команда отправит вам после оплаты.</p></div>')
 
 
 ICON_TG = ('<span style="display: inline-flex; align-items: center; justify-content: center; '
@@ -1063,8 +1060,8 @@ def care_note(размер="15px"):
             + ссылки + '</p>')
 
 
-def pre_benefits_screen():
-    """«Что даёт предзапись» — экран, на котором принимается решение.
+def benefits_screen(include_request=True):
+    """Подарки и условия заявки — экран, на котором принимается решение.
 
     Два яруса нарочно разной плотности: за заявку — светлый, порог нулевой;
     за раннюю оплату — тёмный с бронзой, единственное цветное пятно экрана.
@@ -1083,16 +1080,7 @@ def pre_benefits_screen():
     light = "".join(row(t, x, ICON_DIAMOND, "#2E2521", "#5C5149") for t, x in PRE_FOR_REQUEST)
     dark = "".join(row(t, x, ICON_GIFT, "#F6F0E8", "#DCD1C4") for t, x in PRE_FOR_EARLY)
 
-    return '''
-<div id="zapis" data-screen-label="06 Что даёт предзапись" style="background: linear-gradient(180deg, #F5EFE6 0%%, #EFE6DA 100%%); padding: clamp(56px, 8vw, 100px) clamp(14px, 4vw, 40px);">
-  <div style="max-width: 1020px; margin: 0 auto; display: flex; flex-direction: column; gap: clamp(26px, 3.4vw, 38px);">
-    <div style="display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center;">
-      <div style="%(eyebrow)s">Пока идёт набор</div>
-      <h2 style="font-family: 'Golos Text', system-ui, sans-serif; font-weight: 700; letter-spacing: -.025em; font-size: clamp(38px, 5.6vw, 64px); line-height: 1.1; margin: 0; text-wrap: balance;">Что даёт предзапись</h2>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; align-items: stretch;">
-
+    request_column = '''
       <div style="background: linear-gradient(180deg, #FFFFFF 0%%, #FDFAF6 100%%); border: 1px solid #E9DFD2; border-radius: 16px; box-shadow: 0 1px 2px rgba(60,48,40,.04), 0 16px 36px -24px rgba(60,48,40,.34); padding: clamp(24px, 3.4vw, 36px); display: flex; flex-direction: column; gap: 18px;">
         <div style="display: flex; flex-direction: column; gap: 6px;">
           <div style="%(eyebrow)s">За саму заявку</div>
@@ -1100,26 +1088,44 @@ def pre_benefits_screen():
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px;">%(light)s</div>
       </div>
+''' % {"eyebrow": EYEBROW, "light": light} if include_request else ""
+
+    title = "Что даёт заявка" if include_request else "Что вы получаете"
+    grid_width = "1020px" if include_request else "720px"
+
+    return '''
+<div id="zapis" data-screen-label="06 Подарки и условия" style="background: linear-gradient(180deg, #F5EFE6 0%%, #EFE6DA 100%%); padding: clamp(56px, 8vw, 100px) clamp(14px, 4vw, 40px);">
+  <div style="max-width: 1020px; margin: 0 auto; display: flex; flex-direction: column; gap: clamp(26px, 3.4vw, 38px);">
+    <div style="display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center;">
+      <div style="%(eyebrow)s">Пока идёт набор</div>
+      <h2 style="font-family: 'Golos Text', system-ui, sans-serif; font-weight: 700; letter-spacing: -.025em; font-size: clamp(38px, 5.6vw, 64px); line-height: 1.1; margin: 0; text-wrap: balance;">%(title)s</h2>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; align-items: stretch; width: 100%%; max-width: %(grid_width)s; align-self: center;">
+
+      %(request_column)s
 
       <div style="background: linear-gradient(165deg, #4A392F 0%%, #2B211C 100%%); border: 1px solid #33271F; border-radius: 16px; box-shadow: 0 20px 44px -24px rgba(43,33,28,.7), inset 0 1px 0 rgba(255,255,255,.1); padding: clamp(24px, 3.4vw, 36px); display: flex; flex-direction: column; gap: 18px;">
         <div style="display: flex; flex-direction: column; gap: 6px;">
-          <div style="font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #E9C98F;">Тем, кто оплатит до 18 сентября</div>
+          <div style="font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #E9C98F;">После оплаты</div>
           <p style="margin: 0; font-size: 19px; font-weight: 600; line-height: 1.35; color: #F6F0E8;">Четыре подарка сверх программы</p>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px;">%(dark)s</div>
+        <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #DCD1C4;">Подарки команда отправит вам после оплаты.</p>
       </div>
 
     </div>
 
     <div style="align-self: center; max-width: 54ch; text-align: center; display: flex; flex-direction: column; gap: 8px;">
       <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #2E2521;">Оплату оформляет команда: после заявки она свяжется с&nbsp;вами.</p>
-      <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #5C5149;">С 19&nbsp;сентября цена становится выше.</p>
+      <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #5C5149;">С 23 сентября цена становится выше.</p>
     </div>
 
     %(cta)s
   </div>
 </div>
-''' % {"eyebrow": EYEBROW, "light": light, "dark": dark, "cta": CTA_DARK,
+''' % {"eyebrow": EYEBROW, "dark": dark, "cta": CTA_DARK,
+       "title": title, "request_column": request_column, "grid_width": grid_width,
 }
 
 
@@ -1215,9 +1221,9 @@ def pre_contents_screen():
 
 
 TIMER_SCREEN = """
-<div data-screen-label="01b Срок предзаписи" id="srok" style="background: linear-gradient(180deg, #2B211C 0%, #241C18 100%); border-top: 1px solid rgba(246,240,232,.12); padding: clamp(20px, 3vw, 30px) clamp(14px, 4vw, 40px);">
+<div data-screen-label="01b Повышение цены" id="srok" style="background: linear-gradient(180deg, #2B211C 0%, #241C18 100%); border-top: 1px solid rgba(246,240,232,.12); padding: clamp(20px, 3vw, 30px) clamp(14px, 4vw, 40px);">
   <div style="max-width: 1020px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; gap: clamp(12px, 2vw, 16px);">
-    <p style="margin: 0; max-width: 34ch; font-size: clamp(15px, 1.7vw, 17px); font-weight: 700; line-height: 1.4; color: #F6F0E8;">До&nbsp;конца подарков</p>
+    <p style="margin: 0; max-width: 34ch; font-size: clamp(15px, 1.7vw, 17px); font-weight: 700; line-height: 1.4; color: #F6F0E8;">До повышения цены</p>
     <div id="countdown" style="display: flex; align-items: flex-start; gap: clamp(10px, 2vw, 18px);" data-deadline="__DEADLINE__">
       <div style="display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 54px;"><span data-cd="d" style="font-size: clamp(26px, 4vw, 34px); font-weight: 700; letter-spacing: -.02em; line-height: 1; color: #F0DCBB; font-variant-numeric: tabular-nums;">—</span><span style="font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #B8AA9C;">дней</span></div>
       <div style="display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 54px;"><span data-cd="h" style="font-size: clamp(26px, 4vw, 34px); font-weight: 700; letter-spacing: -.02em; line-height: 1; color: #F0DCBB; font-variant-numeric: tabular-nums;">—</span><span style="font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #B8AA9C;">часов</span></div>
@@ -1226,7 +1232,7 @@ TIMER_SCREEN = """
     </div>
   </div>
 </div>
-""".replace("__DEADLINE__", GIFT_ISO)
+""".replace("__DEADLINE__", PRICE_ISO)
 
 
 # ──────────────────────────────────────────────────────────────── лендинг ──
@@ -1538,7 +1544,7 @@ def build_landing():
             tpl = drop_screen(tpl, label)
 
         tpl = insert_before_screen(tpl, "11 Финальный призыв",
-                                   pre_benefits_screen() + pre_contents_screen())
+                                   benefits_screen(True) + pre_contents_screen())
 
         # Срок — сразу под первым экраном, тонкой полосой.
         tpl = insert_before_screen(tpl, "02 Зачем мне это", TIMER_SCREEN)
@@ -1609,6 +1615,18 @@ def build_landing():
         # Липкая панель обещала переход к оплате — теперь ведёт к заявке.
         tpl = tpl.replace("Продажи закрываются 29&nbsp;сентября в&nbsp;23:59",
                           "Оплату проводим вместе с&nbsp;командой")
+
+        tpl = tpl.replace(
+            "В «С Виолой» пятьдесят мест. Оставьте заявку&nbsp;— откроется чат "
+            "с&nbsp;командой: ответим на&nbsp;вопросы и&nbsp;поможем оплатить безопасно.",
+            "Продажи открыты. Самая выгодная цена держится до 23 сентября, "
+            "дальше она вырастет. После заявки с вами свяжется команда Виолы "
+            "и расскажет подробнее про программу.")
+
+    if MODE in ("pay", "zayavka"):
+        tpl = insert_before_screen(tpl, "02 Зачем мне это", TIMER_SCREEN)
+        tpl = insert_before_screen(tpl, "11 Финальный призыв",
+                                   benefits_screen(MODE == "zayavka"))
 
     # Контакты команды — отдельным экраном перед финальным призывом,
     # на всех четырёх версиях страницы.
@@ -2199,6 +2217,26 @@ def build_tilda(src_dir, out_dir):
 
 # ─────────────────────────────────────────────────────────────────── main ──
 
+def build_pre_redirect():
+    target = "https://violamaro.ru/zayavka"
+    html = '''<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="refresh" content="0;url=%(target)s">
+  <link rel="canonical" href="%(target)s">
+  <title>Переход к заявке</title>
+  <script>
+    location.replace(%(target_json)s + location.search + location.hash);
+  </script>
+</head>
+<body><a href="%(target)s">Перейти к заявке</a></body>
+</html>
+''' % {"target": target, "target_json": json.dumps(target)}
+    write(os.path.join(OUT, "index.html"), html)
+
+
 def parse_args(argv):
     global BASE, NOINDEX, MODE, OUT, DOCS_ROOT, CNAME, TILDA_OUT
     i = 0
@@ -2238,6 +2276,10 @@ def main():
     if os.path.isdir(OUT):
         shutil.rmtree(OUT)
     print("Сборка сайта → %s  (режим: %s)" % (os.path.relpath(OUT, ROOT), MODE))
+    if MODE == "pre":
+        build_pre_redirect()
+        print("Готово. /pre перенаправляет на /zayavka с параметрами адреса")
+        return
     if BASE:
         print("  подпуть: %s" % BASE)
     if NOINDEX:

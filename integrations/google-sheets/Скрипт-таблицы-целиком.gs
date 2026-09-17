@@ -19,7 +19,7 @@
 
 // Версия для интеграции мини-аппов. SaleBot-callback по-прежнему выключен,
 // пока в свойствах скрипта явно не выставлено SALEBOT_ENABLED=1.
-var ВЕРСИЯ = '2026-09-14 integration-update';
+var ВЕРСИЯ = '2026-09-17 utm-and-lead-intent';
 
 /* ═══ ИМЕНА ВКЛАДОК — ЕДИНСТВЕННОЕ МЕСТО, ГДЕ ОНИ ЗАДАЮТСЯ ═══════════
    Должны совпадать с именами вкладок в таблице ДОСЛОВНО. Разойдутся хоть
@@ -46,7 +46,7 @@ var ЛИСТЫ = {
 
 var SHEET_NAME = ЛИСТЫ.тест;
 var LEAD_SHEET = ЛИСТЫ.предзапись;
-var START_HEADERS = ['Дата', 'ID в Телеграме', 'Тест', 'Источник'];
+var START_HEADERS = ['Дата', 'ID в Телеграме', 'Тест', 'Источник', 'Событие'];
 
 var HEADERS = [
   'Дата', 'ID в Телеграме', 'Имя',
@@ -138,7 +138,13 @@ var SITE_FIELDS = [
   ['doc_version_annex',   'Ред. приложения'],
   ['doc_version_consent', 'Ред. согласия'],
   ['page',                'Страница'],
-  ['ua',                  'User-Agent']
+  ['ua',                  'User-Agent'],
+  ['utm_source',          'Источник'],
+  ['utm_medium',          'Канал'],
+  ['utm_campaign',        'Кампания'],
+  ['utm_content',         'Объявление'],
+  ['src',                 'Метка'],
+  ['referrer',            'Откуда пришёл']
 ];
 
 function doPost(e) {
@@ -194,6 +200,7 @@ function route_(d) {
        строкой там, а не двумя правками в разных местах. */
     if (SITE_SHEETS[d.form]) { return saveSite_(d); }
     if (d.type === 'start') return saveStart_(d);
+    if (d.type === 'lead_intent') return saveIntent_(d);
 
     if (d.type === 'contact') return saveContact_(d);
 
@@ -244,7 +251,15 @@ function route_(d) {
 function saveStart_(d) {
   if (!d.userId) return json_({ ok: true, версия: ВЕРСИЯ, note: 'без ID не пишем' });
   var sheet = getSheet2_(ЛИСТЫ.старты, START_HEADERS);
-  sheet.appendRow([new Date(), d.userId, d.test || 'empat', d.istochnik || '']);
+  sheet.appendRow([new Date(), d.userId, d.test || 'empat', d.istochnik || '', 'test_started']);
+  return json_({ ok: true, версия: ВЕРСИЯ, лист: sheet.getName() });
+}
+
+function saveIntent_(d) {
+  var id = String(d.userId || '').trim();
+  if (!id) return json_({ ok: true, версия: ВЕРСИЯ, note: 'без ID не пишем' });
+  var sheet = getSheet2_(ЛИСТЫ.старты, START_HEADERS);
+  sheet.appendRow([new Date(), id, d.test || 'empat', d.istochnik || '', 'lead_intent']);
   return json_({ ok: true, версия: ВЕРСИЯ, лист: sheet.getName() });
 }
 
