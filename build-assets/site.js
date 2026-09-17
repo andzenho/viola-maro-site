@@ -51,6 +51,30 @@
     doc_version_consent: '2026-08-10'
   };
 
+  var ATTRIBUTION_KEY = 'viola_attribution';
+  var ATTRIBUTION_FIELDS = [
+    'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src', 'k'
+  ];
+
+  function readAttribution() {
+    var saved = {};
+    try { saved = JSON.parse(sessionStorage.getItem(ATTRIBUTION_KEY) || '{}'); }
+    catch (e) { saved = {}; }
+
+    var params = new URLSearchParams(window.location.search);
+    ATTRIBUTION_FIELDS.forEach(function (key) {
+      var value = params.get(key);
+      if (!saved[key] && value) saved[key] = value;
+    });
+    if (!saved.referrer && document.referrer) saved.referrer = document.referrer;
+
+    try { sessionStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(saved)); }
+    catch (e) {}
+    return saved;
+  }
+
+  var attribution = readAttribution();
+
   /* ───────────────────────────────────────────────────── модалка ── */
 
   var modal = document.getElementById('lead-modal');
@@ -69,6 +93,7 @@
   var errText = document.getElementById('form-error-text');
   var sentBox = document.getElementById('form-sent');
   var submit = document.getElementById('form-submit');
+  var submitLabel = submit ? submit.textContent : '';
   var closers = modal.querySelectorAll('[data-close-form]');
 
   var inputs = {
@@ -141,6 +166,13 @@
     hide(sentBox);
   }
 
+  function setSending(active) {
+    if (!submit) return;
+    submit.textContent = active ? 'Отправляем…' : submitLabel;
+    submit.classList.toggle('is-loading', active);
+    submit.setAttribute('aria-busy', active ? 'true' : 'false');
+  }
+
   function openModal(plan, payKey, trigger) {
     currentPlan = plan;
     currentPay = payKey || '';
@@ -148,6 +180,7 @@
     if (planLabel) planLabel.textContent = plan;
     hide(errBox);
     hide(sentBox);
+    setSending(false);
     showCheckboxErrors(false);
     syncSubmit();
     modal.hidden = false;
@@ -237,6 +270,9 @@
       page: window.location.href,
       ua: navigator.userAgent
     };
+    ATTRIBUTION_FIELDS.concat(['referrer']).forEach(function (key) {
+      payload[key] = attribution[key] || '';
+    });
     Object.keys(DOC_VERSIONS).forEach(function (k) { payload[k] = DOC_VERSIONS[k]; });
 
     /* Переход на оплату. Согласия пишутся до платежа — так требует
@@ -259,6 +295,7 @@
       }
       var url = PAY_URLS[currentPay];
       if (!url) {
+        setSending(false);
         fail('Не нашли страницу оплаты для этого тарифа. Напишите нам в Telegram: ' + SUPPORT_TG);
         syncSubmit();
         return;
@@ -278,6 +315,7 @@
     }
 
     submit.disabled = true;
+    setSending(true);
     hide(errBox);
 
     /* text/plain, а не application/json: так запрос считается «простым»
@@ -293,19 +331,26 @@
        он приходит только после того, как doPost отработал. Тело ответа
        при этом не прочитать, но всё, что doPost мог бы отклонить
        (имя, контакт, согласия, секрет), проверено до отправки. */
-    fetch(LEAD_ENDPOINT, {
+    var request = fetch(LEAD_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload),
-      redirect: 'manual'
+      redirect: 'manual',
+      keepalive: true
     }).then(function (res) {
-      /* opaqueredirect — это и есть 302 от Apps Script; res.ok — на
-         случай, если Google когда-нибудь начнёт отвечать без редиректа. */
       if (res.type !== 'opaqueredirect' && !res.ok) throw new Error('HTTP ' + res.status);
+      return 'sent';
+    });
+    var timeout = new Promise(function (resolve) {
+      setTimeout(function () { resolve('timeout'); }, 1500);
+    });
+
+    Promise.race([request, timeout]).then(function () {
       goToPayment();
     }).catch(function () {
       /* Записать не вышло. Продажу не блокируем: даём уйти на оплату
          вручную, но об этом говорим прямо, а не делаем вид, что всё цело. */
+      setSending(false);
       syncSubmit();
       var url = IS_PRE ? CHANNEL_URL
               : IS_TEAM ? TEAM_CHAT_URL

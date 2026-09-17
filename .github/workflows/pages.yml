@@ -35,7 +35,7 @@ jobs:
       - name: Собрать сайт с оплатой
         run: python3 build.py --noindex
 
-      - name: Собрать версию предзаписи
+      - name: Собрать редирект со старой страницы /pre
         run: python3 build.py --mode pre --out site/pre --base /pre --noindex
 
       - name: Собрать страницу брони

@@ -1238,6 +1238,7 @@ const CONFIG = {
      «Эмпат ли вы». Обещан на экране заявки, открывается сразу после отправки. */
   channelUrl: "https://t.me/+ot1pJz8KHlo2YTky",
   testUrl: "https://violamaro.ru/koleso/",   // им же делятся
+  practiceUrl: "https://violamaro.ru/zayavka?utm_source=test&utm_medium=koleso&utm_campaign=pe",
   /* Правовые страницы живут на сайте оплаты — тексты и редакции там одни на всё. */
   careChat: "https://t.me/violamaroteam",   // отдел заботы, тот же, что на сайтах
   docs: {
@@ -2462,17 +2463,17 @@ function result(prev) {
         <h2 class="jump-h">Что с этим делать?</h2>
         <p class="jump-t">Скорее всего, вы и без теста догадывались, где у вас просели сферы. Но теперь вы видите точно.</p>
         <p class="jump-t"><b>1 октября у Виолы Маро стартует практикум для эмпатов «Прикладная эмпатия». Его задача — научить вас пользоваться своей эмпатией во благо себе.</b></p>
-        <p class="jump-t">Сейчас идёт предзапись. До 18 сентября действует самая низкая цена, с 19 сентября она вырастет. Заявка бесплатная и ни к чему не обязывает.</p>
+        <p class="jump-t">Продажи уже открыты, старт 1 октября. До 23 сентября действует самая выгодная цена, дальше она вырастет. Заявка бесплатная и ни к чему не обязывает: после неё с вами свяжется команда Виолы и расскажет подробнее про программу.</p>
       </div>
       <div class="foot">
-        <button class="go big cta-top" id="offer">Что за Прикладная эмпатия?&nbsp;<span aria-hidden="true">→</span></button>
+        <button class="go big cta-top" id="offer">Узнать про практикум и оставить заявку&nbsp;→</button>
         <button class="ghost" id="share">Поделиться колесом</button>
         <button class="ghost" id="again">Пройти заново</button>
       </div>
       <p class="disclaim">Это не диагностика и не диагноз. Это способ посмотреть на себя со стороны.</p>
     </div>`);
 
-  n.querySelector("#offer").addEventListener("click", () => offer(r));
+  n.querySelector("#offer").addEventListener("click", () => openPractice_());
   n.querySelector("#share").addEventListener("click", () => share(r));
   n.querySelector("#again").addEventListener("click", () => {
     answers.length = 0; clearState(); flush(); intro();
@@ -2502,6 +2503,30 @@ function open_(url) {
   if (!url) return;
   const tg = window.Telegram && window.Telegram.WebApp;
   if (tg && tg.openLink) tg.openLink(url); else window.open(url, "_blank", "noopener");
+}
+
+function practiceUrl_() {
+  const tg = window.Telegram && window.Telegram.WebApp;
+  const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
+  let key = "";
+  try { key = new URLSearchParams(location.search).get("k") || ""; } catch (e) {}
+  if (!key && u.id) key = "tg_" + u.id;
+  const url = new URL(CONFIG.practiceUrl);
+  if (key) url.searchParams.set("k", key);
+  url.searchParams.set("src", "test-koleso");
+  return url.toString();
+}
+
+function openPractice_() {
+  const tg = window.Telegram && window.Telegram.WebApp;
+  const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
+  queue({
+    type: "lead_intent",
+    test: "koleso",
+    userId: u.id || "",
+    istochnik: istochnik_()
+  });
+  open_(practiceUrl_());
 }
 
 function offerSobytie(r) {
@@ -2666,7 +2691,7 @@ function offerSobytie(r) {
    константой на первом тесте — разойдутся, и человек увидит на двух
    тестах два разных обещания. */
 const OFFER_AP = {
-  tag: "Предзапись",
+  tag: "Продажи открыты",
   eyebrow: "6-недельный практикум Виолы Маро для эмпатов",
   title: "Прикладная эмпатия",
   lead: "Полностью обновлённая программа — с упором на практику и на реальные жизненные ситуации. <span class=\"hl\">Старт 1 октября.</span>",
@@ -2717,13 +2742,9 @@ const OFFER_AP = {
   ],
   /* Бонусы за раннюю покупку — отдельно от того, что даёт сама запись в список.
      Смешивать нельзя: одно получают за контакт, другое за вход в поток. */
-  /* Дата вместо «первым оплатит»: «первым» без названного числа —
-     непроверяемый дефицит, прямой запрет кодекса честности. 18 сентября —
-     конец второго окна продаж по лестнице (produkt/marafon-po-sferam.md §1а),
-     с 19-го цена растёт. Окно бонусов открыто заново решением продюсера
-     07.09: до этого оно было закрыто с 23.08. */
-  bonusHead: "И три лекции в подарок тем, кто оплатит до 18 сентября",
-  bonusNote: "Событие «Неудобные» 11–13 сентября тоже в подарок тем, кто оплатит до 18 сентября. Оно стоит 4 000 ₽, для вас будет бесплатным. Кто оплатит после 13 сентября, получит полную запись.",
+  /* Экран оставлен в коде для истории, но из пользовательского пути отключён. */
+  bonusHead: "После оплаты — три лекции в подарок",
+  bonusNote: "Запись терапевтического уикенда «Неудобные» тоже останется у вас навсегда.",
   bonus: [
     "<b>«Любовь и деньги».</b> Лекция Виолы о том, почему и любовь, и деньги — про одно и то же состояние наполненности.",
     "<b>Разбор фильма «Догвиль».</b> Как эмпат оказывается в позиции жертвы, как устроена эмоциональная зависимость и как из неё выходят.",
@@ -2732,7 +2753,7 @@ const OFFER_AP = {
   /* Главное возражение перед кнопкой — «а что дальше?». Отвечаем до нажатия, а не после. */
   beforeCta: [
     "После заявки с вами свяжется команда Виолы Маро. Расскажут, как устроен практикум и какой тариф под вашу задачу, ответят на вопросы и помогут с оплатой — в том числе в рассрочку.",
-    "И закрепят за вами <b>вход по самой низкой цене</b> — она держится до 18 сентября."
+    "И закрепят за вами <b>самую выгодную цену</b> — она держится до 23 сентября."
   ],
   cta: "Оставить заявку",
   ctaNote: "<span class=\"hl\">Платить сейчас ничего не нужно.</span> Два поля — имя и телеграм."
@@ -2803,8 +2824,8 @@ function lead(r) {
 
   const n = el(`
     <div class="card">
-      <div class="step">Предзапись</div>
-      <h2>Записываю вас в предзапись</h2>
+      <div class="step">Заявка</div>
+      <h2>Оставьте заявку</h2>
       ${known && tgName ? `
         <p class="lede">Записываю как <b>${known}</b>, ${tgName}. Если что-то не так — поправьте.</p>` : `
         <p class="lede">Оставьте, как к вам обращаться и куда написать приглашение.</p>`}
@@ -2945,7 +2966,7 @@ function done() {
   const n = el(`
     <div class="card">
       <h2>Готово. Вы в списке первых.</h2>
-      <p class="lede">Когда откроем набор, напишем вам раньше остальных и по самой низкой цене.</p>
+      <p class="lede">Напишем вам, когда Виола откроет следующий поток.</p>
       ${CONFIG.channelUrl ? `
         <div class="foot">
           <a class="go big" id="ch" href="${CONFIG.channelUrl}" target="_blank" rel="noopener">Забрать доступ в канал Виолы <span aria-hidden="true">→</span></a>
@@ -3299,7 +3320,9 @@ function pingStart_() {
 }
 
 function send_(payload) {
-  return fetch(CONFIG.sheetUrl + "?payload=" + encodeURIComponent(JSON.stringify(payload)));
+  return fetch(CONFIG.sheetUrl + "?payload=" + encodeURIComponent(JSON.stringify(payload)), {
+    keepalive: true
+  });
 }
 
 /* Кладём в буфер и пробуем отправить. Не дошло — полежит и уйдёт

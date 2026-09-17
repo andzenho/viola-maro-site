@@ -21,7 +21,7 @@ site/                       ← результат сборки, это и за�
 python3 build.py                        # под свой домен
 python3 build.py --base /Viola-Maro     # под подпуть (GitHub Pages)
 python3 build.py --noindex              # запретить индексацию (превью)
-python3 build.py --mode pre             # версия предзаписи
+python3 build.py --mode pre             # редирект /pre → /zayavka
 python3 build.py --mode bron            # страница брони
 python3 build.py --mode zayavka         # страница заявки
 python3 build.py --mode neudobnye      # событие «Неудобные»
@@ -29,13 +29,13 @@ python3 build.py --mode neudobnye      # событие «Неудобные»
 
 ### Боевая сборка под violamaro.ru
 
-Две команды подряд — получается папка `dist/`, которая заливается в корень
+Команды ниже создают папку `dist/`, которая заливается в корень
 домена как есть:
 
 ```sh
 rm -rf dist
-python3 build.py --mode pre --out dist --cname violamaro.ru
-python3 build.py --out dist/pay --base /pay --docs-root
+python3 build.py --out dist --cname violamaro.ru
+python3 build.py --mode pre --out dist/pre --base /pre --noindex
 python3 build.py --mode zayavka --out dist/zayavka --base /zayavka --docs-root --noindex
 python3 build.py --mode bron --out dist/bron --base /bron --docs-root --noindex
 python3 build.py --mode neudobnye --out dist/neudobnye --base /neudobnye --docs-root
@@ -43,8 +43,8 @@ python3 build.py --mode neudobnye --out dist/neudobnye --base /neudobnye --docs-
 
 | Адрес | Что |
 |---|---|
-| `/` | предзапись |
-| `/pay/` | оплата |
+| `/` | оплата |
+| `/pre/` | редирект на `/zayavka/` с сохранением параметров |
 | `/zayavka/` | заявка: цены есть, оплаты на странице нет |
 | `/bron/` | бронь места |
 | `/neudobnye/` | событие «Неудобные», 11–13 сентября |

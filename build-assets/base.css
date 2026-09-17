@@ -206,6 +206,18 @@ img, picture, svg { max-width: 100%; }
 .modal[hidden] { display: none !important; }
 body.modal-open { overflow: hidden; }
 
+#form-submit.is-loading::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(246, 240, 232, .45);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: form-submit-spin .7s linear infinite;
+}
+
+@keyframes form-submit-spin { to { transform: rotate(360deg); } }
+
 .cb-err {
   font-size: 14px;
   line-height: 1.4;
