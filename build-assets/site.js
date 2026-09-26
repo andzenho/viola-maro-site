@@ -41,7 +41,7 @@
   /* Чат команды — куда уходит человек со страницы заявки. Это не то же самое,
      что SUPPORT_TG: там служба заботы для тех, у кого что-то сломалось,
      а здесь начинается разговор про участие. */
-  var TEAM_CHAT_URL = 'https://t.me/m/68IixHyvOGM1';
+  var TEAM_CHAT_URL = 'https://t.me/m/t7W8mt1mYjdi';
 
   /* Редакции документов на момент акцепта — уходят вместе с заявкой
      и должны меняться вместе с текстом документов. */
@@ -50,6 +50,30 @@
     doc_version_annex: '2026-08-10',
     doc_version_consent: '2026-08-10'
   };
+
+  var ATTRIBUTION_KEY = 'viola_attribution';
+  var ATTRIBUTION_FIELDS = [
+    'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src', 'k'
+  ];
+
+  function readAttribution() {
+    var saved = {};
+    try { saved = JSON.parse(sessionStorage.getItem(ATTRIBUTION_KEY) || '{}'); }
+    catch (e) { saved = {}; }
+
+    var params = new URLSearchParams(window.location.search);
+    ATTRIBUTION_FIELDS.forEach(function (key) {
+      var value = params.get(key);
+      if (!saved[key] && value) saved[key] = value;
+    });
+    if (!saved.referrer && document.referrer) saved.referrer = document.referrer;
+
+    try { sessionStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(saved)); }
+    catch (e) {}
+    return saved;
+  }
+
+  var attribution = readAttribution();
 
   /* ───────────────────────────────────────────────────── модалка ── */
 
@@ -69,6 +93,7 @@
   var errText = document.getElementById('form-error-text');
   var sentBox = document.getElementById('form-sent');
   var submit = document.getElementById('form-submit');
+  var submitLabel = submit ? submit.textContent : '';
   var closers = modal.querySelectorAll('[data-close-form]');
 
   var inputs = {
@@ -141,6 +166,13 @@
     hide(sentBox);
   }
 
+  function setSending(active) {
+    if (!submit) return;
+    submit.textContent = active ? 'Отправляем…' : submitLabel;
+    submit.classList.toggle('is-loading', active);
+    submit.setAttribute('aria-busy', active ? 'true' : 'false');
+  }
+
   function openModal(plan, payKey, trigger) {
     currentPlan = plan;
     currentPay = payKey || '';
@@ -148,6 +180,7 @@
     if (planLabel) planLabel.textContent = plan;
     hide(errBox);
     hide(sentBox);
+    setSending(false);
     showCheckboxErrors(false);
     syncSubmit();
     modal.hidden = false;
@@ -237,6 +270,9 @@
       page: window.location.href,
       ua: navigator.userAgent
     };
+    ATTRIBUTION_FIELDS.concat(['referrer']).forEach(function (key) {
+      payload[key] = attribution[key] || '';
+    });
     Object.keys(DOC_VERSIONS).forEach(function (k) { payload[k] = DOC_VERSIONS[k]; });
 
     /* Переход на оплату. Согласия пишутся до платежа — так требует
@@ -259,6 +295,7 @@
       }
       var url = PAY_URLS[currentPay];
       if (!url) {
+        setSending(false);
         fail('Не нашли страницу оплаты для этого тарифа. Напишите нам в Telegram: ' + SUPPORT_TG);
         syncSubmit();
         return;
@@ -278,24 +315,42 @@
     }
 
     submit.disabled = true;
+    setSending(true);
     hide(errBox);
 
     /* text/plain, а не application/json: так запрос считается «простым»
        и браузер не шлёт предварительный OPTIONS, на который Apps Script
-       отвечать не умеет. Тело при этом остаётся JSON. */
-    fetch(LEAD_ENDPOINT, {
+       отвечать не умеет. Тело при этом остаётся JSON.
+
+       redirect: 'manual' — принципиально. Apps Script отвечает кодом 302
+       на script.googleusercontent.com, а этот домен в ряде стран
+       заблокирован (Индонезия, периодически РФ): сам POST доходит
+       и строка записывается, а чтение ответа по редиректу падает —
+       и форма зря показывала «не удалось сохранить» человеку, чья
+       заявка уже лежала в таблице. Останавливаемся на самом 302:
+       он приходит только после того, как doPost отработал. Тело ответа
+       при этом не прочитать, но всё, что doPost мог бы отклонить
+       (имя, контакт, согласия, секрет), проверено до отправки. */
+    var request = fetch(LEAD_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      redirect: 'manual',
+      keepalive: true
     }).then(function (res) {
-      return res.json();
-    }).then(function (body) {
-      /* Apps Script всегда отвечает 200, результат лежит в теле. */
-      if (!body || body.ok !== true) throw new Error(body && body.error);
+      if (res.type !== 'opaqueredirect' && !res.ok) throw new Error('HTTP ' + res.status);
+      return 'sent';
+    });
+    var timeout = new Promise(function (resolve) {
+      setTimeout(function () { resolve('timeout'); }, 1500);
+    });
+
+    Promise.race([request, timeout]).then(function () {
       goToPayment();
     }).catch(function () {
       /* Записать не вышло. Продажу не блокируем: даём уйти на оплату
          вручную, но об этом говорим прямо, а не делаем вид, что всё цело. */
+      setSending(false);
       syncSubmit();
       var url = IS_PRE ? CHANNEL_URL
               : IS_TEAM ? TEAM_CHAT_URL
@@ -397,8 +452,27 @@
 
   function two(n) { return n < 10 ? '0' + n : String(n); }
 
+  function syncPrices(raised) {
+    document.querySelectorAll('[data-price-before][data-price-after]').forEach(function (node) {
+      node.textContent = node.getAttribute(raised ? 'data-price-after' : 'data-price-before');
+    });
+    document.querySelectorAll('[data-price-note]').forEach(function (node) {
+      node.textContent = node.getAttribute(raised ? 'data-after' : 'data-before');
+    });
+    document.querySelectorAll('[data-price-before-row]').forEach(function (node) {
+      node.style.setProperty('display', raised ? 'none' : 'grid', raised ? 'important' : '');
+    });
+    document.querySelectorAll('[data-price-after-label]').forEach(function (node) {
+      node.textContent = node.getAttribute(raised ? 'data-after' : 'data-before');
+    });
+    document.querySelectorAll('[data-price-delta]').forEach(function (node) {
+      node.style.setProperty('display', raised ? 'none' : '', raised ? 'important' : '');
+    });
+  }
+
   function tick() {
     var left = target - Date.now();
+    syncPrices(left <= 0);
     if (left <= 0) {
       if (band) band.hidden = true;
       clearInterval(timer);

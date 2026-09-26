@@ -1,10 +1,12 @@
 name: Публикация на GitHub Pages
 
-# Сборка под собственный домен: без префикса подпути и без запрета
-# индексации.
+# Сборка для привязанного тестового домена violamaro.ru.
+# Индексация пока запрещена: это стенд согласования, а не финальная публикация.
 
 on:
   push:
+    # Публикуем только подтверждённый main. Рабочая ветка integration-update
+    # должна лишь хранить изменения и не заменять опубликованный сайт.
     branches: [main]
   workflow_dispatch:
 
@@ -31,19 +33,22 @@ jobs:
         run: pip install --quiet pillow
 
       - name: Собрать сайт с оплатой
-        run: python3 build.py
+        run: python3 build.py --noindex
 
-      - name: Собрать версию предзаписи
-        run: python3 build.py --mode pre --out site/pre
+      - name: Собрать редирект со старой страницы /pre
+        run: python3 build.py --mode pre --out site/pre --base /pre --noindex
 
       - name: Собрать страницу брони
-        run: python3 build.py --mode bron --out site/bron
+        run: python3 build.py --mode bron --out site/bron --base /bron --noindex
 
       - name: Собрать страницу заявки
-        run: python3 build.py --mode zayavka --out site/zayavka
+        run: python3 build.py --mode zayavka --out site/zayavka --base /zayavka --noindex
 
-      - name: Собрать событие «Неудобные»
-        run: python3 build.py --mode neudobnye --out site/neudobnye
+      - name: Добавить мини-аппы
+        run: |
+          mkdir -p site/test site/koleso
+          cp miniapps/test/index.html site/test/index.html
+          cp miniapps/koleso/index.html site/koleso/index.html
 
       - uses: actions/configure-pages@v5
 
