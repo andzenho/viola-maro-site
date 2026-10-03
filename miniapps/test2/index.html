@@ -408,7 +408,7 @@
     font-size: 1.75rem; line-height: 1.2; color: var(--deep);
     text-wrap: balance;
   }
-  .answer.gold { color: var(--accent-text); font-size: clamp(1.7rem, 9.6vw, 2.3rem); line-height: 1.12; }
+  h2 .gold { color: var(--accent-text); }
 
   .pull {
     font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
@@ -545,12 +545,16 @@
   }
   .checks b { font-weight: 600; }
 
-  /* Бонусы за анкету. */
-  .gifts { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 1rem; }
-  .gifts li { position: relative; padding-left: 2.1rem; }
-  .gifts li::before { content: "🎁"; position: absolute; left: 0; top: .05em; font-size: 1.15rem; }
-  .gifts b { display: block; font-weight: 600; line-height: 1.4; }
-  .gifts span { display: block; margin-top: .15rem; color: var(--ink-soft); font-size: .95rem; line-height: 1.5; }
+  /* Шаги техники: крупный номер, заголовок шага, под ним слова Виолы во всю ширину. */
+  .steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 1.7rem; }
+  .steps > li { display: grid; grid-template-columns: 2.6rem 1fr; column-gap: .7rem; row-gap: .85rem; align-items: start; }
+  .step-n {
+    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    font-size: 2.7rem; line-height: .95; color: var(--accent-text);
+  }
+  .step-head { display: flex; flex-direction: column; gap: .3rem; min-width: 0; padding-top: .15rem; }
+  .step-head h3 { font-size: 1.2rem; }
+  .step-wide { grid-column: 1 / -1; }
 
   .reviews { display: flex; flex-direction: column; gap: .9rem; }
   .review { background: var(--surface-2); border-radius: 4px; padding: 1.05rem 1.1rem; }
@@ -793,7 +797,7 @@ const DISCLAIM = "Это не диагностика и не диагноз. Э�
    человеку ничего не говорит. Баллы переводятся в пять уровней, на экране
    пять делений и слово. В таблицу по-прежнему уходят сами баллы. */
 const SEEN = {
-  title: "Что видно по вашим ответам",
+  title: "Что видно по вашим ответам?",
   /* [название строки, шкала, из скольких баллов, слова уровней] */
   rows: [
     ["Считываете людей",     "A", 9,  "feel"],
@@ -830,7 +834,7 @@ function seenHead(sc) {
    Блок говорит о механизме, а не о конкретном человеке из жизни участницы.
    Вступление, три абзаца и финал — слова Виолы из методички (модули 1 и 2). */
 const RYADOM = {
-  title: "Кто оказывается рядом с вами и почему",
+  title: "Кто оказывается рядом с вами и почему?",
   intro: "Чаще всего манипуляции направлены на такие светлые чувства, как любовь, доверие, преданность, доброта. Эти ценности золото нашей души.",
   line: "Пользуются не слабостью. Пользуются лучшим, что в вас есть.",
   by: {
@@ -846,17 +850,54 @@ const RYADOM = {
 };
 
 /* ——— что можно сделать уже сегодня вечером ———
-   Техника Т3, дословно. when — строка Виолы о том, когда говорить себе эти
-   два слова: в базе её нет, сами не дописываем. Появится — вписать сюда. */
+   Техника Т3 в три шага: поймать момент, сказать себе, ответить человеку.
+   Слова Виолы (words, quote, why) стоят дословно, их не правим ни на букву.
+   Заголовки шагов и связки — наши. */
 const VECHER = {
-  title: "Что можно сделать уже сегодня вечером",
-  words: [
-    ["Мне можно.", "Мне можно выбирать себя, ставить свои задачи на первое место."],
-    ["Могу.", "Могу помочь, могу не помочь. Могу дать, могу не дать. У меня есть право тебе отказать."]
+  title: "Что можно сделать уже сегодня вечером?",
+  sub: "Заменить «должна» на «могу»",
+  steps: [
+    { h: "Поймайте момент",
+      t: "Вас о чём-то просят, а внутри сразу звучит «я должна»." },
+    { h: "Скажите себе",
+      words: [
+        ["Мне можно.", "Мне можно выбирать себя, ставить свои задачи на первое место."],
+        ["Могу.", "Могу помочь, могу не помочь. Могу дать, могу не дать. У меня есть право тебе отказать."]
+      ] },
+    { h: "Ответьте человеку уже из «могу»",
+      t: "Вот как это звучит у Виолы:",
+      quote: "Я по-человечески могу любить этого человека, но сейчас ты мной пользуешься, и я тебе говорю «нет»." }
   ],
-  why: ["Должен, обязан это принуждение, а могу это право.", "В психике работают лучше всего самые простые установки."],
-  when: "",
+  whyHead: "Почему это работает?",
+  why: "Должен, обязан это принуждение, а могу это право. Когда вы возвращаете себе своё собственное законное право, любой отказ перестаёт быть для вас предательством.",
   bridge: "Медитация «Мне можно» ждёт вас после анкеты."
+};
+
+/* ——— что дальше ———
+   Вместо списка бонусов — сцена из завтрашнего дня: она объясняет, зачем
+   человеку медитация и эфир. Сцена и тема эфира подбираются по ответу
+   на «Где вас съедает сильнее всего?». Минут эфира на экране нет нигде. */
+const NEXT = {
+  title: "Что дальше?",
+  lead: "Теперь представьте завтрашний день.",
+  by: {
+    partner: { scene: "Он молчит, и вы уже подбираете слова, чтобы не стало хуже. А потом полночи прокручиваете то, что не сказали.",
+               theme: "как держать границы рядом с партнёром и почему вы видите красные флажки и остаётесь" },
+    semya:   { scene: "Звонит мама, и вы заранее знаете, что отложите свои дела. А потом весь вечер прокручиваете этот разговор.",
+               theme: "что делать, когда давит мать, и как перестать всё отдавать взрослым детям" },
+    rabota:  { scene: "Вас просят доделать за другого, и вы уже киваете. Отказать неудобно, хотя сил нет.",
+               theme: "почему вашу доброту принимают за слабость" },
+    chuzhie: { scene: "Малознакомый человек полчаса рассказывает вам свою беду, и уйти неловко. Домой вы приходите выжатой.",
+               theme: "почему эмпатами так легко пользоваться и как давать в балансе" },
+    vezde:   { scene: "День закончился, все устроены, а на себя сил уже нет.",
+               theme: "как понять, где ваше, а где чужое" }
+  },
+  med: "Для этой минуты у Виолы есть <span class=\"hl\">медитация «Мне можно»</span>. Девять минут. Вы включаете её перед разговором, которого боитесь, или сразу после него.",
+  /* {theme} — тема эфира под ответ человека. */
+  efir: "А почему так выходит именно с вами, Виола подробно разобрала <span class=\"hl\">в эфире</span>: {theme}. Запись с удобными таймкодами, свою тему найдёте сразу.",
+  where: "Медитация и эфир лежат в закрытом канале Виолы.",
+  cta: "Получить медитацию и эфир",
+  ctaNote: "Чтобы попасть в канал, заполните анкету предзаписи на Прикладную эмпатию 2.0. Две минуты, бесплатно, это не оплата."
 };
 
 /* ——— программа ———
@@ -873,22 +914,23 @@ const WEEKS = [
 ];
 
 const PROGRAM = {
+  head: "Что такое <span class=\"gold\">Прикладная эмпатия 2.0</span>?",
   bridge: "Вы узнали свой профиль. Что с этим делать, разбираем на Прикладной эмпатии 2.0.",
-  eyebrow: "6-недельный практикум Виолы Маро для эмпатов",
-  title: "Прикладная эмпатия 2.0",
+  what: "Это 6-недельный практикум Виолы Маро для эмпатов.",
   body: [
     "Эмпатия — это способность. <span class=\"hl\">У вас она есть.</span> Пользоваться ей вас никто не учил.",
     "Здесь вы научитесь пользоваться своей эмпатией во всех сферах жизни."
   ],
-  weeksHead: "Шесть недель. Одна неделя — одна сфера вашей жизни",
-  insideHead: "Что внутри",
+  weeksHead: "Что будет за шесть недель?",
+  weeksLead: "Одна неделя — одна сфера вашей жизни.",
+  insideHead: "Что внутри?",
   /* Жирным — что это, дальше подробность. Состав по правке Ильи 03.10. */
   inside: [
     "<b>Лекции Виолы в записи</b> на каждую неделю",
     "<b>18 прикладных техник для эмпата</b>, по три в неделю",
     "<b>Обратная связь от Виолы:</b> ответы в аудио в закрытом чате",
     "<b>Общий чат всех участников</b> на тарифе «С Виолой»",
-    "<b>Аудиомедитация от Виолы</b>",
+    "<b>Аудиомедитации от Виолы</b>",
     "<b>Текстовая методичка</b> на каждую лекцию"
   ],
   /* Метка на неделе под сферу человека. */
@@ -898,18 +940,10 @@ const PROGRAM = {
      на публикацию. Пока список пуст, блок на экране не показывается. */
   reviewsHead: "Что говорят выпускницы",
   reviews: [],
-  bonusHead: "Что вы получите за анкету",
-  bonus: [
-    ["Аудиомедитация Виолы «Мне можно»", "9 минут, с закрытого уикенда."],
-    ["Запись эфира «Что такое быть эмпатом и почему вами пользуются»", "2 часа, с удобными таймкодами."],
-    ["Кабинет предзаписи на Прикладную эмпатию 2.0", "Закрытый канал, оба бонуса лежат там в закрепе."]
-  ],
-  cta: "Заполнить анкету и получить бонусы",
-  ctaNote: "2 минуты. Бесплатно, это не оплата.",
-  faqHead: "Частые вопросы",
+  faqHead: "Остались вопросы?",
   /* {start} — дата старта ближайшего потока. */
   faq: [
-    ["Анкета — это оплата?", "Нет. Анкета бесплатная и ни к чему не обязывает. После неё сразу открывается Кабинет предзаписи с двумя бонусами."],
+    ["Анкета — это оплата?", "Нет. Анкета бесплатная и ни к чему не обязывает. После неё сразу открывается закрытый канал Виолы, где лежат медитация и эфир."],
     ["Мне будут звонить?", "Нет. Даша из команды Виолы напишет вам один раз в Телеграм."],
     ["Когда старт и как проходят лекции?", "Ближайший поток стартует {start}. Лекции идут в записи, смотреть их можно в удобное для вас время."],
     ["Успею ли я, если у меня работа и семья?", "Одна лекция в неделю и три техники к ней. Всё в записи, поэтому идти можно в своём темпе."],
@@ -924,18 +958,18 @@ const PROGRAM = {
    или type: "area" для ответа своими словами. Пока пусто, шаг идёт без них. */
 const LEADER = [];
 const FORM = [
-  { title: "Как к вам обращаться", fields: [
+  { title: "Как к вам обращаться?", fields: [
     { id: "name", label: "Имя", type: "text", auto: "given-name", max: 60 },
     { id: "contact", label: "Телефон или ник в Телеграме", type: "text", max: 60,
       hint: "Чтобы Даша могла вам написать. Например, @imya или +7 900 000-00-00" }
   ] },
   { title: "Ваш запрос", fields: [
-    { id: "change", label: "Что вы хотите изменить в первую очередь", type: "area", max: 400 },
-    { id: "tried", label: "Что вы уже пробовали", type: "area", max: 400,
+    { id: "change", label: "Что вы хотите изменить в первую очередь?", type: "area", max: 400 },
+    { id: "tried", label: "Что вы уже пробовали?", type: "area", max: 400,
       hint: "Книги, курсы, терапия, программы Виолы. Если ничего, так и напишите" }
   ] },
   { title: "Готовность", consent: true, fields: [
-    { id: "ready", label: "Насколько вы готовы начать с ближайшим потоком", type: "scale",
+    { id: "ready", label: "Насколько вы готовы начать с ближайшим потоком?", type: "scale",
       hint: "От 1 до 10. Ответ ни к чему не обязывает", lo: "1 — присматриваюсь", hi: "10 — готова начать" }
   ].concat(LEADER) }
 ];
@@ -1319,15 +1353,16 @@ function ageScreen() {
 
 /* ——— экран результата ———
    Порядок блоков: тип и сфера · что видно по ответам · суперспособности ·
-   кто рядом · что сделать сегодня вечером · программа и анкета.
+   кто рядом · что сделать сегодня вечером · что дальше (кнопка анкеты) ·
+   программа (вторая кнопка анкеты).
    Трём типам без анкеты (Считывающий, Сочувствующий, Другая настройка):
    тип и кнопка в открытый канал.
    Каждый блок — отдельная секция со своим заголовком. data-block нужен
    счётчику «до какого блока долистали»; у блока может быть несколько секций. */
-const BLOCKS = ["type", "portrait", "powers", "ryadom", "vecher", "program"];
+const BLOCKS = ["type", "portrait", "powers", "ryadom", "vecher", "next", "program"];
 const BLOCK_NAMES = {
   type: "Тип", portrait: "Что видно по ответам", powers: "Суперспособности",
-  ryadom: "Кто рядом", vecher: "Сегодня вечером", program: "Программа и анкета"
+  ryadom: "Кто рядом", vecher: "Сегодня вечером", next: "Что дальше", program: "Программа"
 };
 
 function secType_(r, empath) {
@@ -1344,7 +1379,7 @@ function secType_(r, empath) {
     </section>
     ${sp ? `
     <section class="sec" data-block="type">
-      <h2>Где у вас уходит больше всего сил</h2>
+      <h2>Где у вас уходит больше всего сил?</h2>
       <div class="spot">
         <p class="answer">${sp.t}</p>
         <p>${sp.line}</p>
@@ -1384,7 +1419,7 @@ function secPortrait_(r) {
 function secPowers_(pw) {
   return `
     <section class="sec" data-block="powers">
-      <h2>Ваши суперспособности</h2>
+      <h2>Какие у вас суперспособности?</h2>
       <ul class="powers">${pw.map(x => `<li>${x}</li>`).join("")}</ul>
     </section>`;
 }
@@ -1407,20 +1442,63 @@ function secRyadom_(r) {
 }
 
 function secVecher_() {
+  const step = (x, i) => `
+    <li>
+      <span class="step-n" aria-hidden="true">${i + 1}</span>
+      <div class="step-head">
+        <h3>${x.h}</h3>
+        ${x.t ? `<p>${x.t}</p>` : ""}
+      </div>
+      ${x.words ? `
+      <div class="panel mantra step-wide">
+        ${x.words.map(w => `<p><b>${w[0]}</b>${w[1]}</p>`).join("")}
+      </div>` : ""}
+      ${x.quote ? `<blockquote class="quote step-wide">${x.quote}</blockquote>` : ""}
+    </li>`;
   return `
     <section class="sec" data-block="vecher">
       <h2>${VECHER.title}</h2>
-      <div class="panel mantra">
-        ${VECHER.words.map(w => `<p><b>${w[0]}</b>${w[1]}</p>`).join("")}
+      <p class="pull gold">${VECHER.sub}</p>
+      <ol class="steps">${VECHER.steps.map(step).join("")}</ol>
+      <div class="group">
+        <h3>${VECHER.whyHead}</h3>
+        <blockquote class="quote">${VECHER.why}<cite>Виола Маро</cite></blockquote>
       </div>
-      <blockquote class="quote">${VECHER.why.join("<br>")}<cite>Виола Маро</cite></blockquote>
-      ${VECHER.when ? `<p>${VECHER.when}</p>` : ""}
       <p class="soft">${VECHER.bridge}</p>
     </section>`;
 }
 
-/* Программа — пять секций: что это и когда, шесть недель, что внутри,
-   бонусы с кнопкой, вопросы. Недели идут в порядке программы; неделя под сферу человека
+/* Кнопка анкеты. Стоит дважды: в блоке «Что дальше» и после программы.
+   place уходит в таблицу: видно, с какой из двух кнопок человек пошёл в анкету. */
+function ctaHtml_(place) {
+  return leadSent
+    ? `<button class="go" data-cta="cabinet">Вы в предзаписи. Открыть Кабинет&nbsp;<span aria-hidden="true">→</span></button>`
+    : `<button class="go" data-cta="form" data-place="${place}">${NEXT.cta}&nbsp;<span aria-hidden="true">→</span></button>
+       <p class="fine center">${NEXT.ctaNote}</p>`;
+}
+
+/* «Что дальше?» — сцена из завтрашнего дня и зачем человеку медитация и эфир.
+   Сцена и тема эфира берутся по ответу на «Где вас съедает сильнее всего?». */
+function secNext_() {
+  const x = NEXT.by[forks.bol] || NEXT.by.vezde;
+  return `
+    <section class="sec" data-block="next" id="next">
+      <div class="offer-card">
+        <h2>${NEXT.title}</h2>
+        <p class="lead">${NEXT.lead}</p>
+        <p class="pull">${x.scene}</p>
+        <div class="copy">
+          <p>${NEXT.med}</p>
+          <p>${NEXT.efir.replace("{theme}", x.theme)}</p>
+          <p><b>${NEXT.where}</b></p>
+        </div>
+        <div class="foot">${ctaHtml_("next")}</div>
+      </div>
+    </section>`;
+}
+
+/* Программа — что это и когда, шесть недель, что внутри, вторая кнопка,
+   вопросы. Недели идут в порядке программы; неделя под сферу человека
    выделена на своём месте и подписана. */
 function secProgram_(r) {
   const st = stream();
@@ -1442,17 +1520,18 @@ function secProgram_(r) {
     `<details><summary>${f[0]}</summary><p>${f[1].replace("{start}", st.start)}</p></details>`).join("");
   return `
     <section class="sec" data-block="program" id="program">
+      <h2>${PROGRAM.head}</h2>
       <p class="lead">${PROGRAM.bridge}</p>
-      <div class="head">
-        <div class="eyebrow">${PROGRAM.eyebrow}</div>
-        <h2 class="answer gold">${PROGRAM.title}</h2>
+      <div class="copy">
+        <p>${PROGRAM.what}</p>
+        ${PROGRAM.body.map(p => `<p>${p}</p>`).join("")}
       </div>
-      <div class="copy">${PROGRAM.body.map(p => `<p>${p}</p>`).join("")}</div>
       <p class="panel"><b>Ближайший поток стартует ${st.start}.</b> Набор закрывается ${st.close} в 23:59 по Москве.</p>
     </section>
 
     <section class="sec" data-block="program">
       <h2>${PROGRAM.weeksHead}</h2>
+      <p class="lead">${PROGRAM.weeksLead}</p>
       <ol class="weeks">${weeks}</ol>
     </section>
 
@@ -1472,14 +1551,8 @@ function secProgram_(r) {
 
     <section class="sec" data-block="program">
       <div class="offer-card">
-        <h2>${PROGRAM.bonusHead}</h2>
-        <ul class="gifts">${PROGRAM.bonus.map(b => `<li><b>${b[0]}</b><span>${b[1]}</span></li>`).join("")}</ul>
-        <div class="foot">
-          ${leadSent ? `
-            <button class="go" id="to-cabinet">Вы в предзаписи. Открыть Кабинет&nbsp;<span aria-hidden="true">→</span></button>` : `
-            <button class="go" id="to-form">${PROGRAM.cta}&nbsp;<span aria-hidden="true">→</span></button>
-            <p class="fine center">${PROGRAM.ctaNote}</p>`}
-        </div>
+        <p class="lead"><b>${NEXT.where}</b></p>
+        <div class="foot">${ctaHtml_("program")}</div>
       </div>
     </section>
 
@@ -1512,20 +1585,20 @@ function result(prev) {
       ${empath ? secPowers_(powers(r.scales, answers)) : ""}
       ${empath && CONFIG.blocks.ryadom ? secRyadom_(r) : ""}
       ${empath && CONFIG.blocks.vecher ? secVecher_() : ""}
-      ${empath ? secProgram_(r) : secChannel_()}
+      ${empath ? secNext_() + secProgram_(r) : secChannel_()}
       <div class="tail">
         <button class="ghost" id="again">Пройти заново</button>
         <p class="fine">${DISCLAIM}</p>
       </div>
     </div>`);
 
-  const toForm = n.querySelector("#to-form");
-  if (toForm) toForm.addEventListener("click", () => {
-    event_("form_open");
+  n.querySelectorAll('[data-cta="form"]').forEach(b => b.addEventListener("click", () => {
+    event_("form_open", b.getAttribute("data-place"));
     prefillForm_(); formStep = 0; saveState(); formScreen();
-  });
-  const toCab = n.querySelector("#to-cabinet");
-  if (toCab) toCab.addEventListener("click", () => { event_("cabinet"); openCabinet(); });
+  }));
+  n.querySelectorAll('[data-cta="cabinet"]').forEach(b => b.addEventListener("click", () => {
+    event_("cabinet"); openCabinet();
+  }));
   const toChannel = n.querySelector("#channel");
   if (toChannel) toChannel.addEventListener("click", (e) => {
     event_("channel");
@@ -1661,7 +1734,7 @@ function formScreen() {
         <div class="eyebrow">Анкета предзаписи · шаг ${formStep + 1} из ${FORM.length}</div>
         <h2>${st.title}</h2>
       </div>
-      ${formStep === 0 ? `<p class="soft">Заполните, и сразу откроется Кабинет предзаписи с двумя бонусами. Это не оплата.</p>` : ""}
+      ${formStep === 0 ? `<p class="soft">Заполните, и сразу откроется закрытый канал Виолы с медитацией и эфиром. Это не оплата.</p>` : ""}
       <div class="fields">${st.fields.map(fieldHtml_).join("")}</div>
       ${st.consent ? `
         <div class="consents">
@@ -1726,7 +1799,7 @@ function formScreen() {
       if (!bad) bad = { f: f, box: box };
     });
     if (bad) {
-      warn(bad.f.type === "scale" ? "Выберите число от 1 до 10." : "Заполните, пожалуйста: " + lower1(bad.f.label) + ".");
+      warn(bad.f.type === "scale" ? "Выберите число от 1 до 10." : "Заполните, пожалуйста: " + lower1(bad.f.label).replace(/\?$/, "") + ".");
       if (bad.box && bad.box.scrollIntoView) bad.box.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
