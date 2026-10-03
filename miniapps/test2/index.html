@@ -467,6 +467,20 @@
      Аудио с дорожкой и видео с обложкой. Материал закрыт, поэтому
      на кнопке «играть» стоит замок, а нажатие по посту ведёт в анкету. */
   .posts { display: flex; flex-direction: column; gap: .7rem; }
+  /* Три пары «вопрос → карточка». Вопрос человека стоит справа синим
+     сообщением, как свои сообщения в Телеграме; карточка под ним — ответ
+     Виолы. Вопрос набран крупнее текста карточки. */
+  .lines span { display: block; }
+  .qas { display: flex; flex-direction: column; gap: 1.5rem; }
+  .qa { display: flex; flex-direction: column; gap: .6rem; }
+  .ask {
+    align-self: flex-end; max-width: 100%;
+    background: var(--sky); color: #FFFFFF;
+    font-size: 1.2rem; line-height: 1.25; font-weight: 700; letter-spacing: -.01em;
+    padding: .7rem 1rem .75rem;
+    border-radius: 18px 18px 6px 18px;
+    box-shadow: 0 10px 18px -12px rgba(31, 76, 151, .8);
+  }
   .post {
     appearance: none; display: block; width: 100%;
     font: inherit; color: inherit; text-align: left;
@@ -538,8 +552,6 @@
     box-shadow: 0 8px 16px -8px rgba(214, 140, 30, .85);
   }
   .play.gold > svg { width: 1.4rem; height: 1.4rem; margin-left: 0; }
-  /* Вторая кнопка стоит на блоке неба с белым текстом; карточка внутри белая. */
-  .offer-card .post { color: var(--ink); }
 
   /* Метка над кнопкой стоит по центру, как и сама кнопка. На обычном телефоне
      она в строку не помещается, поэтому переносится после слова «Предзапись»
@@ -581,6 +593,23 @@
     display: flex; flex-direction: column; gap: 1rem;
   }
   .offer-card .fine { color: rgba(255, 255, 255, .9); }
+  .offer-card h3 { font-size: 1.3rem; line-height: 1.25; letter-spacing: -.015em; }
+  /* Итог: три пункта на тёмных плитках, значок на золотом круге. Плитка
+     темнее неба, поэтому белый текст на ней читается лучше, чем на фоне. */
+  .total { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+  .total li {
+    display: grid; grid-template-columns: 2.6rem 1fr; column-gap: .85rem; align-items: center;
+    background: rgba(9, 26, 68, .34); border-radius: 16px; padding: .8rem .9rem;
+  }
+  .total-ic {
+    width: 2.6rem; height: 2.6rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #F7CB62 0%, #EFA533 100%); color: #143A85;
+  }
+  .total-ic svg { width: 1.3rem; height: 1.3rem; }
+  .total-main { display: flex; flex-direction: column; gap: .1rem; min-width: 0; }
+  .total-main b { font-weight: 700; line-height: 1.25; }
+  .total-main span { font-size: .92rem; line-height: 1.35; color: rgba(255, 255, 255, .88); }
 
   .reviews { display: flex; flex-direction: column; gap: .7rem; }
   .review { background: var(--surface); border-radius: 18px; padding: 1.05rem 1.1rem; box-shadow: var(--shadow); }
@@ -906,34 +935,36 @@ const VECHER = {
       quote: "Я по-человечески могу любить этого человека, но сейчас ты мной пользуешься, и я тебе говорю «нет»." }
   ],
   whyHead: "Почему это работает?",
-  why: "Должен, обязан это принуждение, а могу это право. Когда вы возвращаете себе своё собственное законное право, любой отказ перестаёт быть для вас предательством.",
-  bridge: "Медитация «Мне можно» ждёт вас после анкеты."
+  why: "Должен, обязан это принуждение, а могу это право. Когда вы возвращаете себе своё собственное законное право, любой отказ перестаёт быть для вас предательством."
 };
 
 /* ——— что дальше ———
-   Переход от техники к трём продолжениям: медитация, эфир и самая низкая
-   цена. Порядок: связка, сцена из завтрашнего дня, зачем нужны
-   продолжения, три карточки с замком (аудио, видео, цена),
-   метка предзаписи и кнопка. Сцена и тема эфира подбираются по ответу
-   на «Где вас съедает сильнее всего?». Минут эфира на экране нет нигде.
-   Заголовок с вопросительным знаком, как у всех блоков (правка 03.10). */
+   Переход от результата к бонусам через три вопроса (правка 03.10, прежнее
+   вступление со сценой из завтрашнего дня убрано целиком). Порядок:
+   вступление в три строки, затем три пары «вопрос → карточка», строка
+   про канал, метка предзаписи и кнопка. Вопросы стоят от первого лица
+   и набраны крупнее текста карточек: это вопросы самого человека,
+   а карточка под каждым — ответ Виолы. Тема эфира подбирается по ответу
+   на «Где вас съедает сильнее всего?». Минут эфира на экране нет нигде. */
 const NEXT = {
   title: "Что дальше?",
-  bridge: "Технику вы уже знаете. Осталось, чтобы она сработала в жизни.",
+  /* Каждая строка вступления стоит с новой строки. */
+  intro: ["Вы узнали свой тип.", "После этого остаются три вопроса.", "На каждый у Виолы есть ответ."],
+  /* Вопрос над карточкой: медитация, эфир, цена. Перенос стоит руками:
+     вопрос в одну строку на телефоне не помещается, а с заданным переносом
+     сообщение обнимает текст и не растягивается на всю ширину. */
+  ask: { audio: "Что делать <br>в&nbsp;трудную минуту?",
+         video: "Почему так выходит <br>именно со&nbsp;мной?",
+         price: "Можно ли&nbsp;этому <br>научиться?" },
+  /* Строка под карточками. */
+  all: "Всё это ждёт вас в канале предзаписи.",
   by: {
-    partner: { scene: "Завтра он снова молчит, и вы подбираете слова, чтобы не стало хуже.",
-               theme: "как держать границы рядом с партнёром и почему вы видите красные флажки и остаётесь" },
-    semya:   { scene: "Завтра позвонит мама, и вы заранее знаете, что отложите свои дела.",
-               theme: "что делать, когда давит мать, и как перестать всё отдавать взрослым детям" },
-    rabota:  { scene: "Завтра вас попросят доделать за другого, и вы уже кивнёте.",
-               theme: "почему вашу доброту принимают за слабость" },
-    chuzhie: { scene: "Завтра малознакомый человек снова будет полчаса рассказывать вам свою беду, и уйти будет неловко.",
-               theme: "почему эмпатами так легко пользоваться и как давать в балансе" },
-    vezde:   { scene: "Завтра день закончится, все будут устроены, а на себя сил снова не останется.",
-               theme: "как понять, где ваше, а где чужое" }
+    partner: { theme: "как держать границы рядом с партнёром и почему вы видите красные флажки и остаётесь" },
+    semya:   { theme: "что делать, когда давит мать, и как перестать всё отдавать взрослым детям" },
+    rabota:  { theme: "почему вашу доброту принимают за слабость" },
+    chuzhie: { theme: "почему эмпатами так легко пользоваться и как давать в балансе" },
+    vezde:   { theme: "как понять, где ваше, а где чужое" }
   },
-  after: "В такой момент «мне можно» вылетает из головы.",
-  lead: "Чтобы оно осталось с вами, у Виолы есть три продолжения.",
   /* Медитация и эфир оформлены постами канала: аудио с дорожкой и видео
      с обложкой. Вид «как в Телеграме» возвращён 03.10: с карточками
      без него блок потерял живость. Материал закрыт, поэтому на кнопке
@@ -949,8 +980,11 @@ const NEXT = {
            cap: "Её получают только те, кто в предзаписи." },
   /* <br> работает только на узком экране, см. стили метки. */
   tag: "Предзапись <br>на&nbsp;Прикладную&nbsp;эмпатию&nbsp;2.0",
-  /* Строка у второй кнопки, после программы. */
-  where: "Медитация и эфир лежат в закрытом канале предзаписи на Прикладную эмпатию 2.0.",
+  /* Итог перед второй кнопкой, после программы: заголовок и три пункта
+     того, что человек получит. Названия пунктов те же, что у карточек
+     выше; подпись у каждого короткая. */
+  total: "Что вы получите в закрытом канале предзаписи?",
+  totalSub: { audio: "9 минут", video: "в записи", price: "только для тех, кто в предзаписи" },
   cta: "Получить медитацию и эфир",
   ctaNote: "Анкета на 2 минуты. Бесплатно, это не оплата."
 };
@@ -991,7 +1025,6 @@ const PROGRAM = {
   ],
   /* Метка на неделе под сферу человека. */
   mineTag: "Самая важная для вас неделя на основе теста",
-  med: "Практикум не заменяет обследование и лечение у врача.",
   /* Отзывы выпускниц: { t: "текст", who: "имя, откуда" }. Ставим только с разрешением
      на публикацию. Пока список пуст, блок на экране не показывается. */
   reviewsHead: "Что говорят выпускницы?",
@@ -1304,6 +1337,8 @@ function viola_(html) {
 }
 
 const ICON = {
+  wave: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></svg>',
+  film: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3.5"/><path d="M10.2 9.2v5.6l4.8-2.8z" fill="currentColor"/></svg>',
   percent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M18.5 5.5l-13 13"/><circle cx="7" cy="7" r="2.6"/><circle cx="17" cy="17" r="2.6"/></svg>',
   play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>',
   lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'
@@ -1565,7 +1600,6 @@ function secVecher_() {
         <h3>${VECHER.whyHead}</h3>
         ${viola_(VECHER.why)}
       </div>
-      <p class="soft">${VECHER.bridge}</p>
     </section>`;
 }
 
@@ -1620,6 +1654,22 @@ function priceHtml_(place) {
     </button>`;
 }
 
+/* Итог перед второй кнопкой: три пункта того, что ждёт в канале предзаписи. */
+function totalHtml_() {
+  const rows = [
+    [ICON.wave,    NEXT.audio.title, NEXT.totalSub.audio],
+    [ICON.film,    NEXT.video.title, NEXT.totalSub.video],
+    [ICON.percent, NEXT.price.title, NEXT.totalSub.price]
+  ];
+  return `
+    <ul class="total">${rows.map(r => `
+      <li>
+        <span class="total-ic" aria-hidden="true">${r[0]}</span>
+        <span class="total-main"><b>${r[1]}</b><span>${r[2]}</span></span>
+      </li>`).join("")}
+    </ul>`;
+}
+
 function secNext_() {
   const x = NEXT.by[forks.bol] || NEXT.by.vezde;
   const audio = `
@@ -1640,17 +1690,22 @@ function secNext_() {
   return `
     <section class="sec" data-block="next" id="next">
       <h2>${NEXT.title}</h2>
-      <p>${NEXT.bridge}</p>
-      <div class="copy">
-        <p>${x.scene}</p>
-        <p>${NEXT.after}</p>
+      <p class="lines">${NEXT.intro.map(t => `<span>${t}</span>`).join(" ")}</p>
+      <div class="qas">
+        <div class="qa">
+          <h3 class="ask">${NEXT.ask.audio}</h3>
+          ${postHtml_(audio, "", NEXT.audio.cap)}
+        </div>
+        <div class="qa">
+          <h3 class="ask">${NEXT.ask.video}</h3>
+          ${postHtml_(video, NEXT.video.title, NEXT.video.cap.replace("{theme}", x.theme))}
+        </div>
+        <div class="qa">
+          <h3 class="ask">${NEXT.ask.price}</h3>
+          ${priceHtml_("next")}
+        </div>
       </div>
-      <p>${NEXT.lead}</p>
-      <div class="posts">
-        ${postHtml_(audio, "", NEXT.audio.cap)}
-        ${postHtml_(video, NEXT.video.title, NEXT.video.cap.replace("{theme}", x.theme))}
-        ${priceHtml_("next")}
-      </div>
+      <p>${NEXT.all}</p>
       <div class="foot">
         <span class="tag">${NEXT.tag}</span>
         ${ctaHtml_("next")}
@@ -1699,7 +1754,6 @@ function secProgram_(r) {
     <section class="sec" data-block="program">
       <h2>${PROGRAM.insideHead}</h2>
       <ul class="checks">${PROGRAM.inside.map(i => `<li>${i}</li>`).join("")}</ul>
-      <p class="fine">${PROGRAM.med}</p>
     </section>
 
     ${PROGRAM.reviews.length ? `
@@ -1712,8 +1766,8 @@ function secProgram_(r) {
 
     <section class="sec" data-block="program">
       <div class="offer-card">
-        <p class="lead"><b>${NEXT.where}</b></p>
-        ${priceHtml_("program")}
+        <h3>${NEXT.total}</h3>
+        ${totalHtml_()}
         <div class="foot">${ctaHtml_("program")}</div>
       </div>
     </section>
