@@ -523,6 +523,20 @@
     font-size: .86rem; font-weight: 600; line-height: 1.3;
     padding: .18rem .6rem; border-radius: 999px;
   }
+  /* Третья карточка, про цену: тот же пост, вместо плеера значок ценника
+     на золотом круге, замок на краю. Перед ней стоит строка «И ещё одно». */
+  .perk { display: grid; grid-template-columns: 3.1rem 1fr; column-gap: .9rem; align-items: start; padding: 1rem; }
+  .perk-main { display: flex; flex-direction: column; gap: .3rem; min-width: 0; }
+  .perk-title { font-weight: 700; line-height: 1.25; }
+  .play.gold {
+    background: linear-gradient(135deg, #F7CB62 0%, #EFA533 100%); color: #143A85;
+    box-shadow: 0 8px 16px -8px rgba(214, 140, 30, .85);
+  }
+  .play.gold > svg { width: 1.35rem; height: 1.35rem; margin-left: 0; }
+  .more { font-weight: 700; }
+  /* Вторая кнопка стоит на блоке неба с белым текстом; карточка внутри белая. */
+  .offer-card .post { color: var(--ink); }
+
   /* Метка над кнопкой стоит по центру, как и сама кнопка. На обычном телефоне
      она в строку не помещается, поэтому переносится после слова «Предзапись»
      и остаётся плашкой по ширине текста. На широком экране перенос выключен. */
@@ -928,6 +942,12 @@ const NEXT = {
   audio: { title: "Медитация «Мне можно»", by: "Виола Маро", time: "9 минут",
            cap: "Включаете перед трудным разговором или сразу после него." },
   video: { title: "Эфир Виолы", time: "запись", cap: "Виола подробно разбирает, {theme}." },
+  /* Третья карточка, мотивация про цену (правка 03.10): человек до кнопки
+     видит, что предзапись даёт самую низкую цену. Менеджера и саму цену
+     здесь не называем. Строка и карточка стоят и перед второй кнопкой. */
+  more: "И ещё одно.",
+  price: { title: "Самая низкая цена на Прикладную эмпатию 2.0",
+           cap: "Её получают только те, кто в предзаписи." },
   /* <br> работает только на узком экране, см. стили метки. */
   tag: "Предзапись <br>на&nbsp;Прикладную&nbsp;эмпатию&nbsp;2.0",
   /* Строка у второй кнопки, после программы. */
@@ -1281,6 +1301,7 @@ function viola_(html) {
 }
 
 const ICON = {
+  tag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7.2" cy="7.2" r="1.3" fill="currentColor" stroke="none"/></svg>',
   play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>',
   lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'
 };
@@ -1581,6 +1602,21 @@ function postHtml_(media, title, cap) {
     </button>`;
 }
 
+/* Карточка про цену. Ведёт туда же, куда кнопка рядом с ней. */
+function priceHtml_(place) {
+  const attrs = leadSent ? 'data-cta="cabinet"' : `data-cta="form" data-place="${place}"`;
+  return `
+    <button class="post" ${attrs}>
+      <span class="perk">
+        <span class="play gold" aria-hidden="true">${ICON.tag}<span class="play-lock">${ICON.lock}</span></span>
+        <span class="perk-main">
+          <span class="perk-title">${NEXT.price.title}</span>
+          <span class="post-cap">${NEXT.price.cap}</span>
+        </span>
+      </span>
+    </button>`;
+}
+
 function secNext_() {
   const x = NEXT.by[forks.bol] || NEXT.by.vezde;
   const audio = `
@@ -1611,6 +1647,8 @@ function secNext_() {
         ${postHtml_(audio, "", NEXT.audio.cap)}
         ${postHtml_(video, NEXT.video.title, NEXT.video.cap.replace("{theme}", x.theme))}
       </div>
+      <p class="more">${NEXT.more}</p>
+      ${priceHtml_("next")}
       <div class="foot">
         <span class="tag">${NEXT.tag}</span>
         ${ctaHtml_("next")}
@@ -1673,6 +1711,8 @@ function secProgram_(r) {
     <section class="sec" data-block="program">
       <div class="offer-card">
         <p class="lead"><b>${NEXT.where}</b></p>
+        <p class="more">${NEXT.more}</p>
+        ${priceHtml_("program")}
         <div class="foot">${ctaHtml_("program")}</div>
       </div>
     </section>
