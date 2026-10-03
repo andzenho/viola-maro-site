@@ -46,9 +46,10 @@ jobs:
 
       - name: Добавить мини-аппы
         run: |
-          mkdir -p site/test site/koleso
+          mkdir -p site/test site/koleso site/test2
           cp miniapps/test/index.html site/test/index.html
           cp miniapps/koleso/index.html site/koleso/index.html
+          cp miniapps/test2/index.html site/test2/index.html
 
       - uses: actions/configure-pages@v5
 
