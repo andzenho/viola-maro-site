@@ -2,7 +2,7 @@
 <html lang="ru">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#16121A">
+<meta name="theme-color" content="#17141B">
 <!-- Карточка ссылки. Телеграм берёт og:title и og:description; без них
      ссылка в канале и в пересылке выглядит голым адресом. Картинки нет —
      превью текстовое, как у первого теста. -->
@@ -75,6 +75,7 @@
       tg.ready();
       tg.expand();
       if (tg.disableVerticalSwipes) tg.disableVerticalSwipes();
+      if (window.__syncTheme) window.__syncTheme();
     } catch (e) {}
   }
 
@@ -92,234 +93,228 @@
         onerror="window.__tgSettled && window.__tgSettled()"></script>
 <title>Какой вы эмпат?</title>
 <style>
-  /* Вид теста 2.0. Правила, на которых он стоит:
-     — у каждого блока обычный заголовок, а не мелкая подпись капителью;
-     — текста мельче 15 px нет, приглушённый цвет читается на обоих фонах;
-     — результат идёт сплошной страницей, без рамок вокруг каждого блока:
-       рамка на телефоне съедала шестую часть ширины строки;
-     — у цвета есть смысл: золотом выделено то, что тест сказал про человека
-       (тип, итоговая фраза, уровни, суперспособности), сиреневым — его сфера
-       и неделя программы под неё;
-     — рамка на странице одна — у бонусов с кнопкой анкеты;
-     — слова Виолы везде выглядят одинаково: прямая антиква, золотая черта слева.
-     Палитра и гарнитуры — от первого теста, шрифты системные: внешних запросов нет. */
+  /* Вид теста 2.0, третья редакция: язык Телеграма вместо «журнального».
+     Что это значит на деле:
+     — один шрифт, системный гротеск; заголовки берут весом и размером,
+       антиквы и курсива нет;
+     — слова Виолы стоят сообщениями: аватарка, имя, пузырь — как в чате;
+     — медитация и эфир выглядят постами канала: аудио с дорожкой, видео
+       с обложкой, под каждым подпись;
+     — тип человека — цветной блок, а не строка текста;
+     — скругления разные по роли: блок 24, пузырь и карточка 18, кнопка
+       и поле 14, метки и деления шкал круглые;
+     — линеек, полосок над заголовками и черты слева у цитат нет.
+     У цвета прежний смысл: бронзой отмечено то, что тест сказал про человека,
+     сиреневым — его сфера и неделя программы под неё.
+     Текст 18 px, мельче 15,5 px нет. Внешних запросов нет: картинки вшиты. */
   :root {
-    --ground: #F7F3F5;
+    --ground: #F4F2F6;
     --surface: #FFFFFF;
-    --surface-2: #EFE8ED;
-    --ink: #241D28;
-    --ink-soft: #564B5C;
-    --ink-mute: #6E6375;
-    --line: #E0D6DD;
-    --line-strong: #BFB0BC;
-    --accent: #A2703C;         /* деления шкал, маркеры, черта у цитат */
-    --accent-text: #83531F;    /* тот же тон для текста: сам акцент на светлом читается слабо */
-    --accent-soft: #EDE0CF;
-    --cta: #8C5B27;            /* фон главной кнопки, белый текст по нему 5,5:1 */
+    --surface-2: #ECE8F0;
+    --ink: #1D1A22;
+    --ink-soft: #55505E;
+    --ink-mute: #6F6979;
+    --line: #E3DEE8;
+    --line-strong: #C9C2D1;
+    --accent: #A9712F;         /* деления шкал, значки */
+    --accent-text: #85551D;    /* тот же тон для текста */
+    --accent-soft: #F6ECDD;    /* песочная подложка */
+    --cta: #8A5A24;            /* главная кнопка, белый текст по ней 5,7:1 */
     --cta-ink: #FFFFFF;
     --warn: #A8321F;
-    --deep: #4B3556;
-    --deep-soft: #EBE2F0;      /* подложка под сферу и «вашу» неделю */
-    --shadow: 0 1px 2px rgba(36, 29, 40, .06), 0 10px 28px -14px rgba(36, 29, 40, .22);
+    --deep: #4E3464;           /* сфера человека, его неделя, номера шагов */
+    --deep-soft: #EDE5F4;
+    --hero: #3C2A4C;           /* блок с названием типа */
+    --hero-ink: #FFFFFF;
+    --shadow: 0 1px 2px rgba(29, 26, 34, .05), 0 8px 24px -16px rgba(29, 26, 34, .25);
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --ground: #16121A;
-      --surface: #1F1A24;
-      --surface-2: #29222F;
-      --ink: #F4EEF4;
-      --ink-soft: #CDC2D2;
-      --ink-mute: #A89CAF;
-      --line: #342B3A;
-      --line-strong: #5A4D63;
-      --accent: #D9A163;
-      --accent-text: #E2B078;
-      --accent-soft: #3A2C22;
-      --cta: #D9A163;
-      --cta-ink: #1A141E;
+      --ground: #17141B;
+      --surface: #231F29;
+      --surface-2: #2E2936;
+      --ink: #F5F2F8;
+      --ink-soft: #C9C3D1;
+      --ink-mute: #A29BAC;
+      --line: #342E3C;
+      --line-strong: #564E61;
+      --accent: #DDA869;
+      --accent-text: #E6B77E;
+      --accent-soft: #3A2F24;
+      --cta: #DDA869;
+      --cta-ink: #1B151F;
       --warn: #F39A84;
-      --deep: #CDB2DD;
-      --deep-soft: #2D2338;
-      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px -14px rgba(0, 0, 0, .7);
+      --deep: #CDB2E0;
+      --deep-soft: #30263B;
+      --hero: #3F2C50;
+      --hero-ink: #FFFFFF;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 8px 24px -16px rgba(0, 0, 0, .7);
     }
   }
 
   :root[data-theme="dark"] {
-    --ground: #16121A;
-    --surface: #1F1A24;
-    --surface-2: #29222F;
-    --ink: #F4EEF4;
-    --ink-soft: #CDC2D2;
-    --ink-mute: #A89CAF;
-    --line: #342B3A;
-    --line-strong: #5A4D63;
-    --accent: #D9A163;
-    --accent-text: #E2B078;
-    --accent-soft: #3A2C22;
-    --cta: #D9A163;
-    --cta-ink: #1A141E;
+    --ground: #17141B;
+    --surface: #231F29;
+    --surface-2: #2E2936;
+    --ink: #F5F2F8;
+    --ink-soft: #C9C3D1;
+    --ink-mute: #A29BAC;
+    --line: #342E3C;
+    --line-strong: #564E61;
+    --accent: #DDA869;
+    --accent-text: #E6B77E;
+    --accent-soft: #3A2F24;
+    --cta: #DDA869;
+    --cta-ink: #1B151F;
     --warn: #F39A84;
-    --deep: #CDB2DD;
-    --deep-soft: #2D2338;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px -14px rgba(0, 0, 0, .7);
+    --deep: #CDB2E0;
+    --deep-soft: #30263B;
+    --hero: #3F2C50;
+    --hero-ink: #FFFFFF;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 8px 24px -16px rgba(0, 0, 0, .7);
   }
 
   * { box-sizing: border-box; }
   /* Основной кегль 18 px задан на корне, в процентах: все размеры в rem
      считаются от него, а человек, увеличивший шрифт в настройках, получит
-     увеличенный и здесь. Самый мелкий текст на странице — 15,5 px. */
+     увеличенный и здесь. */
   html { font-size: 112.5%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
   body {
     margin: 0;
     background: var(--ground);
     color: var(--ink);
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
 
   .wrap {
     max-width: 34rem;
     margin: 0 auto;
-    padding: 1rem 1.1rem calc(3.5rem + env(safe-area-inset-bottom));
+    padding: .8rem .9rem calc(3.5rem + env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
-    gap: 1.3rem;
+    gap: 1rem;
     min-height: 100vh;
   }
 
-  /* — шапка: имя и шкала приёмника — */
-  .top { display: flex; flex-direction: column; gap: .7rem; }
+  /* — шапка: кто говорит и сколько пройдено — */
+  .top { display: flex; flex-direction: column; gap: .65rem; }
+  .brand { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .brand-who { display: flex; align-items: center; gap: .5rem; font-weight: 600; font-size: .92rem; }
+  #counter { font-size: .9rem; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
 
-  .brand {
-    display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
-    font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-  #counter {
-    letter-spacing: 0; text-transform: none;
-    font-size: .9rem; color: var(--ink-soft); font-variant-numeric: tabular-nums;
-  }
+  /* Полоса прогресса. Нужна, пока идут утверждения; дальше её нет. */
+  .bar { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--accent); transition: width .25s ease; }
+  .top.quiet .bar { display: none; }
 
-  /* Делений 36. Шкала нужна, пока идут утверждения; на результате и в анкете
-     она ничего не сообщает, и там её нет. */
-  .dial { display: flex; gap: 2px; height: 22px; align-items: flex-end; }
-  .top.quiet .dial { display: none; }
-
-  .tick {
-    flex: 1;
-    height: 7px;
-    border-radius: 1px;
-    background: var(--line);
-    transition: height .25s ease, background-color .25s ease;
-  }
-  .tick.done { background: var(--line-strong); }
-  .tick.now { height: 22px; background: var(--accent); }
+  .ava { width: 2rem; height: 2rem; border-radius: 50%; object-fit: cover; flex: none; background: var(--surface-2); }
 
   /* — заголовки и текст — */
-  h1, h2 {
-    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-weight: 400;
-    letter-spacing: -.01em;
-    text-wrap: balance;
-    margin: 0;
-  }
-  h1 { font-size: 1.85rem; line-height: 1.2; }
-  h2 { font-size: 1.4rem; line-height: 1.3; }
-  h3 { margin: 0; font-size: 1.06rem; font-weight: 600; line-height: 1.35; }
+  h1, h2, h3 { margin: 0; font-weight: 700; letter-spacing: -.015em; text-wrap: balance; }
+  h1 { font-size: 1.9rem; line-height: 1.12; font-weight: 800; letter-spacing: -.025em; }
+  h2 { font-size: 1.5rem; line-height: 1.2; }
+  h3 { font-size: 1.1rem; line-height: 1.3; letter-spacing: -.005em; }
+  h2 .gold { color: var(--accent-text); }
 
   p { margin: 0; }
   a { color: var(--accent-text); }
 
-  /* Строка над заголовком: чей это экран или сколько осталось. */
-  .eyebrow { font-size: .9rem; font-weight: 600; line-height: 1.35; color: var(--accent-text); }
-  .head { display: flex; flex-direction: column; gap: .45rem; }
+  .eyebrow { font-size: .9rem; font-weight: 600; line-height: 1.35; color: var(--ink-mute); }
+  .head { display: flex; flex-direction: column; gap: .5rem; }
 
-  .lead { font-size: 1.1rem; line-height: 1.5; }
+  .lead { font-size: 1.1rem; line-height: 1.45; }
   .soft { color: var(--ink-soft); }
   .fine { color: var(--ink-mute); font-size: .86rem; line-height: 1.5; }
   .center { text-align: center; }
   .nw { white-space: nowrap; }
-  .copy { display: flex; flex-direction: column; gap: .95rem; }
+  .hl { font-weight: 700; }
+  .copy { display: flex; flex-direction: column; gap: .9rem; }
   .fine-print { display: flex; flex-direction: column; gap: .5rem; }
   .fine-print p { color: var(--ink-mute); font-size: .86rem; line-height: 1.5; }
 
-  /* Слова Виолы. Прямая антиква, а не курсив: курсив кириллицей в этом кегле
-     читается заметно труднее. */
-  .quote {
-    margin: 0;
-    padding-left: 1rem;
-    border-left: 3px solid var(--accent);
-    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-size: 1.06rem; line-height: 1.55;
-  }
-  .quote cite {
-    display: block; margin-top: .55rem;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-style: normal; font-size: .86rem; color: var(--ink-mute);
-  }
+  /* Вывод: крупно и жирно, без цвета. */
+  .punch, .pull { font-size: 1.3rem; line-height: 1.3; font-weight: 700; letter-spacing: -.015em; text-wrap: balance; }
+  .pull span { display: block; }
 
-  /* Список с ромбом: тот же знак, что деление шкалы, повёрнутое на угол. */
-  .marks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .8rem; }
-  .marks li { position: relative; padding-left: 1.6rem; }
-  .marks li::before {
-    content: ""; position: absolute; left: .2rem; top: .58em;
-    width: .5rem; height: .5rem; border-radius: 1px;
-    background: var(--accent); transform: rotate(45deg);
+  /* — слова Виолы: сообщение в чате — */
+  .msg { display: grid; grid-template-columns: 2rem 1fr; column-gap: .5rem; align-items: end; }
+  .bubble {
+    background: var(--surface);
+    border-radius: 18px 18px 18px 6px;
+    padding: .7rem .95rem .8rem;
+    box-shadow: var(--shadow);
+    min-width: 0;
   }
-  .marks b { font-weight: 600; }
-  .marks span { display: block; color: var(--ink-soft); font-size: .95rem; line-height: 1.5; }
+  .who { font-size: .86rem; font-weight: 700; color: var(--accent-text); margin-bottom: .15rem; }
+  /* На карточке пузырь темнее фона карточки, иначе он с ней сливается. */
+  .card .bubble { background: var(--surface-2); box-shadow: none; }
+
+  /* Список с галочкой. */
+  .checks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .8rem; }
+  .checks li { position: relative; padding-left: 2.1rem; line-height: 1.4; }
+  .checks li::before {
+    content: ""; position: absolute; left: 0; top: .08em;
+    width: 1.4rem; height: 1.4rem; border-radius: 50%;
+    background: var(--accent-soft);
+  }
+  .checks li::after {
+    content: ""; position: absolute; left: .5rem; top: .36em;
+    width: .32rem; height: .62rem;
+    border: solid var(--accent-text); border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+  }
+  .checks b { font-weight: 700; }
 
   /* — карточка: один экран, один вопрос — */
   .card {
     background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 1.5rem 1.2rem;
+    border-radius: 24px;
+    padding: 1.45rem 1.15rem 1.3rem;
     box-shadow: var(--shadow);
-    display: flex; flex-direction: column; gap: 1.25rem;
+    display: flex; flex-direction: column; gap: 1.2rem;
   }
 
-  .q-text { font-size: 1.35rem; line-height: 1.35; }
+  .q-text { font-size: 1.4rem; line-height: 1.25; font-weight: 700; letter-spacing: -.02em; }
 
-  .answers { display: flex; flex-direction: column; gap: .6rem; }
+  .answers { display: flex; flex-direction: column; gap: .55rem; }
 
   button.ans {
     appearance: none;
     text-align: left;
     font: inherit;
     color: var(--ink);
-    background: var(--surface);
-    border: 1px solid var(--line-strong);
-    border-radius: 4px;
-    padding: .95rem 1.05rem;
+    background: var(--surface-2);
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: .9rem 1rem;
     min-height: 3.3rem;
     cursor: pointer;
-    transition: background-color .15s ease, border-color .15s ease, transform .08s ease;
+    transition: border-color .15s ease, transform .08s ease;
   }
-  button.ans:hover { background: var(--surface-2); border-color: var(--accent); }
-  button.ans:active { transform: scale(.99); }
+  button.ans:hover { border-color: var(--accent); }
+  button.ans:active { transform: scale(.985); }
 
-  /* Главная кнопка. На экране она одна. */
+  /* Главная кнопка. */
   .go {
     appearance: none;
     display: block; width: 100%;
-    font: inherit; font-weight: 600; font-size: 1.08rem; line-height: 1.3;
+    font: inherit; font-weight: 700; font-size: 1.06rem; line-height: 1.25;
     text-align: center; text-decoration: none;
     color: var(--cta-ink);
     background: var(--cta);
-    border: 1px solid var(--cta);
-    border-radius: 4px;
-    padding: 1.05rem 1.2rem;
+    border: 0;
+    border-radius: 14px;
+    padding: 1.05rem 1.1rem;
     cursor: pointer;
-    box-shadow: 0 10px 24px -12px var(--cta);
-    transition: transform .12s ease, filter .2s ease;
+    transition: transform .1s ease, filter .2s ease;
   }
-  .go:hover { filter: brightness(1.07); transform: translateY(-1px); }
-  .go:active { transform: translateY(0); }
+  .go:hover { filter: brightness(1.06); }
+  .go:active { transform: scale(.985); }
   .go:disabled { opacity: .6; cursor: default; }
 
   .ghost {
@@ -332,20 +327,20 @@
 
   .foot { display: flex; flex-direction: column; gap: .7rem; }
 
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
   /* — анкета — */
-  .fields { display: flex; flex-direction: column; gap: 1.4rem; }
+  .fields { display: flex; flex-direction: column; gap: 1.3rem; }
   .fields label, .field-l {
     display: flex; flex-direction: column; gap: .45rem;
-    font-weight: 600; line-height: 1.4;
+    font-weight: 700; line-height: 1.35;
   }
   .field-hint { font-weight: 400; font-size: .9rem; color: var(--ink-mute); line-height: 1.45; }
   .fields input, .fields textarea {
     font: inherit; font-weight: 400; color: var(--ink);
     background: var(--surface-2);
-    border: 1px solid var(--line-strong);
-    border-radius: 4px;
+    border: 2px solid transparent;
+    border-radius: 14px;
     padding: .85rem .95rem;
     width: 100%;
   }
@@ -354,244 +349,255 @@
   .fields .err { border-color: var(--warn); }
 
   /* Шкала готовности 1–10: две строки по пять, чтобы в кнопку попадал палец. */
-  .scale10 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; }
-  .scale10.err { outline: 2px solid var(--warn); outline-offset: 4px; border-radius: 4px; }
+  .scale10 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .45rem; }
+  .scale10.err { outline: 2px solid var(--warn); outline-offset: 4px; border-radius: 14px; }
   .scale-ends {
     display: flex; justify-content: space-between; gap: 1rem; white-space: nowrap;
     font-weight: 400; font-size: .86rem; color: var(--ink-mute);
   }
   .chips { display: flex; flex-direction: column; gap: .5rem; }
   .chip {
-    appearance: none; font: inherit; font-weight: 400;
+    appearance: none; font: inherit; font-weight: 600;
     font-variant-numeric: tabular-nums;
-    color: var(--ink); background: var(--surface);
-    border: 1px solid var(--line-strong); border-radius: 4px;
+    color: var(--ink); background: var(--surface-2);
+    border: 2px solid transparent; border-radius: 14px;
     padding: .8rem .4rem; min-height: 3rem; cursor: pointer; text-align: center;
     transition: background-color .15s ease, border-color .15s ease;
   }
-  .chips .chip { text-align: left; padding: .8rem .95rem; }
+  .chips .chip { text-align: left; padding: .8rem .95rem; font-weight: 400; }
   .chip:hover { border-color: var(--accent); }
-  .chip.on { background: var(--accent-soft); border-color: var(--accent); font-weight: 600; }
+  .chip.on { background: var(--deep); color: var(--ground); border-color: var(--deep); }
 
   .consents { display: flex; flex-direction: column; gap: .8rem; }
   .cb {
     display: grid; grid-template-columns: 24px 1fr; gap: .6rem; align-items: start;
     font-size: .92rem; line-height: 1.5; color: var(--ink-soft); cursor: pointer;
   }
-  .cb input { width: 22px; height: 22px; margin: .1rem 0 0; accent-color: var(--accent); }
+  .cb input { width: 22px; height: 22px; margin: .1rem 0 0; accent-color: var(--deep); }
   .cb.err span { color: var(--warn); }
   .cb.err input { outline: 2px solid var(--warn); outline-offset: 2px; }
-  .fine.err { color: var(--warn); font-weight: 600; font-size: .92rem; }
+  .fine.err { color: var(--warn); font-weight: 700; font-size: .92rem; }
 
-  /* — результат: сплошная страница, блоки отбиты линией и воздухом — */
+  /* — результат: сплошная страница, блоки отбиты воздухом — */
   .page { display: flex; flex-direction: column; }
-  .sec {
-    display: flex; flex-direction: column; gap: 1.2rem;
-    padding: 2.1rem 0;
-  }
-  .sec:first-child { padding-top: .7rem; }
-  /* Начало блока отмечает короткая золотая черта над заголовком. */
-  .sec > h2::before, .offer-card > h2::before {
-    content: ""; display: block;
-    width: 2.6rem; height: 3px; border-radius: 2px;
-    background: var(--accent);
-    margin-bottom: 1.05rem;
-  }
+  .sec { display: flex; flex-direction: column; gap: 1.1rem; padding: 1.9rem .2rem; }
+  .sec:first-child { padding-top: .2rem; }
   .group { display: flex; flex-direction: column; gap: .7rem; }
 
-  /* Название типа — самое крупное на странице. На 320 px «Сочувствующий»
-     обязан помещаться в строку, отсюда привязка к ширине экрана. */
-  .type-name { font-size: clamp(1.7rem, 10.5vw, 2.6rem); line-height: 1.1; color: var(--accent-text); }
-  /* Ответ на вопрос заголовка: сфера, название программы. */
-  .answer {
-    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-size: 1.75rem; line-height: 1.2; color: var(--deep);
-    text-wrap: balance;
+  /* Тип человека — цветной блок с кругами радара в углу. Это единственное
+     украшение на странице, и оно про сам тест: радар, приёмник. */
+  .hero {
+    position: relative; overflow: hidden;
+    margin: 0 -.2rem;
+    background: var(--hero);
+    background-image: repeating-radial-gradient(circle at 100% 0%, rgba(255, 255, 255, .075) 0 1.5px, rgba(255, 255, 255, 0) 1.5px 30px);
+    color: var(--hero-ink);
+    border-radius: 24px;
+    padding: 1.3rem 1.25rem 1.5rem;
+    display: flex; flex-direction: column; gap: .9rem;
   }
-  h2 .gold { color: var(--accent-text); }
+  .hero .tag { background: rgba(255, 255, 255, .16); color: #FFFFFF; }
+  /* На 320 px «Сочувствующий» обязан помещаться в строку. */
+  .type-name { font-size: clamp(1.75rem, 10.4vw, 2.6rem); line-height: 1.05; font-weight: 800; letter-spacing: -.03em; }
 
-  .pull {
-    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-size: 1.25rem; line-height: 1.4;
+  /* Метка над важным. */
+  .tag {
+    display: inline-block; align-self: flex-start;
+    background: var(--accent-soft); color: var(--accent-text);
+    font-size: .86rem; font-weight: 700; line-height: 1.35;
+    padding: .3rem .7rem; border-radius: 999px;
   }
-  .pull span { display: block; text-wrap: balance; }
+  /* Длинная метка уходит в две строки, поэтому скругление у неё меньше. */
+  .tag.deep { background: var(--deep); color: var(--ground); border-radius: 10px; }
 
-  /* Плашка для одного важного: техника на вечер, даты потока. */
-  .panel {
-    background: var(--accent-soft);
-    border-radius: 4px;
-    padding: 1.15rem 1.15rem;
-  }
-  .panel b { font-weight: 600; }
-  .mantra {
-    display: flex; flex-direction: column; gap: 1rem;
-    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-size: 1.06rem; line-height: 1.5;
-  }
-  .mantra b { display: block; font-weight: 400; font-size: 1.6rem; line-height: 1.2; margin-bottom: .25rem; color: var(--accent-text); }
+  /* Ответ на вопрос заголовка: название сферы. */
+  .answer { font-size: 1.7rem; line-height: 1.12; font-weight: 800; letter-spacing: -.025em; color: var(--deep); text-wrap: balance; }
 
-  /* — что видно по ответам: шкалы делениями, как у приёмника в шапке — */
-  .gauges { display: flex; flex-direction: column; gap: 1.5rem; }
-  /* Название слева, слово уровня справа. Название может уйти в две строки
-     на самом узком экране, слово — нет. */
-  .gauge-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-  .gauge-name { font-size: 1.06rem; line-height: 1.35; }
-  .gauge-word { font-weight: 600; color: var(--accent-text); white-space: nowrap; }
-  .gauge-ticks { display: flex; gap: 6px; margin-top: .6rem; }
+  /* Сфера человека: сиреневая подложка. Та же — у его недели в программе. */
+  .spot {
+    background: var(--deep-soft);
+    border-radius: 20px;
+    padding: 1.15rem 1.15rem 1.2rem;
+    display: flex; flex-direction: column; gap: .5rem;
+  }
+
+  /* Песочная плашка: даты потока, слова техники. */
+  .panel { background: var(--accent-soft); border-radius: 18px; padding: 1.1rem 1.15rem; }
+  .panel b { font-weight: 700; }
+  .mantra { display: flex; flex-direction: column; gap: 1rem; line-height: 1.45; }
+  .mantra b { display: block; font-weight: 800; font-size: 1.5rem; line-height: 1.15; letter-spacing: -.02em; margin-bottom: .25rem; color: var(--accent-text); }
+
+  /* — что видно по ответам: пять делений и слово — */
+  .gauges { display: flex; flex-direction: column; gap: 1.25rem; }
+  .gauge-name { font-size: 1.04rem; line-height: 1.3; font-weight: 600; }
+  /* Слово стоит в колонке одной ширины: деления у всех строк кончаются
+     на одной вертикали, какой бы длины слово ни было. */
+  .gauge-row { display: grid; grid-template-columns: 1fr 7.3rem; column-gap: .7rem; align-items: center; margin-top: .45rem; }
+  .gauge-word { font-weight: 700; color: var(--accent-text); white-space: nowrap; text-align: right; }
+  .gauge-ticks { display: flex; gap: 5px; }
   .gauge-ticks i {
-    flex: 1; height: 12px; border-radius: 2px;
+    flex: 1; height: 10px; border-radius: 999px;
     background: var(--line-strong);
     transition: background-color .3s ease;
   }
   .gauge-ticks i.on { background: var(--accent); }
 
-  /* — программа по неделям — */
-  .weeks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
-  .weeks li {
-    display: grid; grid-template-columns: 2rem 1fr; column-gap: .7rem;
-    padding: .95rem 0;
-    border-top: 1px solid var(--line);
-  }
-  .weeks li:first-child { border-top: 0; }
-  .week-n {
-    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-size: 1.5rem; line-height: 1.15; color: var(--ink-mute);
-  }
-  .week-t { font-weight: 600; line-height: 1.4; }
-  .week-q { margin-top: .2rem; color: var(--ink-soft); font-size: .95rem; line-height: 1.5; }
-  /* Недели идут в порядке программы. Неделя под сферу человека выделена
-     на своём месте — той же сиреневой парой, что и сама сфера. */
-  .weeks li.mine {
-    background: var(--deep-soft);
-    border-top: 0; border-left: 4px solid var(--deep);
-    border-radius: 0 6px 6px 0;
-    margin: .45rem -.7rem; padding: 1.05rem .7rem 1.15rem .75rem;
-  }
-  .weeks li.mine + li { border-top: 0; }
-  .weeks li.mine .week-n { color: var(--deep); }
-  .weeks li.mine .week-q { color: var(--ink); }
-  .weeks li .tag { grid-column: 1 / -1; justify-self: start; margin-bottom: .7rem; }
-
-  /* Единственная рамка на странице: что человек получит и кнопка. */
-  .offer-card {
-    background: var(--surface);
-    border: 2px solid var(--accent);
-    border-radius: 8px;
-    padding: 1.45rem 1.2rem;
-    box-shadow: var(--shadow);
-    display: flex; flex-direction: column; gap: 1.2rem;
-  }
-
-  /* — акценты — */
-  /* Подсветка решающих слов внутри абзаца. */
-  .hl { color: var(--accent-text); font-weight: 600; }
-
-  /* Метка над важным. Скруглена слабо: длинная метка уходит в две строки. */
-  .tag {
-    display: inline-block; align-self: flex-start;
-    background: var(--accent-soft); color: var(--accent-text);
-    font-size: .86rem; font-weight: 600; line-height: 1.35;
-    padding: .32rem .7rem; border-radius: 6px;
-  }
-  .tag.deep { background: var(--deep); color: var(--ground); }
-
-  /* Последний абзац описания типа — вывод. Крупнее и золотом. */
-  .punch {
-    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-size: 1.3rem; line-height: 1.4; color: var(--accent-text);
-    text-wrap: balance;
-  }
-  .pull.gold { color: var(--accent-text); }
-
-  /* Сфера человека: сиреневая подложка и черта. Та же пара — у его недели
-     в программе, чтобы одно узнавалось по другому. */
-  .spot {
-    background: var(--deep-soft);
-    border-left: 4px solid var(--deep);
-    border-radius: 0 6px 6px 0;
-    padding: 1.15rem 1.15rem 1.2rem;
-    display: flex; flex-direction: column; gap: .5rem;
-  }
-
-  /* Суперспособности: три плашки, каждая читается отдельно. */
-  .powers { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+  /* — суперспособности: три строки с галочкой — */
+  .powers { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .5rem; }
   .powers li {
     position: relative;
-    background: var(--surface-2);
-    border-radius: 6px;
-    padding: 1rem 1rem 1rem 2.75rem;
-    font-weight: 600; line-height: 1.4;
+    background: var(--surface);
+    border-radius: 16px;
+    padding: .95rem 1rem .95rem 3.1rem;
+    font-weight: 600; line-height: 1.35;
+    box-shadow: var(--shadow);
   }
   .powers li::before {
-    content: ""; position: absolute; left: 1.1rem; top: 1.45rem;
-    width: .6rem; height: .6rem; border-radius: 1px;
-    background: var(--accent); transform: rotate(45deg);
+    content: ""; position: absolute; left: .95rem; top: .95rem;
+    width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--accent);
   }
-
-  /* Подзаголовок механизма в блоке «Кто рядом». */
-  .mech {
-    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-weight: 400; font-size: 1.25rem; line-height: 1.3; color: var(--deep);
-  }
-
-  /* Что входит: галочка и первое слово жирным. */
-  .checks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .85rem; }
-  .checks li { position: relative; padding-left: 1.9rem; line-height: 1.45; }
-  .checks li::before {
-    content: ""; position: absolute; left: .35rem; top: .28em;
-    width: .42rem; height: .78rem;
-    border: solid var(--accent); border-width: 0 3px 3px 0;
+  .powers li::after {
+    content: ""; position: absolute; left: 1.48rem; top: 1.25rem;
+    width: .34rem; height: .66rem;
+    border: solid var(--surface); border-width: 0 2.5px 2.5px 0;
     transform: rotate(45deg);
   }
-  .checks b { font-weight: 600; }
 
-  /* Шаги техники: крупный номер, заголовок шага, под ним слова Виолы во всю ширину. */
-  .steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 1.7rem; }
-  .steps > li { display: grid; grid-template-columns: 2.6rem 1fr; column-gap: .7rem; row-gap: .85rem; align-items: start; }
+  /* — шаги техники — */
+  .steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 1.5rem; }
+  .steps > li { display: grid; grid-template-columns: 2.2rem 1fr; column-gap: .75rem; row-gap: .8rem; align-items: start; }
   .step-n {
-    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-size: 2.7rem; line-height: .95; color: var(--accent-text);
+    width: 2.2rem; height: 2.2rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--deep); color: var(--ground);
+    font-weight: 800; font-size: 1.1rem; line-height: 1;
   }
-  .step-head { display: flex; flex-direction: column; gap: .3rem; min-width: 0; padding-top: .15rem; }
-  .step-head h3 { font-size: 1.2rem; }
+  .step-head { display: flex; flex-direction: column; gap: .25rem; min-width: 0; padding-top: .28rem; }
+  .step-head h3 { font-size: 1.15rem; }
   .step-wide { grid-column: 1 / -1; }
 
-  .reviews { display: flex; flex-direction: column; gap: .9rem; }
-  .review { background: var(--surface-2); border-radius: 4px; padding: 1.05rem 1.1rem; }
+  /* — пост канала: медитация и эфир — */
+  .post {
+    appearance: none; display: block; width: 100%;
+    font: inherit; color: inherit; text-align: left;
+    background: var(--surface);
+    border: 0; border-radius: 18px;
+    padding: 0; overflow: hidden;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform .1s ease;
+  }
+  .post:active { transform: scale(.99); }
+  .post-body { display: flex; flex-direction: column; gap: .5rem; padding: .85rem 1rem 1rem; }
+  .post-title { font-weight: 700; line-height: 1.3; }
+  .post-cap { color: var(--ink-soft); font-size: .97rem; line-height: 1.5; }
+  .post-lock { display: flex; align-items: center; gap: .35rem; font-size: .86rem; font-weight: 600; color: var(--accent-text); }
+  .post-lock svg { width: .95rem; height: .95rem; flex: none; }
+
+  /* Аудио: круглая кнопка, название, дорожка и длительность. */
+  .audio { display: grid; grid-template-columns: 3.1rem 1fr; column-gap: .8rem; align-items: start; padding: 1rem 1rem .2rem; }
+  .play {
+    width: 3.1rem; height: 3.1rem; border-radius: 50%;
+    background: var(--cta); color: var(--cta-ink);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .play svg { width: 1.2rem; height: 1.2rem; margin-left: .15rem; }
+  .audio-main { display: flex; flex-direction: column; gap: .12rem; min-width: 0; }
+  .audio-title { font-weight: 700; line-height: 1.25; }
+  .audio-by { font-size: .9rem; color: var(--ink-mute); line-height: 1.3; }
+  .audio-row { margin-top: .3rem; }
+  .audio-row { display: flex; align-items: center; gap: .6rem; }
+  .wave { display: flex; align-items: center; gap: 2px; height: 1.5rem; flex: 1; min-width: 0; overflow: hidden; }
+  .wave i { flex: none; width: 3px; border-radius: 2px; background: var(--accent); opacity: .55; }
+  .audio-time { font-size: .86rem; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+
+  /* Видео: обложка 16:9, кнопка по центру, длительность в углу. */
+  .video { position: relative; display: block; aspect-ratio: 16 / 9; background: #2B2330; }
+  .video img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  /* Кнопка в углу, а не по центру: по центру она закрывала бы лицо в кадре. */
+  .video .play {
+    position: absolute; left: .6rem; bottom: .55rem;
+    width: 2.9rem; height: 2.9rem;
+    background: rgba(20, 16, 24, .72); color: #FFFFFF;
+  }
+  .video .play svg { width: 1.05rem; height: 1.05rem; }
+  .video-time {
+    position: absolute; right: .55rem; bottom: .55rem;
+    background: rgba(20, 16, 24, .72); color: #FFFFFF;
+    font-size: .86rem; font-weight: 600; font-variant-numeric: tabular-nums;
+    padding: .15rem .55rem; border-radius: 999px;
+  }
+
+  /* — программа по неделям — */
+  .weeks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .35rem; }
+  .weeks li {
+    display: grid; grid-template-columns: 2rem 1fr; column-gap: .75rem; align-items: start;
+    padding: .7rem .2rem;
+  }
+  .week-n {
+    width: 2rem; height: 2rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface-2); color: var(--ink-soft);
+    font-weight: 700; font-size: .95rem; line-height: 1;
+  }
+  .week-t { font-weight: 700; line-height: 1.3; padding-top: .2rem; }
+  .week-q { margin-top: .2rem; color: var(--ink-soft); font-size: .95rem; line-height: 1.45; }
+  /* Недели идут в порядке программы. Неделя под сферу человека выделена
+     на своём месте — той же сиреневой подложкой, что и сама сфера. */
+  .weeks li.mine { background: var(--deep-soft); border-radius: 20px; padding: 1rem 1rem 1.1rem; margin: .3rem -.2rem; }
+  .weeks li.mine .week-n { background: var(--deep); color: var(--ground); }
+  .weeks li.mine .week-q { color: var(--ink); }
+  .weeks li .tag { grid-column: 1 / -1; justify-self: start; margin-bottom: .75rem; }
+
+  /* Вторая кнопка анкеты, после программы. */
+  .offer-card {
+    background: var(--surface);
+    border-radius: 24px;
+    padding: 1.3rem 1.15rem;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+
+  .reviews { display: flex; flex-direction: column; gap: .7rem; }
+  .review { background: var(--surface); border-radius: 18px; padding: 1.05rem 1.1rem; box-shadow: var(--shadow); }
   .review small { display: block; margin-top: .45rem; color: var(--ink-mute); font-size: .86rem; }
 
-  .faq { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
-  .faq details { border-bottom: 1px solid var(--line); padding: 1rem 0; }
+  /* Вопросы: список в одной карточке, как настройки в телефоне. */
+  .faq { background: var(--surface); border-radius: 18px; box-shadow: var(--shadow); overflow: hidden; }
+  .faq details { padding: .95rem 1rem; border-top: 1px solid var(--line); }
+  .faq details:first-child { border-top: 0; }
   .faq summary {
-    cursor: pointer; list-style: none; position: relative; padding-right: 2rem;
-    font-weight: 600; line-height: 1.4;
+    cursor: pointer; list-style: none; position: relative; padding-right: 1.8rem;
+    font-weight: 600; line-height: 1.35;
   }
   .faq summary::-webkit-details-marker { display: none; }
   .faq summary::after {
-    content: "+"; position: absolute; right: .15rem; top: -.2rem;
-    color: var(--accent-text); font-size: 1.5rem; font-weight: 400;
+    content: ""; position: absolute; right: .3rem; top: .32em;
+    width: .5rem; height: .5rem;
+    border: solid var(--ink-mute); border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+    transition: transform .2s ease;
   }
-  .faq details[open] summary::after { content: "–"; }
+  .faq details[open] summary::after { transform: rotate(-135deg); top: .55em; }
   .faq details p { margin-top: .6rem; color: var(--ink-soft); }
 
-  .tail { display: flex; flex-direction: column; gap: .6rem; padding-top: 1.6rem; border-top: 1px solid var(--line); }
+  .tail { display: flex; flex-direction: column; gap: .5rem; padding: 1.4rem .2rem 0; }
 
   .fade { animation: fade .18s ease-out; }
   @keyframes fade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) {
     .fade { animation: none; }
-    .tick, .gauge-ticks i, .go { transition: none; }
-    .go:hover { transform: none; }
+    .bar i, .gauge-ticks i, .go, .post, .faq summary::after { transition: none; }
   }
 </style>
 
 <div class="wrap">
   <header class="top" id="top">
     <div class="brand">
-      <span>Виола Маро</span>
+      <span class="brand-who"><img class="ava" id="brand-ava" alt="" width="36" height="36"><span>Виола Маро</span></span>
       <span id="counter"></span>
     </div>
-    <div class="dial" id="dial" aria-hidden="true"></div>
+    <div class="bar" aria-hidden="true"><i id="bar-fill"></i></div>
   </header>
   <main id="screen"></main>
 </div>
@@ -895,6 +901,13 @@ const NEXT = {
   med: "Для этой минуты у Виолы есть <span class=\"hl\">медитация «Мне можно»</span>. Девять минут. Вы включаете её перед разговором, которого боитесь, или сразу после него.",
   /* {theme} — тема эфира под ответ человека. */
   efir: "А почему так выходит именно с вами, Виола подробно разобрала <span class=\"hl\">в эфире</span>: {theme}. Запись с удобными таймкодами, свою тему найдёте сразу.",
+  /* Аудио и видео оформлены как посты канала. Длительность — словами,
+     а не «9:00»: точного хронометража здесь не знаем и не выдумываем. */
+  audioTitle: "Мне можно",
+  audioBy: "Медитация Виолы Маро",
+  audioTime: "9 мин",
+  videoTitle: "Что такое быть эмпатом и почему вами пользуются",
+  videoTime: "2 часа",
   where: "Медитация и эфир лежат в закрытом канале Виолы.",
   cta: "Получить медитацию и эфир",
   ctaNote: "Чтобы попасть в канал, заполните анкету предзаписи на Прикладную эмпатию 2.0. Две минуты, бесплатно, это не оплата."
@@ -1011,25 +1024,17 @@ let formStep = 0;
 let leadSent = false;
 
 const screen = document.getElementById("screen");
-const dial = document.getElementById("dial");
 const counter = document.getElementById("counter");
+const barFill = document.getElementById("bar-fill");
 /* Не «top»: это имя в окне браузера занято и переопределить его нельзя. */
 const topBar = document.getElementById("top");
 
-ALL.forEach(() => {
-  const t = document.createElement("div");
-  t.className = "tick";
-  dial.appendChild(t);
-});
-
+/* Шапка: полоса и счётчик видны, пока идут утверждения. На результате
+   и в анкете они ничего не сообщают, и там их нет. */
 function paintDial() {
-  const ticks = dial.children;
-  for (let i = 0; i < ticks.length; i++) {
-    ticks[i].className = "tick" +
-      (stage === "q" && i === idx ? " now" : (i < answers.length ? " done" : ""));
-  }
+  barFill.style.width = (stage === "q" ? Math.round(idx / ALL.length * 100) : 0) + "%";
   counter.textContent = stage === "q" ? (idx + 1) + " из " + ALL.length : "";
-  topBar.className = stage === "q" || stage === "intro" ? "top" : "top quiet";
+  topBar.className = stage === "q" ? "top" : "top quiet";
 }
 
 /* ——— Телеграм ——— */
@@ -1041,6 +1046,20 @@ function inTg_() {
   const tg = tgApp();
   return !!(tg && tg.initData);
 }
+/* Тема берётся у Телеграма: у человека в нём может стоять ночная тема при
+   светлой системной, и наоборот. Заодно красим шапку окна в цвет фона. */
+function syncTheme_() {
+  const tg = tgApp();
+  if (!inTg_() || !tg.colorScheme) return;
+  try {
+    document.documentElement.setAttribute("data-theme", tg.colorScheme === "dark" ? "dark" : "light");
+    const bg = getComputedStyle(document.documentElement).getPropertyValue("--ground").trim();
+    if (bg && tg.setHeaderColor) tg.setHeaderColor(bg);
+    if (bg && tg.setBackgroundColor) tg.setBackgroundColor(bg);
+  } catch (e) {}
+}
+window.__syncTheme = syncTheme_;
+
 function tgUser() {
   const tg = tgApp();
   return (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
@@ -1212,13 +1231,27 @@ function newPid_() {
   return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
+/* Слова Виолы — сообщением: аватарка, имя, пузырь. */
+function viola_(html) {
+  return `
+    <div class="msg">
+      <img class="ava" src="${IMG.avatar}" alt="" width="36" height="36">
+      <div class="bubble"><div class="who">Виола Маро</div><p>${html}</p></div>
+    </div>`;
+}
+
+const ICON = {
+  play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'
+};
+
 function intro() {
   stage = "intro";
   const n = el(`
     <div class="card">
       <h1>Какой вы эмпат?</h1>
       <p class="lead">Узнаете, какой вы эмпат и какая сфера жизни забирает у вас больше всего.</p>
-      <ul class="marks">
+      <ul class="checks">
         <li>Ваш тип и что видно по вашим ответам</li>
         <li>Сфера, где у вас уходит больше всего сил</li>
         <li>Что можно сделать уже сегодня вечером</li>
@@ -1248,10 +1281,10 @@ function question() {
   const prev = idx > 0 ? ALL[idx - 1] : null;
   const react = prev && prev.re && answers[idx - 1] >= 2 ? prev.re : "";
   const voice = [react, q.note].filter(Boolean).join(" ");
-  /* Номера утверждения в карточке нет: он уже стоит в шапке, над шкалой. */
+  /* Номера утверждения в карточке нет: он уже стоит в шапке, над полосой. */
   const n = el(`
     <div class="card">
-      ${voice ? `<blockquote class="quote soft">${voice}</blockquote>` : ""}
+      ${voice ? viola_(voice) : ""}
       <h2 class="q-text">${q.t}</h2>
       <div class="answers">
         ${SCALE.map((s, i) => `<button class="ans" data-v="${3 - i}">${s}</button>`).join("")}
@@ -1370,7 +1403,7 @@ function secType_(r, empath) {
   const sp = empath && r.sphere ? SPHERE[r.sphere] : null;
   return `
     <section class="sec" data-block="type">
-      <div class="head">
+      <div class="hero">
         <span class="tag">Ваш тип</span>
         <h1 class="type-name">${t.name}</h1>
       </div>
@@ -1394,8 +1427,11 @@ function gauge_(name, level, word) {
   for (let i = 1; i <= 5; i++) ticks += i <= level ? "<i data-lit></i>" : "<i></i>";
   return `
     <div class="gauge">
-      <div class="gauge-top"><span class="gauge-name">${name}</span><span class="gauge-word">${word}</span></div>
-      <div class="gauge-ticks" aria-hidden="true">${ticks}</div>
+      <div class="gauge-name">${name}</div>
+      <div class="gauge-row">
+        <div class="gauge-ticks" aria-hidden="true">${ticks}</div>
+        <span class="gauge-word">${word}</span>
+      </div>
     </div>`;
 }
 
@@ -1405,14 +1441,14 @@ function secPortrait_(r) {
   return `
     <section class="sec" data-block="portrait" id="portrait">
       <h2>${SEEN.title}</h2>
-      ${head ? `<p class="pull gold">${head}</p>` : ""}
+      ${head ? `<p class="pull">${head}</p>` : ""}
       <div class="gauges">
         ${SEEN.rows.map(x => {
           const lv = level_(sc[x[1]], x[2]);
           return gauge_(x[0], lv, SEEN.words[x[3]][lv - 1]);
         }).join("")}
       </div>
-      <blockquote class="quote">${SEEN.quote}<cite>Виола Маро</cite></blockquote>
+      ${viola_(SEEN.quote)}
     </section>`;
 }
 
@@ -1430,14 +1466,14 @@ function secRyadom_(r) {
   return `
     <section class="sec" data-block="ryadom">
       <h2>${RYADOM.title}</h2>
-      <blockquote class="quote">${RYADOM.intro}<cite>Виола Маро</cite></blockquote>
-      <p class="pull gold">${RYADOM.line.split(". ").map((x, i, all) => `<span>${x}${i < all.length - 1 ? "." : ""}</span>`).join(" ")}</p>
+      ${viola_(RYADOM.intro)}
+      <p class="pull">${RYADOM.line.split(". ").map((x, i, all) => `<span>${x}${i < all.length - 1 ? "." : ""}</span>`).join(" ")}</p>
       <div class="group">
-        <h3 class="mech">${x.h}</h3>
-        <blockquote class="quote">${x.t}</blockquote>
+        <h3>${x.h}</h3>
+        ${viola_(x.t)}
       </div>
       ${named ? `<p class="soft">${RYADOM.bol}${esc(lower1(forks.bol_text))}.</p>` : ""}
-      <blockquote class="quote">${RYADOM.final}<cite>Виола Маро</cite></blockquote>
+      ${viola_(RYADOM.final)}
     </section>`;
 }
 
@@ -1447,22 +1483,22 @@ function secVecher_() {
       <span class="step-n" aria-hidden="true">${i + 1}</span>
       <div class="step-head">
         <h3>${x.h}</h3>
-        ${x.t ? `<p>${x.t}</p>` : ""}
+        ${x.t ? `<p class="soft">${x.t}</p>` : ""}
       </div>
       ${x.words ? `
       <div class="panel mantra step-wide">
         ${x.words.map(w => `<p><b>${w[0]}</b>${w[1]}</p>`).join("")}
       </div>` : ""}
-      ${x.quote ? `<blockquote class="quote step-wide">${x.quote}</blockquote>` : ""}
+      ${x.quote ? `<div class="step-wide">${viola_(x.quote)}</div>` : ""}
     </li>`;
   return `
     <section class="sec" data-block="vecher">
       <h2>${VECHER.title}</h2>
-      <p class="pull gold">${VECHER.sub}</p>
+      <p class="pull">${VECHER.sub}</p>
       <ol class="steps">${VECHER.steps.map(step).join("")}</ol>
       <div class="group">
         <h3>${VECHER.whyHead}</h3>
-        <blockquote class="quote">${VECHER.why}<cite>Виола Маро</cite></blockquote>
+        ${viola_(VECHER.why)}
       </div>
       <p class="soft">${VECHER.bridge}</p>
     </section>`;
@@ -1477,23 +1513,59 @@ function ctaHtml_(place) {
        <p class="fine center">${NEXT.ctaNote}</p>`;
 }
 
+/* Дорожка аудио. Высоты столбиков заданы раз и навсегда: это рисунок,
+   а не запись. Сколько помещается по ширине, столько и видно. */
+const WAVE = [8, 14, 20, 12, 18, 24, 16, 10, 20, 22, 14, 9, 17, 23, 19, 12, 15, 21, 11, 18,
+              24, 13, 9, 16, 20, 14, 22, 10, 17, 12, 19, 23, 15, 8, 14, 20, 11, 18, 13, 21,
+              16, 9, 22, 12, 17, 10, 19, 14, 8, 15];
+function waveHtml_() {
+  return WAVE.map(h => `<i style="height:${h}px"></i>`).join("");
+}
+
+/* Пост канала. Медитация и эфир откроются после анкеты, поэтому вся карточка —
+   кнопка, которая ведёт в анкету, и под подписью об этом сказано прямо. */
+function postHtml_(media, title, cap) {
+  const attrs = leadSent ? 'data-cta="cabinet"' : 'data-cta="form" data-place="next"';
+  return `
+    <button class="post" ${attrs}>
+      ${media}
+      <span class="post-body">
+        ${title ? `<span class="post-title">${title}</span>` : ""}
+        <span class="post-cap">${cap}</span>
+        <span class="post-lock">${ICON.lock}${leadSent ? "Лежит в закрытом канале" : "Откроется после анкеты"}</span>
+      </span>
+    </button>`;
+}
+
 /* «Что дальше?» — сцена из завтрашнего дня и зачем человеку медитация и эфир.
-   Сцена и тема эфира берутся по ответу на «Где вас съедает сильнее всего?». */
+   Сцена и тема эфира берутся по ответу на «Где вас съедает сильнее всего?».
+   Медитация оформлена как аудио в Телеграме, эфир — как видео с обложкой. */
 function secNext_() {
   const x = NEXT.by[forks.bol] || NEXT.by.vezde;
+  const audio = `
+    <span class="audio">
+      <span class="play">${ICON.play}</span>
+      <span class="audio-main">
+        <span class="audio-title">${NEXT.audioTitle}</span>
+        <span class="audio-by">${NEXT.audioBy}</span>
+        <span class="audio-row"><span class="wave" aria-hidden="true">${waveHtml_()}</span><span class="audio-time">${NEXT.audioTime}</span></span>
+      </span>
+    </span>`;
+  const video = `
+    <span class="video">
+      <img src="${IMG.efir}" alt="Кадр из эфира Виолы Маро" width="720" height="405" loading="lazy">
+      <span class="play">${ICON.play}</span>
+      <span class="video-time">${NEXT.videoTime}</span>
+    </span>`;
   return `
     <section class="sec" data-block="next" id="next">
-      <div class="offer-card">
-        <h2>${NEXT.title}</h2>
-        <p class="lead">${NEXT.lead}</p>
-        <p class="pull">${x.scene}</p>
-        <div class="copy">
-          <p>${NEXT.med}</p>
-          <p>${NEXT.efir.replace("{theme}", x.theme)}</p>
-          <p><b>${NEXT.where}</b></p>
-        </div>
-        <div class="foot">${ctaHtml_("next")}</div>
-      </div>
+      <h2>${NEXT.title}</h2>
+      <p class="lead">${NEXT.lead}</p>
+      <p class="pull">${x.scene}</p>
+      ${postHtml_(audio, "", NEXT.med)}
+      ${postHtml_(video, NEXT.videoTitle, NEXT.efir.replace("{theme}", x.theme))}
+      <p><b>${NEXT.where}</b></p>
+      <div class="foot">${ctaHtml_("next")}</div>
     </section>`;
 }
 
@@ -1620,7 +1692,7 @@ function result(prev) {
   watchBlocks_(n);
 }
 
-/* Деления шкал загораются по одному, когда портрет появляется на экране:
+/* Деления шкал загораются по одному, когда блок появляется на экране:
    так видно, что это замер, а не картинка. Таймер, а не кадры анимации:
    в свёрнутом окне кадры не идут, и шкалы остались бы пустыми. */
 function lightGauges_(node) {
@@ -2115,6 +2187,11 @@ function boot() {
     if (tg.disableVerticalSwipes) { try { tg.disableVerticalSwipes(); } catch (e) {} }
   }
 
+  syncTheme_();
+  if (tg && tg.onEvent) { try { tg.onEvent("themeChanged", syncTheme_); } catch (e) {} }
+  const ava = document.getElementById("brand-ava");
+  if (ava) ava.src = IMG.avatar;
+
   flush();   // всё, что не ушло в прошлый раз, отправляем при каждом открытии
 
   const wantForm = startParam_().indexOf("anketa") === 0;
@@ -2164,6 +2241,14 @@ function boot() {
   answers.length = 0;
   intro();
 }
+
+/* ——— картинки ———
+   Вшиты в файл: внешних запросов у теста нет. avatar — из портрета с сайта
+   (source/assets/viola-hero.png), efir — кадр из записи эфира. */
+const IMG = {
+  avatar: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCABwAHADASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAABQYDBAcCAQAI/8QAORAAAgEDAgQEAwUIAQUAAAAAAQIDAAQRBSEGEjFBE1FhcQcigRQykbHBFSMzQ1Kh0fDxQmJyouH/xAAaAQADAQEBAQAAAAAAAAAAAAABAwQCBQAG/8QAJhEAAgICAgIBAwUAAAAAAAAAAAECEQMSITEEIlEUQWEyM3GB0f/aAAwDAQACEQMRAD8Ay1VqRRXKipVFcVn0CR2i1Kq1wvWpkWsM0eqtXtP0y61Kdbe0gkmmboiLkn/FMPCPBEutAXl3m3sQ2DIRkufJR39+lPWpa7onBenmCzsgikfOE+83/m3eg+OwXbpCnafDDUGjH2m7tIJD/LL5I98ZqjrXA+oaLEZjyzwr1dDkCiB+Iel6iOeBRG/TfYg+tT6Bx6s881rcfMV7NvkdCD50puV8IdFKuWJDRkdRivAtN95aafrtwbaCJLS9yeUjaOU9gR2J7GleWCS3laKVSjoSrKRuDRUvsGiLkr3l2rsD0roCg2aSIuTFfclThc16U3rNhoV1qZVqNR5VMgqpkqO0WmzgLhKTinV1hYFLWEeJPKeir5e58qXLK3e6uI4Y1Ls7AAedfoPg/RoeHNGtrEKPGl/e3DDufL2HT6V6EdnyYyz1jwR65jTrZ47JUhitk8OIN91NsszViGqTLxFqDxadfardXGT+9Q4jJ9B0IrV/iIs11oAt4HKPfyrGxHXlJyf1qfhfhmz0u1jSCBFIXdsdaW51K/uOxYHKH4Mx0b4WX93zy3CeDI2M4GA3rjtRqy+GE2l3guJJvEyO3nWtx2jcp+Xb2qteWpUEg4oOcux6w4+jKtc0i5sbmOeLmJ8wOh8/euda0y41BBqLx8szxK7coyH8yPXatBmEY++ik52NDXls57j9nEiOX70O/wApPkfT0pOWWy2XaDDHo9X0zL+QgkEEGuglFdf0uXTtQkjaMoucqD2HlQ3HagpWrDrTo8Ub17ivR7V1jNesNCmoqZagWpolLEAdT0qtkSHn4faUJL6O4ZQzKw5Qf6s9fYbn1I9K2G3cyzTMOiRty59Bt+lIXB8CWreGo/hrn2zsP1P1p20mXPiHsxIHsKONicytgzjCBQumRZHyTAf+rUT0l35VQDagvEl6zyRGMRSMtywUSEgEKuNsepNUrbjP7JdeDc2cluf6uYMtJr3s6WH9pIfuZubAGM1DfwSeFzZzihi6tJMnjo2UAySPalnVuL7p2w19FY2QPzS45nYenkPWnSaaozo48sKXY5T8wx3xSDxxdPYvbXaNylW5eYedNMHE3DmoKbe1vkubgDJLSnnPrvSvx7ZrqHD0oAIZQHG3r1pChrKmayS2hcQzdGLijh2C8Ug3EYCkmk4xlWIIxjtRj4aRvFo72k0pkIUgsM9tx/Y1FqsPJcMeXlzuR5HO9Sr1k4jGripA0RjHSvuXFS4rzFaBQljaiGlJz3UbMByg9+hqioyaMaQokuYwRnlIVFHcnvVzIEabwjEVjnlbJaVg2T3/AN3pkiufsentOdgqkj8c/pQThJGb7SOqLGXB/QVPrU/g2SIf4agM49BufyrN1GzNbToSuMItS1LUtL06C6eGGIF7l425SxY5I5u1XrPhG8jtlQ3ZuTjdiS+B338z7jp0qbgq6OpzPeTMMTNnz2NN+ualbWFkI4Pmkfblz+dahldNF30i4lbsGcMzG10aa0MjScpKb+Wa4uOEIdSBdVAi5QDHkEgg5yM9/Wp9DNodNlmeZEY5LivrbiFgoks+S5WPIkXG4HpXlJxaYyWFTVA6TgaxjmW6kgkEkXMVdyOYZOTv139arXzC+ultSo5GHKc9MAU1XGv2up2nycoOOgpXtntzq3NcyxxRBSAzkAE+W9Jyzcp3djIYYwx0lRc4Z05LSV1jA8NnyD7ihPEsXg3DrjI52Ht/uaYOFbpL22e4ReWNp25cjcqCQPyoTxlDi4Zhk/N17bgVLLiZi7ToVq9FegV0B6UWZQkpRvQmWO5WTuh5mPljoKBoDtTDoNl4kiJu7ORhV7diSe21Xy6IEzWuB7Vm0W+vHGBKnJGPQDeotXiFzI0HLnmQj6FTRvREaDhxYwoGRyL7d6qSwKbi3nJ2KkGsZF6pIxil7tsz/g62urBpdP8AD+eByoHcjsfwxVzXLuLSpDLqzyo0xCDCMVXPRcgYH1ohxfbroGoWmsBmW3mYQSyA4CN/0E+hzj8Kv38qanaLzlS4GGHXI86XFVLk6sMu0EkwVp3DU7MTHpuqCJyG+WElTkgf3yKO6lBqWi2LudEEfLskckqq8p3GAPp16VV0u91SxQQWssxj6cqysmPwNX5kmupxNdqOcDJ3z+fWqXolaB7Xy1X9/wCgldJeTF5cBLRmXmkjjbIz5Z7+9IfxBniWTS7EfPLPcNNGnnyKQM57EtWh6rq8FuBEXDN/T1yax/7RPxFx9JdTEFLd3jjA6Kq9MfU5qeK9nL4MZ53DT5Nh4ZiFppdtEowAAfxNU+MMCR9uhJ+m1XNKI5ggO0YT8q44wT7rYDbFge+CP+KinL2TNwXDQlcuDv1rpBXg3FSKuK2wJCLDEzEZG350/wDBmhSs0Rh+aaZxzL1wPKrHCPwt1Wdo7i6gjWP7ytINv99K1fhzg204dj8RZGlnI+Z2H/FdLRy/g5MssYr8nUluLaxSHG6ryKo756n9KHSx+HBFkbqeX60Z1CaNc4JaVuhxQvWVNtbW0Y3dnU4/360MiQvE3wDuIdGi4i4WvdMm3EkRjH5qfyFZJwvreoaG0Ucqi5jgPLyzDOANiK2qzIYSRtuPun1BOKzLVtMjt9fuUwCJjz/U9f8ANYk/WyzB+uhtsuLdPnPj/skSMw3CFQB9NqvQ8ScM6pdpZsnhXL7CHOCfpWetZ8iEDK0YsuFE1iwikgtTbTA5jmXYlh3z1r0Zt9lrivmhh1bgIIzahYSCRXGeQtkD28qxbQV+wa9dQPFJFcrNIZEkUqwy2eh7dN6/QWhWuuWlqF1K4imlH8wKQGH/AHDufWo9e4btdZtJGkSz8XlKpKU+eMkbEHrj+1CceHROp3JKTFXh+cvIwY5LKG29qJcQ263NhETsTHgH1A/x+VL+jRXOhXkVtdxMACUZ+oX3+tPT6U+qaXLbp/FQZVTsT6qfUGuVJPai20lZlQ61IozVnVbCXTrto5kdGPZlxVddt6ddgRvIlYgeEC6jbmxtXLRPKuQzeytg1aikjHybDyFSFDuVC59utd6UL7PmYuugJcyR25y8L+IehZSaETI80hmdst2z5+Q8qaLlOZQ3IQp8t8H60KlEbuYtgR2C4zU0oNFUJASKQpBM/MAA2x9jmkjW3WXVpHTJKEKfw3/A/nT9rCixiLRxqebIyegb9f8A5SHNZzRM7sQSW5s980jI6Wpd40HJ7ohb954SZ3dgu/nTrpl1dxRraaaY1S3xG7uOY564ApCvH8KETBclHD4896KcP6ojBfEMiLcTsHCtuRjbf3oY+CnJGx7u55RyC5vGkkJwsanv7CvNRihg04BkaKWQ7OO58qExcUaFp9wto1wolBw4Vfu+57U030EWp2MYVleMgOjKc4zTWtkyW9Wr6BGlx22pRtBPEDNjGTR7T7c6ZGqoAmRgk77e1KMxmsbpW5mVkI3Hl500JqkV/bQMhy7MFYDsaVh1bqXaB5EZJbR6ZZv+HNG1aIif7QCe8cmw9gcikPiX4cXumI93YFbu0Xc8gPPGPVe49RWkKoRBtXUVw0fM++BsKfPxYSXVMmx+Vkg+7R//2Q==",
+  efir: "data:image/jpeg;base64,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"
+};
 
 /* Стартуем не сразу: страховка наверху дождётся Телеграма — или того, что его
    не будет, — и позовёт сама. Прямой вызов оставлен на случай, если верхний
