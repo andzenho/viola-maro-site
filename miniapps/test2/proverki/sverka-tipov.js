@@ -27,7 +27,7 @@ const run = (ctx, v, extra) => vm.runInContext(`answers.length = 0; ${JSON.strin
 
 let seed = 20261003;
 const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-const N = 20000, types = {}, spheres = {}, heads = { low: 0, high: 0, plain: 0 }, ry = {};
+const N = 20000, types = {}, spheres = {}, heads = {}, ry = {};
 let mismatch = 0;
 for (let n = 0; n < N; n++) {
   // половина выборки — «похожая на эмпата»: ответы смещены к «да»
@@ -39,9 +39,11 @@ for (let n = 0; n < N; n++) {
   if (a.key !== b.key || a.pct !== b.pct || JSON.stringify(a.scales) !== JSON.stringify(b.scales) || a.fon !== b.fon) mismatch++;
   types[b.key] = (types[b.key] || 0) + 1;
   spheres[b.sphere || '—'] = (spheres[b.sphere || '—'] || 0) + 1;
-  const A = b.scales.A, F = 9 - b.scales.P;
-  heads[A >= 6 && F <= 3 ? 'low' : A >= 6 && F >= 6 ? 'high' : 'plain']++;
   if (['donor', 'filter', 'sleeping', 'awake'].includes(b.key)) {
+    // главная фраза блока «Что видно по вашим ответам» — только у типов эмпата
+    const h = vm.runInContext(`seenHead(${JSON.stringify(b.scales)})`, newT);
+    const name = !h ? 'фразы нет' : /внутрь/.test(h) ? 'чужое заходит внутрь' : 'оставляет снаружи';
+    heads[name] = (heads[name] || 0) + 1;
     const k = vm.runInContext(`ryadomKey(${JSON.stringify(b)})`, newT);
     ry[k] = (ry[k] || 0) + 1;
   }
@@ -49,8 +51,16 @@ for (let n = 0; n < N; n++) {
 console.log('прохождений:', N, '· расхождений с первым тестом:', mismatch);
 console.log('типы:', types);
 console.log('сферы:', spheres);
-console.log('главная строка портрета:', heads);
+console.log('главная фраза у типов эмпата:', heads);
 console.log('абзац «Кто рядом»:', ry);
+
+// уровни шкал: границы из ТЗ
+const lv = (v, max) => vm.runInContext(`level_(${v}, ${max})`, newT);
+const got9 = [0,1,2,3,4,5,6,7,8,9].map(v => lv(v, 9)).join('');
+const got12 = [0,1,2,3,4,5,6,7,8,9,10,11,12].map(v => lv(v, 12)).join('');
+console.log('уровни шкалы 0–9: ', got9, got9 === '1122334455' ? '✔' : '✘ ожидали 1122334455');
+console.log('уровни шкалы 0–12:', got12, got12 === '1112233344555' ? '✔' : '✘ ожидали 1112233344555');
+if (got9 !== '1122334455' || got12 !== '1112233344555') mismatch++;
 
 // точечные случаи сферы
 const flat = Array(24).fill(1);

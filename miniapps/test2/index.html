@@ -417,19 +417,20 @@
   }
   .mantra b { display: block; font-weight: 400; font-size: 1.5rem; line-height: 1.2; margin-bottom: .2rem; }
 
-  /* — портрет в цифрах: шкалы делениями, как у приёмника в шапке — */
-  .gauges { display: flex; flex-direction: column; gap: 1.6rem; }
+  /* — что видно по ответам: шкалы делениями, как у приёмника в шапке — */
+  .gauges { display: flex; flex-direction: column; gap: 1.5rem; }
+  /* Название слева, слово уровня справа. Название может уйти в две строки
+     на самом узком экране, слово — нет. */
   .gauge-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-  .gauge-name { font-weight: 600; font-size: 1.08rem; }
-  .gauge-num { font-variant-numeric: tabular-nums; color: var(--ink-soft); }
-  .gauge-ticks { display: flex; gap: 4px; margin: .55rem 0 .5rem; }
+  .gauge-name { font-size: 1.06rem; line-height: 1.35; }
+  .gauge-word { font-weight: 600; color: var(--accent-text); white-space: nowrap; }
+  .gauge-ticks { display: flex; gap: 6px; margin-top: .6rem; }
   .gauge-ticks i {
     flex: 1; height: 12px; border-radius: 2px;
     background: var(--line-strong);
     transition: background-color .3s ease;
   }
   .gauge-ticks i.on { background: var(--accent); }
-  .gauge-cap { color: var(--ink-mute); font-size: .9rem; line-height: 1.4; }
 
   /* — программа по неделям — */
   .weeks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
@@ -704,11 +705,43 @@ const RESULTS = {
 const FON_NOTE = "Отдельно: часть того, что вас грузит, идёт не от людей, а от общего фона — шум, свет, слишком много всего. Это не про эмпатию, и в тесте оно не решается.";
 const DISCLAIM = "Это не диагностика и не диагноз. Это способ посмотреть на себя со стороны.";
 
-/* ——— портрет в цифрах ———
-   Четыре шкалы, которые тест и так считает. Фильтр — это 9 минус «прилипание». */
-const PORTRAIT_QUOTE = "Быть человеком с высокой эмпатией значит обладать мощным радаром восприятия, к которому, к сожалению, не прилагали инструкцию по эксплуатации.";
-/* Пороги главной строки. Это предложение: их надо сверить с таблицей прохождений. */
-const RADAR_HIGH = 6, FILTER_LOW = 3, FILTER_HIGH = 6;
+/* ——— что видно по вашим ответам ———
+   Четыре шкалы, которые тест и так считает, — словами, а не числами: «2 из 9»
+   человеку ничего не говорит. Баллы переводятся в пять уровней, на экране
+   пять делений и слово. В таблицу по-прежнему уходят сами баллы. */
+const SEEN = {
+  title: "Что видно по вашим ответам",
+  /* [название строки, шкала, из скольких баллов, слова уровней] */
+  rows: [
+    ["Считываете людей",     "A", 9,  "feel"],
+    ["Чужое заходит внутрь", "P", 9,  "feel"],   // шкала как есть, без переворота
+    ["Тело отзывается",      "B", 9,  "feel"],
+    ["Отдаёте другим",       "C", 12, "give"]
+  ],
+  words: {
+    feel: ["слабо", "умеренно", "заметно", "сильно", "очень сильно"],
+    give: ["мало", "умеренно", "заметно", "много", "очень много"]
+  },
+  /* Главная фраза над строками. Есть только у тех, кто чувствует людей сильно. */
+  headIn:  "Вы чувствуете людей очень сильно, и почти всё чужое заходит внутрь.",
+  headOut: "Вы чувствуете людей очень сильно и умеете оставлять чужое снаружи.",
+  quote: "Быть человеком с высокой эмпатией значит обладать мощным радаром восприятия, к которому, к сожалению, не прилагали инструкцию по эксплуатации."
+};
+/* Уровень от 1 до 5. Шкалы из девяти баллов: 0–1, 2–3, 4–5, 6–7, 8–9.
+   Шкала из двенадцати: 0–2, 3–4, 5–7, 8–9, 10–12. */
+function level_(v, max) {
+  if (max === 12) return v <= 2 ? 1 : v <= 4 ? 2 : v <= 7 ? 3 : v <= 9 ? 4 : 5;
+  return v <= 1 ? 1 : v <= 3 ? 2 : v <= 5 ? 3 : v <= 7 ? 4 : 5;
+}
+/* Пороги главной фразы: «сильно» это уровень от 4, «снаружи» — уровень до 2.
+   Это предложение, их надо сверить с таблицей прохождений. */
+const LEVEL_HIGH = 4, LEVEL_LOW = 2;
+function seenHead(sc) {
+  const a = level_(sc.A, 9), p = level_(sc.P, 9);
+  if (a >= LEVEL_HIGH && p >= LEVEL_HIGH) return SEEN.headIn;
+  if (a >= LEVEL_HIGH && p <= LEVEL_LOW) return SEEN.headOut;
+  return "";
+}
 
 /* ——— кто оказывается рядом с вами и почему ———
    Блок говорит о механизме, а не о конкретном человеке из жизни участницы.
@@ -1062,7 +1095,7 @@ function intro() {
       <h1>Какой вы эмпат?</h1>
       <p class="lead">Узнаете, какой вы эмпат и какая сфера жизни забирает у вас больше всего.</p>
       <ul class="marks">
-        <li>Ваш тип и портрет в цифрах</li>
+        <li>Ваш тип и что видно по вашим ответам</li>
         <li>Сфера, где у вас уходит больше всего сил</li>
         <li>Что можно сделать уже сегодня вечером</li>
       </ul>
@@ -1195,15 +1228,15 @@ function ageScreen() {
 }
 
 /* ——— экран результата ———
-   Порядок блоков: тип и сфера · портрет в цифрах · суперспособности ·
+   Порядок блоков: тип и сфера · что видно по ответам · суперспособности ·
    кто рядом · что сделать сегодня вечером · программа и анкета.
    Трём типам без анкеты (Считывающий, Сочувствующий, Другая настройка):
-   тип, портрет, кнопка в открытый канал.
+   тип и кнопка в открытый канал.
    Каждый блок — отдельная секция со своим заголовком. data-block нужен
    счётчику «до какого блока долистали»; у блока может быть несколько секций. */
 const BLOCKS = ["type", "portrait", "powers", "ryadom", "vecher", "program"];
 const BLOCK_NAMES = {
-  type: "Тип", portrait: "Портрет в цифрах", powers: "Суперспособности",
+  type: "Тип", portrait: "Что видно по ответам", powers: "Суперспособности",
   ryadom: "Кто рядом", vecher: "Сегодня вечером", program: "Программа и анкета"
 };
 
@@ -1227,35 +1260,32 @@ function secType_(r, empath) {
     </section>` : ""}`;
 }
 
-/* Шкала делениями: сколько делений горит, столько и баллов. */
-function gauge_(name, cap, val, max) {
+/* Строка шкалы: название, слово уровня и пять делений. Горит столько делений,
+   каков уровень. Чисел на экране нет. */
+function gauge_(name, level, word) {
   let ticks = "";
-  for (let i = 0; i < max; i++) ticks += i < val ? "<i data-lit></i>" : "<i></i>";
+  for (let i = 1; i <= 5; i++) ticks += i <= level ? "<i data-lit></i>" : "<i></i>";
   return `
     <div class="gauge">
-      <div class="gauge-top"><span class="gauge-name">${name}</span><span class="gauge-num">${val} из ${max}</span></div>
+      <div class="gauge-top"><span class="gauge-name">${name}</span><span class="gauge-word">${word}</span></div>
       <div class="gauge-ticks" aria-hidden="true">${ticks}</div>
-      <div class="gauge-cap">${cap}</div>
     </div>`;
 }
 
 function secPortrait_(r) {
   const sc = r.scales;
-  const A = sc.A, F = 9 - sc.P;
-  let head = `Радар ${A} из 9. Фильтр ${F} из 9.`;
-  if (A >= RADAR_HIGH && F <= FILTER_LOW) head += " Приёмник у вас сильный, а фильтра к нему почти нет.";
-  else if (A >= RADAR_HIGH && F >= FILTER_HIGH) head += " Вы видите много и держите это снаружи.";
+  const head = seenHead(sc);
   return `
     <section class="sec" data-block="portrait" id="portrait">
-      <h2>Портрет в цифрах</h2>
-      <p class="lead">${head}</p>
+      <h2>${SEEN.title}</h2>
+      ${head ? `<p class="lead">${head}</p>` : ""}
       <div class="gauges">
-        ${gauge_("Радар", "как сильно вы считываете людей", A, 9)}
-        ${gauge_("Фильтр", "сколько чужого остаётся снаружи", F, 9)}
-        ${gauge_("Тело", "как сильно отвечает тело", sc.B, 9)}
-        ${gauge_("Отдаёте", "сколько уходит другим", sc.C, 12)}
+        ${SEEN.rows.map(x => {
+          const lv = level_(sc[x[1]], x[2]);
+          return gauge_(x[0], lv, SEEN.words[x[3]][lv - 1]);
+        }).join("")}
       </div>
-      <blockquote class="quote">${PORTRAIT_QUOTE}<cite>Виола Маро</cite></blockquote>
+      <blockquote class="quote">${SEEN.quote}<cite>Виола Маро</cite></blockquote>
     </section>`;
 }
 
@@ -1383,7 +1413,7 @@ function result(prev) {
   const n = el(`
     <div class="page">
       ${secType_(r, empath)}
-      ${secPortrait_(r)}
+      ${empath ? secPortrait_(r) : ""}
       ${empath ? secPowers_(powers(r.scales, answers)) : ""}
       ${empath && CONFIG.blocks.ryadom ? secRyadom_(r) : ""}
       ${empath && CONFIG.blocks.vecher ? secVecher_() : ""}
@@ -1438,7 +1468,7 @@ function lightGauges_(node) {
       const lit = rows[g].querySelectorAll("i[data-lit]");
       for (let i = 0; i < lit.length; i++) {
         if (still) lit[i].className = "on";
-        else setTimeout(() => { lit[i].className = "on"; }, 120 + g * 140 + i * 45);
+        else setTimeout(() => { lit[i].className = "on"; }, 120 + g * 220 + i * 80);
       }
     }
   };
