@@ -2,7 +2,7 @@
 <html lang="ru">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F4F2F6">
+<meta name="theme-color" content="#FBF6EC">
 <!-- Тест всегда светлый, какая бы тема ни стояла в телефоне и в Телеграме. -->
 <meta name="color-scheme" content="only light">
 <!-- Карточка ссылки. Телеграм берёт og:title и og:description; без них
@@ -106,30 +106,39 @@
      — скругления разные по роли: блок 24, пузырь и карточка 18, кнопка
        и поле 14, метки и деления шкал круглые;
      — линеек, полосок над заголовками и черты слева у цитат нет.
-     У цвета прежний смысл: бронзой отмечено то, что тест сказал про человека,
-     сиреневым — его сфера и неделя программы под неё.
+     Цвета яркие, с афиши «Путь эмпата». У цвета есть смысл: красным отмечено
+     то, что тест сказал про человека, и главное действие; синим — его сфера,
+     неделя программы под неё и всё, что говорит Виола. Градиенты стоят там,
+     где цвета много: небо в блоке типа, красная кнопка, закат на шкалах.
      Текст 18 px, мельче 15,5 px нет. Внешних запросов нет: картинки вшиты.
      Тема одна, светлая: ни системная тёмная, ни ночная в Телеграме её не меняют. */
   :root {
-    --ground: #F4F2F6;
+    /* Цвета взяты с афиши «Путь эмпата»: синее небо, красное платье и цветы,
+       сливочная бумага билета, золото надписи, закатное тепло. */
+    --ground: #FBF6EC;         /* сливочная бумага */
     --surface: #FFFFFF;
-    --surface-2: #ECE8F0;
-    --ink: #1D1A22;
-    --ink-soft: #55505E;
-    --ink-mute: #6F6979;
-    --line: #E3DEE8;
-    --line-strong: #C9C2D1;
-    --accent: #A9712F;         /* деления шкал, значки */
-    --accent-text: #85551D;    /* тот же тон для текста */
-    --accent-soft: #F6ECDD;    /* песочная подложка */
-    --cta: #8A5A24;            /* главная кнопка, белый текст по ней 5,7:1 */
+    --surface-2: #F4ECDD;
+    --ink: #18213A;            /* чернильно-синий */
+    --ink-soft: #465068;
+    --ink-mute: #5F687E;
+    --line: #EBDFCA;
+    --line-strong: #D2C3A8;
+    --accent: #D22B2B;         /* красный: значки, отметки */
+    --accent-text: #B01E22;    /* тот же красный для текста */
+    --accent-soft: #FDEBD3;    /* персиковая подложка */
+    --gold: #F0B13F;           /* золото надписи: начало тёплых градиентов */
+    /* Главная кнопка: красный градиент. Белый текст на светлом его краю 4,8:1. */
+    --cta: linear-gradient(135deg, #DA352C 0%, #B3161F 100%);
     --cta-ink: #FFFFFF;
-    --warn: #A8321F;
-    --deep: #4E3464;           /* сфера человека, его неделя, номера шагов */
-    --deep-soft: #EDE5F4;
-    --hero: #3C2A4C;           /* блок с названием типа */
+    --cta-glow: rgba(190, 30, 35, .55);
+    --warn: #B01E22;
+    --deep: #1F4C97;           /* синий: сфера человека, его неделя, номера шагов, имя Виолы */
+    --deep-soft: #E3EDFA;
+    /* Небо: блок с названием типа и блок второй кнопки. Белый текст на самом
+       светлом краю 5,3:1. */
+    --sky: linear-gradient(150deg, #143A85 0%, #1F56A6 55%, #2A6DB8 100%);
     --hero-ink: #FFFFFF;
-    --shadow: 0 1px 2px rgba(29, 26, 34, .05), 0 8px 24px -16px rgba(29, 26, 34, .25);
+    --shadow: 0 1px 2px rgba(24, 33, 58, .05), 0 10px 26px -16px rgba(24, 33, 58, .28);
     /* Тёмной темы нет намеренно: тест светлый всегда. Эта строка не даёт
        браузеру самому перекрасить поля и полосы прокрутки в тёмные. */
     color-scheme: only light;
@@ -170,7 +179,7 @@
 
   /* Полоса прогресса. Нужна, пока идут утверждения; дальше её нет. */
   .bar { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
-  .bar i { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--accent); transition: width .25s ease; }
+  .bar i { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--gold), #E0522F 60%, var(--accent)); transition: width .25s ease; }
   .top.quiet .bar { display: none; }
 
   .ava { width: 2rem; height: 2rem; border-radius: 50%; object-fit: cover; flex: none; background: var(--surface-2); }
@@ -211,7 +220,7 @@
     box-shadow: var(--shadow);
     min-width: 0;
   }
-  .who { font-size: .86rem; font-weight: 700; color: var(--accent-text); margin-bottom: .15rem; }
+  .who { font-size: .86rem; font-weight: 700; color: var(--deep); margin-bottom: .15rem; }
   /* На карточке пузырь темнее фона карточки, иначе он с ней сливается. */
   .card .bubble { background: var(--surface-2); box-shadow: none; }
 
@@ -257,7 +266,7 @@
     cursor: pointer;
     transition: border-color .15s ease, transform .08s ease;
   }
-  button.ans:hover { border-color: var(--accent); }
+  button.ans:hover { border-color: var(--deep); }
   button.ans:active { transform: scale(.985); }
 
   /* Главная кнопка. */
@@ -272,6 +281,7 @@
     border-radius: 14px;
     padding: 1.05rem 1.1rem;
     cursor: pointer;
+    box-shadow: 0 12px 22px -14px var(--cta-glow);
     transition: transform .1s ease, filter .2s ease;
   }
   .go:hover { filter: brightness(1.06); }
@@ -306,7 +316,7 @@
     width: 100%;
   }
   .fields textarea { resize: vertical; min-height: 5.6rem; line-height: 1.5; }
-  .fields input:focus, .fields textarea:focus { border-color: var(--accent); outline: none; }
+  .fields input:focus, .fields textarea:focus { border-color: var(--deep); outline: none; }
   .fields .err { border-color: var(--warn); }
 
   /* Шкала готовности 1–10: две строки по пять, чтобы в кнопку попадал палец. */
@@ -326,8 +336,8 @@
     transition: background-color .15s ease, border-color .15s ease;
   }
   .chips .chip { text-align: left; padding: .8rem .95rem; font-weight: 400; }
-  .chip:hover { border-color: var(--accent); }
-  .chip.on { background: var(--deep); color: var(--ground); border-color: var(--deep); }
+  .chip:hover { border-color: var(--deep); }
+  .chip.on { background: var(--deep); color: #FFFFFF; border-color: var(--deep); }
 
   .consents { display: flex; flex-direction: column; gap: .8rem; }
   .cb {
@@ -345,19 +355,24 @@
   .sec:first-child { padding-top: .2rem; }
   .group { display: flex; flex-direction: column; gap: .7rem; }
 
-  /* Тип человека — цветной блок с кругами радара в углу. Это единственное
-     украшение на странице, и оно про сам тест: радар, приёмник. */
+  /* Тип человека — небо с афиши: синий градиент, красная луна в углу и круги
+     радара поверх. Это главное цветовое пятно страницы. Тот же блок открывает
+     тест на первом экране. */
   .hero {
     position: relative; overflow: hidden;
     margin: 0 -.2rem;
-    background: var(--hero);
-    background-image: repeating-radial-gradient(circle at 100% 0%, rgba(255, 255, 255, .075) 0 1.5px, rgba(255, 255, 255, 0) 1.5px 30px);
+    background:
+      repeating-radial-gradient(circle at 100% 0%, rgba(255, 255, 255, .09) 0 1.5px, rgba(255, 255, 255, 0) 1.5px 30px),
+      radial-gradient(circle at 100% 0%, #D8322B 0, #B3161F 4.6rem, rgba(179, 22, 31, 0) 4.7rem),
+      var(--sky);
     color: var(--hero-ink);
     border-radius: 24px;
     padding: 1.3rem 1.25rem 1.5rem;
     display: flex; flex-direction: column; gap: .9rem;
   }
-  .hero .tag { background: rgba(255, 255, 255, .16); color: #FFFFFF; }
+  .hero .tag { background: #FFF1D6; color: #143A85; }
+  .hero .lead { color: rgba(255, 255, 255, .94); }
+  .card > .hero { margin: -.35rem -.2rem 0; }
   /* На 320 px «Сочувствующий» обязан помещаться в строку. */
   .type-name { font-size: clamp(1.75rem, 10.4vw, 2.6rem); line-height: 1.05; font-weight: 800; letter-spacing: -.03em; }
 
@@ -369,21 +384,21 @@
     padding: .3rem .7rem; border-radius: 999px;
   }
   /* Длинная метка уходит в две строки, поэтому скругление у неё меньше. */
-  .tag.deep { background: var(--deep); color: var(--ground); border-radius: 10px; }
+  .tag.deep { background: var(--deep); color: #FFFFFF; border-radius: 10px; }
 
   /* Ответ на вопрос заголовка: название сферы. */
   .answer { font-size: 1.7rem; line-height: 1.12; font-weight: 800; letter-spacing: -.025em; color: var(--deep); text-wrap: balance; }
 
-  /* Сфера человека: сиреневая подложка. Та же — у его недели в программе. */
+  /* Сфера человека: небесная подложка. Та же — у его недели в программе. */
   .spot {
-    background: var(--deep-soft);
+    background: linear-gradient(160deg, #EAF2FC 0%, #D9E7F9 100%);
     border-radius: 20px;
     padding: 1.15rem 1.15rem 1.2rem;
     display: flex; flex-direction: column; gap: .5rem;
   }
 
-  /* Песочная плашка: даты потока, слова техники. */
-  .panel { background: var(--accent-soft); border-radius: 18px; padding: 1.1rem 1.15rem; }
+  /* Тёплая плашка: даты потока, слова техники. */
+  .panel { background: linear-gradient(160deg, #FFF3DE 0%, #FCDDC0 100%); border-radius: 18px; padding: 1.1rem 1.15rem; }
   .panel b { font-weight: 700; }
   .mantra { display: flex; flex-direction: column; gap: 1rem; line-height: 1.45; }
   .mantra b { display: block; font-weight: 800; font-size: 1.5rem; line-height: 1.15; letter-spacing: -.02em; margin-bottom: .25rem; color: var(--accent-text); }
@@ -402,6 +417,11 @@
     transition: background-color .3s ease;
   }
   .gauge-ticks i.on { background: var(--accent); }
+  .gauge-ticks i.on:nth-child(1) { background: #F0B13F; }
+  .gauge-ticks i.on:nth-child(2) { background: #EC9039; }
+  .gauge-ticks i.on:nth-child(3) { background: #E66B33; }
+  .gauge-ticks i.on:nth-child(4) { background: #DD472F; }
+  .gauge-ticks i.on:nth-child(5) { background: #D22B2B; }
 
   /* — суперспособности: три строки с галочкой — */
   .powers { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .5rem; }
@@ -430,7 +450,7 @@
   .step-n {
     width: 2.2rem; height: 2.2rem; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    background: var(--deep); color: var(--ground);
+    background: var(--deep); color: #FFFFFF;
     font-weight: 800; font-size: 1.1rem; line-height: 1;
   }
   .step-head { display: flex; flex-direction: column; gap: .25rem; min-width: 0; padding-top: .28rem; }
@@ -484,19 +504,20 @@
   .week-q { margin-top: .2rem; color: var(--ink-soft); font-size: .95rem; line-height: 1.45; }
   /* Недели идут в порядке программы. Неделя под сферу человека выделена
      на своём месте — той же сиреневой подложкой, что и сама сфера. */
-  .weeks li.mine { background: var(--deep-soft); border-radius: 20px; padding: 1rem 1rem 1.1rem; margin: .3rem -.2rem; }
-  .weeks li.mine .week-n { background: var(--deep); color: var(--ground); }
+  .weeks li.mine { background: linear-gradient(160deg, #EAF2FC 0%, #D9E7F9 100%); border-radius: 20px; padding: 1rem 1rem 1.1rem; margin: .3rem -.2rem; }
+  .weeks li.mine .week-n { background: var(--deep); color: #FFFFFF; }
   .weeks li.mine .week-q { color: var(--ink); }
   .weeks li .tag { grid-column: 1 / -1; justify-self: start; margin-bottom: .75rem; }
 
-  /* Вторая кнопка анкеты, после программы. */
+  /* Вторая кнопка анкеты, после программы: блок неба, как у названия типа. */
   .offer-card {
-    background: var(--surface);
+    background: var(--sky);
+    color: #FFFFFF;
     border-radius: 24px;
-    padding: 1.3rem 1.15rem;
-    box-shadow: var(--shadow);
+    padding: 1.4rem 1.2rem 1.3rem;
     display: flex; flex-direction: column; gap: 1rem;
   }
+  .offer-card .fine { color: rgba(255, 255, 255, .9); }
 
   .reviews { display: flex; flex-direction: column; gap: .7rem; }
   .review { background: var(--surface); border-radius: 18px; padding: 1.05rem 1.1rem; box-shadow: var(--shadow); }
@@ -1201,8 +1222,10 @@ function intro() {
   stage = "intro";
   const n = el(`
     <div class="card">
-      <h1>Какой вы эмпат?</h1>
-      <p class="lead">Узнаете, какой вы эмпат и какая сфера жизни забирает у вас больше всего.</p>
+      <div class="hero">
+        <h1>Какой вы эмпат?</h1>
+        <p class="lead">Узнаете, какой вы эмпат и какая сфера жизни забирает у вас больше всего.</p>
+      </div>
       <ul class="checks">
         <li>Ваш тип и что видно по вашим ответам</li>
         <li>Сфера, где у вас уходит больше всего сил</li>
