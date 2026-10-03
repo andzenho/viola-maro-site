@@ -92,90 +92,116 @@
         onerror="window.__tgSettled && window.__tgSettled()"></script>
 <title>Какой вы эмпат?</title>
 <style>
+  /* Вид теста 2.0. Правила, на которых он стоит:
+     — у каждого блока обычный заголовок, а не мелкая подпись капителью;
+     — текста мельче 15 px нет, приглушённый цвет читается на обоих фонах;
+     — результат идёт сплошной страницей, без рамок вокруг каждого блока:
+       рамка на телефоне съедала шестую часть ширины строки;
+     — рамка на странице одна — у бонусов с кнопкой анкеты;
+     — слова Виолы везде выглядят одинаково: прямая антиква, золотая черта слева.
+     Палитра и гарнитуры — от первого теста, шрифты системные: внешних запросов нет. */
   :root {
-    --ground: #F6F2F4;
+    --ground: #F7F3F5;
     --surface: #FFFFFF;
-    --surface-2: #F0EAEE;
+    --surface-2: #EFE8ED;
     --ink: #241D28;
-    --ink-soft: #5C5162;
-    --ink-mute: #8B7F92;
+    --ink-soft: #564B5C;
+    --ink-mute: #6E6375;
     --line: #E0D6DD;
-    --line-strong: #C9BBC6;
-    --accent: #A2703C;
-    --accent-soft: #E8D9C6;
-    --warn: #B03A26;
+    --line-strong: #BFB0BC;
+    --accent: #A2703C;         /* деления шкал, маркеры, черта у цитат */
+    --accent-text: #83531F;    /* тот же тон для текста: сам акцент на светлом читается слабо */
+    --accent-soft: #EDE0CF;
+    --cta: #8C5B27;            /* фон главной кнопки, белый текст по нему 5,5:1 */
+    --cta-ink: #FFFFFF;
+    --warn: #A8321F;
     --deep: #4B3556;
-    --shadow: 0 1px 2px rgba(36, 29, 40, .06), 0 8px 24px -12px rgba(36, 29, 40, .18);
+    --shadow: 0 1px 2px rgba(36, 29, 40, .06), 0 10px 28px -14px rgba(36, 29, 40, .22);
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --ground: #16121A;
-      --surface: #1E1922;
-      --surface-2: #262030;
-      --ink: #F2EBF2;
-      --ink-soft: #BCAFC2;
-      --ink-mute: #8B7F92;
-      --line: #322A38;
-      --line-strong: #473C50;
+      --surface: #1F1A24;
+      --surface-2: #29222F;
+      --ink: #F4EEF4;
+      --ink-soft: #CDC2D2;
+      --ink-mute: #A89CAF;
+      --line: #342B3A;
+      --line-strong: #5A4D63;
       --accent: #D9A163;
+      --accent-text: #E2B078;
       --accent-soft: #3A2C22;
-      --warn: #F08A72;
-      --deep: #C4A5D6;
-      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -12px rgba(0, 0, 0, .6);
+      --cta: #D9A163;
+      --cta-ink: #1A141E;
+      --warn: #F39A84;
+      --deep: #CDB2DD;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px -14px rgba(0, 0, 0, .7);
     }
   }
 
   :root[data-theme="dark"] {
     --ground: #16121A;
-    --surface: #1E1922;
-    --surface-2: #262030;
-    --ink: #F2EBF2;
-    --ink-soft: #BCAFC2;
-    --ink-mute: #8B7F92;
-    --line: #322A38;
-    --line-strong: #473C50;
+    --surface: #1F1A24;
+    --surface-2: #29222F;
+    --ink: #F4EEF4;
+    --ink-soft: #CDC2D2;
+    --ink-mute: #A89CAF;
+    --line: #342B3A;
+    --line-strong: #5A4D63;
     --accent: #D9A163;
+    --accent-text: #E2B078;
     --accent-soft: #3A2C22;
-    --warn: #F08A72;
-    --deep: #C4A5D6;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -12px rgba(0, 0, 0, .6);
+    --cta: #D9A163;
+    --cta-ink: #1A141E;
+    --warn: #F39A84;
+    --deep: #CDB2DD;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px -14px rgba(0, 0, 0, .7);
   }
 
   * { box-sizing: border-box; }
+  /* Основной кегль 18 px задан на корне, в процентах: все размеры в rem
+     считаются от него, а человек, увеличивший шрифт в настройках, получит
+     увеличенный и здесь. Самый мелкий текст на странице — 15,5 px. */
+  html { font-size: 112.5%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
   body {
     margin: 0;
     background: var(--ground);
     color: var(--ink);
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: 17px;
-    line-height: 1.55;
+    font-size: 1rem;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
 
   .wrap {
     max-width: 34rem;
     margin: 0 auto;
-    padding: 1.25rem 1.15rem calc(3rem + env(safe-area-inset-bottom));
+    padding: 1rem 1.1rem calc(3.5rem + env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.3rem;
     min-height: 100vh;
   }
 
-  /* — шкала приёмника — */
-  .top { display: flex; flex-direction: column; gap: .75rem; }
+  /* — шапка: имя и шкала приёмника — */
+  .top { display: flex; flex-direction: column; gap: .7rem; }
 
   .brand {
-    display: flex; justify-content: space-between; align-items: baseline;
-    font-size: .7rem; letter-spacing: .14em; text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+    font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
     color: var(--ink-mute);
   }
+  #counter {
+    letter-spacing: 0; text-transform: none;
+    font-size: .9rem; color: var(--ink-soft); font-variant-numeric: tabular-nums;
+  }
 
-  /* Делений 36, поэтому зазор меньше, чем в первом тесте: на экране 320 px
-     при прежних трёх пикселях на само деление оставалось бы меньше пяти. */
+  /* Делений 36. Шкала нужна, пока идут утверждения; на результате и в анкете
+     она ничего не сообщает, и там её нет. */
   .dial { display: flex; gap: 2px; height: 22px; align-items: flex-end; }
+  .top.quiet .dial { display: none; }
 
   .tick {
     flex: 1;
@@ -187,24 +213,7 @@
   .tick.done { background: var(--line-strong); }
   .tick.now { height: 22px; background: var(--accent); }
 
-  /* — карточка — */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 1.6rem 1.4rem;
-    box-shadow: var(--shadow);
-    display: flex; flex-direction: column; gap: 1.4rem;
-  }
-
-  /* Экран результата — несколько карточек подряд: по одной на блок. */
-  .stack { display: flex; flex-direction: column; gap: 1rem; }
-
-  .step {
-    font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
-    color: var(--ink-mute); font-variant-numeric: tabular-nums;
-  }
-
+  /* — заголовки и текст — */
   h1, h2 {
     font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
     font-weight: 400;
@@ -212,53 +221,65 @@
     text-wrap: balance;
     margin: 0;
   }
-  h1 { font-size: 1.9rem; line-height: 1.25; }
-  h2 { font-size: 1.4rem; line-height: 1.35; }
-
-  /* Надзаголовок и заголовок держим одним блоком, чтобы между ними не влезал общий отступ карточки */
-  .title-block { display: flex; flex-direction: column; gap: .5rem; }
-  .title-block .step { color: var(--ink-soft); }
-
-  /* Название программы — главный акцент блока */
-  h2.offer-title {
-    font-size: 2.1rem; line-height: 1.1;
-    letter-spacing: .01em;
-    color: var(--accent);
-  }
+  h1 { font-size: 1.85rem; line-height: 1.2; }
+  h2 { font-size: 1.4rem; line-height: 1.3; }
+  h3 { margin: 0; font-size: 1.06rem; font-weight: 600; line-height: 1.35; }
 
   p { margin: 0; }
-  .lede { color: var(--ink-soft); }
-  .quiet { color: var(--ink-mute); font-size: .88rem; line-height: 1.5; }
-  .quiet a { color: var(--accent); }
+  a { color: var(--accent-text); }
 
-  .voice {
-    border-left: 2px solid var(--accent);
-    padding-left: .9rem;
-    font-family: Georgia, "Iowan Old Style", serif;
-    font-style: italic;
-    color: var(--ink-soft);
-    font-size: 1rem;
-  }
+  /* Строка над заголовком: чей это экран или сколько осталось. */
+  .eyebrow { font-size: .9rem; font-weight: 600; line-height: 1.35; color: var(--accent-text); }
+  .head { display: flex; flex-direction: column; gap: .45rem; }
 
-  /* Слова Виолы на экране результата. Тот же рисунок, что у реплики в вопросах,
-     плюс подпись: здесь важно, что это сказала она, а не тест. */
+  .lead { font-size: 1.1rem; line-height: 1.5; }
+  .soft { color: var(--ink-soft); }
+  .fine { color: var(--ink-mute); font-size: .86rem; line-height: 1.5; }
+  .center { text-align: center; }
+  .nw { white-space: nowrap; }
+  .copy { display: flex; flex-direction: column; gap: .95rem; }
+  .fine-print { display: flex; flex-direction: column; gap: .5rem; }
+  .fine-print p { color: var(--ink-mute); font-size: .86rem; line-height: 1.5; }
+
+  /* Слова Виолы. Прямая антиква, а не курсив: курсив кириллицей в этом кегле
+     читается заметно труднее. */
   .quote {
     margin: 0;
-    border-left: 2px solid var(--accent);
-    padding-left: .9rem;
-    font-family: Georgia, "Iowan Old Style", serif;
-    font-style: italic;
-    color: var(--ink-soft);
-    font-size: 1rem; line-height: 1.5;
+    padding-left: 1rem;
+    border-left: 3px solid var(--accent);
+    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    font-size: 1.06rem; line-height: 1.55;
   }
   .quote cite {
-    display: block; margin-top: .45rem;
+    display: block; margin-top: .55rem;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-style: normal; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
-    color: var(--ink-mute);
+    font-style: normal; font-size: .86rem; color: var(--ink-mute);
   }
 
-  .answers { display: flex; flex-direction: column; gap: .55rem; }
+  /* Список с ромбом: тот же знак, что деление шкалы, повёрнутое на угол. */
+  .marks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .8rem; }
+  .marks li { position: relative; padding-left: 1.6rem; }
+  .marks li::before {
+    content: ""; position: absolute; left: .2rem; top: .58em;
+    width: .5rem; height: .5rem; border-radius: 1px;
+    background: var(--accent); transform: rotate(45deg);
+  }
+  .marks b { font-weight: 600; }
+  .marks span { display: block; color: var(--ink-soft); font-size: .95rem; line-height: 1.5; }
+
+  /* — карточка: один экран, один вопрос — */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1.5rem 1.2rem;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 1.25rem;
+  }
+
+  .q-text { font-size: 1.35rem; line-height: 1.35; }
+
+  .answers { display: flex; flex-direction: column; gap: .6rem; }
 
   button.ans {
     appearance: none;
@@ -267,359 +288,224 @@
     color: var(--ink);
     background: var(--surface);
     border: 1px solid var(--line-strong);
-    border-radius: 3px;
-    padding: .85rem 1rem;
+    border-radius: 4px;
+    padding: .95rem 1.05rem;
+    min-height: 3.3rem;
     cursor: pointer;
     transition: background-color .15s ease, border-color .15s ease, transform .08s ease;
   }
   button.ans:hover { background: var(--surface-2); border-color: var(--accent); }
   button.ans:active { transform: scale(.99); }
 
-  button.go {
+  /* Главная кнопка. На экране она одна. */
+  .go {
     appearance: none;
-    font: inherit;
-    font-weight: 600;
-    color: var(--ground);
-    background: var(--ink);
-    border: 1px solid var(--ink);
-    border-radius: 3px;
-    padding: .9rem 1.2rem;
-    cursor: pointer;
-    transition: opacity .15s ease;
-  }
-  button.go:hover { opacity: .88; }
-  button.go:disabled { opacity: .6; cursor: default; }
-
-  .go.big {
-    background: var(--accent);
-    border: 1px solid var(--accent);
-    border-radius: 3px;
-    color: #FFF;
-    font: inherit; font-weight: 600;
-    font-size: 1.06rem;
+    display: block; width: 100%;
+    font: inherit; font-weight: 600; font-size: 1.08rem; line-height: 1.3;
+    text-align: center; text-decoration: none;
+    color: var(--cta-ink);
+    background: var(--cta);
+    border: 1px solid var(--cta);
+    border-radius: 4px;
     padding: 1.05rem 1.2rem;
     cursor: pointer;
-    box-shadow: 0 6px 18px -8px var(--accent);
-    transition: transform .12s ease, box-shadow .2s ease, filter .2s ease;
+    transition: transform .12s ease, filter .2s ease;
   }
-  .go.big:hover {
-    opacity: 1;
-    filter: brightness(1.06);
-    transform: translateY(-1px);
-    box-shadow: 0 10px 24px -10px var(--accent);
-  }
-  .go.big:active { transform: translateY(0); }
-  /* На тёмной теме акцент светлый, белый текст по нему читается плохо. */
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .go.big { color: #16121A; }
-  }
-  :root[data-theme="dark"] .go.big { color: #16121A; }
-
-  a.go { display: block; text-align: center; text-decoration: none; }
-
-  .fields { display: flex; flex-direction: column; gap: 1rem; }
-  .fields label, .field-l {
-    display: flex; flex-direction: column; gap: .35rem;
-    font-size: .74rem; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-  .fields input, .fields textarea {
-    font: inherit; font-size: 1.02rem; color: var(--ink);
-    background: var(--surface-2);
-    border: 1px solid var(--line-strong);
-    border-radius: 3px;
-    padding: .8rem .9rem;
-    text-transform: none; letter-spacing: normal;
-    width: 100%;
-  }
-  .fields textarea { resize: vertical; min-height: 5.2rem; line-height: 1.45; }
-  .fields input:focus, .fields textarea:focus { border-color: var(--accent); outline: none; }
-  .fields .err { border-color: var(--warn); }
-  .field-hint {
-    font-size: .86rem; color: var(--ink-mute); line-height: 1.45;
-    text-transform: none; letter-spacing: normal;
-  }
-  .field-err {
-    color: var(--warn); font-size: .88rem; font-weight: 600; line-height: 1.4;
-    text-transform: none; letter-spacing: normal;
-  }
-
-  /* Шкала готовности 1–10: две строки по пять, чтобы в кнопку попадал палец. */
-  .scale10 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .45rem; }
-  .scale10.err { outline: 2px solid var(--warn); outline-offset: 4px; border-radius: 3px; }
-  .scale-ends {
-    display: flex; justify-content: space-between; gap: 1rem; white-space: nowrap;
-    font-size: .82rem; color: var(--ink-mute); line-height: 1.35;
-    text-transform: none; letter-spacing: normal;
-  }
-  .chips { display: flex; flex-direction: column; gap: .5rem; }
-  .chip {
-    appearance: none; font: inherit; font-size: .98rem;
-    font-variant-numeric: tabular-nums;
-    color: var(--ink); background: var(--surface);
-    border: 1px solid var(--line-strong); border-radius: 3px;
-    padding: .75rem .4rem; cursor: pointer; text-align: center;
-    transition: background-color .15s ease, border-color .15s ease;
-  }
-  .chips .chip { text-align: left; padding: .75rem .9rem; }
-  .chip:hover { border-color: var(--accent); }
-  .chip.on { background: var(--accent-soft); border-color: var(--accent); font-weight: 600; }
-
-  .cta-note {
-    font-size: .82rem; color: var(--ink-mute); text-align: center;
-    margin-top: -.15rem;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .go.big { transition: none; }
-    .go.big:hover { transform: none; }
-  }
+  .go:hover { filter: brightness(1.07); transform: translateY(-1px); }
+  .go:active { transform: translateY(0); }
+  .go:disabled { opacity: .6; cursor: default; }
 
   .ghost {
-    appearance: none; font: inherit; font-size: .85rem;
+    appearance: none; font: inherit; font-size: .95rem;
     background: none; border: none; color: var(--ink-mute);
-    cursor: pointer; padding: .4rem 0; text-align: left;
+    cursor: pointer; padding: .5rem 0; text-align: left;
     align-self: flex-start;
   }
   .ghost:hover { color: var(--ink); }
 
+  .foot { display: flex; flex-direction: column; gap: .7rem; }
+
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-  /* — результат — */
-  .cap {
-    font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-  .verdict { display: flex; flex-direction: column; gap: .5rem; }
-  /* «Сочувствующий» при 2.3rem на экране 320 px вылезал за край карточки. */
-  .verdict h1 { color: var(--accent); font-size: clamp(1.7rem, 9.2vw, 2.3rem); }
-
-  .body-copy { display: flex; flex-direction: column; gap: .85rem; }
-
-  .addendum {
-    background: var(--surface-2);
-    border-radius: 3px;
-    padding: .9rem 1rem;
-    font-size: .93rem;
-    color: var(--ink-soft);
-  }
-
-  /* Сфера стоит внутри блока «Тип», но отбита линией: это второй результат,
-     а не продолжение описания типа. */
-  .sphere {
-    border-top: 1px solid var(--line);
-    padding-top: 1.2rem;
+  /* — анкета — */
+  .fields { display: flex; flex-direction: column; gap: 1.4rem; }
+  .fields label, .field-l {
     display: flex; flex-direction: column; gap: .45rem;
+    font-weight: 600; line-height: 1.4;
   }
-  .sphere-name {
-    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-size: 1.45rem; line-height: 1.3; color: var(--deep);
+  .field-hint { font-weight: 400; font-size: .9rem; color: var(--ink-mute); line-height: 1.45; }
+  .fields input, .fields textarea {
+    font: inherit; font-weight: 400; color: var(--ink);
+    background: var(--surface-2);
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    padding: .85rem .95rem;
+    width: 100%;
   }
-  .sphere p { color: var(--ink-soft); }
+  .fields textarea { resize: vertical; min-height: 5.6rem; line-height: 1.5; }
+  .fields input:focus, .fields textarea:focus { border-color: var(--accent); outline: none; }
+  .fields .err { border-color: var(--warn); }
 
-  /* — портрет в цифрах — */
-  .portrait-head {
+  /* Шкала готовности 1–10: две строки по пять, чтобы в кнопку попадал палец. */
+  .scale10 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; }
+  .scale10.err { outline: 2px solid var(--warn); outline-offset: 4px; border-radius: 4px; }
+  .scale-ends {
+    display: flex; justify-content: space-between; gap: 1rem; white-space: nowrap;
+    font-weight: 400; font-size: .86rem; color: var(--ink-mute);
+  }
+  .chips { display: flex; flex-direction: column; gap: .5rem; }
+  .chip {
+    appearance: none; font: inherit; font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line-strong); border-radius: 4px;
+    padding: .8rem .4rem; min-height: 3rem; cursor: pointer; text-align: center;
+    transition: background-color .15s ease, border-color .15s ease;
+  }
+  .chips .chip { text-align: left; padding: .8rem .95rem; }
+  .chip:hover { border-color: var(--accent); }
+  .chip.on { background: var(--accent-soft); border-color: var(--accent); font-weight: 600; }
+
+  .consents { display: flex; flex-direction: column; gap: .8rem; }
+  .cb {
+    display: grid; grid-template-columns: 24px 1fr; gap: .6rem; align-items: start;
+    font-size: .92rem; line-height: 1.5; color: var(--ink-soft); cursor: pointer;
+  }
+  .cb input { width: 22px; height: 22px; margin: .1rem 0 0; accent-color: var(--accent); }
+  .cb.err span { color: var(--warn); }
+  .cb.err input { outline: 2px solid var(--warn); outline-offset: 2px; }
+  .fine.err { color: var(--warn); font-weight: 600; font-size: .92rem; }
+
+  /* — результат: сплошная страница, блоки отбиты линией и воздухом — */
+  .page { display: flex; flex-direction: column; }
+  .sec {
+    display: flex; flex-direction: column; gap: 1.2rem;
+    padding: 2.3rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .sec:first-child { border-top: 0; padding-top: .7rem; }
+  .group { display: flex; flex-direction: column; gap: .7rem; }
+
+  /* Название типа — самое крупное на странице. На 320 px «Сочувствующий»
+     обязан помещаться в строку, отсюда привязка к ширине экрана. */
+  .type-name { font-size: clamp(1.7rem, 10.5vw, 2.6rem); line-height: 1.1; color: var(--accent-text); }
+  /* Ответ на вопрос заголовка: сфера, название программы. */
+  .answer {
     font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-size: 1.25rem; line-height: 1.4;
+    font-size: 1.75rem; line-height: 1.2; color: var(--deep);
     text-wrap: balance;
   }
-  .bars { display: flex; flex-direction: column; gap: 1.05rem; }
-  .bar-row { display: grid; grid-template-columns: 1fr auto; column-gap: .75rem; align-items: baseline; }
-  .bar-name { font-weight: 600; }
-  .bar-num { font-variant-numeric: tabular-nums; color: var(--ink-soft); font-size: .95rem; }
-  .bar-cap { grid-column: 1 / -1; color: var(--ink-mute); font-size: .86rem; line-height: 1.35; }
-  .bar-track {
-    grid-column: 1 / -1; margin-top: .4rem;
-    height: 8px; border-radius: 4px; background: var(--line); overflow: hidden;
-  }
-  .bar-fill {
-    display: block;
-    height: 100%; width: 0; border-radius: 4px; background: var(--accent);
-    transition: width .7s cubic-bezier(.2, .7, .2, 1);
-  }
+  .answer.gold { color: var(--accent-text); font-size: clamp(1.7rem, 9.6vw, 2.3rem); line-height: 1.12; }
 
-  .foot { display: flex; flex-direction: column; gap: .6rem; }
-
-  .bridge {
-    background: var(--accent-soft);
-    border-radius: 3px;
-    padding: 1rem 1.05rem;
-    font-family: Georgia, "Iowan Old Style", serif;
-    font-size: 1.05rem;
-    line-height: 1.45;
-  }
-
-  /* Техника «Мне можно и могу»: два слова крупно, остальное её же текстом. */
-  .mantra {
-    background: var(--accent-soft);
-    border-radius: 3px;
-    padding: 1.15rem 1.1rem;
-    display: flex; flex-direction: column; gap: .85rem;
-    font-family: Georgia, "Iowan Old Style", serif;
-    font-size: 1.04rem; line-height: 1.45;
-  }
-  .mantra b { display: block; font-weight: 400; font-size: 1.5rem; line-height: 1.25; margin-bottom: .15rem; }
-
-  .sub-h {
+  .pull {
     font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-size: 1.15rem; line-height: 1.35; color: var(--deep);
+    font-size: 1.25rem; line-height: 1.4;
   }
-  .strong-line { font-weight: 600; }
+  .pull span { display: block; text-wrap: balance; }
 
-  /* — карточка для пересылки — */
-  .cardimg {
-    display: block; width: 100%; max-width: 19rem; height: auto;
-    margin: 0 auto;
-    border-radius: 6px;
-    box-shadow: var(--shadow);
-  }
-
-  .inside {
-    display: flex; flex-direction: column; gap: .6rem;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding: 1.1rem 0;
-  }
-  .inside-h {
-    font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-  .inside ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .45rem; }
-  .inside li { position: relative; padding-left: 1.1rem; color: var(--ink); font-size: 1rem; line-height: 1.5; }
-  .inside li b { color: var(--ink-mute); font-weight: 400; margin-right: .35rem; }
-  .inside li::before {
-    content: ""; position: absolute; left: 0; top: .62em;
-    width: 5px; height: 5px; border-radius: 50%; background: var(--line-strong);
-  }
-  .inside li.mine::before { background: var(--accent); width: 7px; height: 7px; left: -1px; top: .55em; }
-  .inside li.mine { font-weight: 600; }
-  .inside li.mine .wq { font-weight: 400; }
-  /* Вопрос недели — внутренний голос человека, поэтому курсив и отдельная строка. */
-  .wq {
-    display: block; margin-top: .18rem;
-    color: var(--ink-soft); font-size: .92rem; line-height: 1.4; font-style: italic;
-  }
-
-  /* Неделя под сферу человека: с неё начинается путь по программе. */
-  .yours {
-    background: var(--surface-2);
-    border-radius: 3px;
-    padding: 1rem 1.05rem;
-    display: flex; flex-direction: column; gap: .3rem;
-  }
-  .yours-h {
-    font-size: .7rem; letter-spacing: .13em; text-transform: uppercase;
-    color: var(--accent);
-  }
-  .yours-t { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-size: 1.15rem; line-height: 1.35; }
-
-  .gets { display: flex; flex-direction: column; gap: .55rem; }
-  .gets-h {
-    font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-  .gets ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .4rem; }
-  .gets li {
-    position: relative; padding-left: 1.05rem;
-    color: var(--ink-soft); font-size: .95rem; line-height: 1.45;
-  }
-  .gets li::before { content: "—"; position: absolute; left: 0; color: var(--ink-mute); }
-  /* Бонусы за анкету — тот же список, но выделен фоном и своей отметкой. */
-  .gets.bonus {
-    background: var(--surface-2);
-    border-radius: 3px;
-    padding: 1.05rem 1.1rem;
-  }
-  .gets.bonus .gets-h { color: var(--accent); }
-  .gets.bonus ul { gap: .75rem; }
-  .gets.bonus li { color: var(--ink); padding-left: 1.75rem; }
-  .gets.bonus li::before { content: "🎁"; font-size: 1rem; top: .05em; }
-  .gets.bonus li b { font-weight: 600; }
-  .mins { display: block; margin-top: .35rem; color: var(--ink-soft); font-size: .88rem; line-height: 1.5; }
-
-  .med { color: var(--ink-mute); font-size: .82rem; line-height: 1.45; }
-
-  .status {
+  /* Плашка для одного важного: техника на вечер, даты потока. */
+  .panel {
     background: var(--accent-soft);
-    border-radius: 3px;
-    padding: .75rem .9rem;
-    color: var(--ink);
-    font-size: .93rem; line-height: 1.5;
+    border-radius: 4px;
+    padding: 1.15rem 1.15rem;
   }
-  .status b { font-weight: 600; }
+  .panel b { font-weight: 600; }
+  .mantra {
+    display: flex; flex-direction: column; gap: 1rem;
+    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    font-size: 1.06rem; line-height: 1.5;
+  }
+  .mantra b { display: block; font-weight: 400; font-size: 1.5rem; line-height: 1.2; margin-bottom: .2rem; }
 
-  .hl { color: var(--accent); font-weight: 600; }
+  /* — портрет в цифрах: шкалы делениями, как у приёмника в шапке — */
+  .gauges { display: flex; flex-direction: column; gap: 1.6rem; }
+  .gauge-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .gauge-name { font-weight: 600; font-size: 1.08rem; }
+  .gauge-num { font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+  .gauge-ticks { display: flex; gap: 4px; margin: .55rem 0 .5rem; }
+  .gauge-ticks i {
+    flex: 1; height: 12px; border-radius: 2px;
+    background: var(--line-strong);
+    transition: background-color .3s ease;
+  }
+  .gauge-ticks i.on { background: var(--accent); }
+  .gauge-cap { color: var(--ink-mute); font-size: .9rem; line-height: 1.4; }
 
-  .powers ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .55rem; }
-  .powers li { position: relative; padding-left: 1.5rem; font-size: 1.04rem; line-height: 1.4; }
-  .powers li::before {
-    content: "✦"; position: absolute; left: 0; top: 0;
-    color: var(--accent); font-size: .85rem;
+  /* — программа по неделям — */
+  .weeks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
+  .weeks li {
+    display: grid; grid-template-columns: 2rem 1fr; column-gap: .7rem;
+    padding: .95rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .weeks li:first-child { border-top: 0; }
+  .week-n {
+    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    font-size: 1.5rem; line-height: 1.15; color: var(--ink-mute);
+  }
+  .week-t { font-weight: 600; line-height: 1.4; }
+  .week-q { margin-top: .2rem; color: var(--ink-soft); font-size: .95rem; line-height: 1.5; }
+  /* Неделя под сферу человека стоит первой и выделена: с неё начинается путь. */
+  .weeks li.mine {
+    background: var(--surface-2);
+    border-top: 0; border-radius: 4px;
+    margin: 0 -.7rem .5rem; padding: 1rem .7rem 1.05rem;
+  }
+  .weeks li.mine + li { border-top: 0; }
+  .weeks li.mine .week-n { color: var(--accent-text); }
+  .mine-tag {
+    grid-column: 1 / -1; margin-bottom: .5rem;
+    font-size: .9rem; font-weight: 600; color: var(--accent-text);
   }
 
-  .intro-voice p { font-size: 1.02rem; }
-  .nw { white-space: nowrap; }
-  .intro-get { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .4rem; }
-  .intro-get li { position: relative; padding-left: 1.35rem; font-size: .98rem; line-height: 1.4; }
-  .intro-get li::before {
-    content: "✦"; position: absolute; left: 0; top: 0;
-    color: var(--accent); font-size: .85rem;
+  /* Единственная рамка на странице: что человек получит и кнопка. */
+  .offer-card {
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: 6px;
+    padding: 1.45rem 1.2rem;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 1.2rem;
   }
 
-  /* — отзывы и вопросы — */
-  .reviews { display: flex; flex-direction: column; gap: .8rem; }
-  .review { background: var(--surface-2); border-radius: 3px; padding: .95rem 1rem; font-size: .95rem; line-height: 1.5; }
-  .review small { display: block; margin-top: .4rem; color: var(--ink-mute); font-size: .8rem; }
+  .reviews { display: flex; flex-direction: column; gap: .9rem; }
+  .review { background: var(--surface-2); border-radius: 4px; padding: 1.05rem 1.1rem; }
+  .review small { display: block; margin-top: .45rem; color: var(--ink-mute); font-size: .86rem; }
 
   .faq { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
-  .faq details { border-bottom: 1px solid var(--line); padding: .8rem 0; }
+  .faq details { border-bottom: 1px solid var(--line); padding: 1rem 0; }
   .faq summary {
-    cursor: pointer; list-style: none; position: relative; padding-right: 1.5rem;
-    font-weight: 600; font-size: .97rem; line-height: 1.4;
+    cursor: pointer; list-style: none; position: relative; padding-right: 2rem;
+    font-weight: 600; line-height: 1.4;
   }
   .faq summary::-webkit-details-marker { display: none; }
   .faq summary::after {
-    content: "+"; position: absolute; right: .1rem; top: -.1rem;
-    color: var(--accent); font-size: 1.3rem; font-weight: 400;
+    content: "+"; position: absolute; right: .15rem; top: -.2rem;
+    color: var(--accent-text); font-size: 1.5rem; font-weight: 400;
   }
   .faq details[open] summary::after { content: "–"; }
-  .faq details p { margin-top: .5rem; color: var(--ink-soft); font-size: .95rem; line-height: 1.5; }
+  .faq details p { margin-top: .6rem; color: var(--ink-soft); }
 
-  .consents { display: flex; flex-direction: column; gap: .65rem; }
-  .cb {
-    display: grid; grid-template-columns: 20px 1fr; gap: .55rem; align-items: start;
-    font-size: .88rem; line-height: 1.45; color: var(--ink-soft); cursor: pointer;
-  }
-  .cb input { width: 18px; height: 18px; margin: .1rem 0 0; accent-color: var(--accent); }
-  .cb a { color: var(--accent); }
-  .cb.err span { color: var(--warn); }
-  .cb.err input { outline: 2px solid var(--warn); outline-offset: 2px; }
-  .cta-note.err { color: var(--warn); font-weight: 600; }
-
-  .disclaim {
-    font-size: .8rem; color: var(--ink-mute);
-    border-top: 1px solid var(--line); padding-top: .9rem;
-  }
-  .tail { display: flex; flex-direction: column; gap: .7rem; padding: .4rem .25rem 0; }
+  .tail { display: flex; flex-direction: column; gap: .6rem; padding-top: 1.6rem; border-top: 1px solid var(--line); }
 
   .fade { animation: fade .18s ease-out; }
   @keyframes fade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) {
     .fade { animation: none; }
-    .tick { transition: none; }
-    .bar-fill { transition: none; }
+    .tick, .gauge-ticks i, .go { transition: none; }
+    .go:hover { transform: none; }
   }
 </style>
 
 <div class="wrap">
-  <div class="top">
+  <header class="top" id="top">
     <div class="brand">
       <span>Виола Маро</span>
       <span id="counter"></span>
     </div>
-    <div class="dial" id="dial"></div>
-  </div>
-  <div id="screen"></div>
+    <div class="dial" id="dial" aria-hidden="true"></div>
+  </header>
+  <main id="screen"></main>
 </div>
 
 <script>
@@ -641,11 +527,6 @@ const CONFIG = {
   sheetUrl: "https://script.google.com/macros/s/AKfycbxzJaSclK7FTBSK0X7cAIJcscvwt9qyAGSsYGCrFHehtTvYPPEzTloDjCgsDj7v77n9jQ/exec",
   cabinetUrl: "https://t.me/+ot1pJz8KHlo2YTky",   // Кабинет предзаписи: в закрепе оба бонуса
   publicChannel: "https://t.me/violamaro1",        // открытый — для тех, кто не эмпат
-  /* Ссылка, которая уходит вместе с карточкой. Метка share пишется в «Источник»:
-     по ней видно, сколько людей пришло по пересылке. Когда у теста появится
-     прямая ссылка в боте, сюда ставится она, с startapp=src_share. */
-  shareUrl: "https://violamaro.ru/test2/?src=share",
-  shareShort: "violamaro.ru/test2",
   /* Правовые страницы живут на сайте оплаты — тексты и редакции там одни на всё. */
   docs: {
     consent: "https://violamaro.ru/consent/",
@@ -656,7 +537,7 @@ const CONFIG = {
   docVersionConsent: "2026-08-10",
   /* Выключатели блоков результата. «Кто рядом» стоит на цитатах из платной
      методички и ждёт решения Ильи и визы Виолы: снимается одним словом false. */
-  blocks: { ryadom: true, vecher: true, card: true }
+  blocks: { ryadom: true, vecher: true }
 };
 
 /* ——— вопросы блока А: профиль ———
@@ -896,6 +777,11 @@ const PROGRAM = {
   reviewsHead: "Что говорят выпускницы",
   reviews: [],
   bonusHead: "Что вы получите за анкету",
+  bonus: [
+    ["Аудиомедитация Виолы «Мне можно»", "9 минут, с закрытого уикенда."],
+    ["Запись эфира «Что такое быть эмпатом и почему вами пользуются»", "2 часа."],
+    ["Кабинет предзаписи", "Закрытый канал, оба бонуса лежат там в закрепе."]
+  ],
   cta: "Заполнить анкету и получить бонусы",
   ctaNote: "2 минуты. Бесплатно, это не оплата.",
   faqHead: "Частые вопросы",
@@ -908,17 +794,6 @@ const PROGRAM = {
     ["А если во время работы станет тяжело?", "Так бывает, и об этом лучше знать заранее: когда начинаешь разбирать то, что годами лежало нетронутым, какое-то время может быть неспокойно. Темп здесь ваш, никто не подгоняет. Практикум не заменяет очную психотерапию — если сейчас у вас острое состояние, сначала стоит опереться на своего специалиста."],
     ["Я живу не в России. Смогу участвовать?", "Да. Лекции в записи, а оплата из-за рубежа работает."]
   ]
-};
-
-/* Минуты эфира 16.08 под сферу. Фрагменты про предзапись (35:32, 1:08:53,
-   1:57:27) не даём: в них условия августа. */
-const EFIR = {
-  ya:    ["0:00 залипание на эмоциях", "4:52 сенсорная перегрузка", "51:00 техника «шаг назад» и «я могу»", "1:12:41 где своё, где чужое", "1:55:17 внезапный стресс"],
-  otn:   ["10:47 границы с партнёром", "24:02 почему эмпатами легко манипулировать", "28:43 красные флажки", "33:11 доброту принимают за слабость", "1:38:45 как заново доверять"],
-  semya: ["21:39 токсичные матери", "1:24:38 подросток закрывается", "1:47:22 сепарация", "1:54:11 взрослые дети"],
-  telo:  ["6:00 хронический стресс и психосоматика", "7:27 спящий эмпат", "46:26 сны"],
-  delo:  ["58:43 интуиция", "1:00:27 писать или говорить", "1:05:59 профессия и призвание", "1:27:26 гиперфокус"],
-  dengi: ["55:42 как давать в балансе", "1:16:13 как направить силу на желаемое"]
 };
 
 /* ——— анкета предзаписи ———
@@ -946,7 +821,7 @@ const FORM = [
 /* ——— «ваши суперспособности»: выводим из ответов, а не раздаём всем одинаково.
    Берём три самые сильные стороны — так это читается как вывод, а не как лесть.
    Перенесено из первого теста без изменений. */
-function powersRanked(sc, v) {
+function powers(sc, v) {
   const list = [
     { w: sc.A,        t: "Считываете человека раньше, чем он открыл рот" },
     { w: v[1] * 3,    t: "Слышите, когда слова про одно, а человек про другое" },
@@ -958,22 +833,7 @@ function powersRanked(sc, v) {
     { w: (6 - sc.G) * 1.5, t: "Восстанавливаетесь заранее, пока ещё не накрыло" },
     { w: sc.L * 1.5,  t: "Точно знаете, от кого именно устали" }
   ];
-  return list.sort((a, b) => b.w - a.w);
-}
-function powers(sc, v) {
-  return powersRanked(sc, v).slice(0, 3).map(x => x.t);
-}
-
-/* Суперспособности для карточки. У четырёх типов эмпата и у «Считывающего» —
-   те же три, что на экране. «Сочувствующему» и «Другой настройке» первый тест
-   суперспособностей не показывал вовсе: при радаре 2 из 9 строка «считываете
-   человека раньше, чем он открыл рот» была бы лестью. Им на карточку идёт
-   только то, что стоит на твёрдых ответах; не набралось — вместо списка
-   на карточке их портрет в цифрах. */
-function cardPowers(r) {
-  const ranked = powersRanked(r.scales, answers);
-  if (r.key === "caring" || r.key === "other") return ranked.filter(x => x.w >= 6).slice(0, 3).map(x => x.t);
-  return ranked.slice(0, 3).map(x => x.t);
+  return list.sort((a, b) => b.w - a.w).slice(0, 3).map(x => x.t);
 }
 
 /* ——— состояние ——— */
@@ -997,6 +857,8 @@ let leadSent = false;
 const screen = document.getElementById("screen");
 const dial = document.getElementById("dial");
 const counter = document.getElementById("counter");
+/* Не «top»: это имя в окне браузера занято и переопределить его нельзя. */
+const topBar = document.getElementById("top");
 
 ALL.forEach(() => {
   const t = document.createElement("div");
@@ -1010,10 +872,8 @@ function paintDial() {
     ticks[i].className = "tick" +
       (stage === "q" && i === idx ? " now" : (i < answers.length ? " done" : ""));
   }
-  counter.textContent = stage === "q" ? (idx + 1) + " / " + ALL.length
-    : (stage === "fork" || stage === "words" || stage === "age") ? "почти всё"
-    : stage === "result" ? "результат"
-    : stage === "form" ? "анкета" : "";
+  counter.textContent = stage === "q" ? (idx + 1) + " из " + ALL.length : "";
+  topBar.className = stage === "q" || stage === "intro" ? "top" : "top quiet";
 }
 
 /* ——— Телеграм ——— */
@@ -1128,7 +988,27 @@ function el(html) {
   const d = document.createElement("div");
   d.className = "fade";
   d.innerHTML = html;
+  typograf_(d);
   return d;
+}
+
+/* Неразрывные пробелы: тире не начинает строку, а предлог, союз или число
+   не остаётся в её конце. На узком экране без этого каждая третья строка
+   кончалась на «и», «в» или «не». Поля ввода не трогаем. */
+const SHORT_WORD = /(^|[\s«(\u00A0])([А-Яа-яЁё]{1,2}|\d+)[ \t\n]+(?=\S)/g;
+function typograf_(root) {
+  if (!document.createTreeWalker) return;
+  const walker = document.createTreeWalker(root, 4 /* NodeFilter.SHOW_TEXT */, null);
+  let node;
+  while ((node = walker.nextNode())) {
+    const tag = node.parentNode && node.parentNode.nodeName;
+    if (tag === "TEXTAREA" || tag === "SCRIPT" || tag === "STYLE") continue;
+    let t = node.nodeValue, was;
+    if (!/\S/.test(t)) continue;
+    t = t.replace(/ — /g, "\u00A0— ");
+    do { was = t; t = t.replace(SHORT_WORD, "$1$2\u00A0"); } while (t !== was);
+    if (t !== node.nodeValue) node.nodeValue = t;
+  }
 }
 
 /* Имя из Телеграма и свои слова подставляются в разметку. Кавычка в имени
@@ -1180,21 +1060,21 @@ function intro() {
   const n = el(`
     <div class="card">
       <h1>Какой вы эмпат?</h1>
-      <div class="body-copy intro-voice">
-        <p>Узнаете, какой вы эмпат и какая сфера жизни забирает у вас больше всего.</p>
-      </div>
-      <ul class="intro-get">
+      <p class="lead">Узнаете, какой вы эмпат и какая сфера жизни забирает у вас больше всего.</p>
+      <ul class="marks">
         <li>Ваш тип и портрет в цифрах</li>
         <li>Сфера, где у вас уходит больше всего сил</li>
         <li>Что можно сделать уже сегодня вечером</li>
       </ul>
-      <div class="body-copy intro-voice">
-        <p>Тут тридцать шесть утверждений. Отвечайте сразу, первым, что придёт в голову. Начнёте примерять каждое слово — получится про кого-то другого.</p>
-        <p>Правильных ответов тут нет, оценивать вас никто не будет. Это <span class="nw">3–5 минут</span>.</p>
+      <div class="copy soft">
+        <p>Тут тридцать шесть утверждений, это <span class="nw">3–5 минут</span>. Отвечайте сразу, первым, что придёт в голову. Начнёте примерять каждое слово — получится про кого-то другого.</p>
+        <p>Правильных ответов тут нет, оценивать вас никто не будет.</p>
       </div>
-      <p class="quiet">${DISCLAIM}</p>
       <button class="go" id="start">Начать</button>
-      <p class="quiet">Нажимая «Начать», вы соглашаетесь с <a href="${CONFIG.docs.privacy}" target="_blank" rel="noopener">Политикой обработки персональных данных</a>.</p>
+      <div class="fine-print">
+        <p>${DISCLAIM}</p>
+        <p>Нажимая «Начать», вы соглашаетесь с <a href="${CONFIG.docs.privacy}" target="_blank" rel="noopener">Политикой обработки персональных данных</a>.</p>
+      </div>
     </div>`);
   n.querySelector("#start").addEventListener("click", () => {
     idx = 0; startedAt = Date.now(); pid = newPid_();
@@ -1211,11 +1091,11 @@ function question() {
   const prev = idx > 0 ? ALL[idx - 1] : null;
   const react = prev && prev.re && answers[idx - 1] >= 2 ? prev.re : "";
   const voice = [react, q.note].filter(Boolean).join(" ");
+  /* Номера утверждения в карточке нет: он уже стоит в шапке, над шкалой. */
   const n = el(`
     <div class="card">
-      ${voice ? `<p class="voice">${voice}</p>` : ""}
-      <div class="step">Утверждение ${idx + 1}</div>
-      <h2>${q.t}</h2>
+      ${voice ? `<blockquote class="quote soft">${voice}</blockquote>` : ""}
+      <h2 class="q-text">${q.t}</h2>
       <div class="answers">
         ${SCALE.map((s, i) => `<button class="ans" data-v="${3 - i}">${s}</button>`).join("")}
       </div>
@@ -1240,8 +1120,10 @@ function fork() {
   const f = FORKS[idx];
   const n = el(`
     <div class="card">
-      <div class="step">${leftWord_(FORKS.length - idx + 2)}</div>
-      <h2>${f.q}</h2>
+      <div class="head">
+        <div class="eyebrow">${leftWord_(FORKS.length - idx + 2)}</div>
+        <h2 class="q-text">${f.q}</h2>
+      </div>
       <div class="answers">
         ${f.a.map((o, i) => `<button class="ans" data-i="${i}">${o[0]}</button>`).join("")}
       </div>
@@ -1267,9 +1149,11 @@ function wordsScreen() {
   stage = "words";
   const n = el(`
     <div class="card">
-      <div class="step">${leftWord_(2)}</div>
-      <h2>Что вы хотите изменить в первую очередь?</h2>
-      <p class="lede">Своими словами, как сказали бы подруге. Одной фразы хватит.</p>
+      <div class="head">
+        <div class="eyebrow">${leftWord_(2)}</div>
+        <h2 class="q-text">Что вы хотите изменить в первую очередь?</h2>
+      </div>
+      <p class="soft">Своими словами, как сказали бы подруге. Одной фразы хватит.</p>
       <div class="fields">
         <textarea id="w" rows="3" maxlength="400" aria-label="Что вы хотите изменить в первую очередь">${esc(words)}</textarea>
       </div>
@@ -1291,12 +1175,14 @@ function ageScreen() {
   stage = "age";
   const n = el(`
     <div class="card">
-      <div class="step">${leftWord_(1)}</div>
-      <h2>Сколько вам лет?</h2>
+      <div class="head">
+        <div class="eyebrow">${leftWord_(1)}</div>
+        <h2 class="q-text">Сколько вам лет?</h2>
+      </div>
       <div class="answers">
         ${AGES.map((a, i) => `<button class="ans" data-i="${i}">${a}</button>`).join("")}
       </div>
-      <p class="quiet">На результат не влияет.</p>
+      <p class="fine">На результат не влияет.</p>
       <button class="ghost" id="back">← Назад</button>
     </div>`);
   n.querySelectorAll(".ans").forEach(b => b.addEventListener("click", () => {
@@ -1309,179 +1195,183 @@ function ageScreen() {
 }
 
 /* ——— экран результата ———
-   Порядок блоков: тип · портрет в цифрах · суперспособности · кто рядом ·
-   что сделать сегодня вечером · карточка · программа и анкета.
+   Порядок блоков: тип и сфера · портрет в цифрах · суперспособности ·
+   кто рядом · что сделать сегодня вечером · программа и анкета.
    Трём типам без анкеты (Считывающий, Сочувствующий, Другая настройка):
-   тип, портрет, карточка, кнопка в открытый канал. */
-const BLOCKS = ["type", "portrait", "powers", "ryadom", "vecher", "card", "program"];
+   тип, портрет, кнопка в открытый канал.
+   Каждый блок — отдельная секция со своим заголовком. data-block нужен
+   счётчику «до какого блока долистали»; у блока может быть несколько секций. */
+const BLOCKS = ["type", "portrait", "powers", "ryadom", "vecher", "program"];
 const BLOCK_NAMES = {
   type: "Тип", portrait: "Портрет в цифрах", powers: "Суперспособности",
-  ryadom: "Кто рядом", vecher: "Сегодня вечером", card: "Карточка", program: "Программа и анкета"
+  ryadom: "Кто рядом", vecher: "Сегодня вечером", program: "Программа и анкета"
 };
 
-function blockType_(r, empath) {
+function secType_(r, empath) {
   const t = RESULTS[r.key];
   const sp = empath && r.sphere ? SPHERE[r.sphere] : null;
   return `
-    <section class="card" data-block="type">
-      <div class="verdict">
-        <div class="cap">ваш тип</div>
-        <h1>${t.name}</h1>
+    <section class="sec" data-block="type">
+      <div class="head">
+        <div class="eyebrow">Ваш тип</div>
+        <h1 class="type-name">${t.name}</h1>
       </div>
-      <div class="body-copy">${t.body.map(p => `<p>${p}</p>`).join("")}</div>
-      ${r.fon ? `<p class="addendum">${FON_NOTE}</p>` : ""}
-      ${sp ? `
-        <div class="sphere">
-          <div class="cap">сфера, где у вас уходит больше всего сил</div>
-          <div class="sphere-name">${sp.t}</div>
-          <p>${sp.line}</p>
-        </div>` : ""}
-    </section>`;
+      <div class="copy">${t.body.map(p => `<p>${p}</p>`).join("")}</div>
+      ${r.fon ? `<p class="soft">${FON_NOTE}</p>` : ""}
+    </section>
+    ${sp ? `
+    <section class="sec" data-block="type">
+      <h2>Где у вас уходит больше всего сил</h2>
+      <p class="answer">${sp.t}</p>
+      <p>${sp.line}</p>
+    </section>` : ""}`;
 }
 
-function blockPortrait_(r) {
+/* Шкала делениями: сколько делений горит, столько и баллов. */
+function gauge_(name, cap, val, max) {
+  let ticks = "";
+  for (let i = 0; i < max; i++) ticks += i < val ? "<i data-lit></i>" : "<i></i>";
+  return `
+    <div class="gauge">
+      <div class="gauge-top"><span class="gauge-name">${name}</span><span class="gauge-num">${val} из ${max}</span></div>
+      <div class="gauge-ticks" aria-hidden="true">${ticks}</div>
+      <div class="gauge-cap">${cap}</div>
+    </div>`;
+}
+
+function secPortrait_(r) {
   const sc = r.scales;
   const A = sc.A, F = 9 - sc.P;
-  let head = `Радар ${A} из 9. Фильтр ${F} из 9`;
-  if (A >= RADAR_HIGH && F <= FILTER_LOW) head += ". Приёмник у вас сильный, а фильтра к нему почти нет";
-  else if (A >= RADAR_HIGH && F >= FILTER_HIGH) head += ". Вы видите много и держите это снаружи";
-  const rows = [
-    ["Радар", "как сильно вы считываете людей", A, 9],
-    ["Фильтр", "сколько чужого остаётся снаружи", F, 9],
-    ["Тело", "как сильно отвечает тело", sc.B, 9],
-    ["Отдаёте", "сколько уходит другим", sc.C, 12]
-  ];
+  let head = `Радар ${A} из 9. Фильтр ${F} из 9.`;
+  if (A >= RADAR_HIGH && F <= FILTER_LOW) head += " Приёмник у вас сильный, а фильтра к нему почти нет.";
+  else if (A >= RADAR_HIGH && F >= FILTER_HIGH) head += " Вы видите много и держите это снаружи.";
   return `
-    <section class="card" data-block="portrait">
-      <div class="cap">портрет в цифрах</div>
-      <p class="portrait-head">${head}</p>
-      <div class="bars">
-        ${rows.map(x => `
-          <div class="bar-row">
-            <span class="bar-name">${x[0]}</span>
-            <span class="bar-num">${x[2]} из ${x[3]}</span>
-            <span class="bar-cap">${x[1]}</span>
-            <span class="bar-track"><span class="bar-fill" data-w="${Math.round(x[2] / x[3] * 100)}"></span></span>
-          </div>`).join("")}
+    <section class="sec" data-block="portrait" id="portrait">
+      <h2>Портрет в цифрах</h2>
+      <p class="lead">${head}</p>
+      <div class="gauges">
+        ${gauge_("Радар", "как сильно вы считываете людей", A, 9)}
+        ${gauge_("Фильтр", "сколько чужого остаётся снаружи", F, 9)}
+        ${gauge_("Тело", "как сильно отвечает тело", sc.B, 9)}
+        ${gauge_("Отдаёте", "сколько уходит другим", sc.C, 12)}
       </div>
       <blockquote class="quote">${PORTRAIT_QUOTE}<cite>Виола Маро</cite></blockquote>
     </section>`;
 }
 
-function blockPowers_(pw) {
+function secPowers_(pw) {
   return `
-    <section class="card" data-block="powers">
-      <div class="cap">ваши суперспособности</div>
-      <div class="powers"><ul>${pw.map(x => `<li>${x}</li>`).join("")}</ul></div>
+    <section class="sec" data-block="powers">
+      <h2>Ваши суперспособности</h2>
+      <ul class="marks">${pw.map(x => `<li>${x}</li>`).join("")}</ul>
     </section>`;
 }
 
-function blockRyadom_(r) {
+function secRyadom_(r) {
   const x = RYADOM.by[ryadomKey(r)];
   const named = forks.bol && forks.bol !== "vezde" && forks.bol_text;
   return `
-    <section class="card" data-block="ryadom">
+    <section class="sec" data-block="ryadom">
       <h2>${RYADOM.title}</h2>
       <blockquote class="quote">${RYADOM.intro}<cite>Виола Маро</cite></blockquote>
-      <p class="strong-line">${RYADOM.line}</p>
-      <div class="body-copy">
-        <div class="sub-h">${x.h}</div>
+      <p class="pull">${RYADOM.line.split(". ").map((x, i, all) => `<span>${x}${i < all.length - 1 ? "." : ""}</span>`).join(" ")}</p>
+      <div class="group">
+        <h3>${x.h}</h3>
         <blockquote class="quote">${x.t}</blockquote>
-        ${named ? `<p class="lede">${RYADOM.bol}${esc(lower1(forks.bol_text))}.</p>` : ""}
       </div>
+      ${named ? `<p class="soft">${RYADOM.bol}${esc(lower1(forks.bol_text))}.</p>` : ""}
       <blockquote class="quote">${RYADOM.final}<cite>Виола Маро</cite></blockquote>
     </section>`;
 }
 
-function blockVecher_() {
+function secVecher_() {
   return `
-    <section class="card" data-block="vecher">
+    <section class="sec" data-block="vecher">
       <h2>${VECHER.title}</h2>
-      <div class="mantra">
+      <div class="panel mantra">
         ${VECHER.words.map(w => `<p><b>${w[0]}</b>${w[1]}</p>`).join("")}
       </div>
       <blockquote class="quote">${VECHER.why.join("<br>")}<cite>Виола Маро</cite></blockquote>
       ${VECHER.when ? `<p>${VECHER.when}</p>` : ""}
-      <p class="lede">${VECHER.bridge}</p>
+      <p class="soft">${VECHER.bridge}</p>
     </section>`;
 }
 
-function blockCard_(r) {
-  return `
-    <section class="card" data-block="card">
-      <div class="cap">карточка вашего типа</div>
-      <img class="cardimg" id="cardimg" alt="Карточка: мой тип — ${RESULTS[r.key].name}" width="1080" height="1350">
-      <div class="foot">
-        <button class="go" id="share">Переслать подруге</button>
-        <p class="cta-note" id="share-note">Картинку можно сохранить: нажмите на неё и удерживайте.</p>
-      </div>
-    </section>`;
-}
-
-function blockProgram_(r) {
+/* Программа — четыре секции: что это и когда, шесть недель, бонусы с кнопкой,
+   вопросы. Неделя под сферу человека стоит в списке первой. */
+function secProgram_(r) {
   const st = stream();
   const sp = r.sphere ? SPHERE[r.sphere] : null;
   const mine = sp ? WEEKS[sp.week - 1] : null;
-  const mins = sp ? EFIR[sp.k] : null;
+  const week = (w, isMine) => `
+    <li${isMine ? ' class="mine"' : ""}>
+      ${isMine ? `<div class="mine-tag">Ваша сфера: ${lower1(sp.t)}. Неделя ${w.n}</div>` : ""}
+      <span class="week-n" aria-label="Неделя ${w.n}">${w.n}</span>
+      <div>
+        <div class="week-t">${w.t}</div>
+        <div class="week-q">${w.q}</div>
+      </div>
+    </li>`;
+  const weeks = (mine ? week(mine, true) : "") +
+    WEEKS.filter(w => !mine || w.n !== mine.n).map(w => week(w, false)).join("");
   const faq = PROGRAM.faq.map(f =>
     `<details><summary>${f[0]}</summary><p>${f[1].replace("{start}", st.start)}</p></details>`).join("");
   return `
-    <section class="card" data-block="program" id="program">
-      <p class="bridge">${PROGRAM.bridge}</p>
-      <div class="title-block">
-        <div class="step">${PROGRAM.eyebrow}</div>
-        <h2 class="offer-title">${PROGRAM.title}</h2>
+    <section class="sec" data-block="program" id="program">
+      <p class="lead">${PROGRAM.bridge}</p>
+      <div class="head">
+        <div class="eyebrow">${PROGRAM.eyebrow}</div>
+        <h2 class="answer gold">${PROGRAM.title}</h2>
       </div>
-      <div class="body-copy">${PROGRAM.body.map(p => `<p>${p}</p>`).join("")}</div>
-      <p class="status"><b>Ближайший поток стартует ${st.start}.</b> Набор закрывается ${st.close} в 23:59 по Москве.</p>
-      ${mine ? `
-        <div class="yours">
-          <div class="yours-h">ваша сфера: ${lower1(sp.t)}</div>
-          <div class="yours-t">Неделя ${mine.n}. ${mine.t}</div>
-          <span class="wq">${mine.q}</span>
-        </div>` : ""}
-      <div class="inside">
-        <div class="inside-h">${PROGRAM.weeksHead}</div>
-        <ul>${WEEKS.map(w => `<li${mine && w.n === mine.n ? ' class="mine"' : ""}><b>Неделя ${w.n}.</b> ${w.t}<span class="wq">${w.q}</span></li>`).join("")}</ul>
+      <div class="copy">${PROGRAM.body.map(p => `<p>${p}</p>`).join("")}</div>
+      <p class="panel"><b>Ближайший поток стартует ${st.start}.</b> Набор закрывается ${st.close} в 23:59 по Москве.</p>
+    </section>
+
+    <section class="sec" data-block="program">
+      <h2>${PROGRAM.weeksHead}</h2>
+      <ol class="weeks">${weeks}</ol>
+      <div class="group">
+        <h3>${PROGRAM.insideHead}</h3>
+        <ul class="marks">${PROGRAM.inside.map(i => `<li>${i}</li>`).join("")}</ul>
       </div>
-      <div class="gets">
-        <div class="gets-h">${PROGRAM.insideHead}</div>
-        <ul>${PROGRAM.inside.map(i => `<li>${i}</li>`).join("")}</ul>
+      <p class="fine">${PROGRAM.med}</p>
+    </section>
+
+    ${PROGRAM.reviews.length ? `
+    <section class="sec" data-block="program">
+      <h2>${PROGRAM.reviewsHead}</h2>
+      <div class="reviews">
+        ${PROGRAM.reviews.map(v => `<div class="review">${esc(v.t)}<small>${esc(v.who)}</small></div>`).join("")}
       </div>
-      ${PROGRAM.reviews.length ? `
-        <div class="reviews">
-          <div class="gets-h">${PROGRAM.reviewsHead}</div>
-          ${PROGRAM.reviews.map(v => `<div class="review">${esc(v.t)}<small>${esc(v.who)}</small></div>`).join("")}
-        </div>` : ""}
-      <p class="med">${PROGRAM.med}</p>
-      <div class="gets bonus">
-        <div class="gets-h">${PROGRAM.bonusHead}</div>
-        <ul>
-          <li><b>Аудиомедитация Виолы «Мне можно».</b> 9 минут, с закрытого уикенда.</li>
-          <li><b>Запись эфира «Что такое быть эмпатом и почему вами пользуются».</b> 2 часа${mins ? ", с минутами под вашу сферу." : "."}
-            ${mins ? `<span class="mins">${mins.join(" · ")}</span>` : ""}</li>
-          <li><b>Кабинет предзаписи.</b> Закрытый канал, оба бонуса лежат там в закрепе.</li>
-        </ul>
+    </section>` : ""}
+
+    <section class="sec" data-block="program">
+      <div class="offer-card">
+        <h2>${PROGRAM.bonusHead}</h2>
+        <ul class="marks">${PROGRAM.bonus.map(b => `<li><b>${b[0]}</b><span>${b[1]}</span></li>`).join("")}</ul>
+        <div class="foot">
+          ${leadSent ? `
+            <button class="go" id="to-cabinet">Вы в предзаписи. Открыть Кабинет&nbsp;<span aria-hidden="true">→</span></button>` : `
+            <button class="go" id="to-form">${PROGRAM.cta}&nbsp;<span aria-hidden="true">→</span></button>
+            <p class="fine center">${PROGRAM.ctaNote}</p>`}
+        </div>
       </div>
-      <div class="foot">
-        ${leadSent ? `
-          <button class="go big" id="to-cabinet">Вы в предзаписи. Открыть Кабинет&nbsp;<span aria-hidden="true">→</span></button>` : `
-          <button class="go big" id="to-form">${PROGRAM.cta}&nbsp;<span aria-hidden="true">→</span></button>
-          <p class="cta-note">${PROGRAM.ctaNote}</p>`}
-      </div>
-      <div class="gets">
-        <div class="gets-h">${PROGRAM.faqHead}</div>
-        <div class="faq">${faq}</div>
-      </div>
+    </section>
+
+    <section class="sec" data-block="program">
+      <h2>${PROGRAM.faqHead}</h2>
+      <div class="faq">${faq}</div>
     </section>`;
 }
 
-function blockChannel_() {
+function secChannel_() {
   return `
-    <div class="foot">
-      <a class="go big" id="channel" href="${CONFIG.publicChannel}" target="_blank" rel="noopener">Читать Виолу в Телеграме&nbsp;<span aria-hidden="true">→</span></a>
-      <p class="cta-note">Каждый день — про людей, границы и чувствительность.</p>
-    </div>`;
+    <section class="sec">
+      <div class="foot">
+        <a class="go" id="channel" href="${CONFIG.publicChannel}" target="_blank" rel="noopener">Читать Виолу в Телеграме&nbsp;<span aria-hidden="true">→</span></a>
+        <p class="fine center">Каждый день — про людей, границы и чувствительность.</p>
+      </div>
+    </section>`;
 }
 
 function result(prev) {
@@ -1489,20 +1379,18 @@ function result(prev) {
   const r = prev || score();
   lastResult = r;
   const empath = EMPATH.indexOf(r.key) !== -1;
-  const pw = powers(r.scales, answers);
 
   const n = el(`
-    <div class="stack">
-      ${blockType_(r, empath)}
-      ${blockPortrait_(r)}
-      ${empath ? blockPowers_(pw) : ""}
-      ${empath && CONFIG.blocks.ryadom ? blockRyadom_(r) : ""}
-      ${empath && CONFIG.blocks.vecher ? blockVecher_() : ""}
-      ${CONFIG.blocks.card ? blockCard_(r) : ""}
-      ${empath ? blockProgram_(r) : blockChannel_()}
+    <div class="page">
+      ${secType_(r, empath)}
+      ${secPortrait_(r)}
+      ${empath ? secPowers_(powers(r.scales, answers)) : ""}
+      ${empath && CONFIG.blocks.ryadom ? secRyadom_(r) : ""}
+      ${empath && CONFIG.blocks.vecher ? secVecher_() : ""}
+      ${empath ? secProgram_(r) : secChannel_()}
       <div class="tail">
         <button class="ghost" id="again">Пройти заново</button>
-        <p class="disclaim">${DISCLAIM}</p>
+        <p class="fine">${DISCLAIM}</p>
       </div>
     </div>`);
 
@@ -1519,8 +1407,6 @@ function result(prev) {
     const tg = tgApp();
     if (inTg_() && tg.openTelegramLink) { e.preventDefault(); tg.openTelegramLink(CONFIG.publicChannel); }
   });
-  const share = n.querySelector("#share");
-  if (share) share.addEventListener("click", () => shareCard_(r));
 
   n.querySelector("#again").addEventListener("click", () => {
     answers.length = 0; lastResult = null; words = ""; age = ""; pid = "";
@@ -1532,197 +1418,38 @@ function result(prev) {
   if (!prev) send(r);
   saveState();          // чтобы перезагрузка вернула человека на результат, а не в начало
   render(n);
-
-  /* Полоски растут уже на экране: так видно, что это замер, а не картинка. */
-  const fills = n.querySelectorAll(".bar-fill");
-  const grow = () => { for (let i = 0; i < fills.length; i++) fills[i].style.width = fills[i].getAttribute("data-w") + "%"; };
-  /* Таймер, а не requestAnimationFrame: в свёрнутом окне кадры не идут,
-     и полоски остались бы пустыми до первого касания. */
-  setTimeout(grow, 60);
-
-  if (CONFIG.blocks.card) paintCard_(n, r, cardPowers(r));
+  lightGauges_(n);
   watchBlocks_(n);
 }
 
-/* ——— карточка для пересылки ———
-   Рисуется на холсте и показывается картинкой: её можно сохранить долгим
-   нажатием, а там, где устройство умеет, переслать вместе с текстом.
-   Всегда тёмная: это отдельная вещь, а не часть экрана. */
-let cardFile = null;
-
-function wrapLines_(ctx, text, maxW) {
-  const parts = String(text).split(" ");
-  const lines = [];
-  let line = "";
-  parts.forEach(w => {
-    const probe = line ? line + " " + w : w;
-    if (line && ctx.measureText(probe).width > maxW) { lines.push(line); line = w; }
-    else line = probe;
-  });
-  if (line) lines.push(line);
-  return lines;
-}
-
-/* Разрядка букв: letterSpacing у холста есть не везде, рисуем по одной. */
-function spaced_(ctx, text, x, y, gap) {
-  let cx = x;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text.charAt(i);
-    ctx.fillText(ch, cx, y);
-    cx += ctx.measureText(ch).width + gap;
-  }
-}
-
-function drawCard_(r, pw) {
-  const W = 1080, H = 1350, PAD = 104;
-  const c = document.createElement("canvas");
-  c.width = W; c.height = H;
-  const x = c.getContext && c.getContext("2d");
-  if (!x) return null;
-  const SERIF = 'Georgia, "Iowan Old Style", "Times New Roman", serif';
-  const SANS = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
-  const INK = "#F2EBF2", SOFT = "#BCAFC2", MUTE = "#8B7F92", LINE = "#473C50", ACC = "#D9A163";
-  const A = r.scales.A;
-
-  x.fillStyle = "#1A151F";
-  x.fillRect(0, 0, W, H);
-  const glow = x.createRadialGradient(W * .8, 90, 30, W * .8, 90, 820);
-  glow.addColorStop(0, "rgba(217,161,99,.22)");
-  glow.addColorStop(1, "rgba(217,161,99,0)");
-  x.fillStyle = glow;
-  x.fillRect(0, 0, W, H);
-  x.strokeStyle = LINE; x.lineWidth = 2;
-  x.strokeRect(44, 44, W - 88, H - 88);
-
-  x.textBaseline = "alphabetic";
-  x.fillStyle = MUTE; x.font = "500 28px " + SANS;
-  spaced_(x, "ВИОЛА МАРО", PAD, 142, 6);
-
-  x.fillStyle = SOFT; x.font = "500 30px " + SANS;
-  spaced_(x, "МОЙ ТИП", PAD, 248, 6);
-
-  /* Название: в одну строку, пока влезает; дальше уменьшаем и переносим. */
-  const name = RESULTS[r.key].name;
-  let size = 108, lines = [];
-  for (;;) {
-    x.font = "400 " + size + "px " + SERIF;
-    lines = wrapLines_(x, name, W - PAD * 2);
-    if (lines.length === 1 || size <= 88) break;
-    size -= 4;
-  }
-  x.fillStyle = ACC;
-  let y = 248 + 30 + size;
-  lines.forEach(l => { x.fillText(l, PAD, y); y += Math.round(size * 1.1); });
-
-  y += 36;
-  x.fillStyle = INK; x.font = "400 56px " + SERIF;
-  x.fillText("Радар " + A + " из 9", PAD, y);
-  y += 38;
-  const gap = 12, tw = (W - PAD * 2 - gap * 8) / 9;
-  for (let i = 0; i < 9; i++) {
-    x.fillStyle = i < A ? ACC : LINE;
-    x.fillRect(PAD + i * (tw + gap), y, tw, 16);
-  }
-  y += 16 + 76;
-
-  x.fillStyle = SOFT; x.font = "500 28px " + SANS;
-  if (!pw.length) {
-    /* Суперспособностей на твёрдых ответах не набралось: показываем числа. */
-    spaced_(x, "МОЙ ПОРТРЕТ В ЦИФРАХ", PAD, y, 5);
-    y += 78;
-    [["Фильтр", 9 - r.scales.P, 9], ["Тело", r.scales.B, 9], ["Отдаю", r.scales.C, 12]].forEach(row => {
-      x.fillStyle = INK; x.font = "400 46px " + SANS;
-      x.fillText(row[0], PAD, y);
-      x.textAlign = "right";
-      x.fillStyle = SOFT;
-      x.fillText(row[1] + " из " + row[2], W - PAD, y);
-      x.textAlign = "left";
-      x.fillStyle = LINE; x.fillRect(PAD, y + 26, W - PAD * 2, 8);
-      x.fillStyle = ACC; x.fillRect(PAD, y + 26, Math.round((W - PAD * 2) * row[1] / row[2]), 8);
-      y += 118;
-    });
-  } else {
-    spaced_(x, "МОИ СУПЕРСПОСОБНОСТИ", PAD, y, 5);
-  }
-  y += 62;
-
-  /* Три строки могут не поместиться, если название ушло в две: подбираем кегль. */
-  const floor = H - 218;
-  const sizes = [46, 42, 38, 34, 31];
-  let fs = sizes[0], lh = 62, wrapped = [];
-  for (let s = 0; s < sizes.length; s++) {
-    fs = sizes[s]; lh = Math.round(fs * 1.34);
-    x.font = "400 " + fs + "px " + SANS;
-    wrapped = pw.map(p => wrapLines_(x, p, W - PAD * 2 - 56));
-    const need = wrapped.reduce((sum, ls) => sum + ls.length * lh + 22, 0);
-    if (y + need - lh <= floor) break;
-  }
-  wrapped.forEach(ls => {
-    /* Ромб вместо «✦»: глифа может не быть в системном шрифте. */
-    const cy = y - fs * .34;
-    x.fillStyle = ACC;
-    x.beginPath();
-    x.moveTo(PAD + 11, cy - 13); x.lineTo(PAD + 24, cy); x.lineTo(PAD + 11, cy + 13); x.lineTo(PAD - 2, cy);
-    x.closePath(); x.fill();
-    x.fillStyle = INK;
-    ls.forEach(l => { x.fillText(l, PAD + 56, y); y += lh; });
-    y += 22;
-  });
-
-  x.fillStyle = LINE;
-  x.fillRect(PAD, H - 190, W - PAD * 2, 2);
-  x.fillStyle = INK; x.font = "400 40px " + SERIF;
-  x.fillText("Тест Виолы Маро", PAD, H - 122);
-  x.fillStyle = MUTE; x.font = "400 30px " + SANS;
-  x.textAlign = "right";
-  x.fillText(CONFIG.shareShort, W - PAD, H - 122);
-  x.textAlign = "left";
-  return c;
-}
-
-function paintCard_(node, r, pw) {
-  const img = node.querySelector("#cardimg");
-  if (!img) return;
-  cardFile = null;
-  try {
-    const c = drawCard_(r, pw);
-    if (!c) throw new Error("нет холста");
-    /* JPEG, а не PNG: с градиентом PNG весил 730 КБ, JPEG — впятеро меньше. */
-    img.src = c.toDataURL("image/jpeg", .92);
-    if (c.toBlob && typeof File === "function") {
-      c.toBlob(b => {
-        try { if (b) cardFile = new File([b], "moy-tip-empata.jpg", { type: "image/jpeg" }); } catch (e) {}
-      }, "image/jpeg", .92);
+/* Деления шкал загораются по одному, когда портрет появляется на экране:
+   так видно, что это замер, а не картинка. Таймер, а не кадры анимации:
+   в свёрнутом окне кадры не идут, и шкалы остались бы пустыми. */
+function lightGauges_(node) {
+  const sec = node.querySelector("#portrait");
+  if (!sec) return;
+  const still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let done = false;
+  const light = () => {
+    if (done) return;
+    done = true;
+    const rows = sec.querySelectorAll(".gauge-ticks");
+    for (let g = 0; g < rows.length; g++) {
+      const lit = rows[g].querySelectorAll("i[data-lit]");
+      for (let i = 0; i < lit.length; i++) {
+        if (still) lit[i].className = "on";
+        else setTimeout(() => { lit[i].className = "on"; }, 120 + g * 140 + i * 45);
+      }
     }
-  } catch (e) {
-    /* Холста нет — пересылка всё равно работает: уходит текст со ссылкой. */
-    if (img.parentNode) img.parentNode.removeChild(img);
-    const note = node.querySelector("#share-note");
-    if (note && note.parentNode) note.parentNode.removeChild(note);
-  }
-}
-
-function shareCard_(r) {
-  const name = RESULTS[r.key].name;
-  const link = CONFIG.shareUrl;
-  const lead = "Я прошла тест Виолы Маро. Мой тип: " + name + ". ";
-  event_("share");
-  /* Где устройство умеет — уходит картинка вместе с текстом. */
-  try {
-    if (cardFile && navigator.canShare && navigator.canShare({ files: [cardFile] })) {
-      navigator.share({ files: [cardFile], text: lead + "Узнайте свой: " + link }).catch(() => {});
-      return;
-    }
-  } catch (e) {}
-  /* Иначе — выбор чата в Телеграме. Он сам ставит ссылку первой строкой,
-     поэтому в тексте её второй раз не повторяем. */
-  const url = "https://t.me/share/url?url=" + encodeURIComponent(link) +
-              "&text=" + encodeURIComponent(lead + "Узнайте свой по ссылке.");
-  const tg = tgApp();
-  if (inTg_() && tg.openTelegramLink) {
-    try { tg.openTelegramLink(url); return; } catch (e) {}
-  }
-  window.open(url, "_blank", "noopener");
+  };
+  if (!("IntersectionObserver" in window)) { light(); return; }
+  const io = new IntersectionObserver(entries => {
+    if (entries.some(e => e.isIntersecting)) { light(); io.disconnect(); }
+  }, { rootMargin: "0px 0px -20% 0px", threshold: 0 });
+  io.observe(sec);
+  /* Страховка: если наблюдатель по какой-то причине промолчал, шкалы всё равно
+     не должны остаться пустыми. */
+  setTimeout(light, 6000);
 }
 
 /* ——— до какого блока человек долистал ———
@@ -1805,11 +1532,11 @@ function formScreen() {
   const last = formStep === FORM.length - 1;
   const n = el(`
     <div class="card">
-      <div class="title-block">
-        <div class="step">Анкета предзаписи · шаг ${formStep + 1} из ${FORM.length}</div>
+      <div class="head">
+        <div class="eyebrow">Анкета предзаписи · шаг ${formStep + 1} из ${FORM.length}</div>
         <h2>${st.title}</h2>
       </div>
-      ${formStep === 0 ? `<p class="lede">Заполните, и сразу откроется Кабинет предзаписи с двумя бонусами. Это не оплата.</p>` : ""}
+      ${formStep === 0 ? `<p class="soft">Заполните, и сразу откроется Кабинет предзаписи с двумя бонусами. Это не оплата.</p>` : ""}
       <div class="fields">${st.fields.map(fieldHtml_).join("")}</div>
       ${st.consent ? `
         <div class="consents">
@@ -1823,8 +1550,8 @@ function formScreen() {
           </label>
         </div>` : ""}
       <div class="foot">
-        <button class="go big" id="next">${last ? "Отправить анкету" : "Дальше"}&nbsp;<span aria-hidden="true">→</span></button>
-        <p class="cta-note" id="hint">${last ? "Даша из команды Виолы напишет вам один раз в Телеграм." : ""}</p>
+        <button class="go" id="next">${last ? "Отправить анкету" : "Дальше"}&nbsp;<span aria-hidden="true">→</span></button>
+        <p class="fine center" id="hint">${last ? "Даша из команды Виолы напишет вам один раз в Телеграм." : ""}</p>
         <button class="ghost" id="back">← Назад</button>
       </div>
     </div>`);
@@ -1921,11 +1648,11 @@ function done() {
   const n = el(`
     <div class="card">
       <h2>Вы в предзаписи</h2>
-      <p class="lede">Оба бонуса уже ждут в закрепе Кабинета предзаписи: медитация и запись эфира.</p>
+      <p class="lead">Оба бонуса уже ждут в закрепе Кабинета предзаписи: медитация и запись эфира.</p>
       ${CONFIG.cabinetUrl ? `
         <div class="foot">
-          <a class="go big" id="cab" href="${CONFIG.cabinetUrl}" target="_blank" rel="noopener">Открыть Кабинет предзаписи&nbsp;<span aria-hidden="true">→</span></a>
-          <p class="cta-note">Даша из команды Виолы напишет вам один раз в Телеграм.</p>
+          <a class="go" id="cab" href="${CONFIG.cabinetUrl}" target="_blank" rel="noopener">Открыть Кабинет предзаписи&nbsp;<span aria-hidden="true">→</span></a>
+          <p class="fine center">Даша из команды Виолы напишет вам один раз в Телеграм.</p>
         </div>` : ""}
       ${lastResult ? `<button class="ghost" id="back-res">← Вернуться к результату</button>`
                    : `<button class="ghost" id="to-test">Пройти тест</button>`}

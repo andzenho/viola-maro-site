@@ -75,8 +75,8 @@ ok(fetched.length === 0, 'SaleBot молчит, пока выключатель 
 r = get(Object.assign({}, base, { type: 't2_event', event: 'scroll', block: 'Сегодня вечером' }));
 r = get(Object.assign({}, base, { type: 't2_event', event: 'scroll', block: 'Портрет в цифрах' }));
 ok(row('Тест 2.0', 1)['Долистала до'] === 'Сегодня вечером', '«Долистала до» хранит самый дальний блок');
-r = get(Object.assign({}, base, { type: 't2_event', event: 'share' }));
-ok(row('Тест 2.0', 1)['Переслала'] === 'да', 'пересылка отмечена');
+r = get(Object.assign({}, base, { type: 't2_event', event: 'channel' }));
+ok(row('Тест 2.0', 1)['Перешла в канал'] === 'открытый канал', 'переход в канал отмечен');
 r = get(Object.assign({}, base, { type: 't2_event', event: 'form_open' }));
 t = row('Тест 2.0', 1);
 ok(t['Кнопка анкеты'] === 'да' && t['Долистала до'] === 'Программа и анкета', 'кнопка анкеты отмечена');

@@ -4,7 +4,13 @@ function load(file) {
   const html = fs.readFileSync(file, 'utf8');
   const code = html.slice(html.lastIndexOf('<script>') + 8, html.lastIndexOf('</script>'));
   const any = new Proxy(function () {}, {
-    get(t, k) { if (k === 'firstChild') return null; if (k === Symbol.toPrimitive) return () => 0; if (k === 'length') return 0; return any; },
+    get(t, k) {
+      // nextNode: обход текста в типографе должен кончаться, иначе скрипт зависнет
+      if (k === 'firstChild' || k === 'createTreeWalker') return null;
+      if (k === Symbol.toPrimitive) return () => 0;
+      if (k === 'length') return 0;
+      return any;
+    },
     apply() { return any; }, set() { return true; }, construct() { return any; }
   });
   const store = {};
