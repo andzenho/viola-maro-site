@@ -400,6 +400,10 @@
   }
 
   /* Тёплая плашка: даты потока, слова техники. */
+  /* «Вы сами отметили в тесте»: ответы человека лежат белой карточкой,
+     как выписка из его же теста. */
+  .mine { background: var(--surface); border-radius: 18px; padding: 1.1rem 1.15rem 1.2rem; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: .9rem; }
+  .mine-h { font-weight: 700; color: var(--accent-text); }
   .panel { background: linear-gradient(160deg, #FFF3DE 0%, #FCDDC0 100%); border-radius: 18px; padding: 1.1rem 1.15rem; }
   .panel b { font-weight: 700; }
   .mantra { display: flex; flex-direction: column; gap: 1rem; line-height: 1.45; }
@@ -855,37 +859,31 @@ function seenHead(sc) {
   return "";
 }
 
-/* ——— кто оказывается рядом с вами и почему ———
-   Блок говорит о механизме, а не о конкретном человеке из жизни участницы.
-   Порядок отвечает на заголовок: кто рядом → почему → вывод → цитата
-   Виолы → строка по ответу. Текст наш, простыми словами на «вы» (правка
-   03.10: прежние три текста читались сложно). От Виолы одна короткая
-   цитата, дословно. */
+/* ——— почему пользуются именно вами ———
+   Блок под конверсию (правка 03.10, заменяет все прежние версии блока
+   «Кто оказывается рядом с вами и почему?»). Человек видит свои же ответы:
+   до трёх утверждений теста, на которые он ответил «Да, прямо про меня»
+   (3 балла) или «Часто» (2 балла). Утверждения стоят дословно, с маленькой
+   буквы и без точки: текст берётся из Q, здесь только номера.
+   pick — порядок выбора; i — номер утверждения в Q, key — короткое имя для
+   таблицы. Сначала идут ответы с 3 баллами. Если подходящих ответов меньше
+   min, блока на экране нет. От Виолы одна цитата, дословно. */
 const RYADOM = {
-  title: "Кто оказывается рядом с вами и почему?",
-  /* Один из трёх текстов — по шкале, которая выше остальных. В каждом два
-     абзаца: who отвечает на «кто», why — на «почему». Перед why на экране
-     стоит слово whyWord. */
-  whyWord: "Почему?",
-  by: {
-    I: { who: "Рядом с вами часто оказываются люди, которые берут больше, чем дают.",
-         why: "Вы жалеете человека и верите, что он изменится. Видите, что вас обижают, и всё равно даёте ещё один шанс." },
-    B: { who: "Рядом с вами часто оказываются люди, которым нужны ваши переживания.",
-         why: "Вы на всё откликаетесь: вас легко расстроить, растрогать, напугать. Пока вы переживаете, главный он." },
-    C: { who: "Рядом с вами часто оказываются люди, которые перекладывают вину на вас.",
-         why: "Когда что-то идёт не так, вы первой спрашиваете себя, что сделали неправильно. Им остаётся только согласиться." }
-  },
-  /* Вывод, один для всех. Первая фраза стоит полужирным. */
-  out: ["Это не слабость.", "Пользуются лучшим, что в вас есть: добротой, терпением, умением жалеть."],
+  title: "Почему пользуются именно вами?",
+  lead: "Вы сами отметили в тесте:",
+  pick: [
+    { i: 15, key: "отказать" },         // Вам трудно отказать, даже когда у вас самих сил не осталось
+    { i: 8,  key: "красные флажки" },   // Вы видели красные флажки… и всё равно… оставались
+    { i: 16, key: "даром" },            // Вы отдаёте своё время, помощь, знания даром…
+    { i: 13, key: "малознакомые" },     // Малознакомые люди быстро начинают рассказывать вам свою жизнь
+    { i: 14, key: "радары" },           // Ваши радары настроены на всех, кроме себя…
+    { i: 7,  key: "чужая жизнь" }       // Было время, когда вы жили чужой жизнью…
+  ],
+  min: 2, max: 3,
+  text: "Это и замечают те, кто привык брать. Они выбирают не слабых. Они выбирают тех, кто не откажет.",
   quote: "Ваша доброта воспринимается ими как инструкция по взлому.",
-  /* Последняя строка — по ответу на «Где вас съедает сильнее всего?».
-     У ответа «Везде понемногу» строки нет. */
-  bol: {
-    partner: "Сильнее всего это у вас рядом с партнёром.",
-    semya:   "Сильнее всего это у вас в семье.",
-    rabota:  "Сильнее всего это у вас на работе.",
-    chuzhie: "Сильнее всего это у вас с чужими людьми."
-  }
+  /* Финал. Первая фраза стоит полужирным. */
+  out: ["Доброту менять не нужно.", "Ей нужна защита. Первый шаг ниже."]
 };
 
 /* ——— что можно сделать уже сегодня вечером ———
@@ -1194,15 +1192,19 @@ function score() {
            sphere: sp.key, spheres: sp.sums };
 }
 
-/* Какой абзац блока «Кто рядом» показать: тот, чья шкала выше остальных в долях
-   от максимума. При равенстве берём шкалу, на которой стоит сам тип. */
-function ryadomKey(r) {
-  const sc = r.scales;
-  const share = { I: sc.I / 9, B: sc.B / 9, C: sc.C / 12 };
-  const max = Math.max(share.I, share.B, share.C);
-  const own = { donor: "C", filter: "B", awake: "I" }[r.key];
-  if (own && share[own] === max) return own;
-  return ["I", "C", "B"].filter(k => share[k] === max)[0];
+/* Какие утверждения показать в блоке «Почему пользуются именно вами?»:
+   ответы «да» и «часто» из списка RYADOM.pick, сначала с 3 баллами, внутри
+   одного балла в порядке списка, не больше max. Если набралось меньше min,
+   список пустой и блока нет. */
+function ryadomList() {
+  const hit = RYADOM.pick.filter(x => answers[x.i] >= 2);
+  const list = hit.filter(x => answers[x.i] === 3).concat(hit.filter(x => answers[x.i] === 2)).slice(0, RYADOM.max);
+  return list.length >= RYADOM.min ? list : [];
+}
+/* Утверждение теста для списка: дословно, с маленькой буквы и без точки. */
+function stmt_(i) {
+  const t = Q[i].t.replace(/\.$/, "");
+  return t.charAt(0).toLowerCase() + t.slice(1);
 }
 
 /* Ближайший поток: первое число следующего месяца по Москве. */
@@ -1459,7 +1461,7 @@ function ageScreen() {
 const BLOCKS = ["type", "portrait", "powers", "ryadom", "vecher", "next", "program"];
 const BLOCK_NAMES = {
   type: "Тип", portrait: "Что видно по ответам", powers: "Суперспособности",
-  ryadom: "Кто рядом", vecher: "Сегодня вечером", next: "Что дальше", program: "Программа"
+  ryadom: "Почему пользуются", vecher: "Сегодня вечером", next: "Что дальше", program: "Программа"
 };
 
 function secType_(r, empath) {
@@ -1524,19 +1526,19 @@ function secPowers_(pw) {
     </section>`;
 }
 
-function secRyadom_(r) {
-  const x = RYADOM.by[ryadomKey(r)];
-  const where = RYADOM.bol[forks.bol];
+function secRyadom_() {
+  const list = ryadomList();
+  if (!list.length) return "";
   return `
     <section class="sec" data-block="ryadom">
       <h2>${RYADOM.title}</h2>
-      <div class="copy">
-        <p>${x.who}</p>
-        <p><b>${RYADOM.whyWord}</b> ${x.why}</p>
-        <p><b>${RYADOM.out[0]}</b> ${RYADOM.out[1]}</p>
+      <div class="mine">
+        <p class="mine-h">${RYADOM.lead}</p>
+        <ul class="checks">${list.map(x => `<li>${stmt_(x.i)}</li>`).join("")}</ul>
       </div>
+      <p>${RYADOM.text}</p>
       ${viola_(RYADOM.quote)}
-      ${where ? `<p>${where}</p>` : ""}
+      <p><b>${RYADOM.out[0]}</b> ${RYADOM.out[1]}</p>
     </section>`;
 }
 
@@ -1743,7 +1745,7 @@ function result(prev) {
       ${secType_(r, empath)}
       ${empath ? secPortrait_(r) : ""}
       ${empath ? secPowers_(powers(r.scales, answers)) : ""}
-      ${empath && CONFIG.blocks.ryadom ? secRyadom_(r) : ""}
+      ${empath && CONFIG.blocks.ryadom ? secRyadom_() : ""}
       ${empath && CONFIG.blocks.vecher ? secVecher_() : ""}
       ${empath ? secNext_() + secProgram_(r) : secChannel_()}
       <div class="tail">
@@ -2147,6 +2149,11 @@ function send(r) {
   p.words = words;
   p.forks = forks;
   p.answers = answers.slice();
+  /* Блок «Почему пользуются именно вами?»: сколько утверждений человек
+     увидел и какие (короткие имена из RYADOM.pick). Блока нет — ноль. */
+  const shown = EMPATH.indexOf(r.key) !== -1 && CONFIG.blocks.ryadom ? ryadomList() : [];
+  p.ryadom_n = shown.length;
+  p.ryadom_list = shown.map(x => x.key).join(", ");
   window.__result = p;
   /* Через буфер, как и анкета: обрыв связи на этом шаге иначе терял бы прохождение молча. */
   if (CONFIG.sheetUrl) queue(p);
