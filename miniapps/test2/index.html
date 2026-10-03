@@ -268,6 +268,8 @@
   }
   button.ans:hover { border-color: var(--deep); }
   button.ans:active { transform: scale(.985); }
+  /* Второй вариант ответа рядом с главной кнопкой: тот же размер, без цвета. */
+  button.ans.alt { text-align: center; font-weight: 600; }
 
   /* Главная кнопка. */
   .go {
@@ -889,7 +891,7 @@ const NEXT = {
 };
 
 /* ——— программа ———
-   Цены на экране нет: продажи закрытые, цену называет Даша. Дата старта
+   Цены на экране нет: продажи закрытые, цену называет Дарья. Дата старта
    и закрытия набора считаются сами: поток стартует каждое первое число,
    набор закрывается в последний день месяца в 23:59 по Москве. */
 const WEEKS = [
@@ -916,6 +918,7 @@ const PROGRAM = {
   inside: [
     "<b>Лекции Виолы в записи</b> на каждую неделю",
     "<b>18 прикладных техник для эмпата</b>, по три в неделю",
+    "<b>Живой мастер-класс от Виолы</b> с ответами на вопросы",
     "<b>Обратная связь от Виолы:</b> ответы в аудио в закрытом чате",
     "<b>Общий чат всех участников</b> на тарифе «С Виолой»",
     "<b>Аудиомедитации от Виолы</b>",
@@ -932,7 +935,6 @@ const PROGRAM = {
   /* {start} — дата старта ближайшего потока. */
   faq: [
     ["Анкета — это оплата?", "Нет. Анкета бесплатная и ни к чему не обязывает. После неё сразу открывается закрытый канал предзаписи на Прикладную эмпатию 2.0, там лежат медитация и эфир."],
-    ["Мне будут звонить?", "Нет. Даша из команды Виолы напишет вам один раз в Телеграм."],
     ["Когда старт и как проходят лекции?", "Ближайший поток стартует {start}. Лекции идут в записи, смотреть их можно в удобное для вас время."],
     ["Успею ли я, если у меня работа и семья?", "Одна лекция в неделю и три техники к ней. Всё в записи, поэтому идти можно в своём темпе."],
     ["А если во время работы станет тяжело?", "Так бывает, и об этом лучше знать заранее: когда начинаешь разбирать то, что годами лежало нетронутым, какое-то время может быть неспокойно. Темп здесь ваш, никто не подгоняет. Практикум не заменяет очную психотерапию — если сейчас у вас острое состояние, сначала стоит опереться на своего специалиста."],
@@ -949,18 +951,36 @@ const FORM = [
   { title: "Как к вам обращаться?", fields: [
     { id: "name", label: "Имя", type: "text", auto: "given-name", max: 60 },
     { id: "contact", label: "Телефон или ник в Телеграме", type: "text", max: 60,
-      hint: "Чтобы Даша могла вам написать. Например, @imya или +7 900 000-00-00" }
+      hint: "Например, @imya или +7 900 000-00-00" }
   ] },
   { title: "Ваш запрос", fields: [
     { id: "change", label: "Что вы хотите изменить в первую очередь?", type: "area", max: 400 },
     { id: "tried", label: "Что вы уже пробовали?", type: "area", max: 400,
       hint: "Книги, курсы, терапия, программы Виолы. Если ничего, так и напишите" }
   ] },
-  { title: "Готовность", consent: true, fields: [
+  { title: "Готовность", fields: [
     { id: "ready", label: "Насколько вы готовы начать с ближайшим потоком?", type: "scale",
       hint: "От 1 до 10. Ответ ни к чему не обязывает", lo: "1 — присматриваюсь", hi: "10 — готова начать" }
-  ].concat(LEADER) }
+  ].concat(LEADER) },
+  { kind: "darya" },
+  { title: "Согласие на обработку данных", consent: true, fields: [] }
 ];
+
+/* Шаг про Дарью. До кнопки анкеты менеджер не упоминается нигде: ни на экране
+   результата, ни в частых вопросах, ни у кнопок. Здесь человек сам решает,
+   писать ему или нет. При любом ответе он идёт дальше и получает канал.
+   Ответ уходит в таблицу отдельным полем konsultaciya: da или net. */
+const DARYA = {
+  title: "Хотите, чтобы вам написала Дарья из команды Виолы?",
+  list: [
+    "закрепит за вами самую низкую цену на Прикладную эмпатию 2.0. Сейчас это можно сделать только через неё",
+    "ответит на все вопросы о программе",
+    "будет присылать дополнительные подарки от Виолы"
+  ],
+  note: "Это переписка в Телеграме, без звонков.",
+  yes: "Да, пусть напишет",
+  no: "Пока нет, только медитация и эфир"
+};
 
 /* ——— «ваши суперспособности»: выводим из ответов, а не раздаём всем одинаково.
    Берём три самые сильные стороны — так это читается как вывод, а не как лесть.
@@ -1308,7 +1328,7 @@ function fork() {
 }
 
 /* Блок В: свои слова. Ответ уходит в таблицу и подставляется в анкету —
-   с него Даша начинает разговор. Пропустить можно: человек в шаге от
+   с него Дарья начинает разговор. Пропустить можно: человек в шаге от
    результата, и терять его на обязательном поле незачем. */
 function wordsScreen() {
   stage = "words";
@@ -1748,9 +1768,34 @@ function fieldHtml_(f) {
     </label>`;
 }
 
+function daryaStep_() {
+  stage = "form";
+  const n = el(`
+    <div class="card">
+      <div class="head">
+        <div class="eyebrow">Анкета предзаписи · шаг ${formStep + 1} из ${FORM.length}</div>
+        <h2>${DARYA.title}</h2>
+      </div>
+      <ul class="checks">${DARYA.list.map(x => `<li>${x}</li>`).join("")}</ul>
+      <p class="soft">${DARYA.note}</p>
+      <div class="foot">
+        <button class="go" data-k="da">${DARYA.yes}</button>
+        <button class="ans alt" data-k="net">${DARYA.no}</button>
+        <button class="ghost" id="back">← Назад</button>
+      </div>
+    </div>`);
+  n.querySelectorAll("[data-k]").forEach(b => b.addEventListener("click", () => {
+    form.konsultaciya = b.getAttribute("data-k");
+    formStep++; saveState(); formScreen();
+  }));
+  n.querySelector("#back").addEventListener("click", () => { formStep--; saveState(); formScreen(); });
+  render(n);
+}
+
 function formScreen() {
   stage = "form";
   const st = FORM[formStep];
+  if (st.kind === "darya") { daryaStep_(); return; }
   const last = formStep === FORM.length - 1;
   const n = el(`
     <div class="card">
@@ -1759,7 +1804,7 @@ function formScreen() {
         <h2>${st.title}</h2>
       </div>
       ${formStep === 0 ? `<p class="soft">Заполните, и сразу откроется закрытый канал предзаписи на Прикладную эмпатию 2.0. В нём медитация и эфир. Это не оплата.</p>` : ""}
-      <div class="fields">${st.fields.map(fieldHtml_).join("")}</div>
+      ${st.fields.length ? `<div class="fields">${st.fields.map(fieldHtml_).join("")}</div>` : ""}
       ${st.consent ? `
         <div class="consents">
           <label class="cb" id="cb-pd-l">
@@ -1773,7 +1818,7 @@ function formScreen() {
         </div>` : ""}
       <div class="foot">
         <button class="go" id="next">${last ? "Отправить анкету" : "Дальше"}&nbsp;<span aria-hidden="true">→</span></button>
-        <p class="fine center" id="hint">${last ? "Даша из команды Виолы напишет вам один раз в Телеграм." : ""}</p>
+        <p class="fine center" id="hint"></p>
         <button class="ghost" id="back">← Назад</button>
       </div>
     </div>`);
@@ -1869,12 +1914,14 @@ function done() {
   stage = "done";
   const n = el(`
     <div class="card">
-      <h2>Вы в предзаписи</h2>
-      <p class="lead">Медитация и запись эфира уже ждут в закрепе канала предзаписи на Прикладную эмпатию 2.0.</p>
+      <h2>Готово. Вы в предзаписи на Прикладную эмпатию 2.0</h2>
+      <div class="copy">
+        <p class="lead">Медитация и запись эфира ждут вас в канале.</p>
+        ${form.konsultaciya === "da" ? `<p class="lead">Дарья напишет вам в Телеграм.</p>` : ""}
+      </div>
       ${CONFIG.cabinetUrl ? `
         <div class="foot">
           <a class="go" id="cab" href="${CONFIG.cabinetUrl}" target="_blank" rel="noopener">Открыть канал предзаписи&nbsp;<span aria-hidden="true">→</span></a>
-          <p class="fine center">Даша из команды Виолы напишет вам один раз в Телеграм.</p>
         </div>` : ""}
       ${lastResult ? `<button class="ghost" id="back-res">← Вернуться к результату</button>`
                    : `<button class="ghost" id="to-test">Пройти тест</button>`}
@@ -1997,6 +2044,7 @@ function sendLead() {
   p.change = String(form.change || "").trim();
   p.tried = String(form.tried || "").trim();
   p.ready = form.ready || "";
+  p.konsultaciya = form.konsultaciya || "";   // da | net: писать ли человеку Дарье
   p.leader = LEADER.map(f => f.label + ": " + (form[f.id] || "")).join("\n");
   p.rank = r.key || "";
   p.sphere = r.sphere || "";
