@@ -109,6 +109,11 @@ ok(fetched[fetched.length - 1].empat2_konsultaciya === 'net', 'боту уход
 r = get({ type: 't2_whatever', form: 'test2', test: 'empat2' });
 ok(r.ok === false, 'неизвестный тип записи отклонён');
 
+// анкета открыта плавающей кнопкой: место пишется как есть, «Долистала до» не меняется
+r = get(Object.assign({}, base, { type: 't2_event', event: 'form_open', block: 'плавающая кнопка' }));
+t = row('Тест 2.0', 1);
+ok(r.ok && t['Кнопка анкеты'] === 'да, плавающая кнопка' && t['Долистала до'] === 'Что дальше', 'плавающая кнопка: место записано, «Долистала до» не тронуто');
+
 console.log('— старые маршруты —');
 r = get({ rank: 'filter', percent: 80, scales: { A: 7, P: 8, I: 3, B: 8, C: 6, G: 2, L: 3, F: 0, K: 0 }, forks: { bol: 'semya', zapros: 'sily' }, answers: [1, 2], userId: 555, userName: 'Олег', istochnik: 'kanal' });
 ok(r.ok && r.лист === 'Тест эмпата' && sheets['Тест эмпата'].rows[1][3] === 'Эмпат без фильтра', 'первый тест пишется как раньше');

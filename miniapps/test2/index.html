@@ -286,6 +286,31 @@
     box-shadow: 0 12px 22px -14px var(--cta-glow);
     transition: transform .1s ease, filter .2s ease;
   }
+  /* — плавающая кнопка анкеты на экране результата —
+     Своя вёрстка, а не кнопка Телеграма: тест работает и по обычной ссылке.
+     Закреплена у нижнего края и стоит по ширине основной кнопки. Под ней
+     подложка в цвет фона, сходящая кверху на нет: текст страницы под кнопкой
+     не рябит. Сама подложка нажатий не перехватывает, только кнопка.
+     Нижний отступ учитывает полоску «домой» и в браузере, и в Телеграме. */
+  .fab {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    padding: 1.5rem 1.1rem calc(.7rem + max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px)));
+    background: linear-gradient(to top, var(--ground) 0, var(--ground) 58%, rgba(251, 246, 236, 0) 100%);
+    pointer-events: none;
+    opacity: 0; transform: translateY(.9rem); visibility: hidden;
+    transition: opacity .28s ease, transform .28s ease, visibility 0s linear .28s;
+  }
+  .fab.on { opacity: 1; transform: none; visibility: visible; transition: opacity .28s ease, transform .28s ease, visibility 0s; }
+  .fab .go {
+    max-width: 31.8rem; margin: 0 auto; pointer-events: auto;
+    font-size: 1rem; padding: .95rem .9rem;
+    box-shadow: 0 14px 24px -12px var(--cta-glow), 0 2px 6px rgba(24, 33, 58, .14);
+  }
+  /* На самых узких экранах кегль чуть меньше, чтобы надпись осталась в строку. */
+  @media (max-width: 340px) { .fab .go { font-size: .92rem; padding-left: .5rem; padding-right: .5rem; } }
+  /* Пока плавающая кнопка в работе, у страницы снизу больше воздуха:
+     в самом конце кнопка не закрывает последний текст. */
+  .wrap.has-fab { padding-bottom: calc(6rem + max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px))); }
   .go:hover { filter: brightness(1.06); }
   .go:active { transform: scale(.985); }
   .go:disabled { opacity: .6; cursor: default; }
@@ -641,6 +666,7 @@
   @media (prefers-reduced-motion: reduce) {
     .fade { animation: none; }
     .bar i, .gauge-ticks i, .go, .post, .faq summary::after { transition: none; }
+    .fab, .fab.on { transition: none; transform: none; }
   }
 </style>
 
@@ -654,6 +680,7 @@
   </header>
   <main id="screen"></main>
 </div>
+<div class="fab" id="fab"><button class="go" id="fab-go" type="button"></button></div>
 
 <script>
 "use strict";
@@ -1293,6 +1320,7 @@ function lower1(s) { s = String(s || ""); return s.charAt(0).toLowerCase() + s.s
 
 /* Без replaceChildren: на неподновлённых Android его нет — падал весь скрипт. */
 function render(node) {
+  fabOff_();
   while (screen.firstChild) screen.removeChild(screen.firstChild);
   linksThroughTelegram_(node);
   screen.appendChild(node);
@@ -1496,6 +1524,7 @@ function ageScreen() {
 const BLOCKS = ["type", "portrait", "powers", "ryadom", "vecher", "next", "program"];
 const BLOCK_NAMES = {
   type: "Тип", portrait: "Что видно по ответам", powers: "Суперспособности",
+  float: "плавающая кнопка",
   ryadom: "Почему пользуются", vecher: "Сегодня вечером", next: "Что дальше", program: "Программа"
 };
 
@@ -1834,6 +1863,61 @@ function result(prev) {
   render(n);
   lightGauges_(n);
   watchBlocks_(n);
+  if (empath) fabWatch_(n);
+}
+
+/* ——— плавающая кнопка анкеты ———
+   Есть только на экране результата у четырёх типов эмпата, пока анкета
+   не отправлена. В анкете и на экране «Готово» её нет: любая смена экрана
+   гасит её в render().
+   Появляется, когда блок с типом ушёл вверх за край экрана. Скрывается,
+   когда на экране видна основная кнопка анкеты. Вместе с кнопкой считаем
+   и то, что стоит рядом с ней: карточки с вопросами над первой кнопкой
+   и блок второй кнопки целиком. Так плавающая кнопка не ложится
+   ни на карточки, ни на строку под основной кнопкой. */
+const fab = document.getElementById("fab");
+const fabGo = document.getElementById("fab-go");
+const wrap = document.querySelector(".wrap");
+let fabIo = [];
+fabGo.innerHTML = NEXT.cta + '&nbsp;<span aria-hidden="true">→</span>';
+typograf_(fabGo);
+fabGo.addEventListener("click", () => {
+  if (stage !== "result" || leadSent) return;
+  event_("form_open", "float");
+  prefillForm_(); formStep = 0; saveState(); formScreen();
+});
+
+function fabOff_() {
+  fabIo.forEach(o => o.disconnect());
+  fabIo = [];
+  fab.classList.remove("on");
+  wrap.classList.remove("has-fab");
+}
+
+function fabWatch_(node) {
+  fabOff_();
+  if (leadSent || !("IntersectionObserver" in window)) return;
+  const type = node.querySelector('[data-block="type"]');
+  const zones = Array.prototype.slice.call(node.querySelectorAll(".qas, #next .foot, .offer-card"));
+  if (!type || !zones.length) return;
+  wrap.classList.add("has-fab");
+
+  let past = false;                         // блок с типом пролистан
+  const seen = zones.map(() => false);      // какая зона основной кнопки сейчас на экране
+  const paint = () => fab.classList.toggle("on", stage === "result" && past && seen.indexOf(true) === -1);
+
+  const a = new IntersectionObserver(es => {
+    es.forEach(e => { past = !e.isIntersecting && e.boundingClientRect.bottom <= 0; });
+    paint();
+  }, { threshold: 0 });
+  a.observe(type);
+
+  const b = new IntersectionObserver(es => {
+    es.forEach(e => { seen[zones.indexOf(e.target)] = e.isIntersecting; });
+    paint();
+  }, { threshold: 0 });
+  zones.forEach(z => b.observe(z));
+  fabIo = [a, b];
 }
 
 /* Деления шкал загораются по одному, когда блок появляется на экране:
