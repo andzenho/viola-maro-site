@@ -269,7 +269,17 @@
   button.ans:hover { border-color: var(--deep); }
   button.ans:active { transform: scale(.985); }
   /* Второй вариант ответа рядом с главной кнопкой: тот же размер, без цвета. */
-  button.ans.alt { text-align: center; font-weight: 600; }
+  /* Шаг про Дарью: две кнопки одного размера и одной формы. Главная красная,
+     вторая спокойная, без рамки при наведении: на телефоне она залипала
+     синей обводкой. Высота общая и рассчитана на две строки текста. */
+  .pair { display: flex; flex-direction: column; gap: .6rem; }
+  .pair .go {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 4.1rem; padding: .7rem 1rem;
+    font-size: 1.02rem; text-wrap: balance;
+  }
+  .go.quiet { background: var(--surface-2); color: var(--ink); box-shadow: none; }
+  .go.quiet:hover { filter: none; background: #EDE2CE; }
 
   /* Главная кнопка. */
   .go {
@@ -2075,8 +2085,10 @@ function daryaStep_() {
       <ul class="checks">${DARYA.list.map(x => `<li>${x}</li>`).join("")}</ul>
       <p class="soft">${DARYA.note}</p>
       <div class="foot">
-        <button class="go" data-k="da">${DARYA.yes}</button>
-        <button class="ans alt" data-k="net">${DARYA.no}</button>
+        <div class="pair">
+          <button class="go" data-k="da">${DARYA.yes}</button>
+          <button class="go quiet" data-k="net">${DARYA.no}</button>
+        </div>
         <button class="ghost" id="back">← Назад</button>
       </div>
     </div>`);
