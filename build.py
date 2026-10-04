@@ -1513,7 +1513,7 @@ def build_landing():
         tpl = tpl.replace('href="#tarify"',
                           'href="#bron" data-open-form="Бронь места" data-pay="bron"')
 
-        tpl = tpl.replace("от 17&nbsp;900&nbsp;₽", "Бронь " + BOOKING_AMOUNT)
+        tpl = tpl.replace("от 19&nbsp;900&nbsp;₽", "Бронь " + BOOKING_AMOUNT)
         tpl = tpl.replace(
             "В «С Виолой» пятьдесят мест. Оплатить можно сразу или частями&nbsp;— "
             "рассрочка до&nbsp;12&nbsp;месяцев для&nbsp;СНГ.",
@@ -1566,7 +1566,7 @@ def build_landing():
                           'href="#zapis" data-open-form="Предзапись"')
 
         # Липкая панель: вместо цены — состояние набора.
-        tpl = tpl.replace("от 17&nbsp;900&nbsp;₽", "Предзапись открыта")
+        tpl = tpl.replace("от 19&nbsp;900&nbsp;₽", "Предзапись открыта")
         tpl = tpl.replace(
             '<span style="font-size: 17px; font-weight: 600; color: #2E2521;">',
             '<span style="font-size: 16px; font-weight: 700; color: #2E2521;">', 1)
