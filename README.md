@@ -62,14 +62,15 @@ python3 build.py --mode neudobnye      # событие «Неудобные»
 сборщик собирает обычную страницу и в самом конце перекрашивает её,
 перестраивает несколько блоков и добавляет слой стилей. Состав программы
 и тарифов тема не меняет: он правится в шаблоне и доходит до всех страниц.
-Правовые документы тема только перекрашивает. Страница `/zayavka/` пока
-в прежнем виде. Адрес `/dizayn/` — копия главной, оставлен ради старой
-ссылки.
+Правовые документы тема только перекрашивает. Страница заявки
+`/zayavka/` собирается в том же оформлении. Адрес `/dizayn/` — копия
+главной, оставлен ради старой ссылки.
 
 ```sh
 python3 build.py --theme more --noindex
 python3 build.py --mode bron --theme more --out site/bron --base /bron --noindex
 python3 build.py --mode rassrochka --theme more --out site/rassrochka --base /rassrochka --docs-root --noindex
+python3 build.py --mode zayavka --theme more --out site/zayavka --base /zayavka --noindex
 ```
 
 Правила вида (четвёртая версия, 05.10.2026), страница делается под телефон

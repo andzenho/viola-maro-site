@@ -1170,6 +1170,18 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
   box-shadow: 0 8px 16px -8px rgba(214,140,30,.85);
 }
 [data-podarok] > span svg { width: 22px; height: 22px; }
+/* Страница заявки. Колонка «За саму заявку» — голубая плашка: это первое,
+   что человек получает. Строки внутри белые, как подарки рядом. */
+[data-za-zayavku] { background: var(--spot) !important; border: 0 !important; box-shadow: none !important; }
+[data-za-zayavku] [data-podarok] > span { font-size: 19px !important; }
+/* Подписи кнопок тарифа у заявки длиннее («Хочу в рассрочку»): шрифт
+   чуть меньше, чтобы подпись не ломалась на две строки. */
+[data-mode="zayavka"] #tarify [data-btn] {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  font-size: clamp(16.5px, 4.7vw, 20px) !important;
+  white-space: nowrap;
+}
 
 /* ── последний призыв ── */
 
@@ -1197,6 +1209,14 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
 }
 #lead-modal h2::first-line { color: inherit; }
 #lead-modal [data-close-form] { min-height: 46px; }
+/* Кнопка формы во всю ширину карточки: боковые поля меньше, чтобы
+   «Отправить заявку» и «Перейти к оплате» стояли в одну строку. */
+#lead-modal #form-submit {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  font-size: clamp(16.5px, 4.8vw, 20px) !important;
+  white-space: nowrap;
+}
 #lead-modal > div { -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 /* Подписи полей — обычным жирным текстом, не плашками. */
 #lead-modal label [style*="text-transform: uppercase"] {
@@ -1630,10 +1650,13 @@ def _theme_layout(html):
         ("color: #D9CDB6", "color: #2B3550"),
         ('<div style="display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;">',
          '<div data-podarok="" style="display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;">'),
-        ("Что вы получаете</h2>", "Что вы получаете?</h2>"),
         ("background: linear-gradient(180deg, #FBE3B0, #E39A2B); color: #18213A; flex: none;",
          "background: " + _GOLD + "; color: #143A85; flex: none;"),
     ])
+
+    # Заголовок блока вопросом: на страницах оплаты он один, у заявки другой.
+    html = _theme_section_re(html, "Подарки и условия",
+                             r"(Что вы получаете|Что даёт заявка)</h2>", r"\1?</h2>")
 
     # Кнопка поддержки была красной, как «Оплатить». Красная на странице
     # одна: участие и оплата. Поддержка спокойная, с синей обводкой.
@@ -2691,7 +2714,7 @@ def benefits_screen(include_request=True):
     dark = "".join(row(t, x, ICON_GIFT, "#F6F0E8", "#DCD1C4") for t, x in PRE_FOR_EARLY)
 
     request_column = '''
-      <div style="background: linear-gradient(180deg, #FFFFFF 0%%, #FDFAF6 100%%); border: 1px solid #E9DFD2; border-radius: 16px; box-shadow: 0 1px 2px rgba(60,48,40,.04), 0 16px 36px -24px rgba(60,48,40,.34); padding: clamp(24px, 3.4vw, 36px); display: flex; flex-direction: column; gap: 18px;">
+      <div data-za-zayavku="" style="background: linear-gradient(180deg, #FFFFFF 0%%, #FDFAF6 100%%); border: 1px solid #E9DFD2; border-radius: 16px; box-shadow: 0 1px 2px rgba(60,48,40,.04), 0 16px 36px -24px rgba(60,48,40,.34); padding: clamp(24px, 3.4vw, 36px); display: flex; flex-direction: column; gap: 18px;">
         <div style="display: flex; flex-direction: column; gap: 6px;">
           <div style="%(eyebrow)s">За саму заявку</div>
           <p style="margin: 0; font-size: 19px; font-weight: 600; line-height: 1.35; color: #2E2521;">Ничего платить не&nbsp;нужно</p>
@@ -3309,7 +3332,8 @@ def build_landing():
     tpl = divs_to_sections(tpl)
     tpl = collect_state_styles(tpl)
 
-    body = ('<main id="main">' + tpl.strip() + "</main>" + footer_html() + COOKIE_HTML)
+    body = ('<main id="main" data-mode="%s">' % MODE + tpl.strip() + "</main>"
+            + footer_html() + COOKIE_HTML)
 
     # Предзагрузки нет намеренно: <link rel="preload" as="image"> не умеет
     # выбирать между <source> по типу и тянет JPEG поверх уже выбранного WebP —
