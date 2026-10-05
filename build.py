@@ -755,8 +755,31 @@ section[aria-label="Зачем мне это"] > div > p:first-child::first-line
 }
 [data-btn="primary"] > span { display: none !important; }
 [data-btn="primary"]:hover { filter: brightness(1.07); }
-[data-btn="quiet"] { background: #F4ECDD !important; border: 0 !important; box-shadow: none !important; }
-[data-btn="quiet"]:hover { background: #EDE2CE !important; }
+/* «В рассрочку» — кнопка того же веса, что «Оплатить», только синяя:
+   нам всё равно, как человек платит, обе должны быть заметны. */
+[data-btn="quiet"] {
+  justify-content: center !important;
+  min-height: 80px;
+  padding: 18px 46px !important;
+  border: 2px solid #93BBF3 !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(130% 110% at 14% -10%, rgba(255,255,255,.4) 0%, rgba(255,255,255,0) 55%),
+    linear-gradient(180deg, #3F86DD 0%, #2563BA 48%, #174592 100%) !important;
+  box-shadow: 0 16px 30px -16px rgba(16,47,115,.85), inset 0 2px 0 rgba(255,255,255,.4) !important;
+  color: #FFFFFF !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  letter-spacing: .02em !important;
+  text-transform: uppercase;
+}
+[data-btn="quiet"]:hover { filter: brightness(1.07); }
+/* В карточке тарифа свечение красной кнопки не ложится на синюю. */
+#tarify [data-btn="primary"] { box-shadow: 0 16px 30px -16px rgba(150,16,24,.85), inset 0 2px 0 rgba(255,255,255,.4) !important; }
+#tarify [data-btn] { width: 100% !important; }
+#tarify [style*="flex-direction: column; gap: 10px"] { gap: 14px !important; }
+/* Полосы про повышение цены больше нет. */
+#srok { display: none !important; }
 [data-btn="support"] { min-height: 56px; padding: 15px 34px !important; font-size: 18px !important; }
 [data-btn="support"]:hover { background: #EEF4FD !important; }
 
@@ -882,6 +905,64 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
 [data-cifry] > span:nth-child(3) b { color: #1F4C97 !important; }
 [data-cifry] > span:nth-child(4) { background: var(--zoloto); color: #3A2A05; }
 [data-cifry] > span:nth-child(4) b { color: #143A85 !important; }
+
+/* «Каждую неделю вы получаете»: главный блок программы. Шапка-небо
+   с крупным заголовком, пять строк со значками, золотая строка про доступ. */
+[data-nedelya] {
+  border-radius: 24px;
+  overflow: hidden;
+  background: #FFFFFF;
+  box-shadow: 0 28px 54px -30px rgba(20,58,133,.6), 0 0 0 2px #1F4C97;
+}
+[data-n-title] {
+  margin: 0;
+  padding: 24px 22px 20px;
+  background: var(--tochki), var(--sky);
+  font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: clamp(46px, 5vw, 64px);
+  font-weight: 700;
+  line-height: .96;
+  letter-spacing: .005em;
+  text-transform: uppercase;
+  color: #F6CF7A;
+}
+[data-n-title]::first-line { color: #FFFFFF; }
+[data-nedelya] ul { margin: 0; padding: 6px 22px; list-style: none; }
+[data-nedelya] li {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  column-gap: 14px;
+  align-items: center;
+  padding: 14px 0;
+  font-size: 19px;
+  line-height: 1.3;
+  color: #18213A;
+}
+[data-nedelya] li + li { border-top: 1px solid #F1E8D8; }
+[data-nedelya] li > span {
+  display: flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  background: var(--sky);
+  color: #FFFFFF;
+}
+[data-nedelya] li b { font-weight: 700; }
+[data-nedelya] li > div { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; }
+[data-n-viola] > span { background: linear-gradient(135deg, #E5483D 0%, #B3161F 100%) !important; }
+[data-nedelya] em { font-style: normal; }
+[data-n-foot] {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 16px 22px 17px;
+  background: var(--zoloto);
+  font-size: 18.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #18213A;
+}
+[data-n-foot] span { font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 40px; line-height: .7; color: #143A85; }
 
 /* Карточка недели: вопрос человека справа на небе, ответ Виолы сообщением,
    три техники с синими номерами. */
@@ -1118,6 +1199,31 @@ _RED = "#B01E22"             # красный текст: метки, отмет
 _BLUE = "#1F4C97"            # синий: номера, недели, всё, что говорит Виола
 
 
+def _ikonka(paths):
+    return ('<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" '
+            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">%s</svg>' % paths)
+
+
+_THEME_NEDELYA = (
+    '<div data-nedelya="">'
+    '<p data-n-title="">Каждую неделю <br>вы&nbsp;получаете:</p>'
+    '<ul>'
+    '<li><span>' + _ikonka('<path d="M8.5 5.5v13l10-6.5z" fill="currentColor" stroke="none"/>')
+    + '</span><b>лекцию Виолы в&nbsp;записи с&nbsp;таймкодами</b></li>'
+    '<li><span>' + _ikonka('<path d="M5 7h14M5 12h14M5 17h14"/>')
+    + '</span><b>три прикладных техники недели</b></li>'
+    '<li><span>' + _ikonka('<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.4 12.3l2.6 2.6 4.7-5.5"/>')
+    + '</span><b>практические задания</b></li>'
+    '<li><span>' + _ikonka('<path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10A.5.5 0 0 1 7 20z"/><path d="M14 3.5V8h4M9.5 13h5M9.5 16.5h5"/>')
+    + '</span><b>PDF-конспект к&nbsp;лекции</b></li>'
+    '<li data-n-viola=""><span>' + _ikonka('<rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M6 11.5a6 6 0 0 0 12 0M12 17.5V21"/>')
+    + '</span><div><b>аудиоответы от&nbsp;Виолы в&nbsp;чате</b>'
+    '<em data-tag="">Только на&nbsp;тарифе «С&nbsp;Виолой»</em></div></li>'
+    '</ul>'
+    '<p data-n-foot=""><span aria-hidden="true">∞</span>Доступ ко&nbsp;всему остаётся навсегда.</p>'
+    '</div>')
+
+
 def _theme_section_re(html, label, pattern, repl, flags=0):
     """То же, что _theme_section, но заменой по регулярному выражению."""
     i = html.find('aria-label="%s"' % label)
@@ -1238,6 +1344,8 @@ def _theme_layout(html):
     html = _theme_section(html, "Что нового", [
         # заголовок вопросом
         ("с&nbsp;прошлыми потоками</h2>", "с&nbsp;прошлыми потоками?</h2>"),
+        # про группы по двадцать человек больше не говорим
+        ("Поток делится на&nbsp;группы по&nbsp;двадцать человек. ", ""),
         ("background: radial-gradient(90% 60% at 88% 0%, rgba(240,177,63,.2) 0%, rgba(240,177,63,0) 58%), "
          "linear-gradient(165deg, #1F56A6 0%, #18213A 48%, #0F2A66 100%);",
          "background: linear-gradient(180deg, #FFFFFF 0%, #FBF6EC 100%);"),
@@ -1261,8 +1369,6 @@ def _theme_layout(html):
     html = _theme_section(html, "Программа шесть недель", [
         ('<div style="display: flex; flex-wrap: wrap; gap: 12px 26px; font-size: 17px; color: #465068;">',
          '<div data-cifry="" style="display: flex; flex-wrap: wrap; gap: 12px 26px; font-size: 17px; color: #465068;">'),
-        ("background: linear-gradient(160deg, #F4ECDD, #EBDFCA); border-radius: 10px; "
-         "box-shadow: inset 0 1px 0 rgba(255,255,255,.5);", "background: " + _PANEL + "; border-radius: 20px;"),
         # карточка недели: шапка без заливки, значок в золотом круге
         ('<div style="background: linear-gradient(165deg, #1F56A6 0%, #143A85 100%); padding: clamp(24px, 3vw, 34px); '
          'display: flex; flex-direction: column; gap: 14px; color: #FBF6EC;">',
@@ -1282,6 +1388,14 @@ def _theme_layout(html):
         ("width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(160deg, #FBF6EC, #EBDFCA); "
          "color: " + _RED + ";", "width: 30px; height: 30px; border-radius: 50%; background: " + _BLUE + "; color: #FFFFFF;"),
     ])
+    # «Каждую неделю вы получаете» — главный блок программы, поэтому крупно:
+    # шапка-небо, пять строк со значками, внизу золотая строка про доступ.
+    # Слова заданы здесь: список на тестовой странице новее, чем в шаблоне.
+    html = _theme_section_re(
+        html, "Программа шесть недель",
+        r'<div style="background: linear-gradient\(160deg, #F4ECDD, #EBDFCA\); border-radius: 10px;[^>]*>\s*Каждую неделю.*?</div>',
+        lambda m: _THEME_NEDELYA, re.S)
+
     # текст лекции — ответом Виолы: имя и пузырь, как её слова в тесте
     html = _theme_section_re(
         html, "Программа шесть недель",
@@ -1311,7 +1425,6 @@ def _theme_layout(html):
         ("font-size: 40px; line-height: 1; letter-spacing: -.02em; color: #18213A;",
          "font-size: 40px; line-height: 1; letter-spacing: -.02em; color: #FFFFFF;"),
         ('<div style="font-size: 16px; color: #465068;">$', '<div style="font-size: 16px; color: #DCE6F5;">$'),
-        ('style="font-size: 15px; color: #4A546C;">текущая', 'style="font-size: 15px; color: #F6CF7A;">текущая'),
         # «Всего 50 мест» — плашкой
         ('<div style="display: inline-flex; align-self: flex-start; align-items: center; gap: 10px; '
          'background: linear-gradient(180deg, #FDF1D9 0%, #FBE3B0 100%); border: 1.5px solid #F0B13F;',
@@ -1348,6 +1461,13 @@ def _theme_layout(html):
         ("letter-spacing: .1em; text-transform: uppercase;", "letter-spacing: 0;"),
         ("box-shadow: 0 16px 30px -14px rgba(190,30,35,.62);", "box-shadow: inset 0 0 0 2px #143A85;"),
     ])
+
+    # Повышения цены больше нет: убираем подпись под ценой, строку в блоке
+    # подарков и прошедший срок закрытия продаж. Полоса со счётчиком скрыта
+    # стилем: скрипт страницы ищет её по номеру.
+    html = re.sub(r"\s*<div data-price-note[^>]*>.*?</div>", "", html, flags=re.S)
+    html = re.sub(r"\s*<p[^>]*>С(?:\s|&nbsp;|\u00a0)27(?:\s|&nbsp;|\u00a0)сентября цена становится выше\.</p>", "", html)
+    html = re.sub(r"\s*<p[^>]*>Продажи закрываются 29(?:\s|&nbsp;|\u00a0)сентября[^<]*</p>", "", html)
 
     # Последний призыв: блок-небо с красной кнопкой, как второй призыв в тесте.
     html = _theme_section(html, "Финальный призыв", [
