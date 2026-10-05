@@ -314,6 +314,11 @@ for i, w in enumerate(WEEKS):
 
 THEME = ""
 THEME_DIR = os.path.join(BUILD_ASSETS, "tema-more")
+# Вырезка из вертикальной картинки для телефона, в долях её сторон:
+# слева, сверху, справа, снизу. Лицо на картинке стоит на 70% ширины;
+# после вырезки от 40% оно попадает ровно в середину кадра, а пустое
+# море слева уходит.
+THEME_MOBILE_CROP = (0.40, 0.12, 1.0, 0.74)
 
 THEME_HEX = {
     # основной текст и тёмные кружки
@@ -496,6 +501,16 @@ section[aria-label="Первый экран"] { background: #FBF6EC !important; 
     height: clamp(290px, 44svh, 460px);
   }
   [data-hero-photo] img { object-position: 50% 12% !important; }
+  /* Текст листа по центру, под Виолой, которая стоит в середине кадра. */
+  [data-hero-card] { text-align: center; }
+  [data-hero-card] > div:last-child { align-items: center !important; }
+  [data-hero-stage] [data-hero-card] > div:first-child > div:first-child,
+  [data-hero-stage] [data-hero-card] > div:last-child > p { text-wrap: balance; }
+  [data-hero-stage] [data-hero-card] > div:last-child > p:nth-child(2) {
+    border-left: 0 !important;
+    border-radius: 16px !important;
+    padding: 14px 18px !important;
+  }
   [data-hero-stage] [data-hero-copy] {
     min-height: 0 !important;
     width: 100% !important;
@@ -525,6 +540,12 @@ section[aria-label="Первый экран"] { background: #FBF6EC !important; 
     font-size: 19px !important;
   }
   [data-hero-card] > div:last-child > div > div { align-self: center; }
+}
+
+/* Телефон: своя вертикальная картинка, вырезанная так, что лицо стоит
+   в середине кадра (THEME_MOBILE_CROP) на 35% его высоты. */
+@media (max-width: 760px) {
+  [data-hero-photo] img { object-position: 50% 22% !important; }
 }
 
 /* ── общие правки вида ── */
@@ -1230,6 +1251,11 @@ def build_images():
         # Отдельная вертикальная картинка для телефона. Ширина та же, что
         # у вырезки, чтобы не менять набор размеров; высоту берём свою.
         vert = Image.open(theme_mobile).convert("RGB")
+        l, t, r, b = THEME_MOBILE_CROP
+        vert = vert.crop((round(vert.width * l), round(vert.height * t),
+                          round(vert.width * r), round(vert.height * b)))
+        # Вырезка уже исходника, растягивать её до полной ширины незачем.
+        cw = 900
         mob = vert.resize((cw, round(vert.height * cw / vert.width)), Image.LANCZOS)
 
     MOBILE_WIDTHS = (620, cw)
