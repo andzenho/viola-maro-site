@@ -1414,6 +1414,14 @@ def _theme_layout(html):
          "background: " + _GOLD + "; color: #143A85; font-size: 12px;"),
     ])
 
+    # Карточка «Ваш вопрос разберут каждую неделю» повторяла блок про новый
+    # формат ответов, который стоит ниже. В тестовом оформлении её нет.
+    i = html.find('<div data-nov=""')
+    j = html.find('<div data-nov=""', i + 10) if i >= 0 else -1
+    if j >= 0:
+        blk = find_block(html, "div", j)
+        html = html[:blk[0]] + html[blk[3]:]
+
     # Под материалами — выделенный блок про новый формат ответов на вопросы.
     i = html.find('<div data-mat=""')
     if i >= 0:
