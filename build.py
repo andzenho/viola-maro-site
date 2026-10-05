@@ -556,6 +556,7 @@ section[aria-label="Первый экран"] { background: #FBF6EC !important; 
    под ней карточка «что это». Виола — отдельный слой без заливки, терраса
    за ней уходит вверх в небо, на котором стоит название. */
 [data-h2] { display: none; }
+br[data-tel] { display: none; }
 @media (max-width: 900px) {
   [data-hero-stage] { display: none !important; }
   [data-h2] {
@@ -618,7 +619,7 @@ section[aria-label="Первый экран"] { background: #FBF6EC !important; 
     color: rgba(255,255,255,.95);
     text-wrap: balance;
   }
-  [data-h2-top] a[data-btn] { width: 100%; margin-top: 6px; }
+  [data-h2-top] a[data-btn] { margin-top: 8px; }
   [data-h2-photo] { position: relative; z-index: 1; height: clamp(380px, 106vw, 620px); margin-top: 10px; }
   [data-h2-fon] {
     position: absolute;
@@ -734,18 +735,22 @@ section[aria-label="Зачем мне это"] > div > p:first-child::first-line
 /* Главная кнопка: крупный скруглённый прямоугольник с бликом и свечением,
    подпись прописными, без стрелки. Цвет наш, красный; красная одна. */
 [data-btn] { border-radius: 18px !important; }
+/* Форма как у кнопки на лендинге менторства: высокая, не во всю ширину,
+   углы крупно скруглены, по краю светлая кромка, под кнопкой свечение. */
 [data-btn="primary"] {
   justify-content: center !important;
-  min-height: 68px;
-  padding: 18px 34px !important;
-  border: 1px solid rgba(255,255,255,.3) !important;
+  min-height: 80px;
+  padding: 18px 46px !important;
+  border: 2px solid #F58D82 !important;
+  border-radius: 24px !important;
   background:
-    radial-gradient(120% 100% at 18% 0%, rgba(255,255,255,.34) 0%, rgba(255,255,255,0) 58%),
-    linear-gradient(135deg, #E5483D 0%, #C3222A 55%, #A8141D 100%) !important;
-  box-shadow: 0 20px 44px -14px rgba(214,44,44,.7), inset 0 1px 0 rgba(255,255,255,.35) !important;
-  font-size: 19px !important;
+    radial-gradient(130% 110% at 14% -10%, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 55%),
+    linear-gradient(180deg, #EC5145 0%, #D2302C 48%, #B01920 100%) !important;
+  box-shadow: 0 0 44px -6px rgba(232,64,52,.7), 0 18px 36px -16px rgba(150,16,24,.8),
+              inset 0 2px 0 rgba(255,255,255,.4) !important;
+  font-size: 20px !important;
   font-weight: 700 !important;
-  letter-spacing: .03em !important;
+  letter-spacing: .02em !important;
   text-transform: uppercase;
 }
 [data-btn="primary"] > span { display: none !important; }
@@ -772,6 +777,39 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
 [data-sfery] > div:not(:first-child) > span:first-child { background: #F4ECDD !important; color: #465068 !important; }
 [data-sfery] > div > span:nth-child(2) { color: #1F4C97 !important; }
 [data-sfery] > div > span:last-child { font-size: 18px !important; font-weight: 600 !important; }
+
+/* «18 техник»: блок-небо. Число крупно золотом, под первой фразой
+   восемнадцать плиток: шесть недель по три техники. */
+[data-tehniki] {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px 18px;
+  padding: 24px 22px 26px !important;
+  border-radius: 24px !important;
+  background: var(--tochki), var(--sky);
+  color: #FFFFFF;
+  box-shadow: 0 22px 40px -26px rgba(20,58,133,.75) !important;
+}
+[data-tehniki] > span {
+  width: auto !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: clamp(120px, 34vw, 170px) !important;
+  font-weight: 700 !important;
+  line-height: .78 !important;
+  letter-spacing: 0 !important;
+  color: #F6CF7A !important;
+}
+[data-t-lead] { margin: 0; font-size: 24px; font-weight: 700; line-height: 1.2; color: #FFFFFF; text-wrap: balance; }
+[data-t-grid] { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+[data-t-grid] span { display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
+[data-t-grid] i { display: block; height: 18px; border-radius: 6px; background: var(--zoloto); }
+[data-t-grid] b { margin-top: 2px; font-size: 15px; font-weight: 700; line-height: 1; text-align: center; color: rgba(255,255,255,.82); }
+[data-t-text] { grid-column: 1 / -1; margin: 0; font-size: 18px; line-height: 1.5; color: rgba(255,255,255,.95); }
 
 /* ── «Что нового» ── */
 
@@ -1007,9 +1045,12 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
   /* Поля по бокам 20 px: текст не упирается в край экрана. */
   main > section:not([aria-label="Первый экран"]) { padding-left: 20px !important; padding-right: 20px !important; }
 
-  main h2,
-  section[aria-label="Зачем мне это"] > div > p:first-child { font-size: 54px !important; }
-  [data-btn="primary"] { width: 100%; }
+  main h2 { font-size: 54px !important; }
+  /* «Это способность.» — самая длинная строка, она не должна рваться. */
+  section[aria-label="Зачем мне это"] > div > p:first-child { font-size: min(54px, calc((100vw - 40px) / 5.95)) !important; }
+  br[data-tel] { display: inline; }
+  /* Кнопка не во всю ширину: около трёх четвертей экрана, по центру. */
+  [data-btn="primary"] { width: min(100%, 320px); margin-left: auto; margin-right: auto; align-self: center !important; }
 
   /* Вводные абзацы были 17 px при тексте карточек 20 px. */
   main [style*="font-size: clamp(17.1px"] { font-size: 19px !important; }
@@ -1037,6 +1078,8 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
   [data-sticky-bar] { box-shadow: 0 -10px 30px -18px rgba(24,33,58,.4); }
   [data-sticky-bar] a {
     width: auto;
+    margin: 0;
+    border-width: 1px !important;
     min-height: 50px;
     display: inline-flex !important;
     align-items: center;
@@ -1170,9 +1213,12 @@ def _theme_layout(html):
         ("padding: 13px 22px; color: #1A4A96;", "padding: 13px 22px; color: #18213A;"),
         ('<div style="display: flex; flex-direction: column; gap: 8px;">',
          '<div data-sfery="" style="display: flex; flex-direction: column; gap: 8px;">'),
-        # «18 техник»: закатная плашка, число в синем круге
-        ("background: linear-gradient(165deg, #1F56A6 0%, #102F73 100%); border: 1px solid #143A85;",
-         "background: " + _PANEL + "; border: 0;"),
+        # «18 техник»: блок-небо с крупным числом и сеткой 6 × 3
+        ('<div style="display: flex; gap: 18px; align-items: flex-start; '
+         'background: linear-gradient(165deg, #1F56A6 0%, #102F73 100%); border: 1px solid #143A85;',
+         '<div data-tehniki="" style="border: 0;'),
+        # на телефоне «это» уходит на вторую строку и не висит в конце первой
+        ("Эмпатия&nbsp;— это способность.", 'Эмпатия&nbsp;— <br data-tel="">это способность.'),
         ("box-shadow: 0 18px 40px -22px rgba(16,47,115,.7), inset 0 1px 0 rgba(255,255,255,.1);", "box-shadow: none;"),
         ("background: linear-gradient(180deg, #FBE3B0, #E39A2B); color: #18213A; font-size: 21px;",
          "background: " + _SKY + "; color: #FFFFFF; font-size: 21px;"),
@@ -1180,7 +1226,18 @@ def _theme_layout(html):
          'line-height: 1.55; color: #2B3550;"><b style="color: #18213A;">'),
     ])
 
+    # «18 техник»: первая фраза отдельно, под ней восемнадцать плиток —
+    # шесть недель по три техники, потом пояснение.
+    html = _theme_section_re(
+        html, "Зачем мне это",
+        r'(<div data-tehniki=""[^>]*>\s*<span[^>]*>.*?</span>)\s*<p[^>]*><b[^>]*>(.*?)</b>\s*(.*?)</p>',
+        r'\1<p data-t-lead="">\2</p><div data-t-grid="" aria-hidden="true">'
+        + "".join("<span><i></i><i></i><i></i><b>%d</b></span>" % n for n in range(1, 7))
+        + r'</div><p data-t-text="">\3</p>', re.S)
+
     html = _theme_section(html, "Что нового", [
+        # заголовок вопросом
+        ("с&nbsp;прошлыми потоками</h2>", "с&nbsp;прошлыми потоками?</h2>"),
         ("background: radial-gradient(90% 60% at 88% 0%, rgba(240,177,63,.2) 0%, rgba(240,177,63,0) 58%), "
          "linear-gradient(165deg, #1F56A6 0%, #18213A 48%, #0F2A66 100%);",
          "background: linear-gradient(180deg, #FFFFFF 0%, #FBF6EC 100%);"),
@@ -1277,6 +1334,7 @@ def _theme_layout(html):
         ("color: #D9CDB6", "color: #2B3550"),
         ('<div style="display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;">',
          '<div data-podarok="" style="display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;">'),
+        ("Что вы получаете</h2>", "Что вы получаете?</h2>"),
         ("background: linear-gradient(180deg, #FBE3B0, #E39A2B); color: #18213A; flex: none;",
          "background: " + _GOLD + "; color: #143A85; flex: none;"),
     ])
