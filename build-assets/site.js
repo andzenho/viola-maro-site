@@ -94,7 +94,10 @@
   var errText = document.getElementById('form-error-text');
   var sentBox = document.getElementById('form-sent');
   var submit = document.getElementById('form-submit');
-  var submitLabel = submit ? submit.textContent : '';
+  /* Стрелка в разметке кнопки стоит отдельным значком. Подпись после
+     «Отправляем…» возвращается текстом, и стрелка без значка смотрелась
+     бы опечаткой в конце слова, поэтому в подпись она не попадает. */
+  var submitLabel = submit ? submit.textContent.replace(/\s*→\s*$/, '') : '';
   var closers = modal.querySelectorAll('[data-close-form]');
 
   var inputs = {
