@@ -884,7 +884,7 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
 /* ── программа ── */
 
 /* Цифры программы: четыре плитки, у каждой свой цвет. */
-[data-cifry] { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px !important; }
+[data-cifry] { display: grid !important; grid-template-columns: repeat(2, minmax(0, 240px)); gap: 10px !important; }
 [data-cifry] > span {
   display: flex;
   flex-direction: column;
@@ -1211,7 +1211,7 @@ _THEME_NEDELYA = (
     '<li><span>' + _ikonka('<path d="M8.5 5.5v13l10-6.5z" fill="currentColor" stroke="none"/>')
     + '</span><b>лекцию Виолы в&nbsp;записи с&nbsp;таймкодами</b></li>'
     '<li><span>' + _ikonka('<path d="M5 7h14M5 12h14M5 17h14"/>')
-    + '</span><b>три прикладных техники недели</b></li>'
+    + '</span><b>три прикладных техники недели для&nbsp;эмпатов</b></li>'
     '<li><span>' + _ikonka('<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.4 12.3l2.6 2.6 4.7-5.5"/>')
     + '</span><b>практические задания</b></li>'
     '<li><span>' + _ikonka('<path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10A.5.5 0 0 1 7 20z"/><path d="M14 3.5V8h4M9.5 13h5M9.5 16.5h5"/>')
@@ -1407,8 +1407,11 @@ def _theme_layout(html):
     i = html.find('<div data-cifry=""')
     if i >= 0:
         blk = find_block(html, "div", i)
-        html = (html[:blk[0]] + html[blk[0]:blk[3]].replace(" ", " ").replace("&nbsp;", " ")
-                + html[blk[3]:])
+        cifry = html[blk[0]:blk[3]].replace("\u00a0", " ").replace("&nbsp;", " ")
+        # Разборов вопросов после лекций больше нет, а про доступ навсегда
+        # сказано ниже, в блоке «Каждую неделю вы получаете».
+        cifry = re.sub(r"\s*<span[^>]*><b[^>]*>(?:7|∞)</b>[^<]*</span>", "", cifry)
+        html = html[:blk[0]] + cifry + html[blk[3]:]
 
     # Мастер-класс: блок-небо на светлом фоне, без кнопки (она экраном выше).
     html = _theme_section(html, "Финальный мастер-класс", [
