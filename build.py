@@ -1211,7 +1211,7 @@ _THEME_NEDELYA = (
     '<li><span>' + _ikonka('<path d="M8.5 5.5v13l10-6.5z" fill="currentColor" stroke="none"/>')
     + '</span><b>лекцию Виолы в&nbsp;записи с&nbsp;таймкодами</b></li>'
     '<li><span>' + _ikonka('<path d="M5 7h14M5 12h14M5 17h14"/>')
-    + '</span><b>три прикладных техники недели</b></li>'
+    + '</span><b>три прикладных техники недели для&nbsp;эмпатов</b></li>'
     '<li><span>' + _ikonka('<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.4 12.3l2.6 2.6 4.7-5.5"/>')
     + '</span><b>практические задания</b></li>'
     '<li><span>' + _ikonka('<path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10A.5.5 0 0 1 7 20z"/><path d="M14 3.5V8h4M9.5 13h5M9.5 16.5h5"/>')
