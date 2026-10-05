@@ -1430,12 +1430,6 @@ def _theme_layout(html):
         blk = find_block(html, "div", j)
         html = html[:blk[0]] + html[blk[3]:]
 
-    # Под материалами — выделенный блок про новый формат ответов на вопросы.
-    i = html.find('<div data-mat=""')
-    if i >= 0:
-        blk = find_block(html, "div", i)
-        html = html[:blk[3]] + _THEME_OTVETY + html[blk[3]:]
-
     html = _theme_section(html, "Программа шесть недель", [
         ('<div style="display: flex; flex-wrap: wrap; gap: 12px 26px; font-size: 17px; color: #465068;">',
          '<div data-cifry="" style="display: flex; flex-wrap: wrap; gap: 12px 26px; font-size: 17px; color: #465068;">'),
@@ -1547,6 +1541,20 @@ def _theme_layout(html):
         ('aria-label="Финальный призыв"', 'data-final="" aria-label="Финальный призыв"'),
         ('<div style="max-width: 640px; margin: 0 auto;', '<div data-final-card="" style="max-width: 640px; margin: 0 auto;'),
     ])
+    # Блок про новый формат ответов на вопросы стоит в программе,
+    # сразу после карточек недель.
+    i = html.rfind('<div data-week-card=""')
+    if i >= 0:
+        blk = find_block(html, "div", i)
+        html = html[:blk[3]] + _THEME_OTVETY + html[blk[3]:]
+
+    # Раздела «Что нового по сравнению с прошлыми потоками» в тестовом
+    # оформлении нет: главное из него (новый формат ответов) перенесено
+    # в программу, остальное повторяло соседние блоки.
+    i = html.find('aria-label="Что нового"')
+    if i >= 0:
+        blk = find_block(html, "section", html.rfind("<section", 0, i))
+        html = html[:blk[0]] + html[blk[3]:]
     return _theme_modal(html)
 
 
