@@ -44,6 +44,11 @@ jobs:
       - name: Собрать страницу заявки
         run: python3 build.py --mode zayavka --out site/zayavka --base /zayavka --noindex
 
+      # Тестовая страница нового оформления. На неё нет ссылок, индексация
+      # запрещена; действующие страницы она не затрагивает.
+      - name: Собрать тестовую страницу нового оформления
+        run: python3 build.py --theme more --out site/dizayn --base /dizayn --docs-root --noindex
+
       - name: Добавить мини-аппы
         run: |
           mkdir -p site/test site/koleso site/test2
