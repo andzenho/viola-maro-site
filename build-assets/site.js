@@ -16,17 +16,18 @@
 
      FORM_SECRET — та же строка, что SECRET в Code.gs. Отсекает ботов.
 
-     PAY_URLS — страницы оплаты GetPlatinum, по одной на тариф. И прямая
-       оплата, и рассрочка ведут на ту же страницу: способ человек выбирает
-       уже там. Переход происходит после того, как согласия записаны. */
+     Адреса оплаты практикума задаются в build.py (словарь PAY) и приходят
+       в разметке окна, в data-pay-config: у каждой страницы свои ссылки
+       и суммы. После формы человек сам выбирает способ: российской картой
+       (GetPlatinum, там же рассрочка от банка) или зарубежной (Lava).
+
+     PAY_URLS — запасной путь для страниц без такого шага: одна ссылка,
+       переход сразу после того, как согласия записаны. */
 
   var LEAD_ENDPOINT = 'https://script.google.com/macros/s/AKfycby3T-T1o2X9Y29957ZDDQs7r6vtltiKiyLkYT97cyin-roOagb3vUMBWWQoK0-P8Mzbsg/exec';
   var FORM_SECRET = 'PxlGXL9bQSjc0dHcLoiCZJZWtNdfv9D8yY9SHBuJ';
 
   var PAY_URLS = {
-    basic: 'https://anny-nizh.getplatinum.ru/payment/JQqAJkS',
-    full:  'https://anny-nizh.getplatinum.ru/payment/ppgQJJ7',
-    bron:  'https://anny-nizh.getplatinum.ru/payment/ASs2MgT',  // бронь 5 000 ₽
     /* Событие «Неудобные», билет 3 500 ₽ до 4 сентября. Пока пусто,
        форма не делает вид, что оплата открылась: она проверяет согласия,
        записывает заявку и отправляет человека в службу заботы. */
@@ -119,6 +120,57 @@
   var currentPlan = '';
   var currentPay = '';
 
+  /* Второй шаг окна: выбор способа оплаты. Есть только на страницах,
+     где принимаются деньги за практикум. */
+  var payStep = document.getElementById('pay-step');
+  var formParts = modal.querySelectorAll('[data-step="form"]');
+  var PAY = null;
+  if (payStep) {
+    try { PAY = JSON.parse(payStep.getAttribute('data-pay-config') || 'null'); }
+    catch (e) { PAY = null; }
+  }
+
+  function setText(id, text) {
+    var node = document.getElementById(id);
+    if (node) node.textContent = text;
+  }
+
+  function showFormStep() {
+    Array.prototype.forEach.call(formParts, show);
+    hide(payStep);
+  }
+
+  /* Возвращает false, если для нажатой кнопки нет адресов оплаты. */
+  function showPayStep(notSaved) {
+    var plan = PAY && PAY.plans ? PAY.plans[currentPay] : null;
+    if (!payStep || !plan || !plan.ru || !PAY.intl) return false;
+
+    setText('pay-plan', currentPlan);
+    setText('pay-ru-price', plan.rub.replace(/ /g, '\u00a0') + '\u00a0₽');
+    setText('pay-intl-usd', '$' + plan.usd);
+    setText('pay-intl-eur', '€' + plan.eur);
+    document.getElementById('pay-ru').href = plan.ru;
+    document.getElementById('pay-intl').href = PAY.intl;
+
+    /* У зарубежной оплаты одна страница на оба тарифа: подсказываем,
+       какой выбрать, чтобы человек не оплатил чужой. */
+    var hint = document.getElementById('pay-intl-hint');
+    if (hint) {
+      hint.hidden = !plan.name;
+      setText('pay-intl-plan', plan.name || '');
+    }
+    var warn = document.getElementById('pay-warn');
+    if (warn) warn.hidden = !notSaved;
+
+    Array.prototype.forEach.call(formParts, hide);
+    show(payStep);
+    setSending(false);
+    if (modal.firstElementChild) modal.firstElementChild.scrollTop = 0;
+    var title = document.getElementById('pay-title');
+    if (title) title.focus();
+    return true;
+  }
+
   function errorFor(box) {
     var row = box.closest('label');
     return row ? row.querySelector('.cb-err') : null;
@@ -178,6 +230,7 @@
     currentPay = payKey || '';
     lastTrigger = trigger || null;
     if (planLabel) planLabel.textContent = plan;
+    showFormStep();
     hide(errBox);
     hide(sentBox);
     setSending(false);
@@ -275,9 +328,10 @@
     });
     Object.keys(DOC_VERSIONS).forEach(function (k) { payload[k] = DOC_VERSIONS[k]; });
 
-    /* Переход на оплату. Согласия пишутся до платежа — так требует
+    /* Переход к оплате. Согласия пишутся до платежа — так требует
        раздел 3 правового ТЗ: акцепт оферты должен быть зафиксирован
-       раньше, чем человек расстался с деньгами. */
+       раньше, чем человек расстался с деньгами. На страницах практикума
+       после записи открывается выбор способа оплаты, а не сама оплата. */
     function goToPayment() {
       /* Заявка записана — уводим в чат с командой. Ждать, пока напишут
          первыми, человек не обязан: разговор начинается сразу. */
@@ -291,6 +345,11 @@
         hide(errBox);
         show(sentBox);
         window.location.href = CHANNEL_URL;
+        return;
+      }
+      if (showPayStep(false)) {
+        hide(errBox);
+        syncSubmit();
         return;
       }
       var url = PAY_URLS[currentPay];
@@ -352,6 +411,9 @@
          вручную, но об этом говорим прямо, а не делаем вид, что всё цело. */
       setSending(false);
       syncSubmit();
+      /* На страницах практикума способ оплаты человек выбирает сам:
+         показываем тот же шаг и строку о том, что данные не записались. */
+      if (!IS_PRE && !IS_TEAM && showPayStep(true)) return;
       var url = IS_PRE ? CHANNEL_URL
               : IS_TEAM ? TEAM_CHAT_URL
               : (PAY_URLS[currentPay] || SUPPORT_TG);

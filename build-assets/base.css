@@ -541,3 +541,7 @@ body.modal-open { overflow: hidden; }
   .ft { background: #fff; }
   a { text-decoration: underline; }
 }
+
+/* Шаги окна оплаты: у блоков свой display в стиле, без этого правила
+   атрибут hidden их не прячет. */
+#lead-modal [data-step][hidden] { display: none !important; }

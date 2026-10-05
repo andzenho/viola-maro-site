@@ -117,7 +117,67 @@ TILDA_OUT = ""
 # "pre" — служебный редирект со старого адреса /pre на /zayavka
 # вместо платежа. Девять экранов из одиннадцати у них общие, поэтому
 # копией файлов это делать нельзя: правки разъедутся на первой же неделе.
+# "rassrochka" — та же продажа, но по внутренней рассрочке: на странице
+# вносится половина стоимости тарифа. "bron" — короткая страница брони.
 MODE = "pay"
+
+# ── Оплата: два способа на каждой странице ──────────────────────────────
+#
+# Денежных страниц три: полная оплата (/), внутренняя рассрочка
+# (/rassrochka) и бронь (/bron). На каждой после формы человек выбирает,
+# чем платит: российской картой или зарубежной.
+#
+#   ru   — GetPlatinum, своя ссылка на каждый тариф. На странице полной
+#          оплаты там же оформляется рассрочка от банка.
+#   intl — Lava, одна ссылка на страницу: тариф человек выбирает уже там,
+#          поэтому окно подсказывает, какой именно.
+#
+# Суммы стоят здесь же и уходят в окно оплаты вместе со ссылками: цена
+# на кнопке и цена на платёжной странице не должны расходиться. Перед
+# публикацией каждую ссылку открывают и сверяют название и сумму.
+_GP = "https://anny-nizh.getplatinum.ru/payment/"
+_LAVA = "https://app.lava.top/products/"
+PAY = {
+    "pay": {
+        "intl": _LAVA + "5dc037cd-01c0-4d51-9add-274087367214",
+        "plans": {
+            "basic": {"name": "Самостоятельный", "ru": _GP + "JQqAJkS",
+                      "rub": "19 900", "usd": "240", "eur": "215"},
+            "full": {"name": "С Виолой", "ru": _GP + "ppgQJJ7",
+                     "rub": "39 900", "usd": "480", "eur": "430"},
+        },
+    },
+    # Внутренняя рассрочка 50/50: два равных платежа, на странице один.
+    "rassrochka": {
+        "intl": _LAVA + "54645129-e4e3-4c7a-bfc7-bf487407dff7",
+        "plans": {
+            "basic": {"name": "Самостоятельный", "ru": _GP + "aQT8pYy",
+                      "rub": "9 950", "usd": "120", "eur": "108"},
+            "full": {"name": "С Виолой", "ru": _GP + "Imsdgni",
+                     "rub": "19 950", "usd": "240", "eur": "215"},
+        },
+    },
+    "bron": {
+        "intl": _LAVA + "238f0f0a-fbee-4a14-95d4-de951d7843f0",
+        "plans": {
+            "bron": {"name": "", "ru": _GP + "ASs2MgT",
+                     "rub": "5 000", "usd": "60", "eur": "55"},
+        },
+    },
+}
+
+# Что сказано под ценой у каждого способа. Пустая строка — без подписи.
+PAY_NOTES = {
+    "pay": ("Здесь&nbsp;же можно оформить рассрочку от&nbsp;банка.", ""),
+    "rassrochka": ("", ""),
+    "bron": ("", ""),
+}
+# Строка под названием тарифа на шаге оплаты, общая для обоих способов.
+PAY_LEAD = {
+    "pay": "",
+    "rassrochka": "Сейчас вы&nbsp;вносите один платёж из&nbsp;двух равных.",
+    "bron": "Бронь засчитывается в&nbsp;стоимость участия.",
+}
 
 # ── Страница брони ──────────────────────────────────────────────────────
 #
@@ -135,7 +195,7 @@ MODE = "pay"
 # страница про деньги не должна выйти с недописанными цифрами.
 BOOKING_AMOUNT = "5 000 ₽"
 BOOKING_DEADLINE = "1 ноября"         # день старта потока
-BOOKING_PAY_URL = ""                  # страница оплаты брони в GetPlatinum
+# Ссылки на оплату брони и её сумма в валюте — в словаре PAY ниже.
 
 # Формулировка про судьбу брони при неоплате остатка.
 #
@@ -603,7 +663,7 @@ br[data-tel] { display: none; }
     margin: 10px 0 0;
     font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     font-weight: 700;
-    font-size: min(calc((100vw - 40px) / 4.3), 150px);
+    font-size: min(calc((100vw - 40px) / (var(--bukv, 10) * .43)), 150px);
     line-height: .9;
     letter-spacing: .005em;
     text-transform: uppercase;
@@ -716,6 +776,17 @@ section[aria-label="Зачем мне это"] > div > p:first-child {
 main h2::first-line,
 section[aria-label="Зачем мне это"] > div > p:first-child::first-line { color: #1F4C97; }
 [data-mk-card] h2::first-line, [data-final-card] h2::first-line { color: #F6CF7A; }
+
+/* В правовых документах заголовки остаются обычными: высокий шрифт
+   прописными там мешает читать. */
+main.doc h2 {
+  font-family: 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+  font-size: clamp(21px, 2.4vw, 26px) !important;
+  line-height: 1.25 !important;
+  letter-spacing: -.015em !important;
+  text-transform: none;
+}
+main.doc h2::first-line { color: inherit; }
 
 /* Номера и цифры — тем же высоким шрифтом, в скруглённых плитках. */
 [data-sfery] > div > span:first-child,
@@ -1140,6 +1211,42 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
 }
 #lead-modal label span span[style*="text-transform: uppercase"] { color: #5F687E !important; font-size: 14.5px !important; font-weight: 600 !important; }
 
+/* Выбор способа оплаты: две плашки одного веса. Российская карта —
+   закатная с красной кнопкой, зарубежная — голубая с синей. Сумма крупно,
+   тем же высоким шрифтом, что и цифры на странице. */
+[data-pay-option] { border: 0 !important; padding: 18px 18px 20px !important; gap: 14px !important; }
+[data-pay-option="ru"] { background: var(--panel) !important; }
+[data-pay-option="intl"] { background: var(--spot) !important; }
+[data-pay-option] > div > span:first-child { color: #2B3550 !important; font-size: 16.5px !important; }
+[data-pay-price] {
+  font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 54px !important;
+  line-height: .95 !important;
+  letter-spacing: .005em !important;
+}
+[data-pay-price] i {
+  font-family: 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 19px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0;
+  vertical-align: .32em;
+}
+[data-pay-option] p { color: #2B3550 !important; font-size: 16.5px !important; }
+#pay-step [data-btn] {
+  width: 100% !important;
+  min-height: 68px;
+  padding: 14px 10px !important;
+  font-size: clamp(16px, 4.6vw, 19px) !important;
+  white-space: nowrap;
+}
+#pay-step [data-btn="primary"] { box-shadow: 0 16px 30px -16px rgba(150,16,24,.85), inset 0 2px 0 rgba(255,255,255,.4) !important; }
+#pay-title:focus { outline: none; }
+
+/* Подписи к платежу на странице внутренней рассрочки: стоят на небе. */
+[data-cena] [data-cena-note] { color: #EEF3FB !important; font-size: 15.5px !important; }
+[data-cena] [data-cena-note] b { color: #FFFFFF; }
+
 /* ── подвал ── */
 
 .ft-label { text-transform: none; letter-spacing: 0; font-size: 14.5px; font-weight: 700; }
@@ -1316,6 +1423,15 @@ def _theme_hero_phone(html):
         return html
     weeks = re.search(r"(\d+)-недельн", eyebrow)
     name = re.sub(r"\s*<br\s*/?>\s*", " ", title)
+    # Размер названия считается от самого длинного слова: «Прикладная» —
+    # десять букв, «Прикладную» на странице брони с кавычкой — одиннадцать.
+    words = re.sub(r"<[^>]+>", " ", title).replace("&nbsp;", " ").replace("\u00a0", " ").split()
+    longest = max([len(w) for w in words] + [10])
+    # На странице брони заголовок говорит про бронь, а карточка ниже
+    # по-прежнему объясняет, что такое сам практикум.
+    quoted = re.search(r"«([^»]+)»", name)
+    if quoted:
+        name = "Прикладная эмпатия 2.0"
     chips = ""
     if start:
         chips = '<span><i>Старт:</i><b>%s</b></span>' % start
@@ -1325,7 +1441,7 @@ def _theme_hero_phone(html):
     block = (
         '<div data-h2="">'
         '<div data-h2-top="">' + chips
-        + '<p data-h2-title="" role="heading" aria-level="1">%s</p>' % title
+        + '<p data-h2-title="" role="heading" aria-level="1" style="--bukv: %d;">%s</p>' % (longest, title)
         + ('<p data-h2-sub="">%s</p>' % eyebrow if eyebrow else "")
         + cta.group(0)
         + '</div>'
@@ -1605,7 +1721,8 @@ def apply_theme(text, path):
     if path.endswith(".html"):
         text = _theme_buttons(text)
     text = _theme_colors(text)
-    if path.endswith(".html"):
+    # Правовые страницы только перекрашиваются: блоков лендинга на них нет.
+    if path.endswith(".html") and 'aria-label="Первый экран"' in text:
         text = _theme_layout(text)
     if path.endswith(os.path.join("assets", "site.css")):
         text += THEME_CSS
@@ -2270,6 +2387,7 @@ def booking_screens():
       <div style="flex: 0 0 auto; display: flex; flex-direction: column; gap: 4px;">
         <span style="font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #E9C98F;">Размер брони</span>
         <span style="font-size: clamp(40px, 6vw, 60px); font-weight: 700; letter-spacing: -.03em; line-height: 1; color: #F6F0E8;">%(amount)s</span>
+        <span style="font-size: 17px; line-height: 1.4; color: #DCD1C4;">с&nbsp;зарубежной карты&nbsp;— $%(usd)s или €%(eur)s</span>
       </div>
       <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 10px; font-size: 17.5px; line-height: 1.55; color: #DCD1C4;">
         <p style="margin: 0;"><b style="color: #F6F0E8; font-weight: 700;">Засчитывается в&nbsp;стоимость участия.</b> Это не&nbsp;доплата сверху: остаток вы&nbsp;вносите за&nbsp;вычетом брони.</p>
@@ -2286,7 +2404,64 @@ def booking_screens():
 </div>
 ''' % {"eyebrow": EYEBROW, "rows": rows, "cta": CTA_BOOK,
        "amount": BOOKING_AMOUNT, "deadline": BOOKING_DEADLINE,
-       "carry": BOOKING_CARRY}
+       "carry": BOOKING_CARRY,
+       "usd": PAY["bron"]["plans"]["bron"]["usd"],
+       "eur": PAY["bron"]["plans"]["bron"]["eur"]}
+
+
+def rassrochka_tariffs(tpl):
+    """Тарифы страницы внутренней рассрочки.
+
+    Стоимость тарифа делится на два равных платежа, на странице вносится
+    один. Поэтому в карточке стоит сумма платежа, а рядом прямо сказано,
+    что это половина и какова полная цена: число без подписи читалось бы
+    как цена практикума. Кнопка одна: рассрочка от банка здесь не при чём.
+    """
+    half, whole = PAY["rassrochka"]["plans"], PAY["pay"]["plans"]
+
+    tpl, n = re.subn(r'\s*<button type="button" onClick="\{\{ open(?:Basic|Full)Inst \}\}"'
+                     r'[^>]*>В рассрочку</button>', "", tpl)
+    if n != 2:
+        raise ValueError("рассрочка: ожидалось две кнопки «В рассрочку», найдено %d" % n)
+    if tpl.count(">Полная оплата<") != 2:
+        raise ValueError("рассрочка: ожидалось две кнопки «Полная оплата»")
+    tpl = tpl.replace(">Полная оплата<", ">Внести платёж<")
+
+    note = 'data-cena-note="" style="font-size: 15.5px; line-height: 1.4; color: #5C5149;"'
+    keys = iter(("basic", "full"))
+
+    def price(m):
+        key = next(keys)
+        h, w = half[key], whole[key]
+        return ('<div %s><b>Внутренняя рассрочка.</b> Один платёж из&nbsp;двух:</div>' % note
+                + m.group(1)
+                + '<span %s>%s&nbsp;₽</span>' % (m.group(2), h["rub"].replace(" ", "&nbsp;"))
+                + m.group(3)
+                + '<div %s>$%s &nbsp;  €%s</div>' % (m.group(4), h["usd"], h["eur"])
+                + '<div %s>Полная цена тарифа&nbsp;— %s&nbsp;₽, она делится '
+                  'на&nbsp;два равных платежа.</div>' % (note, w["rub"].replace(" ", "&nbsp;")))
+
+    tpl, n = re.subn(
+        r'(<div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;">\s*)'
+        r'<span data-price-before="[^"]*" data-price-after="[^"]*" (style="font-weight: 700; font-size: 40px;[^"]*")>[^<]*</span>'
+        r'(\s*</div>\s*)'
+        r'<div (style="font-size: 16px; color: #5C5149;")>\$[^<]*</div>',
+        price, tpl)
+    if n != 2:
+        raise ValueError("рассрочка: ожидалось две цены тарифов, найдено %d" % n)
+
+    # В липкой полосе цена тоже помнит старые значения: скрипт их не трогает,
+    # пока нет счётчика, но оставлять «от 19 900» рядом с платежом нельзя.
+    tpl = re.sub(r' data-price-before="[^"]*" data-price-after="[^"]*"', "", tpl)
+
+    intro = ('<p style="margin: 0; max-width: 62ch; align-self: center; text-align: center; '
+             'font-size: clamp(17.1px, 1.8vw, 19px); line-height: 1.5; color: #5C5149;">'
+             'Это страница оплаты по&nbsp;внутренней рассрочке: стоимость тарифа делится '
+             'на&nbsp;<b style="color: #2E2521;">два равных платежа</b>, здесь вы&nbsp;вносите один.</p>')
+    head_end = ">Тарифы</h2>"
+    if tpl.count(head_end) != 1:
+        raise ValueError("рассрочка: не найден заголовок тарифов")
+    return tpl.replace(head_end, head_end + intro)
 
 
 def gifts_block():
@@ -2310,6 +2485,109 @@ def gifts_block():
             + rows
             + '<p style="margin: 0; font-size: 15px; line-height: 1.5; color: #DCD1C4;">'
               'Подарки команда отправит вам после оплаты.</p></div>')
+
+
+# Кнопки шага оплаты повторяют стиль двух кнопок тарифа («Полная оплата»
+# и «В рассрочку»): в новом оформлении первая становится красной, вторая
+# синей, и разбирает их тот же код, что и остальные кнопки страницы.
+PAY_BTN_MAIN = ('display: flex; align-items: center; justify-content: center; width: 100%; '
+                'cursor: pointer; font-family: inherit; box-sizing: border-box; text-align: center; '
+                'text-decoration: none; border: none; '
+                'background: linear-gradient(165deg, #4E3C31 0%, #2B211C 100%); color: #F6F0E8; '
+                'box-shadow: 0 16px 34px -12px rgba(43,33,28,.55), inset 0 1px 0 rgba(255,255,255,.14); '
+                'font-weight: 700; font-size: 19px; padding: 19px 24px; border-radius: 999px; '
+                'transition: transform .2s ease, filter .2s ease;')
+PAY_BTN_QUIET = ('display: flex; align-items: center; justify-content: center; width: 100%; '
+                 'cursor: pointer; font-family: inherit; box-sizing: border-box; text-align: center; '
+                 'text-decoration: none; '
+                 'background: linear-gradient(180deg, #F7EBD8 0%, #EDD9B8 100%); color: #3B2E28; '
+                 'border: 1.5px solid #C9A87F; '
+                 'box-shadow: 0 8px 20px -12px rgba(120,90,50,.45), inset 0 1px 0 rgba(255,255,255,.7); '
+                 'font-weight: 700; font-size: 19px; padding: 19px 24px; border-radius: 999px; '
+                 'transition: transform .2s ease, filter .2s ease;')
+
+
+def pay_step_html():
+    """Второй шаг окна: человек выбирает, чем платит.
+
+    Появляется после того, как контакты и согласия записаны. Две кнопки
+    одного веса: российской картой (GetPlatinum) и зарубежной (Lava).
+    Суммы и адреса подставляет скрипт из data-pay-config: кнопка тарифа
+    одна и та же, а тарифов два. У зарубежной оплаты страница общая
+    на оба тарифа, поэтому рядом стоит подсказка, какой там выбрать.
+    """
+    cfg = PAY[MODE]
+    for key, plan in cfg["plans"].items():
+        if not (plan["ru"] and cfg["intl"]):
+            raise ValueError("оплата %s/%s: нет ссылки" % (MODE, key))
+    config = html_mod.escape(json.dumps(cfg, ensure_ascii=False), quote=True)
+    ru_note, intl_note = PAY_NOTES[MODE]
+
+    label = 'style="font-size: 16px; font-weight: 700; line-height: 1.3; color: #5C5149;"'
+    price = ('style="font-weight: 700; font-size: 34px; line-height: 1.05; '
+             'letter-spacing: -.02em; color: #2E2521;"')
+    note = 'style="margin: 0; font-size: 16px; line-height: 1.45; color: #5C5149;"'
+    small = 'style="margin: 0; font-size: 15px; line-height: 1.5; color: #7D7167;"'
+    box = ('style="display: flex; flex-direction: column; gap: 12px; background: #F6F0E8; '
+           'border: 1px solid #E4DACD; border-radius: 16px; padding: 18px;"')
+    hover = 'style-hover="transform: translateY(-2px); filter: brightness(1.06);"'
+
+    def option(kind, title, price_id, btn_id, btn_style, btn_text, lines, inner=""):
+        return ('<div data-pay-option="%s" %s>' % (kind, box)
+                + '<div style="display: flex; flex-direction: column; gap: 4px;">'
+                  '<span %s>%s</span>' % (label, title)
+                + '<span id="%s" data-pay-price="" %s>%s</span></div>' % (price_id, price, inner)
+                + "".join(lines)
+                + '<a id="%s" href="%s" rel="noopener" style="%s" %s>%s</a>'
+                  % (btn_id, TG, btn_style, hover, btn_text)
+                + "</div>")
+
+    ru = option("ru", "Если карта российская", "pay-ru-price", "pay-ru",
+                PAY_BTN_MAIN, "Российской картой",
+                ['<p %s>%s</p>' % (note, ru_note)] if ru_note else [])
+    intl = option("intl", "Если карта другой страны", "pay-intl-price", "pay-intl",
+                  PAY_BTN_QUIET, "Зарубежной картой",
+                  ['<p id="pay-intl-hint" %s>На&nbsp;странице оплаты выберите тариф '
+                   '<b style="color: #2E2521; white-space: nowrap;">«<span id="pay-intl-plan">'
+                   '</span>»</b>.</p>' % note]
+                  + (['<p %s>%s</p>' % (note, intl_note)] if intl_note else []),
+                  # «или» между суммами набрано обычным шрифтом: высокий
+                  # шрифт цифр строчных букв не имеет.
+                  inner='<span id="pay-intl-usd"></span><i> или </i><span id="pay-intl-eur"></span>')
+
+    after = ("После оплаты брони вам напишут из&nbsp;команды Виолы."
+             if MODE == "bron" else
+             "После оплаты вам напишут из&nbsp;команды Виолы и&nbsp;выдадут все доступы.")
+
+    return (
+        '<div id="pay-step" data-step="pay" data-pay-config="%s" hidden>' % config
+        + '<div style="background: linear-gradient(180deg, #FFFFFF 0%, #FDFAF6 100%); '
+          'border: 1px solid #E4DACD; border-radius: 18px; '
+          'box-shadow: 0 1px 2px rgba(60,48,40,.04), 0 24px 52px -30px rgba(60,48,40,.4); '
+          'padding: clamp(22px, 3.4vw, 40px); display: flex; flex-direction: column; gap: 18px;">'
+        + '<div style="%s">Способ оплаты</div>' % EYEBROW
+        + '<h2 id="pay-title" tabindex="-1" style="margin: 0; font-family: \'Golos Text\', '
+          'system-ui, sans-serif; font-weight: 700; letter-spacing: -.025em; '
+          'font-size: clamp(27px, 3.4vw, 38px); line-height: 1.1; color: #2E2521; '
+          'text-wrap: balance; outline: none;">Как вам удобнее оплатить?</h2>'
+        + '<div style="display: inline-flex; align-self: flex-start; align-items: center; gap: 10px; '
+          'background: linear-gradient(180deg, #F7EBD8 0%, #EDD9B8 100%); border: 1.5px solid #C9A87F; '
+          'border-radius: 999px; padding: 9px 18px;">'
+          '<span style="width: 7px; height: 7px; border-radius: 50%; background: #8A5A2B; flex: none;"></span>'
+          '<span id="pay-plan" style="font-size: 15.5px; font-weight: 700; color: #3B2E28;"></span></div>'
+        + ('<p style="margin: 0; font-size: 17px; line-height: 1.45; color: #5C5149;">%s</p>'
+           % PAY_LEAD[MODE] if PAY_LEAD[MODE] else "")
+        + '<p id="pay-warn" hidden style="margin: 0; font-size: 16px; line-height: 1.5; color: #8A2B2B; '
+          'background: #FDF2F0; border: 1px solid #EED8D3; border-radius: 10px; padding: 12px 16px;">'
+          'Не&nbsp;удалось сохранить ваши контакты. Оплатить можно и&nbsp;так, а&nbsp;после оплаты '
+          'напишите нам в&nbsp;Telegram: <a href="%s" target="_blank" rel="noopener" '
+          'style="color: inherit; font-weight: 600;">%s</a>.</p>' % (TG, TG_NAME)
+        + ru + intl
+        + care_note()
+        + '<p %s>Оплата и&nbsp;чек&nbsp;— от&nbsp;ИП Нижевясова А.&nbsp;С., '
+          'продюсера программ Виолы Маро.</p>' % small
+        + '<p %s>%s</p>' % (small, after)
+        + "</div></div>")
 
 
 ICON_TG = ('<span style="display: inline-flex; align-items: center; justify-content: center; '
@@ -2630,6 +2908,10 @@ def build_landing():
     # оставляет контакты, дальше пишет команда. В режиме zayavka их почти
     # не нужно трогать — а вот платёжные, наоборот, все до одной лишние.
     IS_ZAYAVKA = MODE == "zayavka"
+    # Страницы, где принимаются деньги: после формы идёт выбор способа оплаты.
+    HAS_PAY_STEP = MODE in PAY
+    PAY_NEXT = ("На&nbsp;следующем шаге выберете, как платить: "
+                "российской картой или зарубежной.")
 
     for old, new in () if IS_ZAYAVKA else (
         ("Запись на поток",
@@ -2637,7 +2919,7 @@ def build_landing():
         ("Оставьте контакты&nbsp;— мы напишем вам",
          "Оставьте контакты&nbsp;— на&nbsp;них придут доступы"),
         ("Ответим в&nbsp;Telegram, поможем оформить оплату или рассрочку.",
-         "Дальше откроется страница оплаты. Заплатить можно целиком или частями."),
+         PAY_NEXT),
         ("Отправить заявку",
          "Перейти к оплате"),
         ("Готово. Мы получили заявку и&nbsp;напишем вам в&nbsp;Telegram.",
@@ -2696,10 +2978,13 @@ def build_landing():
             ("Оформление участия", "Бронь места"),
             ("Оставьте контакты&nbsp;— на&nbsp;них придут доступы",
              "Оставьте контакты&nbsp;— пришлём доступы"),
-            ("Дальше откроется страница оплаты. Заплатить можно целиком или частями.",
-             "Дальше откроется оплата брони %s. Она засчитывается в&nbsp;стоимость "
-             "участия, остаток вносится до&nbsp;%s." % (BOOKING_AMOUNT, BOOKING_DEADLINE)),
-            ("Перейти к оплате", "Внести бронь " + BOOKING_AMOUNT),
+            (PAY_NEXT,
+             "На&nbsp;следующем шаге выберете, как внести бронь: российской картой "
+             "(%s) или зарубежной ($%s или €%s). Бронь засчитывается в&nbsp;стоимость "
+             "участия, остаток вносится до&nbsp;%s."
+             % (BOOKING_AMOUNT.replace(" ", "&nbsp;"), PAY["bron"]["plans"]["bron"]["usd"],
+                PAY["bron"]["plans"]["bron"]["eur"], BOOKING_DEADLINE)),
+            ("Перейти к оплате", "Внести бронь"),
         ):
             if old not in form:
                 raise ValueError("не найдена строка модалки брони: %s" % old)
@@ -2721,7 +3006,7 @@ def build_landing():
             ("Оформление участия", "Предзапись"),
             ("Оставьте контакты&nbsp;— на&nbsp;них придут доступы",
              "Оставьте контакты&nbsp;— откроем канал"),
-            ("Дальше откроется страница оплаты. Заплатить можно целиком или частями.",
+            (PAY_NEXT,
              "Сразу после заявки откроется закрытый канал Виолы. Команда свяжется с&nbsp;вами "
              "в&nbsp;Telegram: расскажет, как устроен практикум, ответит на&nbsp;вопросы "
              "и&nbsp;поможет оформить оплату."),
@@ -2774,7 +3059,7 @@ def build_landing():
     form = form.replace('<label style="display: flex; flex-direction: column; gap: 8px;">',
                         honeypot + '<label style="display: flex; flex-direction: column; gap: 8px;">', 1)
 
-    if MODE in ("pay", "bron", "zayavka"):
+    if MODE in ("pay", "rassrochka", "bron", "zayavka"):
         # Подарки идут под плашкой тарифа, внутри тёмной шапки формы:
         # это последний экран перед платежом, и здесь они ещё работают.
         # После id="form-plan" идут два </span> и </div> самой плашки:
@@ -2787,6 +3072,22 @@ def build_landing():
     # Чем кончается отправка: страница оплаты, закрытый канал или
     # ничего — заявку разбирает команда.
     after = {"pre": "channel", "zayavka": "team"}.get(MODE, "pay")
+
+    if HAS_PAY_STEP:
+        # Шаг выбора оплаты встаёт первым в колонку окна; шапка и карточка
+        # с полями помечены, чтобы скрипт убрал их, когда шаг откроется.
+        wrap = '<div style="width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 24px;">'
+        head_card = ('<div style="display: flex; flex-direction: column; gap: 10px; '
+                     'background: linear-gradient(165deg, #3B2E28 0%, #241C18 100%);')
+        field_card = ('<div style="background: linear-gradient(180deg, #FFFFFF 0%, #FDFAF6 100%); '
+                      'border: 1px solid #E4DACD; border-radius: 18px;')
+        for piece in (wrap, head_card, field_card):
+            if form.count(piece) != 1:
+                raise ValueError("окно оплаты: ожидался один блок, найдено %d: %s"
+                                 % (form.count(piece), piece[:60]))
+        form = form.replace(head_card, head_card.replace("<div ", '<div data-step="form" ', 1))
+        form = form.replace(field_card, field_card.replace("<div ", '<div data-step="form" ', 1))
+        form = form.replace(wrap, wrap + pay_step_html())
     form = ('<div id="lead-modal" class="modal" role="dialog" aria-modal="true" '
             'aria-labelledby="lead-title" data-after="%s" hidden>' % after + form + "</div>")
     form = form.replace('<h2 style="margin: 0; font-family:', '<h2 id="lead-title" style="margin: 0; font-family:', 1)
@@ -2800,6 +3101,11 @@ def build_landing():
              "openBasicInst": ("Самостоятельный — в рассрочку", "basic"),
              "openFullPay": ("С Виолой — оплата целиком", "full"),
              "openFullInst": ("С Виолой — в рассрочку", "full")}
+
+    if MODE == "rassrochka":
+        tpl = rassrochka_tariffs(tpl)
+        plans = {"openBasicPay": ("Самостоятельный — внутренняя рассрочка", "basic"),
+                 "openFullPay": ("С Виолой — внутренняя рассрочка", "full")}
     for var, (label, key) in plans.items():
         tpl = tpl.replace('onClick="{{ %s }}"' % var,
                           'data-open-form="%s" data-pay="%s"' % (label, key))
@@ -2852,6 +3158,27 @@ def build_landing():
         # Заголовок прямо называет, что это за страница.
         tpl = tpl.replace("Прикладная <br>эмпатия 2.0",
                           "Бронь на <br>«Прикладную эмпатию 2.0»", 1)
+
+    if MODE == "rassrochka":
+        # Экран про рассрочку от банка здесь лишний: страница про другую,
+        # внутреннюю, и два разных «частями» рядом путают.
+        tpl = drop_screen(tpl, "07 Рассрочка")
+
+        for old, new in (
+            ("от 19&nbsp;900&nbsp;₽",
+             "от&nbsp;%s&nbsp;₽"
+             % PAY["rassrochka"]["plans"]["basic"]["rub"].replace(" ", "&nbsp;")),
+            ('color: #7D7167;">старт 1&nbsp;ноября</span>',
+             'color: #7D7167;">один платёж из&nbsp;двух</span>'),
+            ("В «С Виолой» <b>50&nbsp;мест</b>. Оплатить можно сразу или частями&nbsp;— "
+             "<b>рассрочка до&nbsp;12&nbsp;месяцев</b> для&nbsp;СНГ.",
+             "В «С Виолой» <b>50&nbsp;мест</b>. На&nbsp;этой странице оплата идёт "
+             "по&nbsp;внутренней рассрочке: <b>двумя равными платежами</b>."),
+        ):
+            if tpl.count(old) != 1:
+                raise ValueError("рассрочка: ожидалась одна строка, найдено %d: %s"
+                                 % (tpl.count(old), old[:50]))
+            tpl = tpl.replace(old, new)
 
     if MODE == "pre":
         # Уходят все экраны, где есть цена или оплата. Рассрочка тоже: она
@@ -2943,7 +3270,7 @@ def build_landing():
     # не назначена: строку убираем, а не оставляем неверную.
     tpl = re.sub(r"\s*<p[^>]*>Продажи закрываются 29(?:&nbsp;|\u00a0| )сентября[^<]*</p>", "", tpl)
 
-    if MODE in ("pay", "zayavka"):
+    if MODE in ("pay", "rassrochka", "zayavka"):
         # Полосы «До повышения цены» со счётчиком больше нет: цена не растёт.
         tpl = insert_before_screen(tpl, "11 Финальный призыв",
                                    benefits_screen(MODE == "zayavka"))
@@ -2952,7 +3279,7 @@ def build_landing():
     # на всех четырёх версиях страницы.
     tpl = insert_before_screen(tpl, "11 Финальный призыв", contacts_screen())
 
-    if MODE in ("pay", "zayavka"):
+    if MODE in ("pay", "rassrochka", "zayavka"):
         # Та же мысль под тарифами: это момент, когда человек решается
         # платить, и именно тогда полезно знать, кто ему напишет.
         # Сноски о курсе валют больше нет, заметка встаёт в её контейнер.
@@ -3567,9 +3894,9 @@ def parse_args(argv):
         if a == "--mode":
             i += 1
             MODE = argv[i]
-            if MODE not in ("pay", "pre", "bron", "zayavka", "neudobnye"):
-                sys.exit("режим бывает pay, pre, bron, zayavka или neudobnye, "
-                         "получено: %s" % MODE)
+            if MODE not in ("pay", "rassrochka", "pre", "bron", "zayavka", "neudobnye"):
+                sys.exit("режим бывает pay, rassrochka, pre, bron, zayavka "
+                         "или neudobnye, получено: %s" % MODE)
         elif a == "--out":
             i += 1
             OUT = os.path.join(ROOT, argv[i])
