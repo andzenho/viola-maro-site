@@ -407,10 +407,18 @@ THEME_CSS = """
     rgba(13,36,92,.76) 0%, rgba(13,36,92,.36) 26%, rgba(13,36,92,0) 50%) !important;
 }
 @media (max-width: 760px) {
+  /* Две вуали в одном слое: сверху под заголовок и слева под строки текста,
+     чтобы они не терялись на светлых волосах. Лицо остаётся открытым. */
   [data-hero-veil] {
-    background: linear-gradient(to bottom,
-      rgba(13,36,92,.80) 0%, rgba(13,36,92,.50) 20%, rgba(13,36,92,0) 40%) !important;
+    background:
+      linear-gradient(to bottom,
+        rgba(13,36,92,.80) 0%, rgba(13,36,92,.50) 20%, rgba(13,36,92,0) 40%),
+      linear-gradient(100deg,
+        rgba(13,36,92,.66) 0%, rgba(13,36,92,.44) 36%, rgba(13,36,92,0) 60%) !important;
   }
+  /* Отдельный вертикальный кадр для телефона: лицо стоит на 70% ширины
+     и 34% высоты. Сдвигаем кадр так, чтобы оно ушло правее строк текста. */
+  [data-hero-photo] img { object-position: 38% 0% !important; }
   [data-hero-veil] + [data-hero-veil] {
     background: linear-gradient(to top,
       rgba(13,36,92,.92) 0%, rgba(13,36,92,.78) 30%,
