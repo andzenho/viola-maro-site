@@ -313,6 +313,9 @@ for i, w in enumerate(WEEKS):
 
 THEME = ""
 THEME_DIR = os.path.join(BUILD_ASSETS, "tema-more")
+# Высокий узкий шрифт крупных заголовков. Bebas Neue Bold, свободная
+# лицензия SIL OFL 1.1 (записана в самом файле), кириллица есть.
+THEME_FONT = "BebasNeue-Bold.ttf"
 
 # Первый экран. Настольный кадр 1672×941: Виола справа, слева место под
 # карточку с текстом. Телефонный 900×900: лицо в середине кадра.
@@ -323,19 +326,28 @@ THEME_HERO = {
 }
 
 
-def theme_hero_image(kind):
-    """Собирает кадр первого экрана: терраса, слегка размытая, и на ней
-    вырезанный снимок Виолы. Вырезку чуть теплит под вечерний свет фона."""
+def _theme_terrace(size, centering):
+    """Терраса из презентации, обрезанная под кадр и слегка размытая."""
     from PIL import Image, ImageFilter, ImageOps
-    cfg = THEME_HERO[kind]
     bg = Image.open(os.path.join(THEME_DIR, "terrasa.jpg")).convert("RGB")
-    bg = ImageOps.fit(bg, cfg["size"], Image.LANCZOS, centering=cfg["centering"])
-    bg = bg.filter(ImageFilter.GaussianBlur(5))
+    return ImageOps.fit(bg, size, Image.LANCZOS, centering=centering).filter(ImageFilter.GaussianBlur(5))
+
+
+def _theme_cutout(scale):
+    """Снимок Виолы, вырезанный по контуру. Чуть теплится под вечерний свет."""
+    from PIL import Image
     cut = Image.open(os.path.join(SRC, "assets", "viola-cutout.png")).convert("RGBA")
-    cut = cut.resize((round(cut.width * cfg["scale"]), round(cut.height * cfg["scale"])), Image.LANCZOS)
+    cut = cut.resize((round(cut.width * scale), round(cut.height * scale)), Image.LANCZOS)
     r, g, b, a = cut.split()
     rgb = Image.blend(Image.merge("RGB", (r, g, b)), Image.new("RGB", cut.size, (255, 196, 120)), 0.10)
-    cut = Image.merge("RGBA", (*rgb.split(), a))
+    return Image.merge("RGBA", (*rgb.split(), a))
+
+
+def theme_hero_image(kind):
+    """Кадр первого экрана одним слоем: терраса и на ней Виола."""
+    cfg = THEME_HERO[kind]
+    bg = _theme_terrace(cfg["size"], cfg["centering"])
+    cut = _theme_cutout(cfg["scale"])
     bg.paste(cut, (cfg["left"], cfg["top"]), cut)
     return bg
 
@@ -445,6 +457,14 @@ THEME_CSS = """
   --ten: 0 1px 2px rgba(24,33,58,.05), 0 10px 26px -16px rgba(24,33,58,.28);
 }
 
+@font-face {
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/assets/fonts/BebasNeue-Bold.ttf) format('truetype');
+}
+
 /* ── первый экран ── */
 
 section[aria-label="Первый экран"] { background: #FBF6EC !important; color: #18213A !important; }
@@ -477,6 +497,15 @@ section[aria-label="Первый экран"] { background: #FBF6EC !important; 
   max-width: none !important;
   margin: 10px 0 0 !important;
   font-size: clamp(42px, 4.1vw, 60px) !important;
+}
+@media (min-width: 901px) {
+  [data-hero-stage] [data-hero-card] h1 {
+    font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+    font-size: clamp(76px, 7.2vw, 118px) !important;
+    line-height: .9 !important;
+    letter-spacing: .005em !important;
+    text-transform: uppercase;
+  }
 }
 [data-hero-stage] [data-hero-card] p { text-shadow: none !important; max-width: none !important; }
 [data-hero-stage] [data-hero-card] > div:last-child > p:first-child {
@@ -522,52 +551,129 @@ section[aria-label="Первый экран"] { background: #FBF6EC !important; 
   }
 }
 
-/* Телефон и узкий планшет: сверху фотография, под ней лист с текстом.
-   Лист заходит на фото скруглённым краем, текст стоит по центру. */
+/* Телефон и узкий планшет. Порядок как на лендингах запусков: плашки
+   со стартом и длительностью, крупное название, кнопка, Виола по центру,
+   под ней карточка «что это». Виола — отдельный слой без заливки, терраса
+   за ней уходит вверх в небо, на котором стоит название. */
+[data-h2] { display: none; }
 @media (max-width: 900px) {
-  [data-hero-stage] { min-height: 0 !important; overflow: visible !important; }
-  [data-hero-photo] {
-    position: relative !important;
-    inset: auto !important;
-    height: clamp(290px, 44vh, 460px);
-    height: clamp(290px, 44svh, 460px);
+  [data-hero-stage] { display: none !important; }
+  [data-h2] {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0E2A66 0%, #143A85 28%, #1F56A6 60%, #2A6DB8 100%);
+    color: #FFFFFF;
   }
-  [data-hero-photo] img { object-position: 78% 10% !important; }
-  [data-hero-card] { text-align: center; }
-  [data-hero-card] > div:last-child { align-items: center !important; }
-  [data-hero-stage] [data-hero-card] > div:first-child > div:first-child,
-  [data-hero-stage] [data-hero-card] > div:last-child > p { text-wrap: balance; }
-  [data-hero-stage] [data-hero-copy] {
-    min-height: 0 !important;
-    width: 100% !important;
-    padding: 0 !important;
-    margin-top: -28px !important;
+  [data-h2-top] {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 22px 20px 0;
+    text-align: center;
   }
-  [data-hero-stage] [data-hero-copy] > [data-hero-card] {
-    max-width: none !important;
-    border-radius: 28px 28px 0 0;
-    padding: 26px 20px 38px;
-    box-shadow: 0 -16px 34px -22px rgba(24,33,58,.4);
+  [data-h2-chips] { display: flex; align-items: center; justify-content: center; }
+  [data-h2-chips] span {
+    display: flex;
+    flex-direction: column;
+    min-width: 140px;
+    padding: 10px 16px 11px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.12);
+    font-size: 15.5px;
+    line-height: 1.3;
   }
-  [data-hero-stage] [data-hero-card] h1 { font-size: clamp(40px, 11.6vw, 56px) !important; }
-  [data-hero-stage] [data-hero-card] > div:last-child > p:first-child { font-size: 22px !important; }
-  [data-hero-card] > div:last-child > div {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 14px !important;
+  [data-h2-chips] i { font-style: normal; color: rgba(255,255,255,.88); }
+  [data-h2-chips] b { font-size: 17px; font-weight: 700; }
+  [data-h2-chips] em {
+    position: relative;
+    z-index: 1;
+    flex: none;
+    width: 10px; height: 10px;
+    margin: 0 -5px;
+    border-radius: 50%;
+    background: #F0B13F;
+    box-shadow: 0 0 0 3px #143A85;
+  }
+  [data-h2-title] {
+    margin: 10px 0 0;
+    font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 700;
+    font-size: min(calc((100vw - 40px) / 4.3), 150px);
+    line-height: .9;
+    letter-spacing: .005em;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    text-shadow: 0 6px 30px rgba(9,26,68,.45);
+  }
+  [data-h2-sub] {
+    margin: 0;
+    max-width: 330px;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: rgba(255,255,255,.95);
+    text-wrap: balance;
+  }
+  [data-h2-top] a[data-btn] { width: 100%; margin-top: 6px; }
+  [data-h2-photo] { position: relative; z-index: 1; height: clamp(380px, 106vw, 620px); margin-top: 10px; }
+  [data-h2-fon] {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: -190px;
     width: 100%;
+    height: calc(100% + 190px);
+    object-fit: cover;
+    object-position: 50% 40%;
+    opacity: .78;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 2%, #000 52%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 2%, #000 52%);
   }
-  [data-hero-stage] [data-hero-card] a[data-btn] {
-    justify-content: center !important;
-    min-height: 62px;
-    padding: 16px 22px !important;
-    font-size: 19px !important;
+  [data-h2-viola] {
+    position: absolute;
+    left: 50%; bottom: 0;
+    height: 100%;
+    width: auto;
+    max-width: none;
+    transform: translateX(-50%);
   }
-  [data-hero-card] > div:last-child > div > div { align-self: center; }
-}
-/* Телефон: свой квадратный кадр, лицо стоит в его середине. */
-@media (max-width: 760px) {
-  [data-hero-photo] img { object-position: 50% 0% !important; }
+  [data-h2-card] {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: -88px;
+    padding: 30px 22px 36px;
+    border-radius: 28px 28px 0 0;
+    background: #FBF6EC;
+    color: #18213A;
+    box-shadow: 0 -18px 40px -22px rgba(9,26,68,.6);
+  }
+  [data-h2-name] {
+    margin: 0;
+    font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 700;
+    font-size: min(calc((100vw - 44px) / 5.4), 92px);
+    line-height: .94;
+    letter-spacing: .005em;
+    text-transform: uppercase;
+    color: #18213A;
+  }
+  [data-h2-def] { margin: 0; font-size: 21px; line-height: 1.42; color: #2B3550; }
+  [data-h2-def] b { font-weight: 700; color: #18213A; }
+  [data-h2-note] {
+    margin: 4px 0 0;
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: var(--panel);
+    font-size: 17px;
+    line-height: 1.5;
+    color: #2B3550;
+  }
 }
 
 /* ── общее ── */
@@ -595,10 +701,55 @@ main [style*="text-transform: uppercase"][style*="color: #B01E22"] {
 /* Скругления по роли. */
 main [style*="border-radius: 14px"], main [style*="border-radius: 16px"] { border-radius: 24px !important; }
 
-/* Кнопки: скруглённый прямоугольник, как в тесте. Красная одна. */
-[data-btn] { border-radius: 16px !important; }
-[data-btn="primary"] > span { background: rgba(255,255,255,.2) !important; color: #FFFFFF !important; }
-[data-btn="primary"]:hover { filter: brightness(1.06); }
+/* Заголовки блоков: высокий узкий шрифт прописными. Первая строка синяя,
+   остальное чернильное; на небе первая строка золотая. */
+main h2,
+section[aria-label="Зачем мне это"] > div > p:first-child {
+  font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+  font-weight: 700 !important;
+  font-size: clamp(56px, 6.4vw, 96px) !important;
+  line-height: .98 !important;
+  letter-spacing: .005em !important;
+  text-transform: uppercase;
+}
+main h2::first-line,
+section[aria-label="Зачем мне это"] > div > p:first-child::first-line { color: #1F4C97; }
+[data-mk-card] h2::first-line, [data-final-card] h2::first-line { color: #F6CF7A; }
+
+/* Номера и цифры — тем же высоким шрифтом, в скруглённых плитках. */
+[data-sfery] > div > span:first-child,
+[data-week-card] [style*="width: 30px; height: 30px"] {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 11px !important;
+  font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  line-height: 1;
+  padding-top: 2px;
+}
+[data-week-card] [style*="grid-template-columns: 30px 1fr"] { grid-template-columns: 38px 1fr !important; align-items: center !important; }
+[data-cifry] b { font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 64px !important; line-height: .9 !important; letter-spacing: 0 !important; }
+
+/* Главная кнопка: крупный скруглённый прямоугольник с бликом и свечением,
+   подпись прописными, без стрелки. Цвет наш, красный; красная одна. */
+[data-btn] { border-radius: 18px !important; }
+[data-btn="primary"] {
+  justify-content: center !important;
+  min-height: 68px;
+  padding: 18px 34px !important;
+  border: 1px solid rgba(255,255,255,.3) !important;
+  background:
+    radial-gradient(120% 100% at 18% 0%, rgba(255,255,255,.34) 0%, rgba(255,255,255,0) 58%),
+    linear-gradient(135deg, #E5483D 0%, #C3222A 55%, #A8141D 100%) !important;
+  box-shadow: 0 20px 44px -14px rgba(214,44,44,.7), inset 0 1px 0 rgba(255,255,255,.35) !important;
+  font-size: 19px !important;
+  font-weight: 700 !important;
+  letter-spacing: .03em !important;
+  text-transform: uppercase;
+}
+[data-btn="primary"] > span { display: none !important; }
+[data-btn="primary"]:hover { filter: brightness(1.07); }
 [data-btn="quiet"] { background: #F4ECDD !important; border: 0 !important; box-shadow: none !important; }
 [data-btn="quiet"]:hover { background: #EDE2CE !important; }
 [data-btn="support"] { min-height: 56px; padding: 15px 34px !important; font-size: 18px !important; }
@@ -807,12 +958,19 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
   max-width: 760px !important;
 }
 [data-final-card] > div:first-child { background: rgba(9,26,68,.34) !important; border: 0 !important; }
-[data-final-card] h2 { font-size: clamp(33px, 3.8vw, 50px) !important; }
+[data-final-card] h2 { font-size: clamp(54px, 5.4vw, 80px) !important; }
 [data-final-card] [style*="color: #9AA3B5"] { color: #DCE4F0 !important; }
 
 /* ── окно заявки ── */
 
-#lead-modal h2 { font-size: clamp(25px, 3.2vw, 34px) !important; line-height: 1.14 !important; }
+#lead-modal h2 {
+  font-family: 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+  font-size: clamp(25px, 3.2vw, 34px) !important;
+  line-height: 1.14 !important;
+  letter-spacing: -.025em !important;
+  text-transform: none;
+}
+#lead-modal h2::first-line { color: inherit; }
 #lead-modal [data-close-form] { min-height: 46px; }
 #lead-modal > div { -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 /* Подписи полей — обычным жирным текстом, не плашками. */
@@ -849,8 +1007,9 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
   /* Поля по бокам 20 px: текст не упирается в край экрана. */
   main > section:not([aria-label="Первый экран"]) { padding-left: 20px !important; padding-right: 20px !important; }
 
-  /* Заголовки блоков: 38 px рвали длинную фразу на пять строк. */
-  main h2 { font-size: 33px !important; line-height: 1.14 !important; }
+  main h2,
+  section[aria-label="Зачем мне это"] > div > p:first-child { font-size: 54px !important; }
+  [data-btn="primary"] { width: 100%; }
 
   /* Вводные абзацы были 17 px при тексте карточек 20 px. */
   main [style*="font-size: clamp(17.1px"] { font-size: 19px !important; }
@@ -876,7 +1035,17 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
   body:has(.cookie-bar:not([hidden])) [data-sticky-bar] { display: none !important; }
 
   [data-sticky-bar] { box-shadow: 0 -10px 30px -18px rgba(24,33,58,.4); }
-  [data-sticky-bar] a { min-height: 48px; display: inline-flex !important; align-items: center; border-radius: 14px !important; }
+  [data-sticky-bar] a {
+    width: auto;
+    min-height: 50px;
+    display: inline-flex !important;
+    align-items: center;
+    padding: 12px 20px !important;
+    border-radius: 14px !important;
+    font-size: 15px !important;
+    letter-spacing: .02em !important;
+    box-shadow: 0 10px 22px -10px rgba(214,44,44,.7), inset 0 1px 0 rgba(255,255,255,.35) !important;
+  }
 }
 """
 
@@ -918,11 +1087,69 @@ def _theme_section_re(html, label, pattern, repl, flags=0):
     return html[:blk[0]] + sec + html[blk[3]:]
 
 
+def _theme_hero_phone(html):
+    """Первый экран для телефона. Порядок как на лендингах запусков:
+    плашки со стартом и длительностью, крупное название, кнопка, эксперт
+    по центру, под ним карточка «что это». Слова берутся из той же
+    разметки, что и у широкого экрана; широкий экран остаётся прежним."""
+    i = html.find('aria-label="Первый экран"')
+    k = html.find('<div data-hero-stage=""')
+    if i < 0 or k < 0:
+        return html
+    blk = find_block(html, "section", html.rfind("<section", 0, i))
+    sec = html[blk[0]:blk[3]]
+
+    def grab(pattern):
+        m = re.search(pattern, sec, re.S)
+        return m.group(1).strip() if m else ""
+    eyebrow = grab(r'text-transform: uppercase; color: #F0B13F; line-height: 1\.5;">(.*?)</div>')
+    title = grab(r"<h1[^>]*>(.*?)</h1>")
+    promise = grab(r"text-shadow: 0 2px 22px[^>]*>(.*?)</p>")
+    note = grab(r"border-left: 2px solid #F0B13F;[^>]*>(.*?)</p>")
+    start = grab(r">Старт(?:\s|&nbsp;|\u00a0)+([^<]+)</span>")
+    cta = re.search(r'<a [^>]*data-btn="primary"[^>]*>.*?</a>', sec, re.S)
+    if not (title and promise and cta):
+        print("  тема: первый экран для телефона не собран, не найдены его части")
+        return html
+    weeks = re.search(r"(\d+)-недельн", eyebrow)
+    name = re.sub(r"\s*<br\s*/?>\s*", " ", title)
+    chips = ""
+    if start:
+        chips = '<span><i>Старт:</i><b>%s</b></span>' % start
+        if weeks:
+            chips += '<em aria-hidden="true"></em><span><i>Длительность:</i><b>%s&nbsp;недель</b></span>' % weeks.group(1)
+        chips = '<div data-h2-chips="">%s</div>' % chips
+    block = (
+        '<div data-h2="">'
+        '<div data-h2-top="">' + chips
+        + '<p data-h2-title="" role="heading" aria-level="1">%s</p>' % title
+        + ('<p data-h2-sub="">%s</p>' % eyebrow if eyebrow else "")
+        + cta.group(0)
+        + '</div>'
+        '<div data-h2-photo="">'
+        '<img data-h2-fon="" src="/assets/img/terrasa.jpg" alt="" width="900" height="1000" decoding="async">'
+        '<img data-h2-viola="" src="/assets/img/viola.webp" alt="Виола Маро" width="901" height="1202" '
+        'fetchpriority="high" decoding="async">'
+        '</div>'
+        '<div data-h2-card="">'
+        '<p data-h2-name="">%s&nbsp;—</p>' % name
+        + '<p data-h2-def="">это практикум, на&nbsp;котором вы <b>%s</b></p>' % (promise[:1].lower() + promise[1:])
+        + ('<p data-h2-note="">%s</p>' % note if note else "")
+        + '</div></div>')
+    # Кадр широкого экрана на телефоне скрыт; чтобы он там не скачивался,
+    # картинка грузится лениво.
+    sec = sec.replace('fetchpriority="high" decoding="async">', 'loading="lazy" decoding="async">', 1)
+    k = sec.find('<div data-hero-stage=""')
+    sec = sec[:k] + block + sec[k:]
+    return html[:blk[0]] + sec + html[blk[3]:]
+
+
 def _theme_layout(html):
     """Перестройка блоков в язык теста 2.0. Работает по уже перекрашенной
     разметке, поэтому цвета в образцах здесь новые."""
     # Первый экран: надзаголовок, заголовок и нижний текст собираются в одну
     # карточку. На телефоне она становится листом под фотографией.
+    html = _theme_hero_phone(html)
     i = html.find('data-hero-copy=""')
     if i >= 0:
         blk = find_block(html, "div", html.rfind("<div", 0, i))
@@ -1499,6 +1726,16 @@ def build_images():
 
     MOBILE_WIDTHS = (620, cw)
     save(mob, "hero-mob", MOBILE_WIDTHS)
+
+    if THEME:
+        # Первый экран на телефоне собран из двух слоёв: терраса на фоне
+        # и Виола отдельной картинкой с прозрачностью, строго по центру.
+        p = os.path.join(outdir, "viola.webp")
+        _theme_cutout(0.83).save(p, "WEBP", quality=88, method=6)
+        made.append(p)
+        p = os.path.join(outdir, "terrasa.jpg")
+        _theme_terrace((900, 1000), (0.62, 0.5)).save(p, quality=80, optimize=True, progressive=True)
+        made.append(p)
 
     total = sum(os.path.getsize(p) for p in made)
     print("  картинки: %d файлов, %.0f КБ" % (len(made), total / 1024))
@@ -2788,6 +3025,8 @@ def copy_fonts():
     names = [f[1] for f in FONT_FACES]
     if MODE == "neudobnye":
         names += [f[1] for f in LITERATA_FACES]
+    if THEME:
+        names.append(THEME_FONT)
     for fname in names:
         s = os.path.join(BUILD_ASSETS, "fonts", fname)
         shutil.copy2(s, os.path.join(dst, fname))
