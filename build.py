@@ -801,8 +801,8 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
 [data-sfery] > div > span:nth-child(2) { color: #1F4C97 !important; }
 [data-sfery] > div > span:last-child { font-size: 18px !important; font-weight: 600 !important; }
 
-/* «18 техник»: блок-небо. Число крупно золотом, под первой фразой
-   восемнадцать плиток: шесть недель по три техники. */
+/* «18 техник»: блок-небо. Число крупно золотом, рядом первая фраза,
+   под ними пояснение. */
 [data-tehniki] {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -828,10 +828,6 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
   color: #F6CF7A !important;
 }
 [data-t-lead] { margin: 0; font-size: 24px; font-weight: 700; line-height: 1.2; color: #FFFFFF; text-wrap: balance; }
-[data-t-grid] { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
-[data-t-grid] span { display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
-[data-t-grid] i { display: block; height: 18px; border-radius: 6px; background: var(--zoloto); }
-[data-t-grid] b { margin-top: 2px; font-size: 15px; font-weight: 700; line-height: 1; text-align: center; color: rgba(255,255,255,.82); }
 [data-t-text] { grid-column: 1 / -1; margin: 0; font-size: 18px; line-height: 1.5; color: rgba(255,255,255,.95); }
 
 /* ── «Что нового» ── */
@@ -1332,14 +1328,11 @@ def _theme_layout(html):
          'line-height: 1.55; color: #2B3550;"><b style="color: #18213A;">'),
     ])
 
-    # «18 техник»: первая фраза отдельно, под ней восемнадцать плиток —
-    # шесть недель по три техники, потом пояснение.
+    # «18 техник»: первая фраза стоит рядом с числом, пояснение под ними.
     html = _theme_section_re(
         html, "Зачем мне это",
         r'(<div data-tehniki=""[^>]*>\s*<span[^>]*>.*?</span>)\s*<p[^>]*><b[^>]*>(.*?)</b>\s*(.*?)</p>',
-        r'\1<p data-t-lead="">\2</p><div data-t-grid="" aria-hidden="true">'
-        + "".join("<span><i></i><i></i><i></i><b>%d</b></span>" % n for n in range(1, 7))
-        + r'</div><p data-t-text="">\3</p>', re.S)
+        r'\1<p data-t-lead="">\2</p><p data-t-text="">\3</p>', re.S)
 
     html = _theme_section(html, "Что нового", [
         # заголовок вопросом
