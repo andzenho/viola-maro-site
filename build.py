@@ -302,80 +302,43 @@ for i, w in enumerate(WEEKS):
 # (THEME_CSS). Тексты не меняются. Действующие страницы собираются
 # без флага и от этого блока не зависят.
 #
-# Откуда вид. Тест 2.0: небо, сливочная бумага, золото, красная кнопка,
-# чернильно-синий текст. Презентация от 25.09: средиземноморская терраса
-# на первом экране, кремовые карточки, тёмно-синие заголовки.
+# Откуда вид. Тест 2.0: один гротеск, цветные блоки, сообщения, плашки,
+# красная кнопка, чернильно-синий текст на сливочной бумаге. Правила вида
+# перечислены в начале THEME_CSS.
 #
-# Картинки первого экрана лежат в build-assets/tema-more/:
-#   hero-desktop.jpg|png  — горизонтальная, Виола в правой трети кадра
-#   hero-mobile.jpg|png   — вертикальная для телефона
-# Пока их нет, берётся fon-vremennyy.jpg — фон из презентации, отражённый
-# по горизонтали, чтобы скульптура стояла там, где встанет Виола.
+# Фотография на странице одна, на первом экране: настоящий снимок Виолы
+# (source/assets/viola-cutout.png, вырезан по контуру) на фоне террасы
+# из презентации (build-assets/tema-more/terrasa.jpg). Сгенерированных
+# изображений человека на странице нет: они выходят неживыми.
 
 THEME = ""
 THEME_DIR = os.path.join(BUILD_ASSETS, "tema-more")
-# Вырезка из вертикальной картинки для телефона, в долях её сторон:
-# слева, сверху, справа, снизу. Лицо на картинке стоит на 70% ширины;
-# после вырезки от 40% оно попадает ровно в середину кадра, а пустое
-# море слева уходит.
-THEME_MOBILE_CROP = (0.40, 0.12, 1.0, 0.74)
 
-# Кадры для блоков ниже первого экрана: имя → (исходник, вырезка в долях
-# сторон: слева, сверху, справа, снизу; ширина результата). Исходники —
-# терраса из презентации (terrasa-1, terrasa-2) и горизонтальная картинка
-# с Виолой. Страница без них читалась сплошным полотном текста: одна
-# фотография на двадцать пять экранов.
-THEME_KADRY = {
-    "glava-novoe":   ("terrasa-1", (0.00, 0.02, 0.75, 0.60), 1100),   # статуя и море
-    "glava-nedeli":  ("terrasa-2", (0.05, 0.28, 0.95, 0.86), 1100),   # бухта со скалами
-    "glava-podarki": ("terrasa-2", (0.42, 0.18, 1.00, 0.88), 1000),   # солнце на воде, жасмин
-    "ned-1": ("terrasa-1", (0.00, 0.02, 0.45, 0.32), 760),            # лицо статуи
-    "ned-2": ("terrasa-2", (0.00, 0.33, 0.50, 0.70), 760),            # ваза и городок
-    "ned-3": ("terrasa-2", (0.22, 0.40, 0.72, 0.77), 760),            # скалы в море
-    "ned-4": ("terrasa-2", (0.25, 0.60, 0.80, 1.00), 760),            # кипарисы и крыши
-    "ned-5": ("terrasa-1", (0.50, 0.00, 1.00, 0.30), 760),            # ветка оливы
-    "ned-6": ("terrasa-2", (0.50, 0.30, 1.00, 0.67), 760),            # солнечная дорожка
-    "viola-sred": ("hero-desktop", (0.42, 0.00, 1.00, 1.00), 900),    # Виола в кресле
+# Первый экран. Настольный кадр 1672×941: Виола справа, слева место под
+# карточку с текстом. Телефонный 900×900: лицо в середине кадра.
+# масштаб — доля от размера вырезки; лево и верх — куда встаёт её угол.
+THEME_HERO = {
+    "desktop": {"size": (1672, 941), "centering": (0.5, 0.5), "scale": 0.70, "left": 842, "top": 70},
+    "mobile":  {"size": (900, 900),  "centering": (0.62, 0.5), "scale": 0.72, "left": 4,   "top": 8},
 }
 
 
-def _kadr_source(name):
-    stem = THEME_KADRY[name][0]
-    for ext in ("jpg", "jpeg", "png", "webp"):
-        p = os.path.join(THEME_DIR, "%s.%s" % (stem, ext))
-        if os.path.isfile(p):
-            return p
-    return None
+def theme_hero_image(kind):
+    """Собирает кадр первого экрана: терраса, слегка размытая, и на ней
+    вырезанный снимок Виолы. Вырезку чуть теплит под вечерний свет фона."""
+    from PIL import Image, ImageFilter, ImageOps
+    cfg = THEME_HERO[kind]
+    bg = Image.open(os.path.join(THEME_DIR, "terrasa.jpg")).convert("RGB")
+    bg = ImageOps.fit(bg, cfg["size"], Image.LANCZOS, centering=cfg["centering"])
+    bg = bg.filter(ImageFilter.GaussianBlur(5))
+    cut = Image.open(os.path.join(SRC, "assets", "viola-cutout.png")).convert("RGBA")
+    cut = cut.resize((round(cut.width * cfg["scale"]), round(cut.height * cfg["scale"])), Image.LANCZOS)
+    r, g, b, a = cut.split()
+    rgb = Image.blend(Image.merge("RGB", (r, g, b)), Image.new("RGB", cut.size, (255, 196, 120)), 0.10)
+    cut = Image.merge("RGBA", (*rgb.split(), a))
+    bg.paste(cut, (cfg["left"], cfg["top"]), cut)
+    return bg
 
-
-def _kadr_crop(name):
-    """Вырезанный и уменьшенный кадр или None, если исходника нет."""
-    from PIL import Image
-    src = _kadr_source(name)
-    if not src:
-        return None
-    _, (l, t, r, b), width = THEME_KADRY[name]
-    im = Image.open(src).convert("RGB")
-    im = im.crop((round(im.width * l), round(im.height * t), round(im.width * r), round(im.height * b)))
-    if im.width > width:
-        im = im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
-    return im
-
-
-_KADR_SIZE = {}
-
-
-def _kadr(name, alt=""):
-    """Тег картинки для кадра. Все кадры ниже первого экрана, поэтому
-    грузятся лениво и на скорость первого экрана не влияют."""
-    if name not in _KADR_SIZE:
-        im = _kadr_crop(name)
-        _KADR_SIZE[name] = im.size if im else (0, 0)
-    w, h = _KADR_SIZE[name]
-    if not w:
-        return ""
-    return ('<img src="/assets/img/%s.jpg" alt="%s" width="%d" height="%d" loading="lazy" decoding="async">'
-            % (name, alt, w, h))
 
 THEME_HEX = {
     # основной текст и тёмные кружки
@@ -388,7 +351,7 @@ THEME_HEX = {
     "#5C5149": "#465068", "#574C44": "#465068", "#6E6158": "#4A546C", "#776B61": "#4A546C",
     "#7D7167": "#4A546C", "#9A9088": "#4A546C", "#B8AA9C": "#9AA3B5", "#C9BCAD": "#B9C2D3",
     # бронза → золото: тёмное для подписей на светлом, яркое для заливок и линий
-    "#8A5A2B": "#7A4D06", "#A3835F": "#B07A1E", "#6B4E2C": "#7A4D06",
+    "#8A5A2B": "#B01E22", "#A3835F": "#B07A1E", "#6B4E2C": "#B01E22",
     "#C9A87F": "#F0B13F", "#C29A6C": "#E39A2B", "#D9BC92": "#F3C566", "#E9C98F": "#F6CF7A",
     "#F0DCBB": "#FBE3B0", "#EDD9B8": "#FBE3B0", "#F7EBD8": "#FDF1D9", "#F0E2CE": "#F8E6C6",
     # бумага и линии
@@ -456,17 +419,31 @@ def _theme_colors(text):
 
 THEME_CSS = """
 
-/* ─────────────────────────────── тестовое оформление «море» (--theme more) ── */
+/* ─────────────────────────────── тестовое оформление (--theme more) ── */
 
-/* Правила, по которым собран этот слой.
-   1. Портрет без цветной заливки. Текст первого экрана лежит на сплошной
-      кремовой карточке, а не на фотографии.
-   2. Длинный текст только тёмным по светлому. Тёмно-синий фон остаётся
-      у двух коротких полос: финальный мастер-класс и последний призыв.
-   3. Три вида карточек: белая для обычного, золотистая для главного,
-      синяя полоса для события.
-   4. На телефоне подписи не мельче 14 px, поля по бокам 20 px,
-      всё нажимаемое не ниже 48 px. */
+/* Правила вида. Те же, что у теста 2.0.
+   1. Один гротеск. Заголовки берут весом и размером. Антиквы, курсива
+      и подписей прописными нет.
+   2. Фотография одна, на первом экране. Дальше страницу держат цвет
+      и форма блоков.
+   3. У цвета есть смысл. Красный: главное действие, метки, отметки.
+      Небо: событие, итог, цена, вопрос человека, номера. Закатная
+      плашка: главное внутри блока. Голубая: первое, выбранное.
+   4. Длинный текст только тёмным по светлому. На небе стоят короткие
+      строки.
+   5. Скругления по роли: блок 24, карточка и пузырь 18, кнопка 16,
+      метки круглые. Линеек и полосок над заголовками нет.
+   6. На телефоне текст для чтения 18–20 px, подписи не мельче 14,5 px,
+      поля по бокам 20 px, всё нажимаемое не ниже 48 px. */
+
+:root {
+  --sky: linear-gradient(150deg, #143A85 0%, #1F56A6 55%, #2A6DB8 100%);
+  --panel: linear-gradient(160deg, #FFF3DE 0%, #FCDDC0 100%);
+  --spot: linear-gradient(160deg, #EAF2FC 0%, #D9E7F9 100%);
+  --zoloto: linear-gradient(135deg, #F7CB62 0%, #EFA533 100%);
+  --tochki: repeating-radial-gradient(circle at 100% 0%, rgba(255,255,255,.09) 0 1.5px, rgba(255,255,255,0) 1.5px 30px);
+  --ten: 0 1px 2px rgba(24,33,58,.05), 0 10px 26px -16px rgba(24,33,58,.28);
+}
 
 /* ── первый экран ── */
 
@@ -483,14 +460,11 @@ section[aria-label="Первый экран"] { background: #FBF6EC !important; 
 [data-hero-card] > div { max-width: none !important; }
 [data-hero-card] > div:last-child { gap: clamp(18px, 2vw, 24px) !important; }
 
-/* Надзаголовок: обычным регистром, а не прописными. Это целая фраза,
-   прописными её читать труднее. */
+/* Надзаголовок: обычным регистром, синим — это слова Виолы о практикуме. */
 [data-hero-stage] [data-hero-card] > div:first-child > div:first-child {
-  color: #7A4D06 !important;
+  color: #1F4C97 !important;
   font-size: 16px !important;
-  font-weight: 600;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
+  font-weight: 700;
   line-height: 1.4 !important;
 }
 [data-hero-stage] [data-hero-card] h1 {
@@ -510,45 +484,46 @@ section[aria-label="Первый экран"] { background: #FBF6EC !important; 
   font-size: clamp(21px, 1.9vw, 26px) !important;
   line-height: 1.3 !important;
 }
+/* Строка про обновлённую программу — закатной плашкой. */
 [data-hero-stage] [data-hero-card] > div:last-child > p:nth-child(2) {
   width: auto !important;
   color: #2B3550 !important;
   font-size: 17px !important;
   line-height: 1.5 !important;
-  background: #F4ECDD !important;
+  background: var(--panel) !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
-  border-left: 3px solid #F0B13F !important;
-  border-radius: 0 12px 12px 0 !important;
-  padding: 12px 16px !important;
+  border-left: 0 !important;
+  border-radius: 16px !important;
+  padding: 14px 18px !important;
 }
-/* Плашка «Старт 1 ноября»: была полупрозрачной на тёмном. */
+/* «Старт 1 ноября» — синей меткой. */
 [data-hero-card] > div:last-child > div > div {
-  background: #FFFFFF !important;
-  border: 1px solid #E2D3B6 !important;
+  background: #1F4C97 !important;
+  border: 0 !important;
+  padding: 9px 16px !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
 [data-hero-stage] [data-hero-card] > div:last-child > div > div > span:last-child {
-  color: #18213A !important;
-  font-size: 14.5px !important;
+  color: #FFFFFF !important;
+  font-size: 15.5px !important;
 }
 
-/* Широкий экран: фотография во весь кадр, слева кремовая карточка,
-   как на слайдах презентации. */
+/* Широкий экран: фотография во весь кадр, слева карточка с текстом. */
 @media (min-width: 901px) {
   [data-hero-stage] [data-hero-copy] { justify-content: center !important; }
   [data-hero-stage] [data-hero-copy] > [data-hero-card] {
     max-width: min(540px, 47vw) !important;
-    background: rgba(251,246,236,.96);
-    border-radius: 32px;
+    background: rgba(251,246,236,.97);
+    border-radius: 28px;
     padding: clamp(30px, 3.2vw, 48px);
-    box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 34px 70px -34px rgba(24,33,58,.55);
+    box-shadow: 0 34px 70px -34px rgba(24,33,58,.55);
   }
 }
 
-/* Телефон и узкий планшет: сверху чистая фотография, под ней лист с текстом.
-   Лист заходит на фото скруглённым краем. */
+/* Телефон и узкий планшет: сверху фотография, под ней лист с текстом.
+   Лист заходит на фото скруглённым краем, текст стоит по центру. */
 @media (max-width: 900px) {
   [data-hero-stage] { min-height: 0 !important; overflow: visible !important; }
   [data-hero-photo] {
@@ -557,17 +532,11 @@ section[aria-label="Первый экран"] { background: #FBF6EC !important; 
     height: clamp(290px, 44vh, 460px);
     height: clamp(290px, 44svh, 460px);
   }
-  [data-hero-photo] img { object-position: 50% 12% !important; }
-  /* Текст листа по центру, под Виолой, которая стоит в середине кадра. */
+  [data-hero-photo] img { object-position: 78% 10% !important; }
   [data-hero-card] { text-align: center; }
   [data-hero-card] > div:last-child { align-items: center !important; }
   [data-hero-stage] [data-hero-card] > div:first-child > div:first-child,
   [data-hero-stage] [data-hero-card] > div:last-child > p { text-wrap: balance; }
-  [data-hero-stage] [data-hero-card] > div:last-child > p:nth-child(2) {
-    border-left: 0 !important;
-    border-radius: 16px !important;
-    padding: 14px 18px !important;
-  }
   [data-hero-stage] [data-hero-copy] {
     min-height: 0 !important;
     width: 100% !important;
@@ -582,8 +551,6 @@ section[aria-label="Первый экран"] { background: #FBF6EC !important; 
   }
   [data-hero-stage] [data-hero-card] h1 { font-size: clamp(40px, 11.6vw, 56px) !important; }
   [data-hero-stage] [data-hero-card] > div:last-child > p:first-child { font-size: 22px !important; }
-  [data-hero-stage] [data-hero-card] > div:last-child > p:nth-child(2) { font-size: 17px !important; max-width: none !important; }
-  /* Кнопка во всю ширину листа, плашка со стартом под ней по центру. */
   [data-hero-card] > div:last-child > div {
     flex-direction: column !important;
     align-items: stretch !important;
@@ -598,210 +565,275 @@ section[aria-label="Первый экран"] { background: #FBF6EC !important; 
   }
   [data-hero-card] > div:last-child > div > div { align-self: center; }
 }
-
-/* Телефон: своя вертикальная картинка, вырезанная так, что лицо стоит
-   в середине кадра (THEME_MOBILE_CROP) на 35% его высоты. */
+/* Телефон: свой квадратный кадр, лицо стоит в его середине. */
 @media (max-width: 760px) {
-  [data-hero-photo] img { object-position: 50% 22% !important; }
+  [data-hero-photo] img { object-position: 50% 0% !important; }
 }
 
-/* ── общие правки вида ── */
+/* ── общее ── */
 
-/* Самые мелкие подписи: 11–12 px → 13 px и на широком экране. */
-main [style*="font-size: 11px"], main [style*="font-size: 12px"] { font-size: 13px !important; }
+/* Подписи прописными с разрядкой переводятся в обычный регистр. */
+main [style*="text-transform: uppercase"] { text-transform: none !important; letter-spacing: 0 !important; font-weight: 700; }
+main [style*="font-size: 11px"], main [style*="font-size: 12px"] { font-size: 14px !important; }
 
-/* Карточки мягче: радиус 14 → 20. */
-main [style*="border-radius: 14px"] { border-radius: 20px !important; }
-main [style*="border-radius: 16px"] { border-radius: 22px !important; }
+/* Метка: персиковая плашка с красным текстом, как в тесте. */
+[data-tag],
+main [style*="text-transform: uppercase"][style*="color: #B01E22"] {
+  display: inline-block;
+  width: fit-content;
+  background: #FDEBD3;
+  color: #B01E22 !important;
+  font-size: 14.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  padding: 5px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+[data-tag="siniy"] { background: #1F4C97; color: #FFFFFF !important; border-radius: 10px; }
 
-/* Главная кнопка: стрелка в полупрозрачном круге, а не в тёмном. */
+/* Скругления по роли. */
+main [style*="border-radius: 14px"], main [style*="border-radius: 16px"] { border-radius: 24px !important; }
+
+/* Кнопки: скруглённый прямоугольник, как в тесте. Красная одна. */
+[data-btn] { border-radius: 16px !important; }
 [data-btn="primary"] > span { background: rgba(255,255,255,.2) !important; color: #FFFFFF !important; }
 [data-btn="primary"]:hover { filter: brightness(1.06); }
-[data-btn="quiet"] { box-shadow: inset 0 0 0 1px #EBDFCA !important; }
+[data-btn="quiet"] { background: #F4ECDD !important; border: 0 !important; box-shadow: none !important; }
+[data-btn="quiet"]:hover { background: #EDE2CE !important; }
 [data-btn="support"] { min-height: 56px; padding: 15px 34px !important; font-size: 18px !important; }
 [data-btn="support"]:hover { background: #EEF4FD !important; }
 
-/* Шесть сфер: один список в общей карточке, первая строка подсвечена —
-   с неё практикум начинается. */
+/* ── «Эмпатия — это способность» ── */
+
+section[aria-label="Зачем мне это"] [style*="height: 2px"] { display: none !important; }
+
+/* Шесть сфер одним списком. Первая строка голубая: с неё начинаем. */
 [data-sfery] {
   gap: 0 !important;
   background: #FFFFFF;
-  border: 1px solid #EBDFCA;
-  border-radius: 20px;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 16px 34px -26px rgba(24,33,58,.45);
+  box-shadow: var(--ten);
 }
 [data-sfery] > div { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; padding: 15px 18px !important; }
-[data-sfery] > div:not(:first-child) { background: none !important; border-top: 1px solid #F1E8D8 !important; }
+[data-sfery] > div:not(:first-child) { background: none !important; border-top: 1px solid #F4ECDD !important; }
+[data-sfery] > div:not(:first-child) > span:first-child { background: #F4ECDD !important; color: #465068 !important; }
+[data-sfery] > div > span:nth-child(2) { color: #1F4C97 !important; }
 [data-sfery] > div > span:last-child { font-size: 18px !important; font-weight: 600 !important; }
 
-/* Кнопка в полосе мастер-класса стояла в одном экране от такой же
-   в конце программы, сразу за полосой идут тарифы. */
-section[aria-label="Финальный мастер-класс"] a[data-btn] { display: none !important; }
+/* ── «Что нового» ── */
 
-/* Последний призыв: фотография и карточка. */
-[data-final] {
-  background: #EFE3CC url("img/hero.jpg") 100% 30% / cover no-repeat !important;
-  padding: clamp(56px, 7vw, 96px) clamp(20px, 4.5vw, 56px) !important;
-}
-[data-final-card] {
-  background: rgba(251,246,236,.96);
-  border-radius: 32px;
-  padding: clamp(30px, 3.4vw, 48px);
-  box-shadow: 0 34px 70px -34px rgba(24,33,58,.55);
-  max-width: min(540px, 47vw) !important;
-  margin: 0 auto 0 max(0px, calc((100% - 1128px) / 2)) !important;
-}
-[data-final-card] h2 { font-size: clamp(33px, 3.4vw, 48px) !important; }
-@media (max-width: 900px) {
-  [data-final] { background: #FBF6EC !important; padding: 0 !important; }
-  [data-final]::before {
-    content: "";
-    display: block;
-    height: clamp(210px, 56vw, 420px);
-    background: #EFE3CC url("img/hero-sm.jpg") 60% 40% / cover no-repeat;
-  }
-  [data-final-card] {
-    max-width: none !important;
-    margin: -28px 0 0 !important;
-    position: relative;
-    border-radius: 28px 28px 0 0;
-    padding: 30px 20px 44px;
-    box-shadow: 0 -16px 34px -22px rgba(24,33,58,.4);
-  }
-}
+[data-nov] { background: var(--spot) !important; box-shadow: none !important; }
+[data-nov] + [data-nov] { background: var(--panel) !important; }
+[data-nov] p, [data-plus] p { color: #2B3550 !important; }
 
-/* ── картинки в блоках ── */
-
-/* Глава: фотография террасы в начале длинного блока. Низ фото закрыт
-   скруглённым краем цвета блока — тот же приём, что на первом экране. */
-[data-glava] { --pad: clamp(14px, 4vw, 40px); padding-top: 0 !important; }
-[data-scena] {
+/* Короткие пункты: белая строка с красной галочкой. */
+[data-plus] {
   position: relative;
-  margin: 0 calc(-1 * var(--pad)) clamp(30px, 4.5vw, 52px);
-  height: clamp(200px, 30vw, 400px);
-  overflow: hidden;
+  padding: 17px 18px 17px 60px !important;
+  border-radius: 18px !important;
+  box-shadow: var(--ten) !important;
 }
-[data-scena] img { display: block; width: 100%; height: 100%; object-fit: cover; }
-[data-scena]::after {
+[data-plus]::before {
   content: "";
-  position: absolute;
-  left: 0; right: 0; bottom: -1px;
-  height: 30px;
-  background: var(--list, #FBF6EC);
-  border-radius: 30px 30px 0 0;
+  position: absolute; left: 18px; top: 18px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #D22B2B;
 }
-[data-scena="glava-novoe"] img { object-position: 0% 35%; }
-[data-scena="glava-podarki"] img { object-position: 100% 60%; }
-section[aria-label="Что нового"] { --list: #FFFFFF; }
-section[aria-label="Программа шесть недель"] { --list: #FBF7F1; }
-section[aria-label="Подарки и условия"] { --list: #F7F0E2; }
+[data-plus]::after {
+  content: "";
+  position: absolute; left: 28.5px; top: 23.5px;
+  width: 6px; height: 12px;
+  border: solid #FFFFFF; border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+}
 
-/* Цифры программы плитками. */
+/* Материалы: блок-небо, каждая строка на тёмной подложке с золотым кругом. */
+[data-mat] {
+  background: var(--tochki), var(--sky) !important;
+  box-shadow: none !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  gap: 16px !important;
+  color: #FFFFFF;
+}
+[data-mat] h3 { flex: none !important; color: #FFFFFF; font-size: clamp(22px, 2.2vw, 26px) !important; }
+[data-mat] > div { flex: none !important; gap: 8px !important; color: #FFFFFF !important; font-weight: 600; }
+[data-mat] > div > div {
+  background: rgba(9,26,68,.34);
+  border-radius: 16px;
+  padding: 12px 14px;
+  gap: 12px !important;
+  align-items: center !important;
+}
+[data-mat] > div > div > span:first-child { width: 36px !important; height: 36px !important; margin-top: 0 !important; font-size: 14px !important; }
+
+/* ── программа ── */
+
+/* Цифры программы: четыре плитки, у каждой свой цвет. */
 [data-cifry] { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px !important; }
 [data-cifry] > span {
   display: flex;
   flex-direction: column;
   gap: 4px;
   white-space: normal !important;
-  background: #FFFFFF;
-  border: 1px solid #EBDFCA;
-  border-radius: 18px;
-  padding: 16px 16px 14px;
+  border-radius: 20px;
+  padding: 16px 16px 15px;
   font-size: 16.5px;
+  font-weight: 600;
   line-height: 1.25;
-  color: #465068;
-  box-shadow: 0 12px 26px -22px rgba(24,33,58,.45);
 }
-[data-cifry] b { font-size: 40px !important; line-height: 1; letter-spacing: -.03em; color: #A86F12 !important; }
+[data-cifry] b { font-size: 42px !important; line-height: 1; letter-spacing: -.03em; }
+[data-cifry] > span:nth-child(1) { background: var(--sky); color: #FFFFFF; }
+[data-cifry] > span:nth-child(1) b { color: #FFFFFF !important; }
+[data-cifry] > span:nth-child(2) { background: var(--panel); color: #2B3550; }
+[data-cifry] > span:nth-child(2) b { color: #B01E22 !important; }
+[data-cifry] > span:nth-child(3) { background: #FFFFFF; color: #2B3550; box-shadow: var(--ten); }
+[data-cifry] > span:nth-child(3) b { color: #1F4C97 !important; }
+[data-cifry] > span:nth-child(4) { background: var(--zoloto); color: #3A2A05; }
+[data-cifry] > span:nth-child(4) b { color: #143A85 !important; }
 
-/* Неделя: кадр в шапке карточки, значок стоит на его нижнем крае. */
-[data-week-photo] {
-  margin: calc(-1 * clamp(24px, 3vw, 34px)) calc(-1 * clamp(24px, 3vw, 34px)) 0;
-  height: 132px;
-  overflow: hidden;
-}
-[data-week-photo] img { display: block; width: 100%; height: 100%; object-fit: cover; }
-[data-week-head] > div:nth-child(2) { margin-top: -36px; position: relative; align-items: flex-end !important; }
-[data-week-head] > div:nth-child(2) > span:first-child { box-shadow: 0 0 0 4px #EEF4FD; }
-[data-week-head] > div:nth-child(2) > span:last-child { line-height: 1.2; padding-bottom: 1px; }
-/* Вопрос недели — сообщением, как в переписке. */
+/* Карточка недели: вопрос человека справа на небе, ответ Виолы сообщением,
+   три техники с синими номерами. */
+[data-week-card] { background: #FFFFFF !important; border: 0 !important; box-shadow: var(--ten) !important; }
+[data-week-head] { padding: clamp(22px, 3vw, 34px) clamp(20px, 3vw, 34px) 0; }
+[data-week-head] + div { padding: 18px clamp(20px, 3vw, 34px) clamp(22px, 3vw, 34px) !important; }
+[data-week-head] h3 { font-size: clamp(23px, 2.4vw, 28px) !important; }
 [data-vopros] {
-  align-self: flex-start;
-  max-width: 100%;
-  background: #FFFFFF;
-  color: #18213A !important;
-  border-radius: 18px 18px 18px 5px;
-  padding: 12px 16px;
-  box-shadow: 0 8px 18px -12px rgba(24,33,58,.4);
+  align-self: flex-end;
+  max-width: 94%;
+  margin: 2px 0 0;
+  background: var(--sky);
+  color: #FFFFFF;
+  font-size: 19px;
+  line-height: 1.28;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  padding: 12px 16px 13px;
+  border-radius: 18px 18px 6px 18px;
+  box-shadow: 0 10px 18px -12px rgba(31,76,151,.8);
+}
+[data-msg] { display: grid; grid-template-columns: 34px minmax(0, 1fr); column-gap: 8px; align-items: end; }
+[data-ava] {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--sky); color: #FFFFFF;
+  font-size: 16px; font-weight: 700; line-height: 1;
+}
+[data-bubble] { background: #F4ECDD; border-radius: 18px 18px 18px 6px; padding: 12px 16px 14px; }
+[data-who] { display: block; margin-bottom: 3px; font-size: 15.5px; font-weight: 700; color: #1F4C97; }
+[data-bubble] p { margin: 0; font-size: 18px; line-height: 1.5; color: #18213A; }
+@media (min-width: 861px) {
+  [data-week-head] { padding-bottom: clamp(22px, 3vw, 34px); }
+  [data-week-head] + div { padding-top: clamp(22px, 3vw, 34px) !important; }
 }
 
-/* Подарок: карточка с обложкой. */
+/* ── мастер-класс ── */
+
+/* Блок-небо на светлом фоне. Кнопки нет: такая же стоит экраном выше,
+   сразу за блоком идут тарифы. */
+[data-mk] { background: #F7F0E2 !important; padding-top: 0 !important; padding-bottom: clamp(8px, 2vw, 24px) !important; }
+[data-mk] a[data-btn] { display: none !important; }
+[data-mk-card] {
+  background: var(--tochki), var(--sky);
+  border-radius: 24px;
+  padding: clamp(26px, 3.4vw, 44px) clamp(22px, 3.4vw, 44px);
+  color: #FFFFFF;
+}
+[data-mk-card] > div:first-child {
+  background: linear-gradient(135deg, #DA352C 0%, #B3161F 100%) !important;
+  border: 0 !important;
+  padding: 6px 14px !important;
+}
+[data-mk-card] > div:first-child > span:first-child { display: none; }
+
+/* ── тарифы ── */
+
+#tarify [style*="top: -14px"] {
+  background: linear-gradient(135deg, #DA352C 0%, #B3161F 100%) !important;
+  color: #FFFFFF !important;
+  font-size: 14.5px !important;
+  padding: 6px 16px !important;
+  box-shadow: 0 8px 16px -8px rgba(190,30,35,.6) !important;
+}
+/* Галочка: красная в персиковом круге. Чего нет в тарифе — серым. */
+#tarify [style*="grid-template-columns: 22px 1fr"] { grid-template-columns: 26px 1fr !important; }
+#tarify span[style*="color: #1F4C97"] {
+  width: 26px; height: 26px; border-radius: 50%;
+  align-items: center; justify-content: center;
+  margin-top: 0 !important;
+  background: #FDEBD3;
+  color: #B01E22 !important;
+}
+#tarify span[style*="display: inline-flex"][style*="color: #B01E22"] { color: #9AA3B5 !important; }
+#tarify [style*="line-through"] { text-decoration-color: #9AA3B5 !important; }
+/* Золотая линейка между списками — тонкой серой чертой. */
+#tarify [style*="height: 1px"] { background: #F1E8D8 !important; }
+#kontakty > div { border: 0 !important; box-shadow: var(--ten) !important; }
+/* Цена на блоке-небе. */
+[data-cena] { background: var(--sky); border-radius: 18px; padding: 18px 20px; }
+[data-mest] { background: #FDEBD3 !important; box-shadow: none !important; padding: 7px 14px !important; }
+[data-mest] > span:first-child { background: #D22B2B !important; box-shadow: none !important; }
+[data-mest] > span:last-child { color: #B01E22 !important; font-size: 15.5px !important; }
+
+/* ── подарки ── */
+
+/* Каждый подарок — отдельная карточка с золотым кругом, как посты в тесте. */
+[data-podarki] { background: none !important; padding: 0 !important; border-radius: 0 !important; gap: 14px !important; }
+[data-podarki] > div:last-of-type { gap: 10px !important; }
 [data-podarok] {
   background: #FFFFFF;
-  border: 1px solid #F0DDB0;
   border-radius: 18px;
-  overflow: hidden;
-  grid-template-columns: 150px 1fr !important;
-  gap: 0 !important;
-  align-items: stretch !important;
+  padding: 16px;
+  box-shadow: var(--ten);
+  grid-template-columns: 50px 1fr !important;
 }
-[data-oblozhka] { display: block; min-height: 100%; }
-[data-oblozhka] img { display: block; width: 100%; height: 100%; object-fit: cover; }
-[data-podarok] > p { padding: 16px 18px !important; align-self: center; }
+[data-podarok] > span {
+  width: 50px !important; height: 50px !important;
+  margin-top: 0 !important;
+  box-shadow: 0 8px 16px -8px rgba(214,140,30,.85);
+}
+[data-podarok] > span svg { width: 22px; height: 22px; }
 
-/* Цена тарифа на синей плашке. */
-[data-cena] {
-  background: linear-gradient(160deg, #1F56A6 0%, #143A85 100%);
-  border-radius: 18px;
-  padding: 18px 20px;
-  box-shadow: 0 16px 30px -20px rgba(16,47,115,.7);
-}
+/* ── последний призыв ── */
 
-/* Мастер-класс. Широкий экран: синяя карточка на фотографии бухты. */
-@media (min-width: 901px) {
-  [data-mk] {
-    background: #EFE3CC url("img/glava-nedeli.jpg") 50% 60% / cover no-repeat !important;
-    padding: clamp(56px, 7vw, 96px) clamp(20px, 4.5vw, 56px) !important;
-  }
-  [data-mk] > [data-scena] { display: none; }
-  [data-mk-card] {
-    background: linear-gradient(160deg, #2A6DB8 0%, #1A4A96 55%, #143A85 100%);
-    border-radius: 32px;
-    padding: clamp(30px, 3.4vw, 48px);
-    max-width: min(560px, 48vw) !important;
-    margin: 0 auto 0 max(0px, calc((100% - 1128px) / 2)) !important;
-    box-shadow: 0 34px 70px -34px rgba(13,36,92,.7);
-  }
+/* Блок-небо с красной кнопкой, как второй призыв в тесте. */
+[data-final] { background: #FBF6EC !important; padding: clamp(24px, 5vw, 64px) clamp(14px, 4vw, 40px) clamp(44px, 6vw, 84px) !important; }
+[data-final-card] {
+  background: var(--tochki), var(--sky);
+  border-radius: 24px;
+  padding: clamp(32px, 4.4vw, 56px) clamp(22px, 4.4vw, 56px);
+  max-width: 760px !important;
 }
-/* Телефон: фотография Виолы, под ней синий лист с текстом. */
-@media (max-width: 900px) {
-  [data-mk] { padding: 0 !important; background: #143A85 !important; }
-  [data-mk] > [data-scena] { margin: 0; height: clamp(250px, 68vw, 460px); --list: #1E53A3; }
-  [data-mk] > [data-scena] img { object-position: 50% 16%; }
-  [data-mk-card] {
-    max-width: none !important;
-    background: linear-gradient(180deg, #1E53A3 0%, #143A85 100%);
-    padding: 6px 20px 46px;
-    margin-top: -1px !important;
-  }
-}
+[data-final-card] > div:first-child { background: rgba(9,26,68,.34) !important; border: 0 !important; }
+[data-final-card] h2 { font-size: clamp(33px, 3.8vw, 50px) !important; }
+[data-final-card] [style*="color: #9AA3B5"] { color: #DCE4F0 !important; }
 
-@media (max-width: 760px) {
-  [data-glava] { --pad: 20px; }
-  [data-scena] { height: clamp(190px, 54vw, 320px); }
-  [data-cifry] { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  [data-podarok] { display: block !important; }
-  [data-oblozhka] { height: 112px; min-height: 0; }
-  [data-podarok] > p { padding: 14px 16px 16px !important; }
-}
+/* ── окно заявки ── */
 
-/* Окно заявки. */
 #lead-modal h2 { font-size: clamp(25px, 3.2vw, 34px) !important; line-height: 1.14 !important; }
 #lead-modal [data-close-form] { min-height: 46px; }
 #lead-modal > div { -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+/* Подписи полей — обычным жирным текстом, не плашками. */
+#lead-modal label [style*="text-transform: uppercase"] {
+  display: block;
+  width: auto;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  white-space: normal;
+  color: #18213A !important;
+  font-size: 16px !important;
+}
+#lead-modal label span span[style*="text-transform: uppercase"] { color: #5F687E !important; font-size: 14.5px !important; font-weight: 600 !important; }
 
-/* Полоса про cookie: светлая, не спорит с главной кнопкой. */
+/* ── подвал ── */
+
+.ft-label { text-transform: none; letter-spacing: 0; font-size: 14.5px; font-weight: 700; }
+
+/* ── полоса про cookie ── */
+
 .cookie-bar {
   background: #FFFFFF;
   border: 1px solid #E2D3B6;
@@ -809,11 +841,13 @@ section[aria-label="Подарки и условия"] { --list: #F7F0E2; }
   box-shadow: 0 18px 44px -18px rgba(24,33,58,.45);
 }
 .cookie-bar a { color: #143A85; }
-.cookie-bar button { background: #18213A; color: #FFFFFF; }
+.cookie-bar button { background: #18213A; color: #FFFFFF; border-radius: 14px; }
+
+/* ── телефон ── */
 
 @media (max-width: 760px) {
-  /* Поля по бокам 20 px вместо 15: текст не упирается в край экрана. */
-  main > section:not([aria-label="Первый экран"]):not([data-final]):not([data-mk]) { padding-left: 20px !important; padding-right: 20px !important; }
+  /* Поля по бокам 20 px: текст не упирается в край экрана. */
+  main > section:not([aria-label="Первый экран"]) { padding-left: 20px !important; padding-right: 20px !important; }
 
   /* Заголовки блоков: 38 px рвали длинную фразу на пять строк. */
   main h2 { font-size: 33px !important; line-height: 1.14 !important; }
@@ -822,22 +856,17 @@ section[aria-label="Подарки и условия"] { --list: #F7F0E2; }
   main [style*="font-size: clamp(17.1px"] { font-size: 19px !important; }
   main [style*="font-size: clamp(18.9px"] { font-size: 21px !important; }
   main [style*="font-size: clamp(20.7px"] { font-size: 22.5px !important; }
+  main [style*="font-size: 13px"] { font-size: 14.5px !important; }
 
   /* Сетка из шести значков повторяла список сфер выше и карточки ниже. */
   [data-week-rail] { display: none !important; }
-  [data-week-card] [style*="letter-spacing: .14em"] { font-size: 15px !important; }
+
+  [data-cifry] { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  [data-final-card] { text-align: center; }
 
   /* Ссылкам на аккаунт команды и «Подробнее» — зона под палец. */
   main p > a[href^="https://t.me"] { display: inline-block; padding: 11px 6px; margin: -11px -6px; }
   .cookie-bar a { padding: 12px 0; }
-
-  /* Подписи не мельче 14 px. */
-  main [style*="font-size: 11px"] { font-size: 13px !important; }
-  main [style*="font-size: 12px"] { font-size: 14px !important; }
-  main [style*="font-size: 13px"] { font-size: 14.5px !important; }
-  /* У подписей прописными разрядка была .14–.18em: на 14 px это рыхло. */
-  main [style*="letter-spacing: .18em"], main [style*="letter-spacing: .16em"],
-  main [style*="letter-spacing: .14em"] { letter-spacing: .08em !important; }
 
   /* Пока полоса про cookie на экране, нижняя полоса с ценой скрыта:
      две полосы подряд закрывали треть первого экрана. */
@@ -847,7 +876,7 @@ section[aria-label="Подарки и условия"] { --list: #F7F0E2; }
   body:has(.cookie-bar:not([hidden])) [data-sticky-bar] { display: none !important; }
 
   [data-sticky-bar] { box-shadow: 0 -10px 30px -18px rgba(24,33,58,.4); }
-  [data-sticky-bar] a { min-height: 48px; display: inline-flex !important; align-items: center; }
+  [data-sticky-bar] a { min-height: 48px; display: inline-flex !important; align-items: center; border-radius: 14px !important; }
 }
 """
 
@@ -867,13 +896,31 @@ def _theme_section(html, label, pairs):
     return html[:blk[0]] + sec + html[blk[3]:]
 
 
-_SUN_CARD = "linear-gradient(150deg, #FEF3DC 0%, #FBE6B8 100%)"
-_SEA_DOT = "linear-gradient(160deg, #1F56A6, #143A85)"
+# Цветные блоки теста 2.0. Сами градиенты заданы переменными в начале
+# THEME_CSS, в разметку подставляется только имя.
+_PANEL = "var(--panel)"      # закатная плашка: главное внутри блока
+_SPOT = "var(--spot)"        # светло-голубая: первое, выбранное
+_SKY = "var(--sky)"          # небо: событие, итог, цена
+_GOLD = "var(--zoloto)"      # золотой кружок под значок
+_RED = "#B01E22"             # красный текст: метки, отметки, ссылки
+_BLUE = "#1F4C97"            # синий: номера, недели, всё, что говорит Виола
+
+
+def _theme_section_re(html, label, pattern, repl, flags=0):
+    """То же, что _theme_section, но заменой по регулярному выражению."""
+    i = html.find('aria-label="%s"' % label)
+    if i < 0:
+        return html
+    blk = find_block(html, "section", html.rfind("<section", 0, i))
+    sec, n = re.subn(pattern, repl, html[blk[0]:blk[3]], flags=flags)
+    if not n:
+        print("  тема: в блоке «%s» не найдено: %s" % (label, pattern[:70]))
+    return html[:blk[0]] + sec + html[blk[3]:]
 
 
 def _theme_layout(html):
-    """Перестройка блоков под светлую страницу. Работает по уже
-    перекрашенной разметке, поэтому цвета здесь новые, синие."""
+    """Перестройка блоков в язык теста 2.0. Работает по уже перекрашенной
+    разметке, поэтому цвета в образцах здесь новые."""
     # Первый экран: надзаголовок, заголовок и нижний текст собираются в одну
     # карточку. На телефоне она становится листом под фотографией.
     i = html.find('data-hero-copy=""')
@@ -883,27 +930,25 @@ def _theme_layout(html):
                 + "</div>" + html[blk[2]:])
 
     html = _theme_section(html, "Зачем мне это", [
-        # первая строка списка была синей плашкой, как нажатая вкладка
+        # Шесть сфер: были шестью плашками с тенью и выглядели кнопками,
+        # хотя не нажимаются. Теперь один список; первая строка подсвечена,
+        # с неё практикум начинается.
         ("background: linear-gradient(160deg, #1F56A6, #143A85); border: 1px solid #143A85; "
          "box-shadow: 0 8px 20px -12px rgba(16,47,115,.6), inset 0 1px 0 rgba(255,255,255,.1); "
          "border-radius: 999px; padding: 13px 22px; color: #FBF6EC;",
-         "background: " + _SUN_CARD + "; border: 1px solid #F3C566; "
-         "box-shadow: 0 10px 22px -16px rgba(154,100,16,.55); "
+         "background: " + _SPOT + "; border: 0; box-shadow: none; "
          "border-radius: 999px; padding: 13px 22px; color: #18213A;"),
-        ("background: rgba(251,246,236,.14); color: #FBF6EC;", "background: #FFFFFF; color: #7A4D06;"),
-        ('<span style="display: inline-flex; color: #F0B13F;">', '<span style="display: inline-flex; color: #7A4D06;">'),
+        ("background: rgba(251,246,236,.14); color: #FBF6EC;", "background: " + _BLUE + "; color: #FFFFFF;"),
+        ('<span style="display: inline-flex; color: #F0B13F;">', '<span style="display: inline-flex; color: ' + _BLUE + ';">'),
         ("padding: 13px 22px; color: #1A4A96;", "padding: 13px 22px; color: #18213A;"),
-        # шесть сфер: были шестью плашками с тенью и выглядели кнопками,
-        # хотя не нажимаются. Теперь один список в общей карточке.
         ('<div style="display: flex; flex-direction: column; gap: 8px;">',
          '<div data-sfery="" style="display: flex; flex-direction: column; gap: 8px;">'),
-        # карточка «18 техник»: золотистая вместо синей
+        # «18 техник»: закатная плашка, число в синем круге
         ("background: linear-gradient(165deg, #1F56A6 0%, #102F73 100%); border: 1px solid #143A85;",
-         "background: " + _SUN_CARD + "; border: 1px solid #F3C566;"),
-        ("box-shadow: 0 18px 40px -22px rgba(16,47,115,.7), inset 0 1px 0 rgba(255,255,255,.1);",
-         "box-shadow: 0 18px 40px -26px rgba(154,100,16,.6);"),
+         "background: " + _PANEL + "; border: 0;"),
+        ("box-shadow: 0 18px 40px -22px rgba(16,47,115,.7), inset 0 1px 0 rgba(255,255,255,.1);", "box-shadow: none;"),
         ("background: linear-gradient(180deg, #FBE3B0, #E39A2B); color: #18213A; font-size: 21px;",
-         "background: " + _SEA_DOT + "; color: #FFFFFF; font-size: 21px;"),
+         "background: " + _SKY + "; color: #FFFFFF; font-size: 21px;"),
         ('line-height: 1.55; color: #D9CDB6;"><b style="color: #FBF6EC;">',
          'line-height: 1.55; color: #2B3550;"><b style="color: #18213A;">'),
     ])
@@ -914,66 +959,99 @@ def _theme_layout(html):
          "background: linear-gradient(180deg, #FFFFFF 0%, #FBF6EC 100%);"),
         ("color: #FBF6EC", "color: #18213A"),
         ("color: #D9CDB6", "color: #465068"),
-        ("background: linear-gradient(180deg, rgba(251,246,236,.09) 0%, rgba(251,246,236,.04) 100%); "
-         "border: 1px solid rgba(251,246,236,.16);", "background: #FFFFFF; border: 1px solid #EBDFCA;"),
-        ("background: linear-gradient(180deg, rgba(251,246,236,.08) 0%, rgba(251,246,236,.03) 100%); "
-         "border: 1px solid rgba(251,246,236,.14);", "background: #FFFFFF; border: 1px solid #EBDFCA;"),
-        ("background: linear-gradient(135deg, rgba(240,177,63,.2) 0%, rgba(240,177,63,.08) 100%); "
-         "border: 1px solid rgba(240,177,63,.34);", "background: " + _SUN_CARD + "; border: 1px solid #F3C566;"),
-        # золотой кружок на золотистой карточке терялся
+        # две большие карточки: голубая и закатная, без золотой полоски сверху
+        ('<div style="background: linear-gradient(180deg, rgba(251,246,236,.09) 0%, rgba(251,246,236,.04) 100%); '
+         'border: 1px solid rgba(251,246,236,.16); border-top: 3px solid #F0B13F;',
+         '<div data-nov="" style="border: 0;'),
+        # три короткие: белые строки с красной галочкой
+        ('style="background: linear-gradient(180deg, rgba(251,246,236,.08) 0%, rgba(251,246,236,.03) 100%); '
+         'border: 1px solid rgba(251,246,236,.14);', 'data-plus="" style="background: #FFFFFF; border: 0;'),
+        # материалы: блок-небо со строками, как итог в тесте
+        ('<div style="background: linear-gradient(135deg, rgba(240,177,63,.2) 0%, rgba(240,177,63,.08) 100%); '
+         'border: 1px solid rgba(240,177,63,.34);', '<div data-mat="" style="background: ' + _SKY + '; border: 0;'),
         ("background: linear-gradient(160deg, #FBE3B0, #E39A2B); color: #18213A; font-size: 12px;",
-         "background: " + _SEA_DOT + "; color: #FFFFFF; font-size: 12px;"),
+         "background: " + _GOLD + "; color: #143A85; font-size: 12px;"),
+        ("с&nbsp;личной PDF-методичкой", 'с&nbsp;личной <span style="white-space: nowrap;">PDF-методичкой</span>'),
     ])
 
     html = _theme_section(html, "Программа шесть недель", [
-        # шапка карточки недели: светлое небо вместо тёмно-синего
-        ("background: linear-gradient(165deg, #1F56A6 0%, #143A85 100%);",
-         "background: linear-gradient(165deg, #EEF4FD 0%, #DCE8F9 100%);"),
-        ("gap: 14px; color: #FBF6EC;", "gap: 14px; color: #18213A;"),
-        ("color: #F6CF7A; white-space: nowrap;", "color: #143A85; white-space: nowrap;"),
-        ("color: #B9C2D3; font-style: italic;", "color: #3D4864;"),
-        # метка «3 техники»: плоская, без тени и градиента
-        ("background: linear-gradient(160deg, #1F56A6, #102F73); color: #FBF6EC; border-radius: 999px; "
-         "box-shadow: 0 8px 18px -10px rgba(16,47,115,.6);",
-         "background: #E3ECFA; color: #143A85; border-radius: 999px; box-shadow: none;"),
+        ('<div style="display: flex; flex-wrap: wrap; gap: 12px 26px; font-size: 17px; color: #465068;">',
+         '<div data-cifry="" style="display: flex; flex-wrap: wrap; gap: 12px 26px; font-size: 17px; color: #465068;">'),
+        ("background: linear-gradient(160deg, #F4ECDD, #EBDFCA); border-radius: 10px; "
+         "box-shadow: inset 0 1px 0 rgba(255,255,255,.5);", "background: " + _PANEL + "; border-radius: 20px;"),
+        # карточка недели: шапка без заливки, значок в золотом круге
+        ('<div style="background: linear-gradient(165deg, #1F56A6 0%, #143A85 100%); padding: clamp(24px, 3vw, 34px); '
+         'display: flex; flex-direction: column; gap: 14px; color: #FBF6EC;">',
+         '<div data-week-head="" style="display: flex; flex-direction: column; gap: 14px; color: #18213A;">'),
+        ("background: linear-gradient(180deg, #FBE3B0, #E39A2B); color: #18213A; flex: none;",
+         "background: " + _GOLD + "; color: #143A85; flex: none;"),
+        ('<span style="font-size: 13px; font-weight: 700; letter-spacing: .14em; color: #F6CF7A; white-space: nowrap;">НЕДЕЛЯ\u00a0',
+         '<span data-tag="siniy">Неделя\u00a0'),
+        # вопрос недели — сообщением справа, как вопрос человека в тесте
+        ('<p style="margin: 0; font-size: 17px; line-height: 1.45; color: #B9C2D3; font-style: italic;">', '<p data-vopros="">'),
+        ('<span style="background: linear-gradient(160deg, #1F56A6, #102F73); color: #FBF6EC; border-radius: 999px; '
+         'box-shadow: 0 8px 18px -10px rgba(16,47,115,.6); padding: 6px 14px; font-size: 14px; font-weight: 700; '
+         'letter-spacing: .04em; white-space: nowrap;">3 ТЕХНИКИ</span>', '<span data-tag="">3 техники</span>'),
+        ('<span style="flex: 1; height: 1px; background: #EBDFCA;"></span>', ""),
+        (">НЕД.\u00a0", ">Нед.\u00a0"),
+        # номера техник — синие круги, как номера шагов в тесте
+        ("width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(160deg, #FBF6EC, #EBDFCA); "
+         "color: " + _RED + ";", "width: 30px; height: 30px; border-radius: 50%; background: " + _BLUE + "; color: #FFFFFF;"),
     ])
+    # текст лекции — ответом Виолы: имя и пузырь, как её слова в тесте
+    html = _theme_section_re(
+        html, "Программа шесть недель",
+        r'<p style="margin: 0; font-size: 18\.5px; line-height: 1\.5; font-weight: 500;">(.*?)</p>',
+        r'<div data-msg=""><span data-ava="" aria-hidden="true">В</span><div data-bubble="">'
+        r'<b data-who="">Виола Маро</b><p>\1</p></div></div>', re.S)
+    # В плитке подпись должна переноситься: неразрывный пробел в «разборов
+    # вопросов» выталкивал её за край на экране 360 px.
+    i = html.find('<div data-cifry=""')
+    if i >= 0:
+        blk = find_block(html, "div", i)
+        html = (html[:blk[0]] + html[blk[0]:blk[3]].replace(" ", " ").replace("&nbsp;", " ")
+                + html[blk[3]:])
 
-    html = _theme_section(html, "Что нового", [
-        ("с&nbsp;личной PDF-методичкой", 'с&nbsp;личной <span style="white-space: nowrap;">PDF-методичкой</span>'),
-    ])
+    # Мастер-класс: блок-небо на светлом фоне, без кнопки (она экраном выше).
     html = _theme_section(html, "Финальный мастер-класс", [
+        ('aria-label="Финальный мастер-класс"', 'data-mk="" aria-label="Финальный мастер-класс"'),
+        ('<div style="max-width: 860px; margin: 0 auto;', '<div data-mk-card="" style="max-width: 860px; margin: 0 auto;'),
         ("Большой мастер-класс в&nbsp;финале",
          'Большой <span style="white-space: nowrap;">мастер-класс</span> в&nbsp;финале'),
     ])
 
-    # Последний призыв: тот же приём, что на первом экране. Фотография
-    # террасы и кремовая карточка с текстом вместо синей полосы.
-    html = _theme_section(html, "Финальный призыв", [
-        ('aria-label="Финальный призыв"', 'data-final="" aria-label="Финальный призыв"'),
-        ('<div style="max-width: 640px; margin: 0 auto;', '<div data-final-card="" style="max-width: 640px; margin: 0 auto;'),
-        ("color: #FBF6EC;", "color: #18213A;"),
-        ("background: rgba(251,246,236,.1); border: 1px solid rgba(251,246,236,.16);",
-         "background: #FFFFFF; border: 1px solid #E2D3B6;"),
-        ("color: #EEF3FB", "color: #2B3550"),
-        ("color: #9AA3B5", "color: #465068"),
+    html = _theme_section(html, "Тарифы", [
+        # цена на блоке-небе
+        ('<div style="border-top: 1px solid #EBDFCA; padding-top: 16px; display: flex; flex-direction: column; gap: 6px;">',
+         '<div data-cena="" style="display: flex; flex-direction: column; gap: 6px;">'),
+        ("font-size: 40px; line-height: 1; letter-spacing: -.02em; color: #18213A;",
+         "font-size: 40px; line-height: 1; letter-spacing: -.02em; color: #FFFFFF;"),
+        ('<div style="font-size: 16px; color: #465068;">$', '<div style="font-size: 16px; color: #DCE6F5;">$'),
+        ('style="font-size: 15px; color: #4A546C;">текущая', 'style="font-size: 15px; color: #F6CF7A;">текущая'),
+        # «Всего 50 мест» — плашкой
+        ('<div style="display: inline-flex; align-self: flex-start; align-items: center; gap: 10px; '
+         'background: linear-gradient(180deg, #FDF1D9 0%, #FBE3B0 100%); border: 1.5px solid #F0B13F;',
+         '<div data-mest="" style="display: inline-flex; align-self: flex-start; align-items: center; gap: 10px; border: 0;'),
     ])
 
-    # Синий текст в списке читался как ссылки.
     html = _theme_section(html, "Рассрочка", [
         ("color: #1A4A96; padding-top: 3px;", "color: #2B3550; padding-top: 3px;"),
+        ("background: linear-gradient(160deg, #1F56A6, #102F73); color: #FBE3B0; flex: none; "
+         "box-shadow: 0 4px 10px -4px rgba(16,47,115,.5);", "background: #D22B2B; color: #FFFFFF; flex: none;"),
     ])
 
-    # Карточка подарков: длинный текст стоял светлым по тёмно-синему.
+    # Подарки: каждый отдельной карточкой с золотым кругом, как посты в тесте.
     html = _theme_section(html, "Подарки и условия", [
-        ("background: linear-gradient(165deg, #1F56A6 0%, #102F73 100%); border: 1px solid #143A85;",
-         "background: " + _SUN_CARD + "; border: 1px solid #F3C566;"),
-        ("box-shadow: 0 20px 44px -24px rgba(16,47,115,.7), inset 0 1px 0 rgba(255,255,255,.1);",
-         "box-shadow: 0 20px 44px -28px rgba(154,100,16,.6);"),
-        ("color: #F6CF7A", "color: #7A4D06"),
+        ('<div style="background: linear-gradient(165deg, #1F56A6 0%, #102F73 100%); border: 1px solid #143A85;',
+         '<div data-podarki="" style="border: 0;'),
+        ("box-shadow: 0 20px 44px -24px rgba(16,47,115,.7), inset 0 1px 0 rgba(255,255,255,.1);", "box-shadow: none;"),
+        ("color: #F6CF7A", "color: " + _RED),
         ("color: #FBF6EC", "color: #18213A"),
         ("color: #D9CDB6", "color: #2B3550"),
+        ('<div style="display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;">',
+         '<div data-podarok="" style="display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;">'),
         ("background: linear-gradient(180deg, #FBE3B0, #E39A2B); color: #18213A; flex: none;",
-         "background: " + _SEA_DOT + "; color: #FFFFFF; flex: none;"),
+         "background: " + _GOLD + "; color: #143A85; flex: none;"),
     ])
 
     # Кнопка поддержки была красной, как «Оплатить». Красная на странице
@@ -985,91 +1063,13 @@ def _theme_layout(html):
         ("letter-spacing: .1em; text-transform: uppercase;", "letter-spacing: 0;"),
         ("box-shadow: 0 16px 30px -14px rgba(190,30,35,.62);", "box-shadow: inset 0 0 0 2px #143A85;"),
     ])
-    html = _theme_kartinki(html)
+
+    # Последний призыв: блок-небо с красной кнопкой, как второй призыв в тесте.
+    html = _theme_section(html, "Финальный призыв", [
+        ('aria-label="Финальный призыв"', 'data-final="" aria-label="Финальный призыв"'),
+        ('<div style="max-width: 640px; margin: 0 auto;', '<div data-final-card="" style="max-width: 640px; margin: 0 auto;'),
+    ])
     return _theme_modal(html)
-
-
-def _theme_glava(html, label, kadr, extra=""):
-    """Фотография-окно в начале блока: вставляется первой в секцию."""
-    i = html.find('aria-label="%s"' % label)
-    img = _kadr(kadr)
-    if i < 0 or not img:
-        return html
-    end = html.index(">", i) + 1
-    return (html[:i] + 'data-glava="" ' + extra + html[i:end]
-            + '<div data-scena="%s">%s</div>' % (kadr, img) + html[end:])
-
-
-def _theme_kartinki(html):
-    """Картинки и плитки в блоках ниже первого экрана. Тексты те же;
-    меняется подача: фотография в начале главы, свой кадр у каждой недели,
-    вопрос недели сообщением, цифры плитками, цена на синей плашке."""
-    counter = [0]
-
-    # Недели: кадр в шапке карточки, вопрос недели как сообщение.
-    def week_head(m):
-        counter[0] += 1
-        return (m.group(0)[:-1].replace("<div ", '<div data-week-head="" ', 1) + ">"
-                + '<div data-week-photo="">%s</div>' % _kadr("ned-%d" % counter[0]))
-    head = ('<div style="background: linear-gradient(165deg, #EEF4FD 0%, #DCE8F9 100%); '
-            'padding: clamp(24px, 3vw, 34px); display: flex; flex-direction: column; gap: 14px; color: #18213A;">')
-    if _kadr("ned-1"):
-        html = re.sub(re.escape(head), week_head, html)
-    html = html.replace('<p style="margin: 0; font-size: 17px; line-height: 1.45; color: #3D4864;">«',
-                        '<p data-vopros="" style="margin: 0; font-size: 17px; line-height: 1.45; color: #3D4864;">«')
-
-    html = _theme_section(html, "Программа шесть недель", [
-        # «6 лекций, 18 техник…» — плитками с крупной цифрой
-        ('<div style="display: flex; flex-wrap: wrap; gap: 12px 26px; font-size: 17px; color: #465068;">',
-         '<div data-cifry="" style="display: flex; flex-wrap: wrap; gap: 12px 26px; font-size: 17px; color: #465068;">'),
-    ])
-
-    # В плитке подпись должна переноситься: неразрывный пробел в «разборов
-    # вопросов» выталкивал её за край на экране 360 px.
-    i = html.find('<div data-cifry=""')
-    if i >= 0:
-        blk = find_block(html, "div", i)
-        html = (html[:blk[0]] + html[blk[0]:blk[3]].replace("\u00a0", " ").replace("&nbsp;", " ")
-                + html[blk[3]:])
-
-    # Подарки: у каждого своя обложка вместо одинакового значка.
-    i = html.find('aria-label="Подарки и условия"')
-    if i >= 0 and _kadr("ned-2"):
-        blk = find_block(html, "section", html.rfind("<section", 0, i))
-        sec = html[blk[0]:blk[3]]
-        covers = iter(("ned-5", "ned-3", "ned-1", "ned-4"))
-        row = '<div style="display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;">'
-        dot = re.compile(r'<span style="display: inline-flex; align-items: center; justify-content: center; '
-                         r'width: 30px; height: 30px; margin-top: 1px; border-radius: 50%; '
-                         r'background: linear-gradient\(160deg, #1F56A6, #143A85\); color: #FFFFFF; flex: none;">.*?</span>',
-                         re.S)
-        sec = sec.replace(row, row.replace("<div ", '<div data-podarok="" ', 1))
-        sec = dot.sub(lambda m: '<span data-oblozhka="">%s</span>' % _kadr(next(covers)), sec)
-        html = html[:blk[0]] + sec + html[blk[3]:]
-
-    # Тарифы: цена на синей плашке, как на слайдах презентации.
-    html = _theme_section(html, "Тарифы", [
-        ('<div style="border-top: 1px solid #EBDFCA; padding-top: 16px; display: flex; flex-direction: column; gap: 6px;">',
-         '<div data-cena="" style="display: flex; flex-direction: column; gap: 6px;">'),
-        ("font-size: 40px; line-height: 1; letter-spacing: -.02em; color: #18213A;",
-         "font-size: 40px; line-height: 1; letter-spacing: -.02em; color: #FFFFFF;"),
-        ('<div style="font-size: 16px; color: #465068;">$', '<div style="font-size: 16px; color: #DCE6F5;">$'),
-        ('style="font-size: 15px; color: #4A546C;">текущая', 'style="font-size: 15px; color: #F6CF7A;">текущая'),
-    ])
-
-    # Мастер-класс: Виола появляется в середине страницы, не только в начале.
-    i = html.find('aria-label="Финальный мастер-класс"')
-    img = _kadr("viola-sred", "Виола Маро на террасе")
-    if i >= 0 and img:
-        end = html.index(">", i) + 1
-        inner = html.index("<div ", end)
-        html = (html[:i] + 'data-mk="" ' + html[i:end] + '<div data-scena="viola">%s</div>' % img
-                + html[end:inner] + '<div data-mk-card="" ' + html[inner + 5:])
-
-    html = _theme_glava(html, "Что нового", "glava-novoe")
-    html = _theme_glava(html, "Программа шесть недель", "glava-nedeli")
-    html = _theme_glava(html, "Подарки и условия", "glava-podarki")
-    return html
 
 
 def _theme_modal(html):
@@ -1089,7 +1089,7 @@ def _theme_modal(html):
             " margin-top: 4px; padding-top: 18px; border-top: 1px solid rgba(251,246,236,.16);", "")
         m = m[:g[0]] + m[g[3]:]
         wb = find_block(m, "div", m.rfind("<div", 0, w))
-        card = ('<div data-modal-gifts="" style="background: ' + _SUN_CARD + '; border: 1px solid #F3C566; '
+        card = ('<div data-modal-gifts="" style="background: ' + _PANEL + '; border: 0; '
                 'border-radius: 16px; padding: clamp(20px, 3vw, 28px);">' + gifts + "</div>")
         m = m[:wb[2]] + card + m[wb[2]:]
     else:
@@ -1100,14 +1100,14 @@ def _theme_modal(html):
          "background: #FFFFFF; border: 1px solid #E2D3B6; color: #18213A;"),
         ("background: linear-gradient(165deg, #1A4A96 0%, #0F2A66 100%); border: 1px solid rgba(251,246,236,.14);",
          "background: #FFFFFF; border: 1px solid #EBDFCA;"),
-        ("color: #F0B13F;", "color: #7A4D06;"),
-        ("color: #F6CF7A", "color: #7A4D06"),
+        ("color: #F0B13F;", "color: " + _RED + ";"),
+        ("color: #F6CF7A", "color: " + _RED),
         ("color: #FBF6EC", "color: #18213A"),
         ("color: #EEF3FB", "color: #465068"),
         ("color: #D9CDB6", "color: #2B3550"),
         ("color: #1A4A96", "color: #2B3550"),
         ("background: linear-gradient(180deg, #FBE3B0, #E39A2B); color: #18213A; flex: none;",
-         "background: " + _SEA_DOT + "; color: #FFFFFF; flex: none;"),
+         "background: " + _GOLD + "; color: #143A85; flex: none;"),
     ]:
         if old not in m:
             print("  тема: в окне заявки не найдено: %s" % old[:70])
@@ -1124,17 +1124,6 @@ def apply_theme(text, path):
     if path.endswith(os.path.join("assets", "site.css")):
         text += THEME_CSS
     return text
-
-
-def theme_hero_sources():
-    """Откуда брать картинки первого экрана в теме: (настольная, телефонная или None)."""
-    def pick(name):
-        for ext in ("jpg", "jpeg", "png", "webp"):
-            p = os.path.join(THEME_DIR, "%s.%s" % (name, ext))
-            if os.path.isfile(p):
-                return p
-        return None
-    return pick("hero-desktop") or os.path.join(THEME_DIR, "fon-vremennyy.jpg"), pick("hero-mobile")
 
 
 def read(path):
@@ -1464,18 +1453,9 @@ def build_images():
     global MOBILE_WIDTHS, DESKTOP_WIDTHS
     from PIL import Image, ImageFilter
     src = os.path.join(SRC, "assets", "viola-hero.png")
-    theme_mobile = None
-    if THEME:
-        src, theme_mobile = theme_hero_sources()
     outdir = os.path.join(OUT, "assets", "img")
     os.makedirs(outdir, exist_ok=True)
-    im = Image.open(src).convert("RGB")
-    if THEME and im.size != (1672, 941):
-        # Кадр первого экрана рассчитан на 1672×941: под него стоят вырезка
-        # для телефона и привязка к лицу. Картинку другого размера приводим
-        # к нему, обрезая сверху и снизу поровну.
-        from PIL import ImageOps
-        im = ImageOps.fit(im, (1672, 941), Image.LANCZOS, centering=(0.5, 0.42))
+    im = theme_hero_image("desktop") if THEME else Image.open(src).convert("RGB")
     W, H = im.size
 
     def save(img, name, widths):
@@ -1513,29 +1493,12 @@ def build_images():
           "(эти доли — в object-position)" % (face_x, face_y))
 
     mob = crop
-    if theme_mobile:
-        # Отдельная вертикальная картинка для телефона. Ширина та же, что
-        # у вырезки, чтобы не менять набор размеров; высоту берём свою.
-        vert = Image.open(theme_mobile).convert("RGB")
-        l, t, r, b = THEME_MOBILE_CROP
-        vert = vert.crop((round(vert.width * l), round(vert.height * t),
-                          round(vert.width * r), round(vert.height * b)))
-        # Вырезка уже исходника, растягивать её до полной ширины незачем.
-        cw = 900
-        mob = vert.resize((cw, round(vert.height * cw / vert.width)), Image.LANCZOS)
+    if THEME:
+        mob = theme_hero_image("mobile")
+        cw = mob.width
 
     MOBILE_WIDTHS = (620, cw)
     save(mob, "hero-mob", MOBILE_WIDTHS)
-
-    if THEME:
-        for name in THEME_KADRY:
-            kadr = _kadr_crop(name)
-            if kadr is None:
-                print("  тема: нет исходника для кадра %s" % name)
-                continue
-            p = os.path.join(outdir, name + ".jpg")
-            kadr.save(p, quality=82, optimize=True, progressive=True)
-            made.append(p)
 
     total = sum(os.path.getsize(p) for p in made)
     print("  картинки: %d файлов, %.0f КБ" % (len(made), total / 1024))
