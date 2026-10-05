@@ -884,7 +884,7 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
 /* ── программа ── */
 
 /* Цифры программы: четыре плитки, у каждой свой цвет. */
-[data-cifry] { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px !important; }
+[data-cifry] { display: grid !important; grid-template-columns: repeat(2, minmax(0, 240px)); gap: 10px !important; }
 [data-cifry] > span {
   display: flex;
   flex-direction: column;
@@ -1407,8 +1407,11 @@ def _theme_layout(html):
     i = html.find('<div data-cifry=""')
     if i >= 0:
         blk = find_block(html, "div", i)
-        html = (html[:blk[0]] + html[blk[0]:blk[3]].replace(" ", " ").replace("&nbsp;", " ")
-                + html[blk[3]:])
+        cifry = html[blk[0]:blk[3]].replace("\u00a0", " ").replace("&nbsp;", " ")
+        # Разборов вопросов после лекций больше нет, а про доступ навсегда
+        # сказано ниже, в блоке «Каждую неделю вы получаете».
+        cifry = re.sub(r"\s*<span[^>]*><b[^>]*>(?:7|∞)</b>[^<]*</span>", "", cifry)
+        html = html[:blk[0]] + cifry + html[blk[3]:]
 
     # Мастер-класс: блок-небо на светлом фоне, без кнопки (она экраном выше).
     html = _theme_section(html, "Финальный мастер-класс", [
