@@ -320,6 +320,63 @@ THEME_DIR = os.path.join(BUILD_ASSETS, "tema-more")
 # море слева уходит.
 THEME_MOBILE_CROP = (0.40, 0.12, 1.0, 0.74)
 
+# Кадры для блоков ниже первого экрана: имя → (исходник, вырезка в долях
+# сторон: слева, сверху, справа, снизу; ширина результата). Исходники —
+# терраса из презентации (terrasa-1, terrasa-2) и горизонтальная картинка
+# с Виолой. Страница без них читалась сплошным полотном текста: одна
+# фотография на двадцать пять экранов.
+THEME_KADRY = {
+    "glava-novoe":   ("terrasa-1", (0.00, 0.02, 0.75, 0.60), 1100),   # статуя и море
+    "glava-nedeli":  ("terrasa-2", (0.05, 0.28, 0.95, 0.86), 1100),   # бухта со скалами
+    "glava-podarki": ("terrasa-2", (0.42, 0.18, 1.00, 0.88), 1000),   # солнце на воде, жасмин
+    "ned-1": ("terrasa-1", (0.00, 0.02, 0.45, 0.32), 760),            # лицо статуи
+    "ned-2": ("terrasa-2", (0.00, 0.33, 0.50, 0.70), 760),            # ваза и городок
+    "ned-3": ("terrasa-2", (0.22, 0.40, 0.72, 0.77), 760),            # скалы в море
+    "ned-4": ("terrasa-2", (0.25, 0.60, 0.80, 1.00), 760),            # кипарисы и крыши
+    "ned-5": ("terrasa-1", (0.50, 0.00, 1.00, 0.30), 760),            # ветка оливы
+    "ned-6": ("terrasa-2", (0.50, 0.30, 1.00, 0.67), 760),            # солнечная дорожка
+    "viola-sred": ("hero-desktop", (0.42, 0.00, 1.00, 1.00), 900),    # Виола в кресле
+}
+
+
+def _kadr_source(name):
+    stem = THEME_KADRY[name][0]
+    for ext in ("jpg", "jpeg", "png", "webp"):
+        p = os.path.join(THEME_DIR, "%s.%s" % (stem, ext))
+        if os.path.isfile(p):
+            return p
+    return None
+
+
+def _kadr_crop(name):
+    """Вырезанный и уменьшенный кадр или None, если исходника нет."""
+    from PIL import Image
+    src = _kadr_source(name)
+    if not src:
+        return None
+    _, (l, t, r, b), width = THEME_KADRY[name]
+    im = Image.open(src).convert("RGB")
+    im = im.crop((round(im.width * l), round(im.height * t), round(im.width * r), round(im.height * b)))
+    if im.width > width:
+        im = im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
+    return im
+
+
+_KADR_SIZE = {}
+
+
+def _kadr(name, alt=""):
+    """Тег картинки для кадра. Все кадры ниже первого экрана, поэтому
+    грузятся лениво и на скорость первого экрана не влияют."""
+    if name not in _KADR_SIZE:
+        im = _kadr_crop(name)
+        _KADR_SIZE[name] = im.size if im else (0, 0)
+    w, h = _KADR_SIZE[name]
+    if not w:
+        return ""
+    return ('<img src="/assets/img/%s.jpg" alt="%s" width="%d" height="%d" loading="lazy" decoding="async">'
+            % (name, alt, w, h))
+
 THEME_HEX = {
     # основной текст и тёмные кружки
     "#2E2521": "#18213A", "#2A211C": "#18213A", "#332B26": "#18213A", "#372B25": "#18213A",
@@ -614,6 +671,131 @@ section[aria-label="Финальный мастер-класс"] a[data-btn] { d
   }
 }
 
+/* ── картинки в блоках ── */
+
+/* Глава: фотография террасы в начале длинного блока. Низ фото закрыт
+   скруглённым краем цвета блока — тот же приём, что на первом экране. */
+[data-glava] { --pad: clamp(14px, 4vw, 40px); padding-top: 0 !important; }
+[data-scena] {
+  position: relative;
+  margin: 0 calc(-1 * var(--pad)) clamp(30px, 4.5vw, 52px);
+  height: clamp(200px, 30vw, 400px);
+  overflow: hidden;
+}
+[data-scena] img { display: block; width: 100%; height: 100%; object-fit: cover; }
+[data-scena]::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 30px;
+  background: var(--list, #FBF6EC);
+  border-radius: 30px 30px 0 0;
+}
+[data-scena="glava-novoe"] img { object-position: 0% 35%; }
+[data-scena="glava-podarki"] img { object-position: 100% 60%; }
+section[aria-label="Что нового"] { --list: #FFFFFF; }
+section[aria-label="Программа шесть недель"] { --list: #FBF7F1; }
+section[aria-label="Подарки и условия"] { --list: #F7F0E2; }
+
+/* Цифры программы плитками. */
+[data-cifry] { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px !important; }
+[data-cifry] > span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  white-space: normal !important;
+  background: #FFFFFF;
+  border: 1px solid #EBDFCA;
+  border-radius: 18px;
+  padding: 16px 16px 14px;
+  font-size: 16.5px;
+  line-height: 1.25;
+  color: #465068;
+  box-shadow: 0 12px 26px -22px rgba(24,33,58,.45);
+}
+[data-cifry] b { font-size: 40px !important; line-height: 1; letter-spacing: -.03em; color: #A86F12 !important; }
+
+/* Неделя: кадр в шапке карточки, значок стоит на его нижнем крае. */
+[data-week-photo] {
+  margin: calc(-1 * clamp(24px, 3vw, 34px)) calc(-1 * clamp(24px, 3vw, 34px)) 0;
+  height: 132px;
+  overflow: hidden;
+}
+[data-week-photo] img { display: block; width: 100%; height: 100%; object-fit: cover; }
+[data-week-head] > div:nth-child(2) { margin-top: -36px; position: relative; align-items: flex-end !important; }
+[data-week-head] > div:nth-child(2) > span:first-child { box-shadow: 0 0 0 4px #EEF4FD; }
+[data-week-head] > div:nth-child(2) > span:last-child { line-height: 1.2; padding-bottom: 1px; }
+/* Вопрос недели — сообщением, как в переписке. */
+[data-vopros] {
+  align-self: flex-start;
+  max-width: 100%;
+  background: #FFFFFF;
+  color: #18213A !important;
+  border-radius: 18px 18px 18px 5px;
+  padding: 12px 16px;
+  box-shadow: 0 8px 18px -12px rgba(24,33,58,.4);
+}
+
+/* Подарок: карточка с обложкой. */
+[data-podarok] {
+  background: #FFFFFF;
+  border: 1px solid #F0DDB0;
+  border-radius: 18px;
+  overflow: hidden;
+  grid-template-columns: 150px 1fr !important;
+  gap: 0 !important;
+  align-items: stretch !important;
+}
+[data-oblozhka] { display: block; min-height: 100%; }
+[data-oblozhka] img { display: block; width: 100%; height: 100%; object-fit: cover; }
+[data-podarok] > p { padding: 16px 18px !important; align-self: center; }
+
+/* Цена тарифа на синей плашке. */
+[data-cena] {
+  background: linear-gradient(160deg, #1F56A6 0%, #143A85 100%);
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: 0 16px 30px -20px rgba(16,47,115,.7);
+}
+
+/* Мастер-класс. Широкий экран: синяя карточка на фотографии бухты. */
+@media (min-width: 901px) {
+  [data-mk] {
+    background: #EFE3CC url("img/glava-nedeli.jpg") 50% 60% / cover no-repeat !important;
+    padding: clamp(56px, 7vw, 96px) clamp(20px, 4.5vw, 56px) !important;
+  }
+  [data-mk] > [data-scena] { display: none; }
+  [data-mk-card] {
+    background: linear-gradient(160deg, #2A6DB8 0%, #1A4A96 55%, #143A85 100%);
+    border-radius: 32px;
+    padding: clamp(30px, 3.4vw, 48px);
+    max-width: min(560px, 48vw) !important;
+    margin: 0 auto 0 max(0px, calc((100% - 1128px) / 2)) !important;
+    box-shadow: 0 34px 70px -34px rgba(13,36,92,.7);
+  }
+}
+/* Телефон: фотография Виолы, под ней синий лист с текстом. */
+@media (max-width: 900px) {
+  [data-mk] { padding: 0 !important; background: #143A85 !important; }
+  [data-mk] > [data-scena] { margin: 0; height: clamp(250px, 68vw, 460px); --list: #1E53A3; }
+  [data-mk] > [data-scena] img { object-position: 50% 16%; }
+  [data-mk-card] {
+    max-width: none !important;
+    background: linear-gradient(180deg, #1E53A3 0%, #143A85 100%);
+    padding: 6px 20px 46px;
+    margin-top: -1px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  [data-glava] { --pad: 20px; }
+  [data-scena] { height: clamp(190px, 54vw, 320px); }
+  [data-cifry] { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  [data-podarok] { display: block !important; }
+  [data-oblozhka] { height: 112px; min-height: 0; }
+  [data-podarok] > p { padding: 14px 16px 16px !important; }
+}
+
 /* Окно заявки. */
 #lead-modal h2 { font-size: clamp(25px, 3.2vw, 34px) !important; line-height: 1.14 !important; }
 #lead-modal [data-close-form] { min-height: 46px; }
@@ -631,7 +813,7 @@ section[aria-label="Финальный мастер-класс"] a[data-btn] { d
 
 @media (max-width: 760px) {
   /* Поля по бокам 20 px вместо 15: текст не упирается в край экрана. */
-  main > section:not([aria-label="Первый экран"]):not([data-final]) { padding-left: 20px !important; padding-right: 20px !important; }
+  main > section:not([aria-label="Первый экран"]):not([data-final]):not([data-mk]) { padding-left: 20px !important; padding-right: 20px !important; }
 
   /* Заголовки блоков: 38 px рвали длинную фразу на пять строк. */
   main h2 { font-size: 33px !important; line-height: 1.14 !important; }
@@ -803,7 +985,91 @@ def _theme_layout(html):
         ("letter-spacing: .1em; text-transform: uppercase;", "letter-spacing: 0;"),
         ("box-shadow: 0 16px 30px -14px rgba(190,30,35,.62);", "box-shadow: inset 0 0 0 2px #143A85;"),
     ])
+    html = _theme_kartinki(html)
     return _theme_modal(html)
+
+
+def _theme_glava(html, label, kadr, extra=""):
+    """Фотография-окно в начале блока: вставляется первой в секцию."""
+    i = html.find('aria-label="%s"' % label)
+    img = _kadr(kadr)
+    if i < 0 or not img:
+        return html
+    end = html.index(">", i) + 1
+    return (html[:i] + 'data-glava="" ' + extra + html[i:end]
+            + '<div data-scena="%s">%s</div>' % (kadr, img) + html[end:])
+
+
+def _theme_kartinki(html):
+    """Картинки и плитки в блоках ниже первого экрана. Тексты те же;
+    меняется подача: фотография в начале главы, свой кадр у каждой недели,
+    вопрос недели сообщением, цифры плитками, цена на синей плашке."""
+    counter = [0]
+
+    # Недели: кадр в шапке карточки, вопрос недели как сообщение.
+    def week_head(m):
+        counter[0] += 1
+        return (m.group(0)[:-1].replace("<div ", '<div data-week-head="" ', 1) + ">"
+                + '<div data-week-photo="">%s</div>' % _kadr("ned-%d" % counter[0]))
+    head = ('<div style="background: linear-gradient(165deg, #EEF4FD 0%, #DCE8F9 100%); '
+            'padding: clamp(24px, 3vw, 34px); display: flex; flex-direction: column; gap: 14px; color: #18213A;">')
+    if _kadr("ned-1"):
+        html = re.sub(re.escape(head), week_head, html)
+    html = html.replace('<p style="margin: 0; font-size: 17px; line-height: 1.45; color: #3D4864;">«',
+                        '<p data-vopros="" style="margin: 0; font-size: 17px; line-height: 1.45; color: #3D4864;">«')
+
+    html = _theme_section(html, "Программа шесть недель", [
+        # «6 лекций, 18 техник…» — плитками с крупной цифрой
+        ('<div style="display: flex; flex-wrap: wrap; gap: 12px 26px; font-size: 17px; color: #465068;">',
+         '<div data-cifry="" style="display: flex; flex-wrap: wrap; gap: 12px 26px; font-size: 17px; color: #465068;">'),
+    ])
+
+    # В плитке подпись должна переноситься: неразрывный пробел в «разборов
+    # вопросов» выталкивал её за край на экране 360 px.
+    i = html.find('<div data-cifry=""')
+    if i >= 0:
+        blk = find_block(html, "div", i)
+        html = (html[:blk[0]] + html[blk[0]:blk[3]].replace("\u00a0", " ").replace("&nbsp;", " ")
+                + html[blk[3]:])
+
+    # Подарки: у каждого своя обложка вместо одинакового значка.
+    i = html.find('aria-label="Подарки и условия"')
+    if i >= 0 and _kadr("ned-2"):
+        blk = find_block(html, "section", html.rfind("<section", 0, i))
+        sec = html[blk[0]:blk[3]]
+        covers = iter(("ned-5", "ned-3", "ned-1", "ned-4"))
+        row = '<div style="display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;">'
+        dot = re.compile(r'<span style="display: inline-flex; align-items: center; justify-content: center; '
+                         r'width: 30px; height: 30px; margin-top: 1px; border-radius: 50%; '
+                         r'background: linear-gradient\(160deg, #1F56A6, #143A85\); color: #FFFFFF; flex: none;">.*?</span>',
+                         re.S)
+        sec = sec.replace(row, row.replace("<div ", '<div data-podarok="" ', 1))
+        sec = dot.sub(lambda m: '<span data-oblozhka="">%s</span>' % _kadr(next(covers)), sec)
+        html = html[:blk[0]] + sec + html[blk[3]:]
+
+    # Тарифы: цена на синей плашке, как на слайдах презентации.
+    html = _theme_section(html, "Тарифы", [
+        ('<div style="border-top: 1px solid #EBDFCA; padding-top: 16px; display: flex; flex-direction: column; gap: 6px;">',
+         '<div data-cena="" style="display: flex; flex-direction: column; gap: 6px;">'),
+        ("font-size: 40px; line-height: 1; letter-spacing: -.02em; color: #18213A;",
+         "font-size: 40px; line-height: 1; letter-spacing: -.02em; color: #FFFFFF;"),
+        ('<div style="font-size: 16px; color: #465068;">$', '<div style="font-size: 16px; color: #DCE6F5;">$'),
+        ('style="font-size: 15px; color: #4A546C;">текущая', 'style="font-size: 15px; color: #F6CF7A;">текущая'),
+    ])
+
+    # Мастер-класс: Виола появляется в середине страницы, не только в начале.
+    i = html.find('aria-label="Финальный мастер-класс"')
+    img = _kadr("viola-sred", "Виола Маро на террасе")
+    if i >= 0 and img:
+        end = html.index(">", i) + 1
+        inner = html.index("<div ", end)
+        html = (html[:i] + 'data-mk="" ' + html[i:end] + '<div data-scena="viola">%s</div>' % img
+                + html[end:inner] + '<div data-mk-card="" ' + html[inner + 5:])
+
+    html = _theme_glava(html, "Что нового", "glava-novoe")
+    html = _theme_glava(html, "Программа шесть недель", "glava-nedeli")
+    html = _theme_glava(html, "Подарки и условия", "glava-podarki")
+    return html
 
 
 def _theme_modal(html):
@@ -1260,6 +1526,16 @@ def build_images():
 
     MOBILE_WIDTHS = (620, cw)
     save(mob, "hero-mob", MOBILE_WIDTHS)
+
+    if THEME:
+        for name in THEME_KADRY:
+            kadr = _kadr_crop(name)
+            if kadr is None:
+                print("  тема: нет исходника для кадра %s" % name)
+                continue
+            p = os.path.join(outdir, name + ".jpg")
+            kadr.save(p, quality=82, optimize=True, progressive=True)
+            made.append(p)
 
     total = sum(os.path.getsize(p) for p in made)
     print("  картинки: %d файлов, %.0f КБ" % (len(made), total / 1024))
