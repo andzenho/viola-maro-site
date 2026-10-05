@@ -293,6 +293,168 @@ for i, w in enumerate(WEEKS):
 
 # ─────────────────────────────────────────────── парсинг шаблона .dc.html ──
 
+
+# ───────────────────────────────────────── тестовое оформление «море» ──
+#
+# Включается флагом --theme more. Наполнение, формы, цены и скрипты те же:
+# сборщик собирает обычную страницу, а в самом конце перекрашивает её
+# и добавляет небольшой слой стилей. Действующие страницы собираются
+# без флага и от этого блока не зависят.
+#
+# Откуда вид. Тест 2.0: небо, сливочная бумага, золото, красная кнопка,
+# чернильно-синий текст. Презентация от 25.09: средиземноморская терраса
+# на первом экране, кремовые карточки, тёмно-синие заголовки.
+#
+# Картинки первого экрана лежат в build-assets/tema-more/:
+#   hero-desktop.jpg|png  — горизонтальная, Виола в правой трети кадра
+#   hero-mobile.jpg|png   — вертикальная для телефона
+# Пока их нет, берётся fon-vremennyy.jpg — фон из презентации, отражённый
+# по горизонтали, чтобы скульптура стояла там, где встанет Виола.
+
+THEME = ""
+THEME_DIR = os.path.join(BUILD_ASSETS, "tema-more")
+
+THEME_HEX = {
+    # основной текст и тёмные кружки
+    "#2E2521": "#18213A", "#2A211C": "#18213A", "#332B26": "#18213A", "#372B25": "#18213A",
+    # тёмные заливки → небо, от глубокого к светлому
+    "#211A16": "#0F2A66", "#241C18": "#0F2A66", "#2B211C": "#102F73",
+    "#2E2420": "#143A85", "#33271F": "#143A85", "#3B2E28": "#1A4A96",
+    "#4A392F": "#1F56A6", "#4E3C31": "#1F56A6", "#46362D": "#1F56A6", "#4A3A31": "#2A6DB8",
+    # второстепенный текст
+    "#5C5149": "#465068", "#574C44": "#465068", "#6E6158": "#5F687E", "#776B61": "#5F687E",
+    "#7D7167": "#5F687E", "#9A9088": "#5F687E", "#B8AA9C": "#9AA3B5", "#C9BCAD": "#B9C2D3",
+    # бронза → золото: тёмное для подписей на светлом, яркое для заливок и линий
+    "#8A5A2B": "#9A6410", "#A3835F": "#B07A1E", "#6B4E2C": "#7A4E0A",
+    "#C9A87F": "#F0B13F", "#C29A6C": "#E39A2B", "#D9BC92": "#F3C566", "#E9C98F": "#F6CF7A",
+    "#F0DCBB": "#FBE3B0", "#EDD9B8": "#FBE3B0", "#F7EBD8": "#FDF1D9", "#F0E2CE": "#F8E6C6",
+    # бумага и линии
+    "#F6F0E8": "#FBF6EC", "#F6EFE5": "#FBF6EC", "#F3EBE0": "#F4ECDD", "#F5EFE6": "#F7F0E2",
+    "#EFE6DA": "#F4ECDD", "#F1EAE0": "#F4ECDD", "#F1E8DA": "#F4ECDD", "#F4EDE3": "#F7F0E2",
+    "#EDE4D8": "#F1E8D8", "#E9DFD2": "#EFE4D2", "#E4DACD": "#EBDFCA", "#EBDECB": "#EBDFCA",
+    "#E7DAC8": "#EBDFCA", "#DCD1C4": "#D9CDB6", "#DCCFBC": "#D9CDB6",
+    "#E6DCCF": "#EEF3FB",                      # светлый текст на тёмном
+    # зелёные галочки тарифов → синий
+    "#5A7A55": "#1F4C97",
+}
+
+THEME_RGB = {
+    (60, 48, 40): (24, 33, 58), (60, 45, 32): (24, 33, 58),
+    (18, 12, 8): (8, 20, 56), (24, 18, 14): (10, 28, 74),
+    (30, 23, 19): (13, 36, 92), (30, 22, 18): (13, 36, 92), (36, 28, 24): (15, 42, 102),
+    (43, 33, 28): (16, 47, 115), (42, 33, 28): (16, 47, 115), (59, 46, 40): (26, 74, 150),
+    (201, 168, 127): (240, 177, 63), (194, 154, 108): (227, 154, 43),
+    (240, 220, 187): (251, 227, 176), (240, 226, 206): (248, 230, 198),
+    (120, 90, 50): (154, 100, 16), (120, 86, 50): (154, 100, 16), (138, 90, 43): (154, 100, 16),
+    (163, 131, 95): (176, 122, 30),
+    (228, 218, 205): (235, 223, 202), (246, 240, 232): (251, 246, 236),
+}
+
+# Кнопки. В прежнем виде их три: тёмная, бежевая и светлая «В рассрочку».
+# В новом главная кнопка одна — красная, как в тесте 2.0; вторая спокойная.
+_BTN_PRIMARY = ("#4A392F", "#4E3C31", "#F0DCBB")
+_BTN_QUIET = ("#F7EBD8",)
+_BTN_RED = "linear-gradient(135deg, #DA352C 0%, #B3161F 100%)"
+
+
+def _theme_buttons(html):
+    def fix(m):
+        tag, style = m.group(0), m.group(2)
+        if "border-radius: 999px" not in style or "linear-gradient" not in style:
+            return tag
+        kind = ("primary" if any(c in style for c in _BTN_PRIMARY)
+                else "quiet" if any(c in style for c in _BTN_QUIET) else "")
+        if not kind:
+            return tag
+        if kind == "primary":
+            style = re.sub(r"background:\s*linear-gradient\([^;]*", "background: " + _BTN_RED, style, count=1)
+            style = re.sub(r"(?<![-\w])color:\s*#[0-9A-Fa-f]{6}", "color: #FFFFFF", style, count=1)
+            style = re.sub(r"box-shadow:[^;]*", "box-shadow: 0 16px 30px -14px rgba(190,30,35,.62)", style, count=1)
+        else:
+            style = re.sub(r"background:\s*linear-gradient\([^;]*", "background: #F4ECDD", style, count=1)
+            style = re.sub(r"(?<![-\w])color:\s*#[0-9A-Fa-f]{6}", "color: #18213A", style, count=1)
+        return '%sdata-btn="%s" style="%s"' % (m.group(1), kind, style)
+    return re.sub(r'(<(?:a|button)\b[^>]*?)style="([^"]*)"', fix, html)
+
+
+def _theme_colors(text):
+    def hx(m):
+        return THEME_HEX.get(m.group(0).upper(), m.group(0))
+    text = re.sub(r"#[0-9A-Fa-f]{6}\b", hx, text)
+
+    def rgb(m):
+        key = (int(m.group(2)), int(m.group(3)), int(m.group(4)))
+        if key not in THEME_RGB:
+            return m.group(0)
+        r, g, b = THEME_RGB[key]
+        return "%s%d,%d,%d" % (m.group(1), r, g, b)
+    return re.sub(r"(rgba?\(\s*)(\d+)\s*,\s*(\d+)\s*,\s*(\d+)", rgb, text)
+
+
+THEME_CSS = """
+
+/* ─────────────────────────────── тестовое оформление «море» (--theme more) ── */
+
+/* Первый экран: вуаль синяя и легче прежней. Картинка светлая, её должно
+   быть видно; затемняется только та часть, на которой лежит текст. */
+[data-hero-veil] {
+  background: linear-gradient(100deg,
+    rgba(13,36,92,.88) 0%, rgba(13,36,92,.74) 24%,
+    rgba(16,47,115,.36) 44%, rgba(16,47,115,0) 62%) !important;
+}
+[data-hero-veil] + [data-hero-veil] {
+  background: linear-gradient(to top,
+    rgba(13,36,92,.76) 0%, rgba(13,36,92,.36) 26%, rgba(13,36,92,0) 50%) !important;
+}
+@media (max-width: 760px) {
+  [data-hero-veil] {
+    background: linear-gradient(to bottom,
+      rgba(13,36,92,.80) 0%, rgba(13,36,92,.50) 20%, rgba(13,36,92,0) 40%) !important;
+  }
+  [data-hero-veil] + [data-hero-veil] {
+    background: linear-gradient(to top,
+      rgba(13,36,92,.92) 0%, rgba(13,36,92,.78) 30%,
+      rgba(13,36,92,.30) 50%, rgba(13,36,92,0) 66%) !important;
+  }
+}
+
+/* Главный заголовок — тем же гротеском, что и остальные заголовки страницы
+   и заголовки теста 2.0. Антиква оставалась только здесь. */
+[data-hero-copy] h1 {
+  font-family: 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -.035em !important;
+  text-shadow: 0 2px 26px rgba(8,20,56,.5) !important;
+}
+[data-hero-copy] p { text-shadow: 0 2px 20px rgba(8,20,56,.7) !important; }
+
+/* Главная кнопка: стрелка в полупрозрачном круге, а не в тёмном. */
+[data-btn="primary"] > span { background: rgba(255,255,255,.2) !important; color: #FFFFFF !important; }
+[data-btn="primary"]:hover { filter: brightness(1.06); }
+[data-btn="quiet"] { box-shadow: inset 0 0 0 1px #EBDFCA !important; }
+"""
+
+
+def apply_theme(text, path):
+    if path.endswith(".html"):
+        text = _theme_buttons(text)
+    text = _theme_colors(text)
+    if path.endswith(os.path.join("assets", "site.css")):
+        text += THEME_CSS
+    return text
+
+
+def theme_hero_sources():
+    """Откуда брать картинки первого экрана в теме: (настольная, телефонная или None)."""
+    def pick(name):
+        for ext in ("jpg", "jpeg", "png", "webp"):
+            p = os.path.join(THEME_DIR, "%s.%s" % (name, ext))
+            if os.path.isfile(p):
+                return p
+        return None
+    return pick("hero-desktop") or os.path.join(THEME_DIR, "fon-vremennyy.jpg"), pick("hero-mobile")
+
+
 def read(path):
     with open(path, encoding="utf-8") as f:
         return f.read()
@@ -300,6 +462,8 @@ def read(path):
 
 def write(path, text):
     os.makedirs(os.path.dirname(path), exist_ok=True)
+    if THEME and path.endswith((".html", ".css")):
+        text = apply_theme(text, path)
     with open(path, "w", encoding="utf-8") as f:
         f.write(apply_base(text))
 
@@ -618,9 +782,18 @@ def build_images():
     global MOBILE_WIDTHS, DESKTOP_WIDTHS
     from PIL import Image, ImageFilter
     src = os.path.join(SRC, "assets", "viola-hero.png")
+    theme_mobile = None
+    if THEME:
+        src, theme_mobile = theme_hero_sources()
     outdir = os.path.join(OUT, "assets", "img")
     os.makedirs(outdir, exist_ok=True)
     im = Image.open(src).convert("RGB")
+    if THEME and im.size != (1672, 941):
+        # Кадр первого экрана рассчитан на 1672×941: под него стоят вырезка
+        # для телефона и привязка к лицу. Картинку другого размера приводим
+        # к нему, обрезая сверху и снизу поровну.
+        from PIL import ImageOps
+        im = ImageOps.fit(im, (1672, 941), Image.LANCZOS, centering=(0.5, 0.42))
     W, H = im.size
 
     def save(img, name, widths):
@@ -658,6 +831,11 @@ def build_images():
           "(эти доли — в object-position)" % (face_x, face_y))
 
     mob = crop
+    if theme_mobile:
+        # Отдельная вертикальная картинка для телефона. Ширина та же, что
+        # у вырезки, чтобы не менять набор размеров; высоту берём свою.
+        vert = Image.open(theme_mobile).convert("RGB")
+        mob = vert.resize((cw, round(vert.height * cw / vert.width)), Image.LANCZOS)
 
     MOBILE_WIDTHS = (620, cw)
     save(mob, "hero-mob", MOBILE_WIDTHS)
@@ -2228,7 +2406,7 @@ def build_pre_redirect():
 
 
 def parse_args(argv):
-    global BASE, NOINDEX, MODE, OUT, DOCS_ROOT, CNAME, TILDA_OUT
+    global BASE, NOINDEX, MODE, OUT, DOCS_ROOT, CNAME, TILDA_OUT, THEME
     i = 0
     while i < len(argv):
         a = argv[i]
@@ -2256,6 +2434,11 @@ def parse_args(argv):
             TILDA_OUT = argv[i]
         elif a == "--noindex":
             NOINDEX = True
+        elif a == "--theme":
+            i += 1
+            THEME = argv[i]
+            if THEME != "more":
+                sys.exit("оформление бывает только more, получено: %s" % THEME)
         else:
             sys.exit("неизвестный аргумент: %s" % a)
         i += 1
@@ -2274,6 +2457,8 @@ def main():
         print("  подпуть: %s" % BASE)
     if NOINDEX:
         print("  индексация запрещена")
+    if THEME:
+        print("  оформление: %s (тестовое)" % THEME)
     copy_fonts()
     if MODE == "neudobnye":
         build_geroy_photo()
