@@ -32,21 +32,26 @@ jobs:
       - name: Установить Pillow
         run: pip install --quiet pillow
 
+      # Три страницы, где принимаются деньги, собираются в новом оформлении:
+      # полная оплата (/), бронь (/bron) и внутренняя рассрочка (/rassrochka).
       - name: Собрать сайт с оплатой
-        run: python3 build.py --noindex
+        run: python3 build.py --theme more --noindex
 
       - name: Собрать редирект со старой страницы /pre
         run: python3 build.py --mode pre --out site/pre --base /pre --noindex
 
       - name: Собрать страницу брони
-        run: python3 build.py --mode bron --out site/bron --base /bron --noindex
+        run: python3 build.py --mode bron --theme more --out site/bron --base /bron --noindex
+
+      - name: Собрать страницу внутренней рассрочки
+        run: python3 build.py --mode rassrochka --theme more --out site/rassrochka --base /rassrochka --docs-root --noindex
 
       - name: Собрать страницу заявки
         run: python3 build.py --mode zayavka --out site/zayavka --base /zayavka --noindex
 
-      # Тестовая страница нового оформления. На неё нет ссылок, индексация
-      # запрещена; действующие страницы она не затрагивает.
-      - name: Собрать тестовую страницу нового оформления
+      # Прежний адрес тестовой страницы нового оформления: та же сборка,
+      # что и главная. Оставлен, чтобы разосланная ссылка не сломалась.
+      - name: Собрать копию главной по адресу /dizayn
         run: python3 build.py --theme more --out site/dizayn --base /dizayn --docs-root --noindex
 
       - name: Добавить мини-аппы
