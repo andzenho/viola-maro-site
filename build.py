@@ -877,6 +877,44 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
 }
 [data-mat] > div > div > span:first-child { width: 36px !important; height: 36px !important; margin-top: 0 !important; font-size: 14px !important; }
 
+/* Новый формат ответов на вопросы: золотой блок с маленькой сценкой —
+   вопрос человека и аудиоответ Виолы. */
+[data-otvety] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 26px 22px 24px;
+  border-radius: 24px;
+  background: var(--zoloto);
+  color: #18213A;
+  box-shadow: 0 24px 44px -28px rgba(214,140,30,.85);
+}
+[data-otvety] > [data-tag] { background: #FFFFFF; font-style: normal; }
+[data-o-title] {
+  margin: 0;
+  font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: clamp(44px, 5vw, 66px);
+  font-weight: 700;
+  line-height: .96;
+  letter-spacing: .005em;
+  text-transform: uppercase;
+  color: #18213A;
+}
+[data-o-title]::first-line { color: #143A85; }
+[data-o-text] { margin: 0; font-size: 20px; font-weight: 600; line-height: 1.4; color: #18213A; }
+[data-o-scena] { align-self: stretch; display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+[data-audio] { background: #FFFFFF; }
+[data-wave] { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+[data-wave] > span {
+  flex: none;
+  display: flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: var(--sky); color: #FFFFFF;
+}
+[data-wave] > i { flex: 1; min-width: 0; display: flex; align-items: center; gap: 3px; height: 30px; overflow: hidden; }
+[data-wave] > i b { flex: none; width: 3px; border-radius: 2px; background: #1F4C97; opacity: .55; }
+
 /* ── программа ── */
 
 /* Цифры программы: четыре плитки, у каждой свой цвет. */
@@ -1220,6 +1258,25 @@ _THEME_NEDELYA = (
     '</div>')
 
 
+# Новый формат ответов на вопросы. Слова заданы здесь: блок есть только
+# в тестовом оформлении. Сценка с вопросом и аудиоответом — украшение,
+# читалкам экрана она не озвучивается.
+_THEME_OTVETY = (
+    '<div data-otvety="">'
+    '<em data-tag="">Только на&nbsp;тарифе «С&nbsp;Виолой»</em>'
+    '<h3 data-o-title="">Формат ответов на&nbsp;вопросы <br>пересобран полностью</h3>'
+    '<p data-o-text="">Чтобы каждый получил ответ на&nbsp;свой вопрос от&nbsp;Виолы в&nbsp;формате аудио.</p>'
+    '<div data-o-scena="" aria-hidden="true">'
+    '<p data-vopros="">«Почему мной пользуются?»</p>'
+    '<div data-msg=""><span data-ava="">В</span><div data-bubble="" data-audio="">'
+    '<b data-who="">Виола Маро</b><div data-wave=""><span>'
+    + _ikonka('<path d="M9 6v12l9.5-6z" fill="currentColor" stroke="none"/>') + '</span><i>'
+    + "".join('<b style="height: %dpx"></b>' % h for h in
+              (8, 14, 22, 12, 18, 26, 16, 10, 20, 28, 14, 8, 18, 24, 12, 20, 10, 16, 26, 14, 8, 12, 22, 16, 10, 18, 12, 8))
+    + '</i></div></div></div>'
+    '</div></div>')
+
+
 def _theme_section_re(html, label, pattern, repl, flags=0):
     """То же, что _theme_section, но заменой по регулярному выражению."""
     i = html.find('aria-label="%s"' % label)
@@ -1337,8 +1394,6 @@ def _theme_layout(html):
     html = _theme_section(html, "Что нового", [
         # заголовок вопросом
         ("с&nbsp;прошлыми потоками</h2>", "с&nbsp;прошлыми потоками?</h2>"),
-        # про группы по двадцать человек больше не говорим
-        ("Поток делится на&nbsp;группы по&nbsp;двадцать человек. ", ""),
         ("background: radial-gradient(90% 60% at 88% 0%, rgba(240,177,63,.2) 0%, rgba(240,177,63,0) 58%), "
          "linear-gradient(165deg, #1F56A6 0%, #18213A 48%, #0F2A66 100%);",
          "background: linear-gradient(180deg, #FFFFFF 0%, #FBF6EC 100%);"),
@@ -1356,8 +1411,13 @@ def _theme_layout(html):
          'border: 1px solid rgba(240,177,63,.34);', '<div data-mat="" style="background: ' + _SKY + '; border: 0;'),
         ("background: linear-gradient(160deg, #FBE3B0, #E39A2B); color: #18213A; font-size: 12px;",
          "background: " + _GOLD + "; color: #143A85; font-size: 12px;"),
-        ("с&nbsp;личной PDF-методичкой", 'с&nbsp;личной <span style="white-space: nowrap;">PDF-методичкой</span>'),
     ])
+
+    # Под материалами — выделенный блок про новый формат ответов на вопросы.
+    i = html.find('<div data-mat=""')
+    if i >= 0:
+        blk = find_block(html, "div", i)
+        html = html[:blk[3]] + _THEME_OTVETY + html[blk[3]:]
 
     html = _theme_section(html, "Программа шесть недель", [
         ('<div style="display: flex; flex-wrap: wrap; gap: 12px 26px; font-size: 17px; color: #465068;">',
@@ -2111,8 +2171,6 @@ ICON_GIFT = ('<span style="display: inline-flex; align-items: center; justify-co
 PRE_FOR_REQUEST = [
     ("Закрытый канал Виолы",
      "подкасты и материалы, которых нет в открытом доступе. Новое вы видите там первыми."),
-    ("Самая выгодная цена",
-     "она закрепляется за&nbsp;вами до&nbsp;26&nbsp;сентября."),
     ("Право сказать, что включить в программу",
      "в канале спросим, чего вам не хватает, и соберём из ваших ответов часть программы."),
     ("Разговор с командой Виолы Маро",
@@ -2367,7 +2425,6 @@ def benefits_screen(include_request=True):
 
     <div style="align-self: center; max-width: 54ch; text-align: center; display: flex; flex-direction: column; gap: 8px;">
       <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #2E2521;">Оплату оформляет команда: после заявки она свяжется с&nbsp;вами.</p>
-      <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #5C5149;">С 27 сентября цена становится выше.</p>
     </div>
 
     %(cta)s
@@ -2837,7 +2894,7 @@ def build_landing():
         # человека один на один с платёжной формой.
         for old, new, expect in (
             ("Принять участие", "Оставить заявку", 7),
-            (">Оплатить", ">Оставить заявку", 2),
+            (">Полная оплата", ">Оставить заявку", 2),
             (">В рассрочку", ">Хочу в рассрочку", 2),
         ):
             if tpl.count(old) != expect:
@@ -2858,12 +2915,15 @@ def build_landing():
         tpl = tpl.replace(
             "В «С Виолой» пятьдесят мест. Оставьте заявку&nbsp;— откроется чат "
             "с&nbsp;командой: ответим на&nbsp;вопросы и&nbsp;поможем оплатить безопасно.",
-            "Продажи открыты. Самая выгодная цена держится до 26 сентября, "
-            "дальше она вырастет. После заявки с вами свяжется команда Виолы "
+            "Продажи открыты. После заявки с вами свяжется команда Виолы "
             "и расскажет подробнее про программу.")
 
+    # На странице оплаты стоял прошедший срок закрытия продаж. Новая дата
+    # не назначена: строку убираем, а не оставляем неверную.
+    tpl = re.sub(r"\s*<p[^>]*>Продажи закрываются 29(?:&nbsp;|\u00a0| )сентября[^<]*</p>", "", tpl)
+
     if MODE in ("pay", "zayavka"):
-        tpl = insert_before_screen(tpl, "02 Зачем мне это", TIMER_SCREEN)
+        # Полосы «До повышения цены» со счётчиком больше нет: цена не растёт.
         tpl = insert_before_screen(tpl, "11 Финальный призыв",
                                    benefits_screen(MODE == "zayavka"))
 
