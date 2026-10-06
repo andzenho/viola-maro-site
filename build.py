@@ -119,6 +119,9 @@ TILDA_OUT = ""
 # копией файлов это делать нельзя: правки разъедутся на первой же неделе.
 # "rassrochka" — та же продажа, но по внутренней рассрочке: на странице
 # вносится половина стоимости тарифа. "bron" — короткая страница брони.
+# "predzapis" — анкета предзаписи: без цен и оплаты, после анкеты
+# открывается закрытый канал. Это прежний сайт предзаписи (/pre) в новом
+# наполнении; сам адрес /pre остаётся редиректом на заявку.
 MODE = "pay"
 
 # ── Оплата: два способа на каждой странице ──────────────────────────────
@@ -737,6 +740,56 @@ br[data-tel] { display: none; }
   }
 }
 
+/* Анкета предзаписи: метка над названием и список «что даёт предзапись»
+   в карточке под фотографией. */
+[data-h2-tag] {
+  padding: 7px 16px 8px;
+  border-radius: 999px;
+  background: var(--zoloto);
+  color: #18213A;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+[data-h2-tag] + [data-h2-title] { margin-top: 0; }
+[data-h2-pod] {
+  margin: 0;
+  max-width: 320px;
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: rgba(255,255,255,.95);
+  text-wrap: balance;
+}
+[data-hero-stage] [data-hero-card] p[data-hero-pod] { color: #2B3550 !important; font-size: 16.5px !important; font-weight: 600 !important; }
+[data-h2-chto] { margin: 12px 0 0; font-size: 23px; font-weight: 700; line-height: 1.2; letter-spacing: -.02em; color: #18213A; }
+[data-h2-besplatno] { margin: 0; font-size: 16.5px; line-height: 1.45; color: #465068; }
+[data-h2-list] { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+[data-h2-list] li {
+  position: relative;
+  padding: 15px 16px 15px 58px;
+  border-radius: 18px;
+  background: #FFFFFF;
+  box-shadow: var(--ten);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #18213A;
+}
+[data-h2-list] li::before {
+  content: "";
+  position: absolute; left: 16px; top: 50%;
+  width: 28px; height: 28px; margin-top: -14px; border-radius: 50%;
+  background: #D22B2B;
+}
+[data-h2-list] li::after {
+  content: "";
+  position: absolute; left: 26.5px; top: 50%;
+  width: 6px; height: 12px; margin-top: -8.5px;
+  border: solid #FFFFFF; border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+}
+
 /* ── общее ── */
 
 /* Подписи прописными с разрядкой переводятся в обычный регистр. */
@@ -758,6 +811,10 @@ main [style*="text-transform: uppercase"][style*="color: #B01E22"] {
   white-space: nowrap;
 }
 [data-tag="siniy"] { background: #1F4C97; color: #FFFFFF !important; border-radius: 10px; }
+
+/* Сетка карточек «Что входит» просила колонки не уже 400 px и на телефоне
+   вылезала за край экрана. */
+main [style*="minmax(400px, 1fr)"] { grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)) !important; }
 
 /* Скругления по роли. */
 main [style*="border-radius: 14px"], main [style*="border-radius: 16px"] { border-radius: 24px !important; }
@@ -1441,6 +1498,13 @@ def _theme_hero_phone(html):
     if not (title and promise and cta):
         print("  тема: первый экран для телефона не собран, не найдены его части")
         return html
+    # На странице предзаписи надзаголовок начинается с плашки «Анкета
+    # предзаписи»: на телефоне она встаёт меткой над названием.
+    tag = ""
+    pill = re.match(r"\s*<b[^>]*>([^<]+)</b>\s*<span>(.*?)</span>\s*$", eyebrow, re.S)
+    if pill:
+        tag = pill.group(1).strip()
+        eyebrow = re.sub(r"^на(?:\s|&nbsp;|\u00a0)+", "", pill.group(2).strip())
     weeks = re.search(r"(\d+)-недельн", eyebrow)
     name = re.sub(r"\s*<br\s*/?>\s*", " ", title)
     # Размер названия считается от самого длинного слова: «Прикладная» —
@@ -1458,23 +1522,36 @@ def _theme_hero_phone(html):
         if weeks:
             chips += '<em aria-hidden="true"></em><span><i>Длительность:</i><b>%s&nbsp;недель</b></span>' % weeks.group(1)
         chips = '<div data-h2-chips="">%s</div>' % chips
+    # Карточка под фотографией — оффер практикума, на всех страницах.
+    card = ('<p data-h2-name="">%s&nbsp;—</p>' % name
+            + '<p data-h2-def="">это практикум, на&nbsp;котором вы <b>%s</b></p>'
+              % (promise[:1].lower() + promise[1:])
+            + ('<p data-h2-note="">%s</p>' % note if note else ""))
+    # У анкеты предзаписи ниже оффера стоит ответ на вопрос «что я получу»:
+    # три пункта из блока «Что даёт предзапись».
+    if MODE == "predzapis":
+        card += ('<p data-h2-chto="">Что даёт предзапись?</p>'
+                 '<ul data-h2-list="">'
+                 + "".join("<li>%s</li>" % t for t, _tail in PRE_FOR_REQUEST)
+                 + "</ul>"
+                 '<p data-h2-besplatno="">Анкета бесплатна и&nbsp;ни&nbsp;к&nbsp;чему не&nbsp;обязывает.</p>')
+    pod = grab(r'<p data-hero-pod=""[^>]*>(.*?)</p>')
     block = (
         '<div data-h2="">'
         '<div data-h2-top="">' + chips
+        + ('<span data-h2-tag="">%s</span>' % tag if tag else "")
         + '<p data-h2-title="" role="heading" aria-level="1" style="--bukv: %d;">%s</p>' % (longest, title)
         + ('<p data-h2-sub="">%s</p>' % eyebrow if eyebrow else "")
         + cta.group(0)
+        # Под кнопкой анкеты сразу сказано, что будет после неё.
+        + ('<p data-h2-pod="">%s</p>' % pod if pod else "")
         + '</div>'
         '<div data-h2-photo="">'
         '<img data-h2-fon="" src="/assets/img/terrasa.jpg" alt="" width="900" height="1000" decoding="async">'
         '<img data-h2-viola="" src="/assets/img/viola.webp" alt="Виола Маро" width="901" height="1202" '
         'fetchpriority="high" decoding="async">'
         '</div>'
-        '<div data-h2-card="">'
-        '<p data-h2-name="">%s&nbsp;—</p>' % name
-        + '<p data-h2-def="">это практикум, на&nbsp;котором вы <b>%s</b></p>' % (promise[:1].lower() + promise[1:])
-        + ('<p data-h2-note="">%s</p>' % note if note else "")
-        + '</div></div>')
+        '<div data-h2-card="">' + card + '</div></div>')
     # Кадр широкого экрана на телефоне скрыт; чтобы он там не скачивался,
     # картинка грузится лениво.
     sec = sec.replace('fetchpriority="high" decoding="async">', 'loading="lazy" decoding="async">', 1)
@@ -1656,7 +1733,11 @@ def _theme_layout(html):
 
     # Заголовок блока вопросом: на страницах оплаты он один, у заявки другой.
     html = _theme_section_re(html, "Подарки и условия",
-                             r"(Что вы получаете|Что даёт заявка)</h2>", r"\1?</h2>")
+                             r"(Что вы получаете|Что даёт заявка|Что даёт предзапись)</h2>", r"\1?</h2>")
+
+    # «Что входит в практикум» на странице предзаписи — тоже вопросом.
+    html = _theme_section_re(html, "Что входит",
+                             r"(Что входит в(?:&nbsp;|\s)практикум)</h2>", r"\1?</h2>")
 
     # Кнопка поддержки была красной, как «Оплатить». Красная на странице
     # одна: участие и оплата. Поддержка спокойная, с синей обводкой.
@@ -1717,7 +1798,7 @@ def _theme_modal(html):
         card = ('<div data-modal-gifts="" style="background: ' + _PANEL + '; border: 0; '
                 'border-radius: 16px; padding: clamp(20px, 3vw, 28px);">' + gifts + "</div>")
         m = m[:wb[2]] + card + m[wb[2]:]
-    else:
+    elif "После оплаты" in m:
         print("  тема: в окне заявки не найден блок подарков")
     for old, new in [
         ("background: rgba(13,36,92,.74);", "background: rgba(24,33,58,.86);"),
@@ -1734,7 +1815,10 @@ def _theme_modal(html):
         ("background: linear-gradient(180deg, #FBE3B0, #E39A2B); color: #18213A; flex: none;",
          "background: " + _GOLD + "; color: #143A85; flex: none;"),
     ]:
-        if old not in m:
+        # Три последние замены относятся к блоку подарков; в окне анкеты
+        # предзаписи его нет, и сообщать тут не о чем.
+        if old not in m and (k >= 0 or "#F6CF7A" not in old and "#D9CDB6" not in old
+                             and "#FBE3B0" not in old):
             print("  тема: в окне заявки не найдено: %s" % old[:70])
         m = m.replace(old, new)
     return html[:blk[0]] + m + html[blk[3]:]
@@ -2693,7 +2777,7 @@ def care_note(размер="15px"):
             + ссылки + '</p>')
 
 
-def benefits_screen(include_request=True):
+def benefits_screen(include_request=True, pre=False):
     """Подарки и условия заявки — экран, на котором принимается решение.
 
     Два яруса нарочно разной плотности: за заявку — светлый, порог нулевой;
@@ -2716,14 +2800,17 @@ def benefits_screen(include_request=True):
     request_column = '''
       <div data-za-zayavku="" style="background: linear-gradient(180deg, #FFFFFF 0%%, #FDFAF6 100%%); border: 1px solid #E9DFD2; border-radius: 16px; box-shadow: 0 1px 2px rgba(60,48,40,.04), 0 16px 36px -24px rgba(60,48,40,.34); padding: clamp(24px, 3.4vw, 36px); display: flex; flex-direction: column; gap: 18px;">
         <div style="display: flex; flex-direction: column; gap: 6px;">
-          <div style="%(eyebrow)s">За саму заявку</div>
+          <div style="%(eyebrow)s">%(za)s</div>
           <p style="margin: 0; font-size: 19px; font-weight: 600; line-height: 1.35; color: #2E2521;">Ничего платить не&nbsp;нужно</p>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px;">%(light)s</div>
       </div>
-''' % {"eyebrow": EYEBROW, "light": light} if include_request else ""
+''' % {"eyebrow": EYEBROW, "light": light,
+       "za": "За анкету предзаписи" if pre else "За саму заявку"} if include_request else ""
 
-    title = "Что даёт заявка" if include_request else "Что вы получаете"
+    title = ("Что даёт предзапись" if pre else
+             "Что даёт заявка" if include_request else "Что вы получаете")
+    posle = "после анкеты" if pre else "после заявки"
     grid_width = "1020px" if include_request else "720px"
 
     return '''
@@ -2750,7 +2837,7 @@ def benefits_screen(include_request=True):
     </div>
 
     <div style="align-self: center; max-width: 54ch; text-align: center; display: flex; flex-direction: column; gap: 8px;">
-      <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #2E2521;">Оплату оформляет команда: после заявки она свяжется с&nbsp;вами.</p>
+      <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #2E2521;">Оплату оформляет команда: %(posle)s она свяжется с&nbsp;вами.</p>
     </div>
 
     %(cta)s
@@ -2758,6 +2845,7 @@ def benefits_screen(include_request=True):
 </div>
 ''' % {"eyebrow": EYEBROW, "dark": dark, "cta": CTA_DARK,
        "title": title, "request_column": request_column, "grid_width": grid_width,
+       "posle": posle,
 }
 
 
@@ -2834,7 +2922,7 @@ def pre_contents_screen():
       <span style="display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 50%%; background: linear-gradient(180deg, #F0DCBB, #C29A6C); color: #2A211C; font-size: 24px; font-weight: 700; flex: none; box-shadow: inset 0 1px 0 rgba(255,255,255,.5);">∞</span>
       <div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 4px;">
         <p style="margin: 0; font-size: clamp(19px, 2.1vw, 23px); font-weight: 700; letter-spacing: -.02em; color: #F6F0E8;">Доступ навсегда</p>
-        <p style="margin: 0; font-size: 17px; line-height: 1.5; color: #DCD1C4;">Записи, конспекты и&nbsp;материалы остаются у&nbsp;вас без срока.</p>
+        <p style="margin: 0; font-size: 17px; line-height: 1.5; color: #DCD1C4;">Записи лекций, методички и&nbsp;материалы остаются у&nbsp;вас без срока.</p>
       </div>
     </div>
 
@@ -2931,6 +3019,7 @@ def build_landing():
     # оставляет контакты, дальше пишет команда. В режиме zayavka их почти
     # не нужно трогать — а вот платёжные, наоборот, все до одной лишние.
     IS_ZAYAVKA = MODE == "zayavka"
+    IS_PRE = MODE == "predzapis"
     # Страницы, где принимаются деньги: после формы идёт выбор способа оплаты.
     HAS_PAY_STEP = MODE in PAY
     PAY_NEXT = ("На&nbsp;следующем шаге выберете, как платить: "
@@ -3013,7 +3102,7 @@ def build_landing():
                 raise ValueError("не найдена строка модалки брони: %s" % old)
             form = form.replace(old, new)
 
-    if MODE == "pre":
+    if IS_PRE:
         # Предзаписи нечего акцептовать: покупки нет, значит нет и оферты.
         # Требовать её согласие на бесплатной заявке юридически неверно
         # и лишний барьер. Согласие на обработку ПД остаётся — контакты
@@ -3026,11 +3115,11 @@ def build_landing():
             form = form[:chip.start()] + "</div>" + form[chip.end():]
 
         for old, new in (
-            ("Оформление участия", "Предзапись"),
+            ("Оформление участия", "Анкета предзаписи"),
             ("Оставьте контакты&nbsp;— на&nbsp;них придут доступы",
              "Оставьте контакты&nbsp;— откроем канал"),
             (PAY_NEXT,
-             "Сразу после заявки откроется закрытый канал Виолы. Команда свяжется с&nbsp;вами "
+             "Сразу после анкеты откроется закрытый канал Виолы. Команда свяжется с&nbsp;вами "
              "в&nbsp;Telegram: расскажет, как устроен практикум, ответит на&nbsp;вопросы "
              "и&nbsp;поможет оформить оплату."),
             ("Перейти к оплате", "Попасть в предзапись"),
@@ -3062,7 +3151,7 @@ def build_landing():
         keep = "Нажимая кнопку, вы&nbsp;подтверждаете отмеченные согласия.</p>"
         tail = form.index(keep) + len(keep)
         form = form[:tail] + ('<p style="margin: 0; font-size: 15px; line-height: 1.5; '
-                              'color: #7D7167;">Заявка бесплатна и&nbsp;ни&nbsp;к&nbsp;чему '
+                              'color: #7D7167;">Анкета бесплатна и&nbsp;ни&nbsp;к&nbsp;чему '
                               'не&nbsp;обязывает.</p>') + form[form.index("</div>", tail):]
 
     # Кому писать и с каких аккаунтов ждать ответа — там, где человек
@@ -3094,7 +3183,7 @@ def build_landing():
 
     # Чем кончается отправка: страница оплаты, закрытый канал или
     # ничего — заявку разбирает команда.
-    after = {"pre": "channel", "zayavka": "team"}.get(MODE, "pay")
+    after = {"predzapis": "channel", "zayavka": "team"}.get(MODE, "pay")
 
     if HAS_PAY_STEP:
         # Шаг выбора оплаты встаёт первым в колонку окна; шапка и карточка
@@ -3203,7 +3292,7 @@ def build_landing():
                                  % (tpl.count(old), old[:50]))
             tpl = tpl.replace(old, new)
 
-    if MODE == "pre":
+    if IS_PRE:
         # Уходят все экраны, где есть цена или оплата. Рассрочка тоже: она
         # про деньги, а её содержание сжимается в одну строку про разговор
         # с командой в блоке «что входит».
@@ -3211,10 +3300,27 @@ def build_landing():
             tpl = drop_screen(tpl, label)
 
         tpl = insert_before_screen(tpl, "11 Финальный призыв",
-                                   benefits_screen(True) + pre_contents_screen())
+                                   benefits_screen(True, pre=True) + pre_contents_screen())
 
-        # Срок — сразу под первым экраном, тонкой полосой.
-        tpl = insert_before_screen(tpl, "02 Зачем мне это", TIMER_SCREEN)
+        # Кнопки вставленных экранов писались под страницу заявки.
+        tpl = tpl.replace("Оставить заявку", "Попасть в предзапись")
+        tpl = tpl.replace('data-open-form="Заявка на участие"', 'data-open-form="Предзапись"')
+
+        # Полосы со сроком нет: у предзаписи сейчас нет даты, после которой
+        # что-то меняется.
+
+        # Оффер практикума на первом экране остаётся как есть. Под кнопкой
+        # добавлена строка о том, что будет сразу после анкеты.
+        row = '<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px 24px;">'
+        i = tpl.find(row)
+        if i < 0:
+            raise ValueError("предзапись: не найдена строка с кнопкой на первом экране")
+        blk = find_block(tpl, "div", i)
+        tpl = (tpl[:blk[3]]
+               + '<p data-hero-pod="" style="margin: 0; max-width: 46ch; font-size: clamp(14px, 1.5vw, 17px); '
+                 'font-weight: 500; line-height: 1.45; color: #F6F0E8;">Бесплатно. После анкеты '
+                 'откроется закрытый канал Виолы, а&nbsp;команда расскажет про программу.</p>'
+               + tpl[blk[3]:])
 
         # Надзаголовок: первым словом «Предзапись», плашкой, чтобы читалось
         # раньше названия. Дальше — что это за практикум, мелким.
@@ -3229,7 +3335,7 @@ def build_landing():
             'text-transform: uppercase; color: #C9A87F; line-height: 1.5;">'
             '<b style="background: linear-gradient(180deg, #F0DCBB, #C29A6C); color: #2A211C; '
             'font-weight: 700; letter-spacing: .16em; padding: 7px 14px; border-radius: 999px; '
-            'box-shadow: inset 0 1px 0 rgba(255,255,255,.5);">Предзапись</b>'
+            'box-shadow: inset 0 1px 0 rgba(255,255,255,.5);">Анкета предзаписи</b>'
             '<span>на 6-недельный практикум для\u00a0эмпатов от\u00a0Виолы\u00a0Маро</span>'
             "</div>")
 
@@ -3252,10 +3358,10 @@ def build_landing():
         tpl = tpl.replace(
             "В «С Виолой» <b>50&nbsp;мест</b>. Оплатить можно сразу или частями&nbsp;— "
             "<b>рассрочка до&nbsp;12&nbsp;месяцев</b> для&nbsp;СНГ.",
-            "Предзапись открыта. Цена закрепляется за&nbsp;вами до&nbsp;18&nbsp;сентября, "
-            "дальше она выше.")
+            "Предзапись открыта. Заполните анкету: откроется закрытый канал Виолы, "
+            "а&nbsp;команда расскажет про программу и&nbsp;ответит на&nbsp;вопросы.")
         tpl = tpl.replace("Продажи закрываются 29&nbsp;сентября в&nbsp;23:59",
-                          "Заявка бесплатна и&nbsp;ни&nbsp;к&nbsp;чему не&nbsp;обязывает")
+                          "Анкета бесплатна и&nbsp;ни&nbsp;к&nbsp;чему не&nbsp;обязывает")
 
     if MODE == "zayavka":
         # Страницу отправляют тем, кто пришёл из канала и часто платит
@@ -3918,8 +4024,9 @@ def parse_args(argv):
         if a == "--mode":
             i += 1
             MODE = argv[i]
-            if MODE not in ("pay", "rassrochka", "pre", "bron", "zayavka", "neudobnye"):
-                sys.exit("режим бывает pay, rassrochka, pre, bron, zayavka "
+            if MODE not in ("pay", "rassrochka", "pre", "predzapis", "bron", "zayavka",
+                            "neudobnye"):
+                sys.exit("режим бывает pay, rassrochka, pre, predzapis, bron, zayavka "
                          "или neudobnye, получено: %s" % MODE)
         elif a == "--out":
             i += 1
