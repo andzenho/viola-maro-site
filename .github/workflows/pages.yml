@@ -43,6 +43,11 @@ jobs:
       - name: Собрать страницу брони
         run: python3 build.py --mode bron --theme more --out site/bron --base /bron --noindex
 
+      # Анкета предзаписи: без цен и оплаты, после анкеты открывается
+      # закрытый канал. Адрес /pre при этом остаётся редиректом на заявку.
+      - name: Собрать страницу анкеты предзаписи
+        run: python3 build.py --mode predzapis --theme more --out site/predzapis --base /predzapis --docs-root --noindex
+
       - name: Собрать страницу внутренней рассрочки
         run: python3 build.py --mode rassrochka --theme more --out site/rassrochka --base /rassrochka --docs-root --noindex
 
