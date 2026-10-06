@@ -763,7 +763,6 @@ br[data-tel] { display: none; }
 }
 [data-hero-stage] [data-hero-card] p[data-hero-pod] { color: #2B3550 !important; font-size: 16.5px !important; font-weight: 600 !important; }
 [data-h2-chto] { margin: 12px 0 0; font-size: 23px; font-weight: 700; line-height: 1.2; letter-spacing: -.02em; color: #18213A; }
-[data-h2-besplatno] { margin: 0; font-size: 16.5px; line-height: 1.45; color: #465068; }
 [data-h2-list] { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
 [data-h2-list] li {
   position: relative;
@@ -1532,9 +1531,8 @@ def _theme_hero_phone(html):
     if MODE == "predzapis":
         card += ('<p data-h2-chto="">Что даёт предзапись?</p>'
                  '<ul data-h2-list="">'
-                 + "".join("<li>%s</li>" % t for t, _tail in PRE_FOR_REQUEST)
-                 + "</ul>"
-                 '<p data-h2-besplatno="">Анкета бесплатна и&nbsp;ни&nbsp;к&nbsp;чему не&nbsp;обязывает.</p>')
+                 + "".join("<li>%s</li>" % t for t, _tail in PRE_BONUSES + PRE_FOR_REQUEST)
+                 + "</ul>")
     pod = grab(r'<p data-hero-pod=""[^>]*>(.*?)</p>')
     block = (
         '<div data-h2="">'
@@ -2427,6 +2425,17 @@ PRE_FOR_REQUEST = [
      "и помогут с оплатой, в том числе в рассрочку."),
 ]
 
+# Два бонуса, которые человек получает за анкету предзаписи. Названия
+# и подписи те же, что в тесте 2.0 (miniapps/test2, блок «Что дальше?»):
+# оба лежат в закрепе закрытого канала, куда ведёт анкета. Третьей карточки
+# теста, про самую низкую цену, здесь нет: цены на сайте открыты всем.
+PRE_BONUSES = [
+    ("Медитация «Мне можно»",
+     "9 минут. Включаете перед трудным разговором или сразу после него."),
+    ("Эфир Виолы в записи",
+     "подробный разбор: как понять, где ваше, а где чужое."),
+]
+
 PRE_FOR_EARLY = [
     ("«Любовь и деньги»",
      "лекция Виолы о том, почему и любовь, и деньги про одно и то же состояние наполненности."),
@@ -2794,7 +2803,9 @@ def benefits_screen(include_request=True, pre=False):
                 'line-height: 1.55; color: %s;"><b style="color: %s; font-weight: 700;">%s</b>'
                 '&nbsp;— %s</p></div>' % (icon, text_color, title_color, title, tail))
 
-    light = "".join(row(t, x, ICON_DIAMOND, "#2E2521", "#5C5149") for t, x in PRE_FOR_REQUEST)
+    # У анкеты предзаписи список начинается с бонусов из теста 2.0.
+    light = "".join(row(t, x, ICON_DIAMOND, "#2E2521", "#5C5149")
+                    for t, x in (PRE_BONUSES if pre else []) + PRE_FOR_REQUEST)
     dark = "".join(row(t, x, ICON_GIFT, "#F6F0E8", "#DCD1C4") for t, x in PRE_FOR_EARLY)
 
     request_column = '''
@@ -3318,8 +3329,8 @@ def build_landing():
         blk = find_block(tpl, "div", i)
         tpl = (tpl[:blk[3]]
                + '<p data-hero-pod="" style="margin: 0; max-width: 46ch; font-size: clamp(14px, 1.5vw, 17px); '
-                 'font-weight: 500; line-height: 1.45; color: #F6F0E8;">Бесплатно. После анкеты '
-                 'откроется закрытый канал Виолы, а&nbsp;команда расскажет про программу.</p>'
+                 'font-weight: 500; line-height: 1.45; color: #F6F0E8;">После анкеты откроется '
+                 'закрытый канал Виолы: в&nbsp;нём медитация и&nbsp;эфир для&nbsp;вас.</p>'
                + tpl[blk[3]:])
 
         # Надзаголовок: первым словом «Предзапись», плашкой, чтобы читалось
