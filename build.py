@@ -1030,7 +1030,16 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
 }
 [data-o-title]::first-line { color: #143A85; }
 [data-o-text] { margin: 0; font-size: 20px; font-weight: 600; line-height: 1.4; color: #18213A; }
-[data-o-scena] { align-self: stretch; display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+[data-o-scena] { align-self: stretch; display: flex; flex-direction: column; gap: 10px; margin-top: 6px; max-width: 560px; }
+[data-o-primer] { margin: 0; font-size: 16.5px; font-weight: 700; line-height: 1.35; color: #18213A; }
+/* Подпись под голосовым, как в чате: заголовок жирным, чей вопрос, сам
+   вопрос курсивом, метки синим. */
+[data-o-time] { flex: none; font-size: 14.5px; font-weight: 600; color: #5F687E; font-variant-numeric: tabular-nums; }
+[data-o-post] { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F1E8D8; }
+[data-o-tema] { font-size: 18px; font-weight: 700; line-height: 1.3; color: #18213A; }
+[data-o-kto] { font-size: 16px; line-height: 1.35; color: #18213A; }
+[data-o-vopros] { font-size: 17px; line-height: 1.45; font-style: italic; color: #2B3550; }
+[data-o-tegi] { font-size: 16px; font-weight: 600; line-height: 1.5; color: #1F4C97; }
 [data-audio] { background: #FFFFFF; }
 [data-wave] { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
 [data-wave] > span {
@@ -1450,14 +1459,25 @@ _THEME_OTVETY = (
     '<em data-tag="">Только на&nbsp;тарифе «С&nbsp;Виолой»</em>'
     '<h3 data-o-title="">Формат ответов на&nbsp;вопросы <br>пересобран полностью</h3>'
     '<p data-o-text="">Чтобы каждый получил ответ на&nbsp;свой вопрос от&nbsp;Виолы в&nbsp;формате аудио.</p>'
+    # Сценка повторяет настоящий пост из чата потока: голосовое Виолы, под ним
+    # заголовок, чей вопрос, сам вопрос и метки, по которым ответы ищут в чате.
+    # Вопрос здесь придуман под вторую неделю программы и стоит без имени:
+    # настоящие вопросы участниц личные, на сайт их не выносим.
     '<div data-o-scena="" aria-hidden="true">'
-    '<p data-vopros="">«Почему мной пользуются?»</p>'
+    '<p data-o-primer="">Так выглядит ответ в&nbsp;чате потока:</p>'
     '<div data-msg=""><span data-ava="">В</span><div data-bubble="" data-audio="">'
     '<b data-who="">Виола Маро</b><div data-wave=""><span>'
     + _ikonka('<path d="M9 6v12l9.5-6z" fill="currentColor" stroke="none"/>') + '</span><i>'
     + "".join('<b style="height: %dpx"></b>' % h for h in
               (8, 14, 22, 12, 18, 26, 16, 10, 20, 28, 14, 8, 18, 24, 12, 20, 10, 16, 26, 14, 8, 12, 22, 16, 10, 18, 12, 8))
-    + '</i></div></div></div>'
+    + '</i><small data-o-time="">01:56</small></div>'
+    '<div data-o-post="">'
+    '<b data-o-tema="">Родные привыкли, что я&nbsp;всегда помогаю. Как&nbsp;отказать?</b>'
+    '<span data-o-kto="">Вопрос участницы</span>'
+    '<i data-o-vopros="">Я&nbsp;не&nbsp;умею говорить «нет»: соглашаюсь, а&nbsp;потом злюсь на&nbsp;себя. '
+    'Как отказать близким и&nbsp;не&nbsp;чувствовать вину?</i>'
+    '<span data-o-tegi="">#ответы #неделя2 #отношения #границы</span>'
+    '</div></div></div>'
     '</div></div>')
 
 
