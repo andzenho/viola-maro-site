@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBF6EC">
+<!-- Страница всегда светлая, какая бы тема ни стояла в телефоне и в Телеграме. -->
+<meta name="color-scheme" content="only light">
+<!-- Анкета только для участниц потока: в поиске ей делать нечего. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Анкета участниц практикума «Прикладная эмпатия». 12–15 минут.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Виола Маро">
+<meta property="og:url" content="https://violamaro.ru/anketa/">
+<meta property="og:title" content="Анкета участниц Прикладной эмпатии">
+<meta property="og:description" content="12–15 минут. За заполненную анкету закрытый эфир с Виолой и сертификат −30%.">
+<meta name="twitter:card" content="summary">
+<script>
+/* Страховка. Если основной скрипт упадёт на старом браузере, человек увидит
+   объяснение, а не белый экран. Здесь намеренно только ES5. Сохранённые
+   ответы при этом не трогаем: в них четверть часа чужой работы. */
+(function () {
+  var shown = false;
+  function fallback(msg) {
+    if (shown) return;
+    shown = true;
+    var box = document.getElementById("screen") || document.body;
+    if (!box) return;
+    box.innerHTML =
+      '<div style="max-width:32rem;margin:1.5rem auto;padding:1.4rem;font:18px/1.55 system-ui,-apple-system,sans-serif;' +
+      'color:#18213A;background:#fff;border-radius:18px">' +
+      '<p style="margin:0 0 .9rem;font-size:1.3rem;font-weight:700">Анкета не открылась с первого раза</p>' +
+      '<p style="margin:0 0 .9rem">Так бывает: оборвалась связь или страница не догрузилась. ' +
+      'Нажмите «Открыть заново». Ответы, которые вы уже дали, сохранены.</p>' +
+      '<p style="margin:0 0 .9rem"><button onclick="location.reload()" ' +
+      'style="font:inherit;font-weight:700;padding:.9rem 1.2rem;color:#fff;background:#B3161F;border:0;border-radius:14px">' +
+      'Открыть заново</button></p>' +
+      '<p style="margin:0;font-size:.9rem;color:#5F687E">Не помогло, напишите в службу заботы @violamaroteam и пришлите эту строку: ' +
+      String(msg).replace(/</g, "&lt;").slice(0, 200) + '</p></div>';
+  }
+  window.__fallback = fallback;
+  window.addEventListener("error", function (e) {
+    fallback(e && e.message ? e.message : "неизвестная ошибка");
+  });
+  setTimeout(function () {
+    var s = document.getElementById("screen");
+    if (s && !s.firstChild) fallback("пустой экран");
+  }, 7000);
+})();
+</script>
+<!-- Скрипт Телеграма нужен только затем, чтобы подставить ник и ID, если
+     анкету открыли внутри Телеграма. Грузится фоном: страница его не ждёт. -->
+<script async src="https://telegram.org/js/telegram-web-app.js"
+        onload="window.__tgReady && window.__tgReady()"></script>
+<title>Анкета участниц Прикладной эмпатии</title>
+<style>
+  /* Вид теста 2.0 (miniapps/test2): язык Телеграма. Один системный гротеск,
+     слова Виолы сообщением с аватаркой, синий блок-небо под заголовок,
+     красная главная кнопка, выбранный ответ синий.
+     Страница для женщин 45–65 лет, поэтому: текст 18 px, вопрос 20 px,
+     подсказки не мельче 16,5 px, каждый вариант ответа во всю ширину
+     и не ниже 60 px, текст только тёмным по светлому или белым по синему. */
+  :root {
+    --ground: #FBF6EC;
+    --surface: #FFFFFF;
+    --surface-2: #F4ECDD;
+    --ink: #18213A;
+    --ink-soft: #3D475F;
+    --ink-mute: #5F687E;
+    --line: #EBDFCA;
+    --line-strong: #C9B894;
+    --accent: #D22B2B;
+    --accent-text: #B01E22;
+    --accent-soft: #FDEBD3;
+    --gold: #F0B13F;
+    --cta: linear-gradient(135deg, #DA352C 0%, #B3161F 100%);
+    --cta-ink: #FFFFFF;
+    --cta-glow: rgba(190, 30, 35, .55);
+    --warn: #B01E22;
+    --deep: #1F4C97;
+    --deep-soft: #E3EDFA;
+    --sky: linear-gradient(150deg, #143A85 0%, #1F56A6 55%, #2A6DB8 100%);
+    --shadow: 0 1px 2px rgba(24, 33, 58, .05), 0 10px 26px -16px rgba(24, 33, 58, .28);
+    color-scheme: only light;
+  }
+
+  * { box-sizing: border-box; }
+  /* 18 px заданы на корне в процентах: кто увеличил шрифт в настройках
+     телефона, получит увеличенный и здесь. */
+  html { font-size: 112.5%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: .8rem .9rem calc(3rem + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: 100vh;
+  }
+
+  /* — шапка: кто спрашивает и какой шаг — */
+  .top { display: flex; flex-direction: column; gap: .65rem; }
+  .brand { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .brand-who { display: flex; align-items: center; gap: .5rem; font-weight: 600; font-size: .95rem; }
+  #counter { font-size: .95rem; font-weight: 700; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .ava { width: 2rem; height: 2rem; border-radius: 50%; object-fit: cover; flex: none; background: var(--surface-2); }
+
+  .bar { height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--gold), #E0522F 60%, var(--accent)); transition: width .3s ease; }
+  .top.quiet .bar { display: none; }
+
+  h1, h2, h3 { margin: 0; font-weight: 700; letter-spacing: -.015em; text-wrap: balance; }
+  h1 { font-size: 1.85rem; line-height: 1.14; font-weight: 800; letter-spacing: -.025em; }
+  h2 { font-size: 1.55rem; line-height: 1.2; }
+  h3 { font-size: 1.15rem; line-height: 1.3; }
+  p { margin: 0; }
+  a { color: var(--accent-text); }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  .soft { color: var(--ink-soft); }
+  .fine { color: var(--ink-mute); font-size: .92rem; line-height: 1.5; }
+  .center { text-align: center; }
+  .copy { display: flex; flex-direction: column; gap: .9rem; }
+
+  .card {
+    background: var(--surface);
+    border-radius: 24px;
+    padding: 1.45rem 1.15rem 1.3rem;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 1.3rem;
+  }
+
+  /* Небо с афиши: заголовок анкеты и экран «Спасибо». */
+  .hero {
+    position: relative; overflow: hidden;
+    margin: -.35rem -.2rem 0;
+    background:
+      repeating-radial-gradient(circle at 100% 0%, rgba(255, 255, 255, .09) 0 1.5px, rgba(255, 255, 255, 0) 1.5px 30px),
+      var(--sky);
+    color: #FFFFFF;
+    border-radius: 24px;
+    padding: 1.4rem 1.25rem 1.55rem;
+    display: flex; flex-direction: column; gap: .8rem;
+  }
+  .hero p { color: rgba(255, 255, 255, .96); font-size: 1.05rem; line-height: 1.45; }
+
+  .tag {
+    display: inline-block; align-self: flex-start;
+    background: var(--accent-soft); color: var(--accent-text);
+    font-size: .92rem; font-weight: 700; line-height: 1.35;
+    padding: .3rem .75rem; border-radius: 999px;
+  }
+
+  /* Слова Виолы: сообщение в чате, как в тесте. */
+  .msg { display: grid; grid-template-columns: 2rem 1fr; column-gap: .5rem; align-items: end; }
+  .bubble {
+    background: var(--surface-2);
+    border-radius: 18px 18px 18px 6px;
+    padding: .8rem 1rem .9rem;
+    min-width: 0;
+    display: flex; flex-direction: column; gap: .7rem;
+  }
+  .who { font-size: .92rem; font-weight: 700; color: var(--deep); margin-bottom: -.4rem; }
+
+  /* Три бонуса: значок в круге и текст. */
+  .gifts { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+  .gifts li {
+    display: grid; grid-template-columns: 2.9rem 1fr; gap: .8rem; align-items: start;
+    background: var(--accent-soft);
+    border-radius: 18px;
+    padding: .9rem 1rem .95rem .85rem;
+  }
+  .gifts li > span {
+    width: 2.9rem; height: 2.9rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: #FFFFFF; font-size: 1.45rem; line-height: 1;
+  }
+  .gifts b { font-weight: 700; }
+  .deadline {
+    background: var(--deep-soft); color: var(--ink);
+    border-radius: 14px; padding: .8rem 1rem; font-weight: 600;
+  }
+
+  /* — вопросы — */
+  .head { display: flex; flex-direction: column; gap: .45rem; }
+  .eyebrow { font-size: .92rem; font-weight: 700; color: var(--ink-mute); }
+  .qs { display: flex; flex-direction: column; gap: 1.9rem; }
+  .q { display: flex; flex-direction: column; gap: .6rem; scroll-margin: 5rem 0; }
+  .q-label { font-size: 1.12rem; font-weight: 700; line-height: 1.3; letter-spacing: -.01em; }
+  .q-label .req { color: var(--accent-text); font-weight: 800; }
+  .q-hint { font-size: .95rem; line-height: 1.45; color: var(--ink-mute); }
+
+  textarea, input[type="text"] {
+    font: inherit; color: var(--ink);
+    background: var(--surface-2);
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: .9rem 1rem;
+    width: 100%;
+  }
+  textarea { resize: vertical; min-height: 7rem; line-height: 1.5; display: block; }
+  textarea:focus, input[type="text"]:focus { border-color: var(--deep); outline: none; background: #FFFFFF; }
+  textarea.err, input.err { border-color: var(--warn); background: #FFF6F4; }
+
+  /* Вариант ответа: строка во всю ширину с отметкой слева. Круглая отметка —
+     выбирается один, квадратная — можно несколько. */
+  .opts { display: flex; flex-direction: column; gap: .5rem; border-radius: 16px; }
+  .opts.err { outline: 2px solid var(--warn); outline-offset: 5px; }
+  .opt {
+    appearance: none; font: inherit; color: var(--ink); text-align: left;
+    display: grid; grid-template-columns: 1.55rem 1fr; gap: .75rem; align-items: center;
+    width: 100%; min-height: 3.4rem; padding: .8rem 1rem;
+    background: var(--surface-2);
+    border: 2px solid transparent; border-radius: 14px;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, opacity .15s ease;
+  }
+  .opt::before {
+    content: ""; width: 1.55rem; height: 1.55rem; border-radius: 50%;
+    background: #FFFFFF; border: 2px solid var(--line-strong);
+  }
+  .opts.multi .opt::before { border-radius: 8px; }
+  @media (hover: hover) { .opt:hover { border-color: var(--deep); } }
+  .opt.on { background: var(--deep); color: #FFFFFF; border-color: var(--deep); font-weight: 600; }
+  .opt.on::before {
+    border-color: #FFFFFF;
+    background: radial-gradient(circle, var(--deep) 0 42%, #FFFFFF 46%);
+  }
+  .opts.multi .opt.on::before {
+    background: #FFFFFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231F4C97' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 78% no-repeat;
+  }
+  /* Выбрано три из трёх: остальные варианты приглушены. */
+  .opt.off { opacity: .45; }
+  .q-note { font-size: .95rem; line-height: 1.45; color: var(--accent-text); font-weight: 600; }
+
+  /* Шкала 1–10: две строки по пять, чтобы в плитку попадал палец. */
+  .scale10 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; padding: .25rem 0; border-radius: 16px; }
+  .scale10.err { outline: 2px solid var(--warn); outline-offset: 5px; }
+  .tile {
+    appearance: none; font: inherit; cursor: pointer;
+    min-height: 3.4rem; padding: .6rem .2rem;
+    font-size: 1.2rem; font-weight: 700; line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink); background: var(--t); border: 0; border-radius: 14px;
+    box-shadow: inset 0 -3px 0 var(--m);
+    transition: background-color .15s ease, transform .12s ease, box-shadow .15s ease;
+  }
+  .tile.pre { background: var(--m); box-shadow: inset 0 -3px 0 var(--c); }
+  .tile.on {
+    background: var(--c); color: var(--k);
+    box-shadow: 0 10px 16px -10px var(--c), 0 0 0 3px var(--surface), 0 0 0 5px var(--c);
+    transform: translateY(-2px);
+  }
+  .scale-ends { display: flex; justify-content: space-between; gap: 1rem; font-size: .95rem; line-height: 1.35; color: var(--ink-mute); }
+  .scale-ends span:last-child { text-align: right; }
+
+  /* Галочки: разрешение на цитату и согласие на обработку данных. */
+  .cb {
+    display: grid; grid-template-columns: 30px 1fr; gap: .75rem; align-items: start;
+    line-height: 1.45; cursor: pointer;
+    background: var(--surface-2); border: 2px solid transparent; border-radius: 14px;
+    padding: .9rem 1rem;
+  }
+  .cb input { width: 28px; height: 28px; margin: 0; accent-color: var(--deep); cursor: pointer; }
+  .cb.err { border-color: var(--warn); background: #FFF6F4; }
+
+  /* Приманка для ботов: человеку не видна и не читается экранным диктором. */
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  /* — кнопки — */
+  .foot { display: flex; flex-direction: column; gap: .7rem; }
+  .go {
+    appearance: none;
+    display: block; width: 100%;
+    font: inherit; font-weight: 700; font-size: 1.12rem; line-height: 1.25;
+    text-align: center; text-decoration: none;
+    color: var(--cta-ink);
+    background: var(--cta);
+    border: 0; border-radius: 14px;
+    padding: 1.15rem 1.1rem; min-height: 3.6rem;
+    cursor: pointer;
+    box-shadow: 0 12px 22px -14px var(--cta-glow);
+    transition: transform .1s ease, filter .2s ease;
+  }
+  .go:active { transform: scale(.985); }
+  .go[disabled] { filter: saturate(.5) brightness(1.08); cursor: default; }
+  @media (hover: hover) { .go:hover { filter: brightness(1.06); } }
+  .ghost {
+    appearance: none; font: inherit; font-weight: 600;
+    background: none; border: none; color: var(--ink-soft);
+    cursor: pointer; padding: .8rem .2rem; min-height: 3rem; text-align: left;
+    align-self: flex-start;
+  }
+  #hint { min-height: 1.4rem; }
+  #hint.err { color: var(--warn); font-weight: 700; font-size: 1rem; }
+
+  .fade { animation: fade .22s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .fade { animation: none; }
+    .bar i, .tile, .opt, .go { transition: none; }
+    .tile.on { transform: none; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="top quiet" id="top">
+    <div class="brand">
+      <span class="brand-who"><img class="ava" id="brand-ava" alt="" width="36" height="36"><span>Виола Маро</span></span>
+      <span id="counter"></span>
+    </div>
+    <div class="bar" aria-hidden="true"><i id="bar-fill"></i></div>
+  </header>
+  <main id="screen"></main>
+</div>
+
+<script>
+"use strict";
+
+/* ——— настройки ——— */
+const CONFIG = {
+  /* Адрес веб-приложения Apps Script при таблице «Анкета участниц Прикладной
+     эмпатии» (код: integrations/anketa-pe/Code.gs). Это отдельная таблица
+     и отдельный скрипт, с таблицей заявок они не связаны.
+     Пока пусто, анкета не делает вид, что ушла: она говорит об этом прямо. */
+  sheetUrl: "",
+  docs: {
+    consent: "https://violamaro.ru/consent/",
+    privacy: "https://violamaro.ru/privacy/"
+  },
+  /* Редакция согласия на момент акцепта: та же, что на сайте и в тесте 2.0. */
+  docVersionConsent: "2026-08-10"
+};
+
+/* ——— текст в начале анкеты ———
+   Дословно из anketa-uchastnic-pe.md (08.10.2026). */
+const COVER = {
+  title: "Анкета участниц Прикладной эмпатии",
+  words: [
+    "Дорогие мои! Я хочу делать для вас контент лучше: понимать, что вы хотите читать, смотреть и изучать, какие события проводить и какие программы собирать дальше. Лучше вас этого никто не скажет.",
+    "На анкету нужно 12–15 минут. Отвечайте своими словами и честно: нам важно и хорошее, и неудобное."
+  ],
+  giftsHead: "За заполненную анкету:",
+  gifts: [
+    ["🎥", "<b>закрытый эфир с Виолой</b> только для тех, кто ответил: разбор самых частых ситуаций из ваших анкет и ответы вживую"],
+    ["🎁", "<b>сертификат −30%</b> на следующий продукт Виолы"],
+    ["⬆️", "<b>переход с вашего тарифа на тариф с обратной связью и ответами Виолы на вопросы за 10 000 ₽ вместо 20 000 ₽</b>, если вы на самостоятельном тарифе. Всего 5 мест, до 18 октября"]
+  ],
+  deadline: "Анкету принимаем до 12 октября, 23:59 по Москве."
+};
+
+/* ——— вопросы ———
+   Восемь блоков, один блок на экран. Порядок менять нельзя: заголовки
+   и обещания практикума стоят только в блоке 6, иначе человек в первых
+   блоках просто повторит нашу формулировку.
+   n — номер вопроса в анкете и колонка в таблице (1–36).
+   type: text — свой ответ, one — один вариант, multi — несколько,
+   scale — шкала 1–10, check — галочка. req — обязательный (звёздочка).
+   max — сколько вариантов можно выбрать самое большее.
+   Вариант «Другое» открывает поле, где можно написать, что именно. */
+const SEEN = [
+  "Проходила тест «Эмпат ли вы» в Телеграме",
+  "Проходила тест «Колесо эмпата», про сферы жизни",
+  "Смотрела бесплатные эфиры Виолы в августе и сентябре",
+  "Была на трёхдневном уикенде «Неудобные» в сентябре",
+  "Читала посты Виолы в Телеграм-канале",
+  "Смотрела видео Виолы на YouTube",
+  "Смотрела короткие видео и истории Виолы в Инстаграме",
+  "Получала сообщения от бота Виолы в Телеграме",
+  "Переписывалась с Дарьей или службой заботы Виолы"
+];
+const TITLES = [
+  "Научитесь пользоваться своей эмпатией во всех сферах жизни",
+  "Верните себе свою жизнь и перестаньте отвечать за всех",
+  "Чувствуйте людей и оставайтесь собой",
+  "Чтобы вами перестали пользоваться",
+  "18 техник на ситуации, когда чувствительность бьёт по вам"
+];
+
+const BLOCKS = [
+  { title: "Своими словами", qs: [
+    { n: 1, type: "text", req: true,
+      label: "Представьте, что подруга спрашивает вас, что это за практикум и что он даёт. Как бы вы ей ответили?" },
+    { n: 2, type: "text", req: true,
+      label: "Какая фраза, мысль или обещание зацепили вас, когда вы решали купить? Если не помните, так и напишите." },
+    { n: 3, type: "text", req: true,
+      label: "Что изменится в вашей жизни через шесть недель практикума? Какой вы будете?" }
+  ] },
+  { title: "Как вы решились", qs: [
+    { n: 4, type: "text", req: true,
+      label: "Что происходило в вашей жизни, когда вы решили пойти на практикум?" },
+    { n: 5, type: "text", req: true,
+      label: "Почему вы решились именно сейчас, а не год назад?" },
+    { n: 6, type: "multi", req: true,
+      label: "Что вы пробовали до этого?",
+      opts: ["Книги и статьи по психологии", "Психолог или терапия", "Курсы и программы других специалистов",
+             "Программы и марафоны Виолы", "Бесплатные видео и посты Виолы", "Ничего не пробовала", "Другое"] },
+    { n: 7, type: "text", req: true,
+      label: "Что почти остановило вас от покупки?",
+      hint: "Деньги, время, сомнения, мнение близких, страх, что не получится. Нам важен честный ответ" },
+    { n: 8, type: "one", req: true,
+      label: "Сколько вы думали перед покупкой?",
+      opts: ["Решила сразу", "Несколько дней", "Неделю или две", "Больше месяца", "Давно ждала этот практикум"] }
+  ] },
+  { title: "Как вы к нам пришли", qs: [
+    { n: 9, type: "one", req: true,
+      label: "Где вы впервые узнали о Виоле?",
+      opts: ["YouTube", "Инстаграм", "Телеграм-канал", "Посоветовали знакомые", "Реклама", "Не помню", "Другое"] },
+    { n: 10, type: "one", req: true,
+      label: "Как давно вы слушаете Виолу?",
+      opts: ["Меньше месяца", "1–3 месяца", "От 3 месяцев до года", "Больше года", "Несколько лет, проходила её программы"] },
+    { n: 11, type: "multi", req: true,
+      label: "Что из этого вы видели или проходили, прежде чем купить практикум? Отметьте всё, что помните.",
+      opts: SEEN.concat(["Не помню"]) },
+    { n: 12, type: "one", req: true,
+      label: "Что из этого больше всего помогло вам решиться? Выберите одно.",
+      opts: SEEN.concat(["Другое"]) },
+    { n: 13, type: "one", req: true,
+      label: "Как вы оставили заявку?",
+      opts: ["Заполнила анкету предзаписи", "Оставила заявку на сайте", "Сама написала в службу заботы",
+             "Ответила на сообщение команды", "Сразу оплатила на сайте", "Другое"] },
+    { n: 14, type: "one", req: true,
+      label: "Как вы оплатили?",
+      opts: ["Полностью", "Банковская рассрочка", "Два платежа", "Бронь, потом доплатила", "Бронь, ещё доплачиваю"] },
+    { n: 15, type: "scale", req: true,
+      label: "Насколько легко было купить и оплатить?",
+      lo: "1 — очень сложно", hi: "10 — очень легко" },
+    { n: 16, type: "text",
+      label: "Что в покупке или оплате было сложным или непонятным?" }
+  ] },
+  { title: "Общение с командой", qs: [
+    { n: 17, type: "one", req: true,
+      label: "Вы общались с командой Виолы до покупки?",
+      opts: ["Да, мне написали", "Да, я написала сама", "Нет"] },
+    { n: 18, type: "scale",
+      label: "Оцените общение с командой до и после покупки." },
+    { n: 19, type: "text",
+      label: "Что в общении с командой помогло решиться? А что мешало или раздражало?" },
+    { n: 20, type: "one", req: true,
+      label: "После оплаты было понятно, куда идти и как получить доступ?",
+      opts: ["Да, сразу", "Разобралась, но не сразу", "Пришлось писать команде", "До сих пор не всё понятно"] }
+  ] },
+  { title: "За что вы платите", qs: [
+    { n: 21, type: "one", req: true,
+      label: "Ваш тариф",
+      opts: ["Самостоятельный", "С Виолой"] },
+    { n: 22, type: "text", req: true,
+      label: "Почему вы выбрали именно этот тариф?" },
+    { n: 23, type: "multi", req: true, max: 3,
+      label: "Что в практикуме для вас самое ценное? Выберите до трёх.",
+      opts: ["Техники на конкретные ситуации", "Лекции Виолы", "Голосовые ответы Виолы на вопросы", "Медитации",
+             "Методички", "Чат потока", "Мастер-класс в финале", "Подарки после оплаты", "Доступ навсегда"] },
+    { n: 24, type: "text", req: true,
+      label: "Что должно быть в практикуме, чтобы вы с радостью заплатили за него втрое больше?" }
+  ] },
+  { title: "Проверим наши слова", qs: [
+    { n: 25, type: "one", req: true,
+      label: "Какой заголовок ближе всего к тому, зачем вы пришли на практикум?",
+      opts: TITLES },
+    { n: 26, type: "one", req: true,
+      label: "А какой из этих заголовков вас совсем не цепляет?",
+      opts: TITLES },
+    { n: 27, type: "multi", req: true, max: 3,
+      label: "Что для вас главное в практикуме? Выберите до трёх.",
+      opts: ["Найти опору в себе и почувствовать свою ценность", "Вернуть себе себя и жить свою жизнь",
+             "Отказывать без чувства вины", "Не впитывать чужие эмоции и чужую боль",
+             "Спокойствие без постоянной тревоги", "Сделать свою чувствительность силой",
+             "Чтобы мной перестали пользоваться"] },
+    { n: 28, type: "one", req: true,
+      label: "Какая неделя практикума вам нужнее всего?",
+      opts: ["Вы сами", "Отношения и границы", "Родители и дети", "Тело и психосоматика", "Своё место и реализация", "Деньги"] }
+  ] },
+  { title: "Что дальше", qs: [
+    { n: 29, type: "multi", req: true,
+      label: "Что вы хотели бы от Виолы после практикума?",
+      opts: ["Продолжение: следующая ступень практикума", "Клуб с Виолой: встречи и ответы каждый месяц",
+             "Личная консультация", "Интенсив по одной теме: деньги, отношения, родители и дети или тело",
+             "Живая встреча или ретрит", "Пока ничего"] },
+    { n: 30, type: "one", req: true,
+      label: "Есть ли среди ваших близких или знакомых человек, которому практикум тоже нужен?",
+      opts: ["Да, несколько", "Да, один человек", "Не знаю", "Нет"] }
+  ] },
+  { title: "Первая неделя и о вас", last: true, qs: [
+    { n: 31, type: "text",
+      label: "Что уже изменилось за первую неделю? Одна ситуация, если есть." },
+    { n: 32, type: "check",
+      label: "Можно привести мой ответ в канале без имени и узнаваемых деталей" },
+    { n: 33, type: "one", req: true,
+      label: "Возраст",
+      opts: ["до 35", "35–44", "45–54", "55–64", "65 и старше"] },
+    { n: 34, type: "one", req: true,
+      label: "Где вы живёте?",
+      opts: ["Россия", "другая страна СНГ", "Европа", "Израиль", "другое"] },
+    { n: 35, type: "one", req: true,
+      label: "Работа",
+      opts: ["работаю по найму", "своё дело", "на пенсии", "не работаю", "другое"] },
+    { n: 36, type: "one", req: true,
+      label: "Дети",
+      opts: ["нет", "есть, взрослые", "есть, младше 18"] }
+  ] }
+];
+/* Вопросы 37 и 38 стоят на последнем шаге отдельно: ник уходит в колонку
+   «Ник в Телеграме», согласие — в «Согласие на ПД» и две колонки рядом. */
+const NICK = { label: "Ваш ник в Телеграме, чтобы прислать бонусы", hint: "Например, @anna" };
+
+const DONE = {
+  title: "Спасибо! Ваша анкета у нас.",
+  text: [
+    "Служба заботы пришлёт вам в Телеграм приглашение на закрытый эфир с Виолой и сертификат −30%.",
+    "Если вы на самостоятельном тарифе и хотите перейти на тариф с обратной связью и ответами Виолы за 10 000 ₽ вместо 20 000 ₽, напишите в службу заботы <a href=\"https://t.me/violamaroteam\" target=\"_blank\" rel=\"noopener\">@violamaroteam</a>. Мест 5, до 18 октября."
+  ]
+};
+
+/* Цвета десяти плиток шкалы, от золота к красному: те же, что в тесте 2.0. */
+const SCALE10 = {
+  c: ["#F0B13F", "#EDA23D", "#E9933B", "#E68438", "#E37536", "#DF6734", "#DC5832", "#D9492F", "#D53A2D", "#D22B2B"],
+  m: ["#F8D89F", "#F6D19E", "#F4C99D", "#F2C29C", "#F1BA9B", "#EFB399", "#EEAB98", "#ECA497", "#EA9C96", "#E89595"],
+  t: ["#FBECD1", "#FBE9D0", "#FAE5D0", "#F9E2CF", "#F8DECF", "#F7DACE", "#F7D7CE", "#F6D3CD", "#F5D0CD", "#F4CCCC"],
+  k: ["#18213A", "#18213A", "#18213A", "#18213A", "#18213A", "#18213A", "#18213A", "#FFFFFF", "#FFFFFF", "#FFFFFF"]
+};
+
+/* ——— состояние ———
+   Всё, что человек ответил, лежит в браузере: закрыл страницу, вернулся,
+   продолжил с того же шага. Хранится 30 дней. */
+const STATE_KEY = "viola-anketa-pe";
+const TTL = 30 * 24 * 3600e3;
+let stage = "cover";       // cover | form | done
+let step = 0;              // 0–7
+const A = {};              // ответы: A[1] … A[36]
+const OTHER = {};          // что написано рядом с «Другое»: OTHER[6] …
+let nick = "";
+let tgId = "";
+let acceptPd = false;
+let sent = false;
+
+function saveState() {
+  try {
+    localStorage.setItem(STATE_KEY, JSON.stringify({
+      v: 1, t: Date.now(), stage: stage, step: step,
+      a: A, other: OTHER, nick: nick, tgId: tgId, pd: acceptPd, sent: sent
+    }));
+  } catch (e) {}
+}
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STATE_KEY) || "null");
+    if (!s || s.v !== 1 || !s.t || Date.now() - s.t > TTL) return null;
+    return s;
+  } catch (e) { return null; }
+}
+
+/* ——— мелочи ——— */
+const view = document.getElementById("screen");
+const topEl = document.getElementById("top");
+const counter = document.getElementById("counter");
+const barFill = document.getElementById("bar-fill");
+
+const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ESC[c]); }
+
+/* Неразрывные пробелы: тире не начинает строку, а предлог, союз или число
+   не остаётся в её конце. Поля ввода не трогаем. Тот же приём, что в тесте. */
+const SHORT_WORD = /(^|[\s«( ])([А-Яа-яЁё]{1,2}|\d+)[ \t\n]+(?=\S)/g;
+function typograf_(root) {
+  if (!document.createTreeWalker) return;
+  const walker = document.createTreeWalker(root, 4, null);
+  let node;
+  while ((node = walker.nextNode())) {
+    const tag = node.parentNode && node.parentNode.nodeName;
+    if (tag === "TEXTAREA" || tag === "SCRIPT" || tag === "STYLE") continue;
+    let t = node.nodeValue, was;
+    if (!/\S/.test(t)) continue;
+    t = t.replace(/ — /g, " — ");
+    t = t.replace(/ (\d[\d.,]*)(?=[.,!?»)]*(\s|$))/g, " $1");
+    do { was = t; t = t.replace(SHORT_WORD, "$1$2 "); } while (t !== was);
+    if (t !== node.nodeValue) node.nodeValue = t;
+  }
+}
+function el(html) {
+  const d = document.createElement("div");
+  d.className = "fade";
+  d.innerHTML = html;
+  typograf_(d);
+  return d;
+}
+function render(node) {
+  while (view.firstChild) view.removeChild(view.firstChild);
+  linksThroughTelegram_(node);
+  view.appendChild(node);
+  try { window.scrollTo(0, 0); } catch (e) {}
+}
+function paintTop() {
+  const on = stage === "form";
+  topEl.classList.toggle("quiet", !on);
+  counter.textContent = on ? "Шаг " + (step + 1) + " из " + BLOCKS.length : "";
+  barFill.style.width = on ? Math.round((step + 1) / BLOCKS.length * 100) + "%" : "0";
+}
+
+/* ——— Телеграм ———
+   Страница обычная и работает в любом браузере. Если её открыли внутри
+   Телеграма мини-приложением, берём оттуда ник и ID, чтобы человек
+   не набирал ник руками и не ошибся в нём. */
+function tgApp() { return window.Telegram && window.Telegram.WebApp; }
+function inTg_() { const tg = tgApp(); return !!(tg && tg.initData); }
+function tgUser() {
+  const tg = tgApp();
+  return (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
+}
+function takeTg_() {
+  if (!inTg_()) return;
+  const tg = tgApp();
+  try {
+    tg.ready(); tg.expand();
+    const bg = getComputedStyle(document.documentElement).getPropertyValue("--ground").trim();
+    if (bg && tg.setHeaderColor) tg.setHeaderColor(bg);
+    if (bg && tg.setBackgroundColor) tg.setBackgroundColor(bg);
+  } catch (e) {}
+  const u = tgUser();
+  if (u.id && !tgId) tgId = String(u.id);
+  if (u.username && !nick) {
+    nick = "@" + u.username;
+    const f = document.getElementById("f-nick");
+    if (f && !f.value) f.value = nick;
+  }
+  saveState();
+}
+window.__tgReady = takeTg_;
+
+/* Правовые страницы внутри мини-приложения открываем средствами Телеграма:
+   обычный target=_blank там срабатывает не на всех клиентах. */
+function linksThroughTelegram_(node) {
+  node.querySelectorAll("a").forEach(a => a.addEventListener("click", (e) => {
+    const href = a.getAttribute("href");
+    if (!href || href.indexOf("http") !== 0) return;
+    const tg = tgApp();
+    if (!inTg_()) return;
+    if (href.indexOf("https://t.me/") === 0) {
+      if (tg.openTelegramLink) { e.preventDefault(); tg.openTelegramLink(href); }
+      return;
+    }
+    if (tg.openLink) { e.preventDefault(); tg.openLink(href); }
+  }));
+}
+
+/* ——— первый экран ——— */
+function cover() {
+  stage = "cover";
+  paintTop();
+  const started = Object.keys(A).length > 0;
+  const n = el(`
+    <div class="card">
+      <div class="hero"><h1>${COVER.title}</h1></div>
+      <div class="msg">
+        <img class="ava" alt="" width="36" height="36" src="${AVATAR}">
+        <div class="bubble">
+          <div class="who">Виола Маро</div>
+          ${COVER.words.map(p => `<p>${p}</p>`).join("")}
+        </div>
+      </div>
+      <div class="copy">
+        <h3>${COVER.giftsHead}</h3>
+        <ul class="gifts">
+          ${COVER.gifts.map(g => `<li><span aria-hidden="true">${g[0]}</span><p>${g[1]}</p></li>`).join("")}
+        </ul>
+        <p class="deadline">${COVER.deadline}</p>
+      </div>
+      <div class="foot">
+        <button class="go" id="start">${started ? "Продолжить анкету" : "Начать анкету"}&nbsp;<span aria-hidden="true">→</span></button>
+        <p class="fine center">Ответы сохраняются на этом устройстве: анкету можно закрыть и продолжить позже.</p>
+      </div>
+    </div>`);
+  n.querySelector("#start").addEventListener("click", () => { stage = "form"; saveState(); formScreen(); });
+  render(n);
+}
+
+/* ——— вопрос ——— */
+function isOther_(o) { return o === "Другое" || o === "другое"; }
+
+function qHtml_(q) {
+  const v = A[q.n];
+  const label = `<div class="q-label" id="ql-${q.n}">${q.label}${q.req ? ' <span class="req" title="Обязательный вопрос">*</span>' : ""}</div>`;
+  const hint = q.hint ? `<div class="q-hint">${q.hint}</div>` : "";
+
+  if (q.type === "text") {
+    return `<div class="q" data-q="${q.n}">${label}${hint}
+      <textarea data-n="${q.n}" rows="4" maxlength="1500" aria-labelledby="ql-${q.n}">${esc(v || "")}</textarea></div>`;
+  }
+  if (q.type === "scale") {
+    const tiles = [];
+    for (let i = 1; i <= 10; i++) {
+      const cls = v === i ? " on" : (v > i ? " pre" : "");
+      const css = `--c:${SCALE10.c[i - 1]};--m:${SCALE10.m[i - 1]};--t:${SCALE10.t[i - 1]};--k:${SCALE10.k[i - 1]}`;
+      tiles.push(`<button type="button" class="tile${cls}" style="${css}" aria-pressed="${v === i}" data-n="${q.n}" data-v="${i}">${i}</button>`);
+    }
+    return `<div class="q" data-q="${q.n}">${label}${hint}
+      <div class="scale10" role="group" aria-labelledby="ql-${q.n}">${tiles.join("")}</div>
+      ${q.lo || q.hi ? `<div class="scale-ends"><span>${q.lo || ""}</span><span>${q.hi || ""}</span></div>` : ""}</div>`;
+  }
+  if (q.type === "check") {
+    return `<div class="q" data-q="${q.n}">
+      <label class="cb"><input type="checkbox" data-n="${q.n}"${v ? " checked" : ""}><span>${q.label}</span></label></div>`;
+  }
+  /* one и multi */
+  const multi = q.type === "multi";
+  const picked = multi ? (Array.isArray(v) ? v : []) : (v ? [v] : []);
+  const full = multi && q.max && picked.length >= q.max;
+  const kind = multi ? (q.max ? "" : `<div class="q-hint">Можно выбрать несколько</div>`) : "";
+  const opts = q.opts.map((o, i) => {
+    const on = picked.indexOf(o) !== -1;
+    return `<button type="button" class="opt${on ? " on" : ""}${full && !on ? " off" : ""}" aria-pressed="${on}" data-n="${q.n}" data-i="${i}"><span>${esc(o)}</span></button>`;
+  }).join("");
+  const hasOther = q.opts.some(isOther_);
+  const otherOn = picked.some(isOther_);
+  return `<div class="q" data-q="${q.n}">${label}${hint}${kind}
+    <div class="opts${multi ? " multi" : ""}" role="group" aria-labelledby="ql-${q.n}">${opts}</div>
+    ${q.max ? `<div class="q-note" data-full="${q.n}"${full ? "" : " hidden"}>Выбрано ${q.max === 3 ? "три" : q.max}. Чтобы отметить другой вариант, снимите один из выбранных.</div>` : ""}
+    ${hasOther ? `<input type="text" data-other="${q.n}" maxlength="200" placeholder="Напишите, что именно" aria-label="Другое: напишите, что именно" value="${esc(OTHER[q.n] || "")}"${otherOn ? "" : " hidden"}>` : ""}
+  </div>`;
+}
+
+function emptyQ_(q) {
+  const v = A[q.n];
+  if (q.type === "text") return String(v || "").trim().length < 2;
+  if (q.type === "scale") return !v;
+  if (q.type === "one") return !v;
+  if (q.type === "multi") return !Array.isArray(v) || !v.length;
+  return false;
+}
+
+/* ——— шаг анкеты ——— */
+function formScreen() {
+  stage = "form";
+  const b = BLOCKS[step];
+  const last = step === BLOCKS.length - 1;
+  paintTop();
+  const n = el(`
+    <div class="card">
+      <div class="head">
+        <h2>${b.title}</h2>
+        ${step === 0 ? `<p class="fine">Вопросы со звёздочкой <span style="color: var(--accent-text); font-weight: 800;">*</span> обязательные.</p>` : ""}
+      </div>
+      <div class="qs">
+        ${b.qs.map(qHtml_).join("")}
+        ${last ? `
+          <div class="q" data-q="nick">
+            <label class="q-label" for="f-nick" id="ql-nick">${NICK.label} <span class="req" title="Обязательный вопрос">*</span></label>
+            <div class="q-hint">${NICK.hint}</div>
+            <input type="text" id="f-nick" maxlength="64" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(nick)}">
+          </div>
+          <div class="hp" aria-hidden="true"><label>Не заполняйте это поле<input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off"></label></div>
+          <div class="q" data-q="pd">
+            <label class="cb" id="cb-pd-l">
+              <input type="checkbox" id="cb-pd"${acceptPd ? " checked" : ""}>
+              <span>Я даю <a href="${CONFIG.docs.consent}" target="_blank" rel="noopener">согласие</a> на обработку моих персональных данных и ознакомлена с <a href="${CONFIG.docs.privacy}" target="_blank" rel="noopener">Политикой обработки персональных данных</a>. <span class="req" style="color: var(--accent-text); font-weight: 800;">*</span></span>
+            </label>
+          </div>` : ""}
+      </div>
+      <div class="foot">
+        <button class="go" id="next">${last ? "Отправить анкету" : "Дальше"}&nbsp;<span aria-hidden="true">→</span></button>
+        <p class="fine center" id="hint" role="status"></p>
+        <button class="ghost" id="back">← Назад</button>
+      </div>
+    </div>`);
+
+  const hint = n.querySelector("#hint");
+  function warn(msg) { hint.textContent = msg; hint.classList.add("err"); }
+  function calm() { hint.textContent = ""; hint.classList.remove("err"); }
+  const byN = {};
+  b.qs.forEach(q => { byN[q.n] = q; });
+
+  /* свой ответ */
+  n.querySelectorAll("textarea[data-n]").forEach(t => t.addEventListener("input", () => {
+    A[t.getAttribute("data-n")] = t.value;
+    t.classList.remove("err"); calm(); saveState();
+  }));
+
+  /* шкала */
+  n.querySelectorAll(".tile").forEach(c => c.addEventListener("click", () => {
+    const id = c.getAttribute("data-n");
+    const val = Number(c.getAttribute("data-v"));
+    const box = c.parentNode;
+    /* Вторая оценка необязательная: повторное нажатие её снимает. */
+    const off = A[id] === val && !byN[id].req;
+    if (off) delete A[id]; else A[id] = val;
+    for (let i = 0; i < box.children.length; i++) {
+      const on = !off && i === val - 1;
+      box.children[i].classList.toggle("on", on);
+      box.children[i].classList.toggle("pre", !off && i < val - 1);
+      box.children[i].setAttribute("aria-pressed", on ? "true" : "false");
+    }
+    box.classList.remove("err"); calm(); saveState();
+  }));
+
+  /* варианты */
+  n.querySelectorAll(".opt").forEach(c => c.addEventListener("click", () => {
+    const id = c.getAttribute("data-n");
+    const q = byN[id];
+    const o = q.opts[Number(c.getAttribute("data-i"))];
+    const box = c.parentNode;
+    if (q.type === "one") {
+      A[id] = o;
+    } else {
+      const cur = Array.isArray(A[id]) ? A[id].slice() : [];
+      const at = cur.indexOf(o);
+      if (at !== -1) cur.splice(at, 1);
+      else {
+        /* Больше, чем разрешено, выбрать нельзя: лишнее нажатие ничего не меняет. */
+        if (q.max && cur.length >= q.max) return;
+        cur.push(o);
+      }
+      /* В таблицу варианты идут в том порядке, в каком стоят в анкете. */
+      cur.sort((x, y) => q.opts.indexOf(x) - q.opts.indexOf(y));
+      A[id] = cur;
+    }
+    const picked = q.type === "one" ? [A[id]] : A[id];
+    const full = q.type === "multi" && q.max && picked.length >= q.max;
+    for (let i = 0; i < box.children.length; i++) {
+      const on = picked.indexOf(q.opts[i]) !== -1;
+      box.children[i].classList.toggle("on", on);
+      box.children[i].classList.toggle("off", !!full && !on);
+      box.children[i].setAttribute("aria-pressed", on ? "true" : "false");
+    }
+    const note = n.querySelector('[data-full="' + id + '"]');
+    if (note) note.hidden = !full;
+    const other = n.querySelector('[data-other="' + id + '"]');
+    if (other) {
+      const show = picked.some(isOther_);
+      other.hidden = !show;
+      if (show && !other.value) { try { other.focus(); } catch (e) {} }
+    }
+    box.classList.remove("err"); calm(); saveState();
+  }));
+  n.querySelectorAll("[data-other]").forEach(i => i.addEventListener("input", () => {
+    OTHER[i.getAttribute("data-other")] = i.value; saveState();
+  }));
+
+  /* галочка «можно цитировать» */
+  n.querySelectorAll('input[type="checkbox"][data-n]').forEach(c => c.addEventListener("change", () => {
+    A[c.getAttribute("data-n")] = c.checked; saveState();
+  }));
+
+  const fNick = n.querySelector("#f-nick");
+  const pd = n.querySelector("#cb-pd");
+  const pdLabel = n.querySelector("#cb-pd-l");
+  if (fNick) fNick.addEventListener("input", () => { nick = fNick.value; fNick.classList.remove("err"); calm(); saveState(); });
+  if (pd) pd.addEventListener("change", () => {
+    acceptPd = pd.checked;
+    if (pd.checked) { pdLabel.classList.remove("err"); calm(); }
+    saveState();
+  });
+
+  const btn = n.querySelector("#next");
+  btn.addEventListener("click", () => {
+    /* Первый пропущенный обязательный вопрос подсвечиваем и подводим к нему
+       экран: подсказку под кнопкой не видно, если вопрос остался выше. */
+    let bad = null;
+    b.qs.forEach(q => {
+      if (!q.req || !emptyQ_(q)) return;
+      const box = n.querySelector('[data-q="' + q.n + '"]');
+      const mark = box && box.querySelector("textarea, .scale10, .opts");
+      if (mark) mark.classList.add("err");
+      if (!bad) bad = box;
+    });
+    if (last && String(nick || "").trim().length < 2) {
+      fNick.classList.add("err");
+      if (!bad) bad = n.querySelector('[data-q="nick"]');
+    }
+    if (bad) {
+      warn("Остался вопрос без ответа. Он выделен красным.");
+      if (bad.scrollIntoView) bad.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    if (!last) { step++; saveState(); formScreen(); return; }
+    if (!pd.checked) {
+      /* Без согласия на обработку данных анкету принимать нельзя. */
+      pdLabel.classList.add("err");
+      if (pdLabel.scrollIntoView) pdLabel.scrollIntoView({ behavior: "smooth", block: "center" });
+      warn("Отметьте согласие на обработку персональных данных.");
+      return;
+    }
+    const hp = n.querySelector("#f-website");
+    btn.disabled = true;
+    btn.textContent = "Отправляю…";
+    calm();
+    sendForm(hp ? hp.value : "").then(() => {
+      sent = true; stage = "done"; saveState(); done();
+    }).catch((err) => {
+      btn.disabled = false;
+      btn.innerHTML = 'Отправить анкету&nbsp;<span aria-hidden="true">→</span>';
+      warn(err && err.message === "no-url"
+        ? "Анкета пока не принимается: приём ответов ещё не подключён. Ваши ответы сохранены."
+        : "Не получилось отправить. Проверьте интернет и нажмите ещё раз. Ваши ответы сохранены.");
+    });
+  });
+  n.querySelector("#back").addEventListener("click", () => {
+    if (step > 0) { step--; saveState(); formScreen(); return; }
+    cover();
+  });
+  render(n);
+  /* Ник из Телеграма мог приехать позже, чем отрисовался шаг. */
+  if (last) takeTg_();
+}
+
+/* ——— отправка ———
+   Тем же способом, что site.js шлёт заявки: POST с типом text/plain.
+   Такой запрос «простой», браузер не шлёт перед ним OPTIONS, на который
+   Apps Script отвечать не умеет. redirect: "manual" — потому что скрипт
+   отвечает кодом 302 на домен, который в ряде стран недоступен: сам POST
+   доходит и строка записывается, а чтение ответа падает. Останавливаемся
+   на самом 302: он приходит только после того, как doPost отработал. */
+function answer_(q) {
+  const v = A[q.n];
+  if (q.type === "check") return v ? "да" : "";
+  if (q.type === "scale") return v || "";
+  const more = String(OTHER[q.n] || "").trim();
+  const name = o => (isOther_(o) && more ? o + ": " + more : o);
+  if (q.type === "multi") return (Array.isArray(v) ? v : []).map(name);
+  if (q.type === "one") return v ? name(v) : "";
+  return String(v || "").trim();
+}
+function payload_(website) {
+  const answers = {};
+  BLOCKS.forEach(b => b.qs.forEach(q => { answers["q" + q.n] = answer_(q); }));
+  return {
+    type: "pe_anketa",
+    website: website || "",
+    nick: String(nick || "").trim(),
+    tg_id: tgId || "",
+    answers: answers,
+    accept_pd: !!acceptPd,
+    consent_ts: new Date().toISOString(),
+    doc_version_consent: CONFIG.docVersionConsent,
+    page: location.href
+  };
+}
+function sendForm(website) {
+  if (!CONFIG.sheetUrl) return Promise.reject(new Error("no-url"));
+  return fetch(CONFIG.sheetUrl, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload_(website)),
+    redirect: "manual",
+    keepalive: true
+  }).then(res => {
+    if (res.type !== "opaqueredirect" && !res.ok) throw new Error("HTTP " + res.status);
+    return true;
+  });
+}
+
+/* ——— спасибо ——— */
+function done() {
+  stage = "done";
+  paintTop();
+  const n = el(`
+    <div class="card">
+      <div class="hero"><h2>${DONE.title}</h2></div>
+      <div class="copy">
+        ${DONE.text.map(p => `<p>${p}</p>`).join("")}
+      </div>
+    </div>`);
+  render(n);
+}
+
+/* ——— запуск ——— */
+const AVATAR = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCABwAHADASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAABQYDBAcCAQAI/8QAORAAAgEDAgQEAwUIAQUAAAAAAQIDAAQRBSEGEjFBE1FhcQcigRQykbHBFSMzQ1Kh0fDxQmJyouH/xAAaAQADAQEBAQAAAAAAAAAAAAABAwQCBQAG/8QAJhEAAgICAgIBAwUAAAAAAAAAAAECEQMSITEEIlEUQWEyM3GB0f/aAAwDAQACEQMRAD8Ay1VqRRXKipVFcVn0CR2i1Kq1wvWpkWsM0eqtXtP0y61Kdbe0gkmmboiLkn/FMPCPBEutAXl3m3sQ2DIRkufJR39+lPWpa7onBenmCzsgikfOE+83/m3eg+OwXbpCnafDDUGjH2m7tIJD/LL5I98ZqjrXA+oaLEZjyzwr1dDkCiB+Iel6iOeBRG/TfYg+tT6Bx6s881rcfMV7NvkdCD50puV8IdFKuWJDRkdRivAtN95aafrtwbaCJLS9yeUjaOU9gR2J7GleWCS3laKVSjoSrKRuDRUvsGiLkr3l2rsD0roCg2aSIuTFfclThc16U3rNhoV1qZVqNR5VMgqpkqO0WmzgLhKTinV1hYFLWEeJPKeir5e58qXLK3e6uI4Y1Ls7AAedfoPg/RoeHNGtrEKPGl/e3DDufL2HT6V6EdnyYyz1jwR65jTrZ47JUhitk8OIN91NsszViGqTLxFqDxadfardXGT+9Q4jJ9B0IrV/iIs11oAt4HKPfyrGxHXlJyf1qfhfhmz0u1jSCBFIXdsdaW51K/uOxYHKH4Mx0b4WX93zy3CeDI2M4GA3rjtRqy+GE2l3guJJvEyO3nWtx2jcp+Xb2qteWpUEg4oOcux6w4+jKtc0i5sbmOeLmJ8wOh8/euda0y41BBqLx8szxK7coyH8yPXatBmEY++ik52NDXls57j9nEiOX70O/wApPkfT0pOWWy2XaDDHo9X0zL+QgkEEGuglFdf0uXTtQkjaMoucqD2HlQ3HagpWrDrTo8Ub17ivR7V1jNesNCmoqZagWpolLEAdT0qtkSHn4faUJL6O4ZQzKw5Qf6s9fYbn1I9K2G3cyzTMOiRty59Bt+lIXB8CWreGo/hrn2zsP1P1p20mXPiHsxIHsKONicytgzjCBQumRZHyTAf+rUT0l35VQDagvEl6zyRGMRSMtywUSEgEKuNsepNUrbjP7JdeDc2cluf6uYMtJr3s6WH9pIfuZubAGM1DfwSeFzZzihi6tJMnjo2UAySPalnVuL7p2w19FY2QPzS45nYenkPWnSaaozo48sKXY5T8wx3xSDxxdPYvbXaNylW5eYedNMHE3DmoKbe1vkubgDJLSnnPrvSvx7ZrqHD0oAIZQHG3r1pChrKmayS2hcQzdGLijh2C8Ug3EYCkmk4xlWIIxjtRj4aRvFo72k0pkIUgsM9tx/Y1FqsPJcMeXlzuR5HO9Sr1k4jGripA0RjHSvuXFS4rzFaBQljaiGlJz3UbMByg9+hqioyaMaQokuYwRnlIVFHcnvVzIEabwjEVjnlbJaVg2T3/AN3pkiufsentOdgqkj8c/pQThJGb7SOqLGXB/QVPrU/g2SIf4agM49BufyrN1GzNbToSuMItS1LUtL06C6eGGIF7l425SxY5I5u1XrPhG8jtlQ3ZuTjdiS+B338z7jp0qbgq6OpzPeTMMTNnz2NN+ualbWFkI4Pmkfblz+dahldNF30i4lbsGcMzG10aa0MjScpKb+Wa4uOEIdSBdVAi5QDHkEgg5yM9/Wp9DNodNlmeZEY5LivrbiFgoks+S5WPIkXG4HpXlJxaYyWFTVA6TgaxjmW6kgkEkXMVdyOYZOTv139arXzC+ultSo5GHKc9MAU1XGv2up2nycoOOgpXtntzq3NcyxxRBSAzkAE+W9Jyzcp3djIYYwx0lRc4Z05LSV1jA8NnyD7ihPEsXg3DrjI52Ht/uaYOFbpL22e4ReWNp25cjcqCQPyoTxlDi4Zhk/N17bgVLLiZi7ToVq9FegV0B6UWZQkpRvQmWO5WTuh5mPljoKBoDtTDoNl4kiJu7ORhV7diSe21Xy6IEzWuB7Vm0W+vHGBKnJGPQDeotXiFzI0HLnmQj6FTRvREaDhxYwoGRyL7d6qSwKbi3nJ2KkGsZF6pIxil7tsz/g62urBpdP8AD+eByoHcjsfwxVzXLuLSpDLqzyo0xCDCMVXPRcgYH1ohxfbroGoWmsBmW3mYQSyA4CN/0E+hzj8Kv38qanaLzlS4GGHXI86XFVLk6sMu0EkwVp3DU7MTHpuqCJyG+WElTkgf3yKO6lBqWi2LudEEfLskckqq8p3GAPp16VV0u91SxQQWssxj6cqysmPwNX5kmupxNdqOcDJ3z+fWqXolaB7Xy1X9/wCgldJeTF5cBLRmXmkjjbIz5Z7+9IfxBniWTS7EfPLPcNNGnnyKQM57EtWh6rq8FuBEXDN/T1yax/7RPxFx9JdTEFLd3jjA6Kq9MfU5qeK9nL4MZ53DT5Nh4ZiFppdtEowAAfxNU+MMCR9uhJ+m1XNKI5ggO0YT8q44wT7rYDbFge+CP+KinL2TNwXDQlcuDv1rpBXg3FSKuK2wJCLDEzEZG350/wDBmhSs0Rh+aaZxzL1wPKrHCPwt1Wdo7i6gjWP7ytINv99K1fhzg204dj8RZGlnI+Z2H/FdLRy/g5MssYr8nUluLaxSHG6ryKo756n9KHSx+HBFkbqeX60Z1CaNc4JaVuhxQvWVNtbW0Y3dnU4/360MiQvE3wDuIdGi4i4WvdMm3EkRjH5qfyFZJwvreoaG0Ucqi5jgPLyzDOANiK2qzIYSRtuPun1BOKzLVtMjt9fuUwCJjz/U9f8ANYk/WyzB+uhtsuLdPnPj/skSMw3CFQB9NqvQ8ScM6pdpZsnhXL7CHOCfpWetZ8iEDK0YsuFE1iwikgtTbTA5jmXYlh3z1r0Zt9lrivmhh1bgIIzahYSCRXGeQtkD28qxbQV+wa9dQPFJFcrNIZEkUqwy2eh7dN6/QWhWuuWlqF1K4imlH8wKQGH/AHDufWo9e4btdZtJGkSz8XlKpKU+eMkbEHrj+1CceHROp3JKTFXh+cvIwY5LKG29qJcQ263NhETsTHgH1A/x+VL+jRXOhXkVtdxMACUZ+oX3+tPT6U+qaXLbp/FQZVTsT6qfUGuVJPai20lZlQ61IozVnVbCXTrto5kdGPZlxVddt6ddgRvIlYgeEC6jbmxtXLRPKuQzeytg1aikjHybDyFSFDuVC59utd6UL7PmYuugJcyR25y8L+IehZSaETI80hmdst2z5+Q8qaLlOZQ3IQp8t8H60KlEbuYtgR2C4zU0oNFUJASKQpBM/MAA2x9jmkjW3WXVpHTJKEKfw3/A/nT9rCixiLRxqebIyegb9f8A5SHNZzRM7sQSW5s980jI6Wpd40HJ7ohb954SZ3dgu/nTrpl1dxRraaaY1S3xG7uOY564ApCvH8KETBclHD4896KcP6ojBfEMiLcTsHCtuRjbf3oY+CnJGx7u55RyC5vGkkJwsanv7CvNRihg04BkaKWQ7OO58qExcUaFp9wto1wolBw4Vfu+57U030EWp2MYVleMgOjKc4zTWtkyW9Wr6BGlx22pRtBPEDNjGTR7T7c6ZGqoAmRgk77e1KMxmsbpW5mVkI3Hl500JqkV/bQMhy7MFYDsaVh1bqXaB5EZJbR6ZZv+HNG1aIif7QCe8cmw9gcikPiX4cXumI93YFbu0Xc8gPPGPVe49RWkKoRBtXUVw0fM++BsKfPxYSXVMmx+Vkg+7R//2Q==";
+
+function boot() {
+  document.getElementById("brand-ava").src = AVATAR;
+  const s = loadState();
+  if (s) {
+    Object.keys(s.a || {}).forEach(k => { A[k] = s.a[k]; });
+    Object.keys(s.other || {}).forEach(k => { OTHER[k] = s.other[k]; });
+    nick = s.nick || "";
+    tgId = s.tgId || "";
+    acceptPd = !!s.pd;
+    sent = !!s.sent;
+    step = Math.max(0, Math.min(Number(s.step) || 0, BLOCKS.length - 1));
+  }
+  takeTg_();
+  if (sent) { done(); return; }
+  /* Вернулась к начатой анкете — сразу тот шаг, на котором остановилась. */
+  if (s && s.stage === "form") { formScreen(); return; }
+  cover();
+}
+boot();
+</script>
+</html>
