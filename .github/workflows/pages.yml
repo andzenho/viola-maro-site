@@ -66,6 +66,13 @@ jobs:
           cp miniapps/koleso/index.html site/koleso/index.html
           cp miniapps/test2/index.html site/test2/index.html
 
+      # Анкета участниц потока: одна страница, свой приёмник и своя таблица.
+      # В меню сайта её нет, индексация запрещена в самой странице.
+      - name: Добавить анкету участниц
+        run: |
+          mkdir -p site/anketa
+          cp miniapps/anketa/index.html site/anketa/index.html
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
