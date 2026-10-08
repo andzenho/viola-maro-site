@@ -316,11 +316,13 @@
     font-size: 1rem; padding: .95rem .9rem;
     box-shadow: 0 14px 24px -12px var(--cta-glow), 0 2px 6px rgba(24, 33, 58, .14);
   }
-  /* На самых узких экранах кегль чуть меньше, чтобы надпись осталась в строку. */
+  /* Надпись «Предзапись на Прикладную эмпатию 2.0» на телефоне встаёт
+     в две строки: «Предзапись» и название практикума. На самых узких
+     экранах кегль чуть меньше, чтобы название осталось в одной строке. */
   @media (max-width: 340px) { .fab .go { font-size: .92rem; padding-left: .5rem; padding-right: .5rem; } }
   /* Пока плавающая кнопка в работе, у страницы снизу больше воздуха:
      в самом конце кнопка не закрывает последний текст. */
-  .wrap.has-fab { padding-bottom: calc(6rem + max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px))); }
+  .wrap.has-fab { padding-bottom: calc(7.3rem + max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px))); }
   .go:hover { filter: brightness(1.06); }
   .go:active { transform: scale(.985); }
   .go:disabled { opacity: .6; cursor: default; }
@@ -1050,6 +1052,10 @@ const NEXT = {
   total: "Что вы получите в закрытом канале предзаписи?",
   totalSub: { audio: "9 минут", video: "в записи", price: "только для тех, кто в предзаписи" },
   cta: "Получить медитацию и эфир",
+  /* Плавающая кнопка называет само действие (правка 08.10): рядом с ней нет
+     ни метки предзаписи, ни карточек с бонусами, как у основных кнопок.
+     Название практикума не рвётся: перенос возможен только после первого слова. */
+  fab: "Предзапись на&nbsp;Прикладную&nbsp;эмпатию&nbsp;2.0",
   ctaNote: "Анкета на 2 минуты. Бесплатно, это не оплата."
 };
 
@@ -1932,7 +1938,7 @@ const fab = document.getElementById("fab");
 const fabGo = document.getElementById("fab-go");
 const wrap = document.querySelector(".wrap");
 let fabIo = [];
-fabGo.innerHTML = NEXT.cta + '&nbsp;<span aria-hidden="true">→</span>';
+fabGo.innerHTML = NEXT.fab + '&nbsp;<span aria-hidden="true">→</span>';
 typograf_(fabGo);
 fabGo.addEventListener("click", () => {
   if (stage !== "result" || leadSent) return;
