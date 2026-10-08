@@ -344,6 +344,10 @@
     font-weight: 700; line-height: 1.35;
   }
   .field-hint { font-weight: 400; font-size: .9rem; color: var(--ink-mute); line-height: 1.45; }
+  /* Слова человека из теста под подсказкой: чуть темнее самой подсказки. */
+  .field-note { color: var(--ink); overflow-wrap: anywhere; }
+  /* Вопрос и так набран жирным, поэтому выделенное слово берёт цветом. */
+  .field-l b, .fields label b { color: var(--warn); }
   .fields input, .fields textarea {
     font: inherit; font-weight: 400; color: var(--ink);
     background: var(--surface-2);
@@ -363,6 +367,8 @@
      Цвета каждой плитки приходят из SCALE10 через --c, --m, --t, --k. */
   .scale10 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; padding: .25rem 0; }
   .scale10.err { outline: 2px solid var(--warn); outline-offset: 4px; border-radius: 14px; }
+  /* Пропущенный вопрос с вариантами отмечается так же, как пропущенная шкала. */
+  .chips.err { outline: 2px solid var(--warn); outline-offset: 4px; border-radius: 14px; }
   .scale10 .chip {
     min-height: 3.3rem; padding: .6rem .2rem;
     font-size: 1.15rem; font-weight: 700; line-height: 1;
@@ -1099,8 +1105,11 @@ const PROGRAM = {
 };
 
 /* ——— анкета предзаписи ———
-   Пять шагов: имя и контакт, о себе, готовность, вопрос про Дарью, согласие.
-   Тексты шагов 1–3 и шапки — правка 04.10. LEADER — вопросы про «Женщину-лидера»: их даёт Илья. Формат:
+   Пять шагов: имя и контакт, готовность и что может помешать, запрос на
+   программу (проблема, бюджет, что пробовали), вопрос про Дарью, согласие.
+   Порядок и тексты шагов 2–3 — правка 08.10: сначала готовность, потом
+   запрос. Поля типа one обязательны, как и остальные.
+   LEADER — вопросы про «Женщину-лидера»: их даёт Илья. Формат:
    { id: "leader1", label: "Вопрос", type: "one", opts: ["да", "нет"] }
    или type: "area" для ответа своими словами. Пока пусто, шаг идёт без них. */
 const LEADER = [];
@@ -1110,17 +1119,26 @@ const FORM = [
     { id: "contact", label: "Ваш ник в Телеграме или телефон", type: "text", max: 60,
       hint: "Чтобы мы могли прислать вам подарки. Например, @anna или +7 900 000-00-00" }
   ] },
-  { title: "Расскажите о себе", fields: [
-    { id: "change", label: "Что вы хотите изменить в своей жизни в первую очередь?", type: "area", max: 400,
-      hint: "Своими словами, одной фразы хватит" },
-    { id: "tried", label: "Что вы уже пробовали, чтобы это изменить?", type: "area", max: 400,
+  { title: "Прикладная эмпатия 2.0", fields: [
+    { id: "ready", label: "Насколько вы планируете пойти на <b>платный</b> шестинедельный практикум Прикладная эмпатия 2.0, который стартует 1&nbsp;ноября?", type: "scale",
+      hint: "Ответьте, пожалуйста, максимально честно",
+      lo: "1, пока только смотрю", hi: "10, точно иду" },
+    { id: "meshaet", label: "Что сейчас может помешать вам пойти?", type: "one",
+      opts: ["Ничего, хочу идти", "Хочу сначала узнать цену", "Сомневаюсь, что мне подойдёт",
+             "Не будет времени в ноябре", "Пока просто интересно"] }
+  ].concat(LEADER) },
+  { title: "Ваш запрос на программу", fields: [
+    /* Ответ из теста в поле не подставляется: здесь вопрос уже про программу,
+       и нужен ответ на него. Прежние слова человека показаны под подсказкой. */
+    { id: "change", label: "Какую главную проблему вы хотите решить на Прикладной эмпатии 2.0?", type: "area", max: 400,
+      hint: "Своими словами: ситуация, в которой вам сейчас труднее всего",
+      note: () => words ? "В тесте вы написали: «" + esc(words) + "»" : "" },
+    { id: "budget", label: "Сколько вы готовы заплатить за полное решение этой проблемы?", type: "one",
+      opts: ["До 10\u00a0000\u00a0₽", "10\u00a0000–20\u00a0000\u00a0₽", "20\u00a0000–40\u00a0000\u00a0₽",
+             "Больше 40\u00a0000\u00a0₽", "Пока не знаю"] },
+    { id: "tried", label: "Что вы уже пробовали, чтобы это решить?", type: "area", max: 400,
       hint: "Книги, курсы, психолог, программы Виолы. Если ничего, так и напишите" }
   ] },
-  { title: "Прикладная эмпатия 2.0", fields: [
-    { id: "ready", label: "Насколько вы готовы присоединиться к практикуму Прикладная эмпатия 2.0?", type: "scale",
-      hint: "Выберите цифру от 1 до 10. Это не оплата и ни к чему не обязывает",
-      lo: "1, пока только смотрю", hi: "10, готова идти" }
-  ].concat(LEADER) },
   { kind: "darya" },
   { title: "Согласие на обработку данных", consent: true, fields: [] }
 ];
@@ -2021,11 +2039,36 @@ document.addEventListener("visibilitychange", () => {
 });
 
 /* ——— анкета предзаписи ——— */
+/* Пусто ли поле анкеты. Одна проверка на всё: и для кнопки «Дальше»,
+   и для возврата к недозаполненному шагу. */
+function fieldEmpty_(f) {
+  const v = form[f.id];
+  return (f.type === "scale" || f.type === "one")
+    ? !v
+    : String(v || "").trim().length < (f.id === "contact" ? 3 : 2);
+}
+
+/* Первый шаг, где ещё нет ответа. Анкету могли начать до правки 08.10:
+   шаги шли в другом порядке, двух вопросов не было. Без этой проверки
+   человек с сохранённым шагом проскочил бы новые вопросы, и в таблицу
+   ушла бы анкета с пустыми «Помешать» и «Готова заплатить». */
+function firstGap_() {
+  for (let i = 0; i < FORM.length; i++) {
+    const st = FORM[i];
+    if (st.kind === "darya") { if (!form.konsultaciya) return i; continue; }
+    if ((st.fields || []).some(fieldEmpty_)) return i;
+  }
+  return FORM.length - 1;
+}
+
 function prefillForm_() {
   const u = tgUser();
   if (!form.name && u.first_name) form.name = u.first_name;
   if (!form.contact && u.username) form.contact = "@" + u.username;
-  if (!form.change && words) form.change = words;
+  /* До 08.10 сюда подставлялся ответ из теста. Если он так и лежит в поле
+     нетронутым, убираем: вопрос теперь другой, а слова человека показаны
+     под подсказкой. */
+  if (words && form.change === words) form.change = "";
 }
 
 /* Цвета десяти плиток шкалы готовности, от золота к красному, как деления
@@ -2066,9 +2109,11 @@ function fieldHtml_(f) {
   const input = f.type === "area"
     ? `<textarea id="f-${f.id}" data-f="${f.id}" rows="3" maxlength="${f.max || 400}">${esc(v || "")}</textarea>`
     : `<input id="f-${f.id}" data-f="${f.id}" type="text" maxlength="${f.max || 80}" value="${esc(v || "")}"${f.auto ? ` autocomplete="${f.auto}"` : ' autocomplete="off"'}>`;
+  const note = f.note ? f.note() : "";
   return `
     <label data-field="${f.id}">${f.label}
       ${f.hint ? `<span class="field-hint">${f.hint}</span>` : ""}
+      ${note ? `<span class="field-hint field-note">${note}</span>` : ""}
       ${input}
     </label>`;
 }
@@ -2171,18 +2216,16 @@ function formScreen() {
        под кнопкой человек не видит, если поле осталось выше сгиба. */
     let bad = null;
     st.fields.forEach(f => {
-      const v = form[f.id];
-      const empty = (f.type === "scale" || f.type === "one")
-        ? !v
-        : String(v || "").trim().length < (f.id === "contact" ? 3 : 2);
-      if (!empty) return;
+      if (!fieldEmpty_(f)) return;
       const box = n.querySelector('[data-field="' + f.id + '"]');
       const mark = box && (box.querySelector("input, textarea, .scale10, .chips"));
       if (mark) mark.classList.add("err");
       if (!bad) bad = { f: f, box: box };
     });
     if (bad) {
-      warn(bad.f.type === "scale" ? "Выберите цифру от 1 до 10." : "Заполните, пожалуйста: " + lower1(bad.f.label).replace(/\?$/, "") + ".");
+      warn(bad.f.type === "scale" ? "Выберите цифру от 1 до 10."
+         : bad.f.type === "one" ? "Выберите один из вариантов."
+         : "Заполните, пожалуйста: " + lower1(bad.f.label).replace(/\?$/, "") + ".");
       if (bad.box && bad.box.scrollIntoView) bad.box.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
@@ -2364,7 +2407,12 @@ function sendLead() {
   p.tried = String(form.tried || "").trim();
   p.ready = form.ready || "";
   p.konsultaciya = form.konsultaciya || "";   // da | net: писать ли человеку Дарье
-  p.leader = LEADER.map(f => f.label + ": " + (form[f.id] || "")).join("\n");
+  /* Два новых ответа едут в поле leader двумя строками: приёмник таблицы
+     кладёт его в одну колонку как есть, и менять его ради них не нужно.
+     В таблицу идут обычные пробелы: по ним удобнее искать и фильтровать. */
+  const plain = v => String(v || "").replace(/\u00a0/g, " ");
+  p.leader = ["Помешать: " + plain(form.meshaet), "Готова заплатить: " + plain(form.budget)]
+    .concat(LEADER.map(f => f.label + ": " + (form[f.id] || ""))).join("\n");
   p.rank = r.key || "";
   p.sphere = r.sphere || "";
   p.age = age;
@@ -2524,7 +2572,7 @@ function boot() {
     age = s.age || "";
     startedAt = s.startedAt || 0;
     pid = s.pid || "";
-    formStep = Math.min(s.formStep || 0, FORM.length - 1);
+    formStep = Math.min(s.formStep || 0, FORM.length - 1, firstGap_());
     leadSent = !!s.leadSent;
     lastResult = s.res || null;
   }
