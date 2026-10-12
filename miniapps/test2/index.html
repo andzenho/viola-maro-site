@@ -401,6 +401,19 @@
     transition: background-color .15s ease, border-color .15s ease;
   }
   .chips .chip { text-align: left; padding: .8rem .95rem; font-weight: 400; }
+  /* Тариф в анкете: название, цена крупно, одна строка отличия. */
+  .chips .chip.tarif { display: flex; flex-direction: column; gap: .25rem; padding: 1rem 1.05rem 1.05rem; }
+  /* Название тарифа своим цветом не выделяем: красным в вопросах отмечено
+     одно слово, а на выбранном синем варианте красный не читается. */
+  .chips .chip.tarif b { font-size: 1.05rem; font-weight: 700; color: inherit; }
+  .tarif-price { font-size: 1.45rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; font-variant-numeric: tabular-nums; }
+  .tarif-price i { font-style: normal; font-size: .9rem; font-weight: 500; letter-spacing: 0; margin-left: .55rem; opacity: .85; }
+  .tarif-text { font-size: .92rem; line-height: 1.4; opacity: .92; }
+  /* Что даёт предзапись, над тарифами: персиковая плашка, как метки. */
+  .perks-box { background: var(--accent-soft); border-radius: 18px; padding: 1rem 1.05rem 1.1rem; display: flex; flex-direction: column; gap: .8rem; }
+  .perks-box p { font-weight: 700; line-height: 1.35; }
+  .perks-box .checks { gap: .6rem; }
+  .perks-box .checks li::before { background: #FFFFFF; }
   .chip:hover { border-color: var(--deep); }
   .chip.on { background: var(--deep); color: #FFFFFF; border-color: var(--deep); }
 
@@ -1038,19 +1051,22 @@ const NEXT = {
   audio: { title: "Медитация «Мне можно»", by: "Виола Маро", time: "9 минут",
            cap: "Включаете перед трудным разговором или сразу после него." },
   video: { title: "Эфир Виолы", time: "запись", cap: "Виола подробно разбирает, {theme}." },
-  /* Третья карточка, мотивация про цену (правка 03.10): человек до кнопки
-     видит, что предзапись даёт самую низкую цену. Менеджера и саму цену
-     здесь не называем. Та же карточка стоит и перед второй кнопкой.
-     Строки «И ещё одно» перед ней нет: убрана правкой 03.10. */
-  price: { title: "Самая низкая цена на Прикладную эмпатию 2.0",
-           cap: "Её получают только те, кто в предзаписи." },
+  /* Третья карточка (правка 12.10). Раньше она обещала самую низкую цену
+     только тем, кто в предзаписи. Теперь цены открытые, одни для всех,
+     и стоят в самой анкете, поэтому карточка говорит про практикум и про
+     выбор тарифа. Менеджера здесь по-прежнему не называем. */
+  price: { title: "Практикум «Прикладная эмпатия 2.0»",
+           cap: "Шесть недель с Виолой. В анкете предзаписи увидите цены и выберете тариф." },
   /* <br> работает только на узком экране, см. стили метки. */
   tag: "Предзапись <br>на&nbsp;Прикладную&nbsp;эмпатию&nbsp;2.0",
   /* Итог перед второй кнопкой, после программы: заголовок и три пункта
      того, что человек получит. Названия пунктов те же, что у карточек
      выше; подпись у каждого короткая. */
   total: "Что вы получите в закрытом канале предзаписи?",
-  totalSub: { audio: "9 минут", video: "в записи", price: "только для тех, кто в предзаписи" },
+  totalSub: { audio: "9 минут", video: "в записи" },
+  /* Третий пункт итога: что ещё лежит в канале. Слова те же, что на сайте
+     предзаписи. Про цену здесь больше нет: она одна для всех. */
+  totalMore: { title: "Материалы Виолы, которых нет в открытом доступе", sub: "новое вы видите первыми" },
   cta: "Получить медитацию и эфир",
   /* Плавающая кнопка называет само действие (правка 08.10): рядом с ней нет
      ни метки предзаписи, ни карточек с бонусами, как у основных кнопок.
@@ -1111,8 +1127,9 @@ const PROGRAM = {
 };
 
 /* ——— анкета предзаписи ———
-   Пять шагов: имя и контакт, готовность и что может помешать, запрос на
-   программу (проблема, бюджет, что пробовали), вопрос про Дарью, согласие.
+   Шесть шагов: имя и контакт, готовность и что может помешать, запрос на
+   программу (проблема, бюджет, что пробовали), тариф с ценами, вопрос про
+   Дарью, согласие.
    Порядок и тексты шагов 2–3 — правка 08.10: сначала готовность, потом
    запрос. Поля типа one обязательны, как и остальные.
    LEADER — вопросы про «Женщину-лидера»: их даёт Илья. Формат:
@@ -1145,9 +1162,30 @@ const FORM = [
     { id: "tried", label: "Что вы уже пробовали, чтобы это решить?", type: "area", max: 400,
       hint: "Книги, курсы, психолог, программы Виолы. Если ничего, так и напишите" }
   ] },
+  /* Цены и выбор тарифа (правка 12.10). Шаг стоит после вопросов про
+     готовность и бюджет: на них человек отвечает ещё без нашей цены перед
+     глазами. Цены те же, что на сайте. Над тарифами напоминание, что даёт
+     сама предзапись: цена не должна быть единственным, что человек видит
+     перед кнопкой. */
+  { title: "Тариф для предзаписи", perks: true, fields: [
+    { id: "tarif", label: "Какой тариф вы выбираете?", type: "one",
+      hint: "Платить сейчас не нужно. Оплатить потом можно целиком или в рассрочку",
+      rich: [
+        { v: "Самостоятельный", price: "19\u00a0900\u00a0₽", cur: "$240 / €215",
+          text: "Весь метод и все техники. Самостоятельное прохождение." },
+        { v: "С Виолой", price: "39\u00a0900\u00a0₽", cur: "$480 / €430",
+          text: "Всё то же самое, и Виола отвечает на ваши вопросы." }
+      ] }
+  ] },
   { kind: "darya" },
   { title: "Согласие на обработку данных", consent: true, fields: [] }
 ];
+
+/* Что даёт предзапись: стоит на шаге с тарифами, над ценами. */
+const PERKS = {
+  lead: "За анкету предзаписи вы сразу получаете:",
+  list: ["Медитацию «Мне можно»", "Эфир Виолы в записи", "Закрытый канал предзаписи: новое вы видите первыми"]
+};
 
 /* Шаг про Дарью. До кнопки анкеты менеджер не упоминается нигде: ни на экране
    результата, ни в частых вопросах, ни у кнопок. Здесь человек сам решает,
@@ -1156,7 +1194,7 @@ const FORM = [
 const DARYA = {
   title: "Хотите, чтобы вам написала Дарья из команды Виолы?",
   list: [
-    "закрепит за вами самую низкую цену на Прикладную эмпатию 2.0. Сейчас это можно сделать только через неё",
+    "поможет выбрать тариф и оформить оплату, целиком или в рассрочку",
     "ответит на все вопросы о программе"
   ],
   note: "Это переписка в Телеграме, без звонков.",
@@ -1426,6 +1464,7 @@ const ICON = {
   film: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3.5"/><path d="M10.2 9.2v5.6l4.8-2.8z" fill="currentColor"/></svg>',
   percent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M18.5 5.5l-13 13"/><circle cx="7" cy="7" r="2.6"/><circle cx="17" cy="17" r="2.6"/></svg>',
   play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>',
+  doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9.5 12h5M9.5 16h5"/></svg>',
   lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'
 };
 
@@ -1733,7 +1772,7 @@ function priceHtml_(place) {
   return `
     <button class="post" ${attrs}>
       <span class="perk">
-        <span class="play gold" aria-hidden="true">${ICON.percent}<span class="play-lock">${ICON.lock}</span></span>
+        <span class="play gold" aria-hidden="true">${ICON.doc}</span>
         <span class="perk-main">
           <span class="perk-title">${NEXT.price.title}</span>
           <span class="post-cap">${NEXT.price.cap}</span>
@@ -1747,7 +1786,7 @@ function totalHtml_() {
   const rows = [
     [ICON.wave,    NEXT.audio.title, NEXT.totalSub.audio],
     [ICON.film,    NEXT.video.title, NEXT.totalSub.video],
-    [ICON.percent, NEXT.price.title, NEXT.totalSub.price]
+    [ICON.doc,     NEXT.totalMore.title, NEXT.totalMore.sub]
   ];
   return `
     <ul class="total">${rows.map(r => `
@@ -2105,11 +2144,16 @@ function fieldHtml_(f) {
       </div>`;
   }
   if (f.type === "one") {
+    /* Обычный вариант — строка текста. У тарифа вариант крупнее: название,
+       цена и одна строка о том, чем он отличается. */
+    const chips = f.rich
+      ? f.rich.map(r => `<button type="button" class="chip tarif${v === r.v ? " on" : ""}" data-f="${f.id}" data-v="${esc(r.v)}"><b>${esc(r.v)}</b><span class="tarif-price">${r.price}<i>${r.cur}</i></span><span class="tarif-text">${r.text}</span></button>`)
+      : f.opts.map(o => `<button type="button" class="chip${v === o ? " on" : ""}" data-f="${f.id}" data-v="${esc(o)}">${esc(o)}</button>`);
     return `
       <div class="field-l" data-field="${f.id}">
         <span>${f.label}</span>
         ${f.hint ? `<span class="field-hint">${f.hint}</span>` : ""}
-        <div class="chips">${f.opts.map(o => `<button type="button" class="chip${v === o ? " on" : ""}" data-f="${f.id}" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>
+        <div class="chips">${chips.join("")}</div>
       </div>`;
   }
   const input = f.type === "area"
@@ -2162,6 +2206,7 @@ function formScreen() {
         <h2>${st.title}</h2>
       </div>
       ${formStep === 0 ? `<p class="soft">Заполните, и сразу откроется закрытый канал предзаписи на Прикладную эмпатию 2.0. В нём медитация и эфир. Это не оплата.</p>` : ""}
+      ${st.perks ? `<div class="perks-box"><p>${PERKS.lead}</p><ul class="checks">${PERKS.list.map(x => `<li>${x}</li>`).join("")}</ul></div>` : ""}
       ${st.fields.length ? `<div class="fields">${st.fields.map(fieldHtml_).join("")}</div>` : ""}
       ${st.consent ? `
         <div class="consents">
@@ -2417,7 +2462,10 @@ function sendLead() {
      кладёт его в одну колонку как есть, и менять его ради них не нужно.
      В таблицу идут обычные пробелы: по ним удобнее искать и фильтровать. */
   const plain = v => String(v || "").replace(/\u00a0/g, " ");
-  p.leader = ["Помешать: " + plain(form.meshaet), "Готова заплатить: " + plain(form.budget)]
+  const tarif = FORM.reduce((all, st) => all.concat(st.fields || []), [])
+    .filter(f => f.id === "tarif")[0].rich.filter(r => r.v === form.tarif)[0];
+  p.leader = ["Тариф: " + (tarif ? tarif.v + ", " + plain(tarif.price) : ""),
+              "Помешать: " + plain(form.meshaet), "Готова заплатить: " + plain(form.budget)]
     .concat(LEADER.map(f => f.label + ": " + (form[f.id] || ""))).join("\n");
   p.rank = r.key || "";
   p.sphere = r.sphere || "";

@@ -123,6 +123,17 @@
   var currentPlan = '';
   var currentPay = '';
 
+  /* Анкета предзаписи: тариф человек выбирает прямо в форме, из двух
+     вариантов с ценами. На остальных страницах этих переключателей нет. */
+  var tarifs = modal.querySelectorAll('[name="tarif"]');
+  function pickedTarif() {
+    for (var i = 0; i < tarifs.length; i++) if (tarifs[i].checked) return tarifs[i];
+    return null;
+  }
+  Array.prototype.forEach.call(tarifs, function (t) {
+    t.addEventListener('change', function () { hide(errBox); });
+  });
+
   /* Второй шаг окна: выбор способа оплаты. Есть только на страницах,
      где принимаются деньги за практикум. */
   var payStep = document.getElementById('pay-step');
@@ -233,6 +244,11 @@
     currentPay = payKey || '';
     lastTrigger = trigger || null;
     if (planLabel) planLabel.textContent = plan;
+    /* Открыли кнопкой тарифа — этот тариф уже отмечен. Открыли общей
+       кнопкой — выбор остаётся за человеком. */
+    Array.prototype.forEach.call(tarifs, function (t) {
+      if (payKey && t.getAttribute('data-key') === payKey) t.checked = true;
+    });
     showFormStep();
     hide(errBox);
     hide(sentBox);
@@ -294,6 +310,7 @@
 
     if (!name) { fail('Укажите имя.'); inputs.name.focus(); return; }
     if (!phone && !tg) { fail('Оставьте телефон или Telegram для связи.'); inputs.phone.focus(); return; }
+    if (tarifs.length && !pickedTarif()) { fail('Выберите тариф для предзаписи.'); tarifs[0].focus(); return; }
 
     if (!requiredOk()) {
       showCheckboxErrors(true);
@@ -312,7 +329,7 @@
       name: name,
       phone: phone,
       telegram: tg,
-      plan: currentPlan,
+      plan: pickedTarif() ? currentPlan + ': ' + pickedTarif().value : currentPlan,
       /* 'заявка' ложится в тот же лист, что и оплата: команде удобнее
          видеть всех, кто выбрал тариф, в одном месте. Отличает их
          колонка «Готовность». */

@@ -1241,7 +1241,8 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
 [data-za-zayavku] [data-podarok] > span { font-size: 19px !important; }
 /* Подписи кнопок тарифа у заявки длиннее («Хочу в рассрочку»): шрифт
    чуть меньше, чтобы подпись не ломалась на две строки. */
-[data-mode="zayavka"] #tarify [data-btn] {
+[data-mode="zayavka"] #tarify [data-btn],
+[data-mode="predzapis"] #tarify [data-btn] {
   padding-left: 12px !important;
   padding-right: 12px !important;
   font-size: clamp(16.5px, 4.7vw, 20px) !important;
@@ -2600,6 +2601,27 @@ def rassrochka_tariffs(tpl):
     return tpl.replace(head_end, head_end + intro)
 
 
+def predzapis_tariffs(tpl):
+    """Тарифы страницы предзаписи: цены как на странице оплаты, но кнопка
+    у каждого тарифа одна и ведёт не к оплате, а в анкету с этим тарифом."""
+    tpl, n = re.subn(r'\s*<button type="button" onClick="\{\{ open(?:Basic|Full)Inst \}\}"'
+                     r'[^>]*>В рассрочку</button>', "", tpl)
+    if n != 2:
+        raise ValueError("предзапись: ожидалось две кнопки «В рассрочку», найдено %d" % n)
+    if tpl.count(">Полная оплата<") != 2:
+        raise ValueError("предзапись: ожидалось две кнопки «Полная оплата»")
+    tpl = tpl.replace(">Полная оплата<", ">Выбрать этот тариф<")
+
+    intro = ('<p style="margin: 0; max-width: 62ch; align-self: center; text-align: center; '
+             'font-size: clamp(17.1px, 1.8vw, 19px); line-height: 1.5; color: #5C5149;">'
+             'Сейчас платить не&nbsp;нужно: вы&nbsp;выбираете <b style="color: #2E2521;">тариф для&nbsp;предзаписи</b>. '
+             'Оплатить потом можно целиком или в&nbsp;рассрочку.</p>')
+    head_end = ">Тарифы</h2>"
+    if tpl.count(head_end) != 1:
+        raise ValueError("предзапись: не найден заголовок тарифов")
+    return tpl.replace(head_end, head_end + intro)
+
+
 def gifts_block():
     """Подарки после оплаты — в шапку формы оплаты.
 
@@ -3152,7 +3174,19 @@ def build_landing():
             (PAY_NEXT,
              "Сразу после анкеты откроется закрытый канал Виолы. Команда свяжется с&nbsp;вами "
              "в&nbsp;Telegram: расскажет, как устроен практикум, ответит на&nbsp;вопросы "
-             "и&nbsp;поможет оформить оплату."),
+             "и&nbsp;поможет оформить оплату."
+             # Что даёт предзапись — прямо в шапке анкеты, над полями: человек
+             # выбирает здесь тариф и видит цены, и рядом с ними должно стоять
+             # то, что он получает за саму анкету.
+             + '</p><div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">'
+               '<div style="font-size: 12px; letter-spacing: .18em; text-transform: uppercase; '
+               'color: #C9A87F;">Что даёт предзапись</div>'
+             + "".join(
+                 '<div style="display: grid; grid-template-columns: 20px 1fr; gap: 10px; '
+                 'align-items: start; font-size: 16.5px; line-height: 1.4; color: #F6F0E8;">'
+                 '<span style="color: #C9A87F; font-weight: 700;">✓</span><span>%s</span></div>' % t
+                 for t, _tail in PRE_BONUSES + PRE_FOR_REQUEST)
+             + '</div><p hidden>'),
             ("Перейти к оплате", "Попасть в предзапись"),
             ("Готово. Открываем страницу оплаты…", "Готово. Открываем закрытый канал…"),
         ):
@@ -3174,9 +3208,28 @@ def build_landing():
                  '<span style="font-size: 13px; font-weight: 600; letter-spacing: .16em; '
                  'text-transform: uppercase; color: #6B4E2C;">Готовность пойти на программу'
                  "</span>" + radios + "</div>")
+        # Тариф для предзаписи: два варианта с ценами, выбрать один обязательно.
+        # Цены те же, что на странице оплаты, и берутся из того же словаря.
+        tarify = "".join(
+            '<label style="display: grid; grid-template-columns: 26px 1fr; gap: 14px; '
+            'align-items: start; cursor: pointer;">'
+            '<input type="radio" name="tarif" value="%s" data-key="%s" style="appearance: auto; '
+            'width: 20px; height: 20px; margin: 3px 0 0; accent-color: #4A392F; cursor: pointer;">'
+            '<span style="display: flex; flex-direction: column; gap: 2px; font-size: 16.5px; '
+            'line-height: 1.45; color: #3B2E28;"><b style="font-weight: 700;">%s&nbsp;— %s&nbsp;₽</b>'
+            '<span style="font-size: 15px; color: #7D7167;">$%s / €%s</span></span></label>'
+            % (pl["name"], key, pl["name"], pl["rub"].replace(" ", "&nbsp;"), pl["usd"], pl["eur"])
+            for key, pl in PAY["pay"]["plans"].items())
+        tarif_block = ('<div data-tarif-pick="" style="display: flex; flex-direction: column; gap: 12px;">'
+                       '<span style="font-size: 13px; font-weight: 600; letter-spacing: .16em; '
+                       'text-transform: uppercase; color: #6B4E2C;">Тариф для предзаписи</span>'
+                       + tarify
+                       + '<span style="font-size: 15px; line-height: 1.5; color: #7D7167;">'
+                         'Платить сейчас не&nbsp;нужно. Оплатить потом можно целиком или '
+                         'в&nbsp;рассрочку.</span></div>')
         divider = ('<div style="height: 1px; background: linear-gradient(90deg, #C9A87F, '
                    'rgba(228,218,205,.2));"></div>')
-        form = form.replace(divider, block + divider, 1)
+        form = form.replace(divider, tarif_block + block + divider, 1)
 
         # подписи под кнопкой у предзаписи свои: платить пока нечего
         keep = "Нажимая кнопку, вы&nbsp;подтверждаете отмеченные согласия.</p>"
@@ -3249,6 +3302,12 @@ def build_landing():
         tpl = rassrochka_tariffs(tpl)
         plans = {"openBasicPay": ("Самостоятельный — внутренняя рассрочка", "basic"),
                  "openFullPay": ("С Виолой — внутренняя рассрочка", "full")}
+
+    if IS_PRE:
+        tpl = predzapis_tariffs(tpl)
+        # Кнопка тарифа открывает анкету с уже отмеченным тарифом.
+        plans = {"openBasicPay": ("Предзапись", "basic"),
+                 "openFullPay": ("Предзапись", "full")}
     for var, (label, key) in plans.items():
         tpl = tpl.replace('onClick="{{ %s }}"' % var,
                           'data-open-form="%s" data-pay="%s"' % (label, key))
@@ -3324,14 +3383,15 @@ def build_landing():
             tpl = tpl.replace(old, new)
 
     if IS_PRE:
-        # Уходят все экраны, где есть цена или оплата. Рассрочка тоже: она
-        # про деньги, а её содержание сжимается в одну строку про разговор
-        # с командой в блоке «что входит».
-        for label in ("06 Тарифы", "06b Проблемы с оплатой", "07 Рассрочка"):
+        # Тарифы с ценами на странице остаются (правка 12.10): человек выбирает
+        # тариф для предзаписи. Уходят только экраны про саму оплату.
+        for label in ("06b Проблемы с оплатой", "07 Рассрочка"):
             tpl = drop_screen(tpl, label)
 
-        tpl = insert_before_screen(tpl, "11 Финальный призыв",
-                                   benefits_screen(True, pre=True) + pre_contents_screen())
+        # «Что даёт предзапись» стоит перед тарифами: сначала человек видит,
+        # что получает за анкету, и только потом цены. Экрана «Что входит
+        # в практикум» больше нет: состав расписан в карточках тарифов.
+        tpl = insert_before_screen(tpl, "06 Тарифы", benefits_screen(True, pre=True))
 
         # Кнопки вставленных экранов писались под страницу заявки.
         tpl = tpl.replace("Оставить заявку", "Попасть в предзапись")
@@ -3439,7 +3499,7 @@ def build_landing():
     # на всех четырёх версиях страницы.
     tpl = insert_before_screen(tpl, "11 Финальный призыв", contacts_screen())
 
-    if MODE in ("pay", "rassrochka", "zayavka"):
+    if MODE in ("pay", "rassrochka", "zayavka", "predzapis"):
         # Та же мысль под тарифами: это момент, когда человек решается
         # платить, и именно тогда полезно знать, кто ему напишет.
         # Сноски о курсе валют больше нет, заметка встаёт в её контейнер.
