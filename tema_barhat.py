@@ -24,12 +24,24 @@ DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "build-assets", "
 
 # имя в стилях → файл в build-assets/tema-barhat/
 SLOTS = {
-    "hero-d": "hero-desktop.jpg",   # Виола в сцене, горизонтальная 2400×1400
-    "hero-m": "hero-mobile.jpg",    # Виола в сцене, вертикальная 1080×1600
-    "lenta":  "lenta.png",          # золотая лента на прозрачном фоне
-    "barhat": "barhat.jpg",         # красный шёлк для красных блоков
-    "mk":     "mk.jpg",             # зал со сценой, мастер-класс
-    "final":  "final.jpg",          # приоткрытая дверь, последний призыв
+    "viola":  "viola.png",          # Виола на прозрачном фоне, по пояс
+    "hero-d": "hero-desktop.jpg",   # готовая сцена с Виолой, горизонтальная
+    "hero-m": "hero-mobile.jpg",    # готовая сцена с Виолой, вертикальная
+    # объёмные предметы на прозрачном фоне: встают у края блоков
+    "o-18":        "o-18.png",         # блок «18 техник»
+    "o-programma": "o-programma.png",  # заголовок «Шесть недель»
+    "o-mk":        "o-mk.png",         # мастер-класс
+    "o-tarify":    "o-tarify.png",     # заголовок «Тарифы»
+    "o-podarki":   "o-podarki.png",    # «Что вы получаете?»
+    "o-final":     "o-final.png",      # последний призыв
+    # объёмные значки на прозрачном фоне, квадратные
+    "n1": "n1.png", "n2": "n2.png", "n3": "n3.png",   # шесть недель
+    "n4": "n4.png", "n5": "n5.png", "n6": "n6.png",
+    "p1": "p1.png", "p2": "p2.png", "p3": "p3.png",   # «каждую неделю вы получаете»
+    "p4": "p4.png", "p5": "p5.png",
+    "podarok": "podarok.png",                          # подарки
+    "mk":     "mk.jpg",             # фото для фона мастер-класса
+    "final":  "final.jpg",          # фото для фона последнего призыва
 }
 
 
@@ -103,30 +115,69 @@ def apply(text, path):
     высокого гротеска и свой слой стилей в конце site.css."""
     text = colors(text)
     text = text.replace("'Bebas Neue'", "'Prata'")
+    if path.endswith(".html"):
+        text = icons(text)
     if path.endswith(os.path.join("assets", "site.css")):
         text += CSS + slots_css()
     return text
 
 
+_OBJ = {   # предмет → правило, которое его показывает
+    "o-18": "[data-tehniki]::after",
+    "o-programma": "section[aria-label=\"Программа шесть недель\"]::before",
+    "o-mk": "[data-mk]::before",
+    "o-tarify": "#tarify::before",
+    "o-podarki": "section[aria-label=\"Подарки и условия\"]::before",
+    "o-final": "[data-final]::before",
+}
+
+
 def slots_css():
     """Стили для присланных картинок. Пока файла нет, его правил нет."""
-    rules = {
-        "barhat": ":root { --barhat: linear-gradient(140deg, rgba(226,27,54,.35) 0%, rgba(154,12,31,.45) 100%), URL; }",
-        "mk": "[data-mk-card]::after { opacity: 1; background-image: linear-gradient(90deg, rgba(154,12,31,.96) 0%, "
-              "rgba(154,12,31,.8) 46%, rgba(154,12,31,.2) 100%), URL; }",
-        "final": "[data-final-card]::after { opacity: 1; background-image: linear-gradient(180deg, "
-                 "rgba(154,12,31,.7) 0%, rgba(154,12,31,.9) 100%), URL; }",
-        "lenta": "[data-h2-card]::before, [data-final]::before, section[aria-label=\"Подарки и условия\"]::before, "
-                 "section[aria-label=\"Программа шесть недель\"]::before { display: block; background-image: URL; }",
-        # В присланной сцене Виола уже есть: вырезанный снимок убирается.
-        "hero-m": "@media (max-width: 900px) { [data-h2-fon] { display: block; top: 0; height: 100%; opacity: 1; "
-                  "object-position: 50% 30%; -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000 16%); "
-                  "mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000 16%); } "
-                  "[data-h2-viola], [data-h2-photo]::before { display: none; } }",
-    }
-    out = [rules[name].replace("URL", "url(/assets/img/b-%s)" % SLOTS[name])
-           for name in sorted(rules) if est(name)]
+    def url(name):
+        return "url(/assets/img/b-%s)" % SLOTS[name]
+    out = ["%s { display: block; background-image: %s; }" % (sel, url(name))
+           for name, sel in sorted(_OBJ.items()) if est(name)]
+    if est("mk"):
+        out.append("[data-mk-card]::after { opacity: 1; background-image: linear-gradient(90deg, rgba(178,16,40,.96) 0%, "
+                   "rgba(178,16,40,.82) 46%, rgba(178,16,40,.25) 100%), %s; }" % url("mk"))
+    if est("final"):
+        out.append("[data-final-card]::after { opacity: 1; background-image: linear-gradient(180deg, "
+                   "rgba(178,16,40,.72) 0%, rgba(178,16,40,.92) 100%), %s; }" % url("final"))
     return "\n" + "\n".join(out) + "\n" if out else ""
+
+
+def icons(html):
+    """Линейные значки заменяются присланными объёмными (PNG)."""
+    def img(name):
+        return ('<img data-ik="" src="/assets/img/b-%s" alt="" loading="lazy" decoding="async">'
+                % SLOTS[name])
+
+    def numbered(pattern, prefix, text):
+        n = [0]
+
+        def one(m):
+            n[0] += 1
+            name = "%s%d" % (prefix, n[0])
+            return m.group(1) + img(name) + m.group(2) if name in SLOTS and est(name) else m.group(0)
+        return re.sub(pattern, one, text, flags=re.S)
+
+    svg = r"\s*<svg\b.*?</svg>\s*"
+    html = numbered(r'(data-week-head=""[^>]*>\s*<div[^>]*>\s*<span[^>]*>)' + svg + r"(</span>)", "n", html)
+    i = html.find('data-sfery=""')
+    if i >= 0:
+        j = html.find("data-tehniki", i)
+        j = j if j > 0 else i + 6000
+        html = html[:i] + numbered(r'(<span style="display: inline-flex; color: #[0-9A-F]{6};">)' + svg + r"(</span>)",
+                                   "n", html[i:j]) + html[j:]
+    i = html.find('data-nedelya=""')
+    if i >= 0:
+        j = html.find("</ul>", i)
+        html = html[:i] + numbered(r"(<li[^>]*><span>)" + svg + r"(</span>)", "p", html[i:j]) + html[j:]
+    if est("podarok"):
+        html = re.sub(r'(<div data-podarok=""[^>]*>\s*<span[^>]*>)' + svg + r"(</span>)",
+                      lambda m: m.group(1) + img("podarok") + m.group(2), html, flags=re.S)
+    return html
 
 
 def copy_slots(outdir):
@@ -555,23 +606,6 @@ section[aria-label="Первый экран"] { background: var(--noch) !importa
 [data-mk-card] > *, [data-final-card] > * { position: relative; z-index: 1; }
 [data-mk-card] > div:first-child { background: rgba(255,255,255,.18) !important; color: #FFFFFF; }
 
-/* Лента. Появляется, когда пришлют файл. */
-[data-h2-card]::before, [data-final]::before, section[aria-label="Подарки и условия"]::before,
-section[aria-label="Программа шесть недель"]::before {
-  content: "";
-  display: none;
-  position: absolute;
-  right: -40px; top: -58px;
-  width: min(320px, 64vw); height: 130px;
-  background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;
-  pointer-events: none;
-}
-[data-final], section[aria-label="Подарки и условия"], section[aria-label="Программа шесть недель"] { position: relative; overflow: hidden; }
-[data-final]::before, section[aria-label="Подарки и условия"]::before { top: 8px; right: -30px; }
-section[aria-label="Программа шесть недель"]::before { top: 10px; right: auto; left: -40px; transform: scaleX(-1); }
-
 /* ── тарифы ── */
 
 #tarify [style*="top: -14px"] {
@@ -634,4 +668,98 @@ section[aria-label="Программа шесть недель"]::before { top: 
   [data-btn="primary"] { width: min(100%, 330px); }
   [data-sticky-bar] a { letter-spacing: .06em !important; }
 }
+
+/* ── фигуры: дуги, кольца, крупные цифры ── */
+
+/* Белые блоки — большими скруглёнными листами на сером. */
+main > section[aria-label="Программа шесть недель"],
+main > section[aria-label="Рассрочка"],
+main > section[aria-label="Контакты команды"] { border-radius: clamp(36px, 6vw, 80px); }
+
+/* Первый экран снизу закрыт дугой. */
+@media (min-width: 901px) {
+  [data-hero-stage] { border-radius: 0 0 50% 50% / 0 0 70px 70px; }
+}
+
+/* Кольца на красных блоках. */
+[data-tehniki], [data-mk-card], [data-final-card], [data-cena], [data-n-title] { position: relative; overflow: hidden; }
+[data-tehniki]::before, [data-mk-card]::before, [data-final-card]::before, [data-cena]::before, [data-n-title]::before {
+  content: "";
+  position: absolute;
+  right: -90px; top: -110px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 1.5px rgba(255,255,255,.24),
+    0 0 0 44px rgba(255,255,255,.035),
+    0 0 0 45.5px rgba(255,255,255,.18),
+    0 0 0 92px rgba(255,255,255,.02),
+    0 0 0 93.5px rgba(255,255,255,.12);
+  pointer-events: none;
+}
+[data-cena]::before, [data-n-title]::before { width: 150px; height: 150px; right: -50px; top: -70px; }
+[data-tehniki] > *, [data-cena] > *, [data-n-title] > * { position: relative; z-index: 1; }
+[data-final-card]::before { right: auto; left: -110px; top: auto; bottom: -130px; }
+
+/* Карточка недели: крупный номер тенью в углу, один угол срезан дугой. */
+section[aria-label="Программа шесть недель"] { counter-reset: ned; }
+[data-week-card] { position: relative; counter-increment: ned; border-radius: 26px 26px 84px 26px !important; }
+[data-week-card]::before {
+  content: "0" counter(ned);
+  position: absolute;
+  right: 16px; top: -6px;
+  font-family: var(--prata);
+  font-size: 104px;
+  line-height: 1;
+  color: #FCE9EA;
+  pointer-events: none;
+}
+[data-week-card] > * { position: relative; z-index: 1; }
+[data-vopros] { border-radius: 4px 22px 22px 22px; }
+[data-podarok] { border-radius: 22px 22px 22px 6px; }
+[data-sfery] { border-radius: 26px 26px 26px 64px; }
+[data-tehniki] { border-radius: 26px 64px 26px 26px !important; }
+[data-nedelya] { border-radius: 26px 64px 26px 26px; }
+[data-mk-card], [data-final-card] { border-radius: 30px 30px 96px 30px; }
+#tarify > div > div[style*="grid"] { gap: 40px 24px !important; }
+
+/* ── присланные картинки ── */
+
+/* Объёмные значки вместо линейных. */
+img[data-ik] { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 12px rgba(120,10,26,.28)); }
+span:has(> img[data-ik]),
+[data-week-head] > div:first-child > span:first-child:has(> img[data-ik]),
+[data-nedelya] li > span:has(> img[data-ik]),
+[data-podarok] > span:has(> img[data-ik]) { background: none !important; box-shadow: none !important; border-radius: 0 !important; }
+[data-week-head] > div:first-child > span:has(> img[data-ik]) { width: 76px !important; height: 76px !important; }
+[data-nedelya] li:has(img[data-ik]) { grid-template-columns: 64px minmax(0, 1fr); }
+[data-nedelya] li > span:has(> img[data-ik]) { width: 64px; height: 64px; }
+[data-podarok]:has(img[data-ik]) { grid-template-columns: 68px 1fr !important; }
+[data-podarok] > span:has(> img[data-ik]) { width: 68px !important; height: 68px !important; }
+[data-sfery] span:has(> img[data-ik]) { width: 34px; height: 34px; }
+
+/* Предметы у края блоков. Появляются, когда пришлют файл. */
+[data-tehniki]::after, [data-mk]::before, [data-final]::before, #tarify::before,
+section[aria-label="Подарки и условия"]::before, section[aria-label="Программа шесть недель"]::before {
+  content: "";
+  display: none;
+  position: absolute;
+  z-index: 2;
+  width: clamp(120px, 30vw, 220px);
+  aspect-ratio: 1;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 22px 26px rgba(120,10,26,.3));
+  pointer-events: none;
+}
+[data-mk], [data-final], #tarify, section[aria-label="Подарки и условия"], section[aria-label="Программа шесть недель"] { position: relative; }
+[data-tehniki] { overflow: visible; }
+[data-tehniki]::before { clip-path: inset(0 round 26px 64px 26px 26px); }
+[data-tehniki]::after { right: -8px; bottom: -46px; width: clamp(96px, 24vw, 150px); }
+section[aria-label="Программа шесть недель"]::before { right: max(8px, calc(50% - 560px)); top: -56px; width: clamp(110px, 26vw, 200px); }
+[data-mk]::before { right: max(6px, calc(50% - 500px)); top: -40px; }
+#tarify::before { right: max(6px, calc(50% - 520px)); top: -10px; width: clamp(96px, 22vw, 180px); }
+section[aria-label="Подарки и условия"]::before { right: max(6px, calc(50% - 520px)); top: -44px; width: clamp(96px, 22vw, 180px); }
+[data-final]::before { right: max(6px, calc(50% - 400px)); top: -30px; }
 """
