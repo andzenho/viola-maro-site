@@ -412,6 +412,8 @@ def _theme_cutout(scale):
         new = new.crop(new.getbbox())
         cut = new.resize((round(new.width * cut.height / new.height), cut.height), Image.LANCZOS)
     cut = cut.resize((round(cut.width * scale), round(cut.height * scale)), Image.LANCZOS)
+    if THEME == "barhat" and tema_barhat.est("viola"):
+        return cut      # присланная вырезка уже с цветокоррекцией
     r, g, b, a = cut.split()
     rgb = Image.blend(Image.merge("RGB", (r, g, b)), Image.new("RGB", cut.size, (255, 196, 120)), 0.10)
     return Image.merge("RGBA", (*rgb.split(), a))
