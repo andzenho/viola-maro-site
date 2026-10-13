@@ -405,6 +405,12 @@ def _theme_cutout(scale):
     """Снимок Виолы, вырезанный по контуру. Чуть теплится под вечерний свет."""
     from PIL import Image
     cut = Image.open(os.path.join(SRC, "assets", "viola-cutout.png")).convert("RGBA")
+    if THEME == "barhat" and tema_barhat.est("viola"):
+        # Присланная вырезка: поля обрезаются, высота приводится к прежней,
+        # чтобы расстановка в кадре осталась той же.
+        new = Image.open(os.path.join(tema_barhat.DIR, tema_barhat.SLOTS["viola"])).convert("RGBA")
+        new = new.crop(new.getbbox())
+        cut = new.resize((round(new.width * cut.height / new.height), cut.height), Image.LANCZOS)
     cut = cut.resize((round(cut.width * scale), round(cut.height * scale)), Image.LANCZOS)
     r, g, b, a = cut.split()
     rgb = Image.blend(Image.merge("RGB", (r, g, b)), Image.new("RGB", cut.size, (255, 196, 120)), 0.10)
