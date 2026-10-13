@@ -39,6 +39,11 @@ jobs:
       - name: Собрать сайт с оплатой
         run: python3 build.py --theme barhat --noindex
 
+      # Страница-заявка для подписчиков Кабинета. Берёт стили, шрифты и фото
+      # из только что собранного основного сайта, поэтому идёт сразу после него.
+      - name: Собрать страницу заявки для Кабинета
+        run: python3 kabinet.py
+
       - name: Собрать редирект со старой страницы /pre
         run: python3 build.py --mode pre --out site/pre --base /pre --noindex
 
