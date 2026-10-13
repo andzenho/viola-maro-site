@@ -715,7 +715,8 @@ section[aria-label="Программа шесть недель"] { counter-reset
 [data-week-card] > * { position: relative; z-index: 1; }
 [data-vopros] { border-radius: 4px 22px 22px 22px; }
 [data-podarok] { border-radius: 22px 22px 22px 6px; }
-[data-sfery] { border-radius: 26px 26px 26px 64px; }
+/* у списка сфер углы ровные: большой угол срезал плитку с шестёркой */
+[data-sfery] { border-radius: 26px; }
 [data-tehniki] { border-radius: 26px 64px 26px 26px !important; }
 [data-nedelya] { border-radius: 26px 64px 26px 26px; }
 [data-mk-card], [data-final-card] { border-radius: 30px 30px 96px 30px; }
@@ -752,8 +753,6 @@ section[aria-label="Подарки и условия"]::before, section[aria-lab
   pointer-events: none;
 }
 [data-mk], [data-final], #tarify, section[aria-label="Подарки и условия"], section[aria-label="Программа шесть недель"] { position: relative; }
-[data-tehniki] { overflow: visible; }
-[data-tehniki]::before { clip-path: inset(0 round 26px 64px 26px 26px); }
 [data-tehniki]::after { right: -8px; bottom: -46px; width: clamp(96px, 24vw, 150px); }
 section[aria-label="Программа шесть недель"]::before { right: max(8px, calc(50% - 560px)); top: -56px; width: clamp(110px, 26vw, 200px); }
 [data-mk]::before { right: max(6px, calc(50% - 500px)); top: -40px; }
@@ -797,4 +796,18 @@ main > section[aria-label="Подарки и условия"]:not([aria-label="�
   filter: drop-shadow(0 22px 26px rgba(70,4,14,.55));
 }
 [data-final-card] { padding-top: clamp(150px, 24vw, 200px) !important; }
+
+/* Подарки: шкатулка одна, над заголовком. В карточках вместо значка
+   стоит номер подарка. */
+section[aria-label="Подарки и условия"] { counter-reset: podarok; }
+[data-podarok] { counter-increment: podarok; grid-template-columns: 46px 1fr !important; }
+[data-podarok] > span { width: 46px !important; height: auto !important; margin-top: -4px !important; background: none !important; border-radius: 0 !important; }
+[data-podarok] > span svg { display: none; }
+[data-podarok] > span::before {
+  content: "0" counter(podarok);
+  font-family: var(--prata);
+  font-size: 36px;
+  line-height: 1;
+  color: var(--vino);
+}
 """
