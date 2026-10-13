@@ -2,19 +2,22 @@
 # -*- coding: utf-8 -*-
 """Страница-заявка «Прикладная эмпатия 2.0» для Кабинета: violamaro.ru/kabinet.
 
-Отдельная страница для подписчиков закрытого канала Виолы. Человек оставляет
-заявку и сразу попадает в чат с менеджером. Оплаты на странице нет, цена
-Кабинета на ней не пишется нигде: её называет менеджер.
+Это тот же сайт продукта, только под заявку: все блоки основной страницы
+(что такое практикум, шесть сфер, недели, формат ответов, мастер-класс,
+тарифы, подарки) и поверх них то, что нужно подписчикам закрытого канала:
+блок «после заявки», «как это работает», «кому подойдёт», вопросы и форма
+внизу страницы. Оплаты нет, цена Кабинета не пишется нигде: её называет
+менеджер. После заявки человек попадает в чат с менеджером.
 
-Запуск — после сборки основного сайта, потому что страница берёт оттуда
-стили, шрифты и фотографию:
+Как собирается. Сборщик основного сайта делает страницу заявки
+(--mode zayavka) в папку site/kabinet, а этот модуль её дорабатывает:
+меняет первый экран и карточки тарифов, убирает блоки про оплату,
+вставляет свои блоки и форму, перенаправляет все кнопки на форму.
 
-    python3 build.py --theme barhat --noindex
     python3 kabinet.py
 
-Всё, что меняется без правки вёрстки, лежит в CONFIG. Тексты блоков стоят
-дословно по ТЗ от 13.10.2026; состав тарифов, недели и бонусы берутся
-из сборщика основного сайта, чтобы два сайта не разошлись.
+Всё, что меняется без правки вёрстки, лежит в CONFIG. Тексты добавленных
+блоков стоят дословно по ТЗ от 13.10.2026.
 """
 
 import hashlib
@@ -23,6 +26,8 @@ import json
 import os
 import re
 import shutil
+import subprocess
+import sys
 
 import build
 
@@ -49,22 +54,6 @@ CONFIG = {
 OUT = os.path.join(build.ROOT, "site", "kabinet")
 REVIEWS = os.path.join(build.ROOT, "kabinet", "reviews")
 SITE_URL = "https://violamaro.ru"
-
-# Состав тарифов. Те же строки, что в карточках на violamaro.ru; сборка
-# сверяет их с собранной главной и предупреждает, если разошлись.
-TARIF_COMMON = [
-    "18 техник эмпата, по три на неделю",
-    "Задание после каждой лекции",
-    "Записи лекций с таймкодами",
-    "PDF-методички к каждой лекции",
-    "Аудиомедитации от Виолы",
-    "Доступ навсегда",
-]
-TARIF_VIOLA = [
-    "Вопросы Виоле в чате: команда собирает их каждый день, Виола отвечает аудио",
-    "Мастер-класс Виолы с ответами на ваши вопросы",
-    "Чат потока",
-]
 
 VAZHNO = ["Перестать растворяться в чужих эмоциях", "Отказывать без вины", "Отношения с близкими",
           "Работа и люди с властью", "Силы и время для себя", "Другое"]
@@ -94,22 +83,6 @@ def tg(s):
 
 # ── блоки ──
 
-def hero():
-    return """
-<header class="kb-hero">
-  <div class="kb-hero-top">
-    <p class="kb-eyebrow">Только для Кабинета</p>
-    <h1>Заявка на<br>«Прикладную<br>эмпатию&nbsp;2.0»</h1>
-    <p class="kb-sub">Старт 1&nbsp;ноября. Для тех, кто в&nbsp;Кабинете, цена ниже, чем на&nbsp;сайте. Её назовёт Дарья после заявки.</p>
-    <a class="kb-btn kb-btn-white" href="#zayavka" data-cta="">Оставить заявку</a>
-    <p class="kb-small">После заявки вы попадёте в&nbsp;чат с&nbsp;Дарьей из&nbsp;команды Виолы.</p>
-  </div>
-  <div class="kb-hero-photo">
-    <img src="/assets/img/viola.webp" alt="Виола Маро" width="901" height="1202" fetchpriority="high" decoding="async">
-  </div>
-</header>"""
-
-
 def posle():
     items = [
         "расскажет подробно о программе и покажет презентацию практикума;",
@@ -118,7 +91,7 @@ def posle():
         "поможет оплатить, в том числе в рассрочку или из-за границы, и получить доступы к «Прикладной эмпатии».",
     ]
     return """
-<section class="kb-sec">
+<section class="kb kb-sec" aria-label="После заявки">
   <div class="kb-in">
     <h2>После заявки вы попадёте в&nbsp;чат с&nbsp;Дарьей из&nbsp;команды Виолы</h2>
     <p class="kb-lead">%s</p>
@@ -126,49 +99,6 @@ def posle():
   </div>
 </section>""" % (tg(nb("Если чат не откроется, Дарья сама напишет вам с аккаунта @violamaroteam. Она:")),
                  "".join("<li>%s</li>" % nb(esc(t)) for t in items))
-
-
-def tarif_card(name, lead, price, extra, key, seats=""):
-    weeks = "".join("<li>Неделя %s. %s</li>" % (w["n"], esc(w["title"])) for w in build.WEEKS)
-    yes = "".join("<li>%s</li>" % nb(esc(t)) for t in TARIF_COMMON + extra)
-    no = "".join("<li>%s</li>" % nb(esc(t)) for t in TARIF_VIOLA) if not extra else ""
-    return """
-    <article class="kb-tarif%s">
-      %s<h3>%s</h3>
-      <p class="kb-tarif-lead">%s</p>
-      <p class="kb-tag">Программа</p>
-      <ul class="kb-weeks">%s</ul>
-      <ul class="kb-yes">%s</ul>
-      %s
-      %s
-      <div class="kb-cena"><span>%s</span></div>
-      <p class="kb-deshevle">В&nbsp;Кабинете дешевле. Цену назовёт Дарья после заявки</p>
-      <a class="kb-btn" href="#zayavka" data-cta="" data-tarif="%s">Оставить заявку на&nbsp;этот тариф</a>
-    </article>""" % (" kb-tarif-main" if extra else "",
-                     '<span class="kb-rekom">Рекомендуем</span>' if extra else "",
-                     esc(name), nb(esc(lead)), weeks, yes,
-                     '<ul class="kb-no">%s</ul>' % no if no else "",
-                     '<p class="kb-mest">%s</p>' % seats if seats else "",
-                     esc(price).replace(" ", "&nbsp;"), esc(key))
-
-
-def tarify():
-    seats = "50&nbsp;мест"
-    if CONFIG["SEATS_LEFT"]:
-        seats += ", осталось %s" % esc(str(CONFIG["SEATS_LEFT"]))
-    return """
-<section class="kb-sec kb-red" id="tarify">
-  <div class="kb-in kb-wide">
-    <h2>Тарифы</h2>
-    <div class="kb-tarify">%s%s
-    </div>
-    <p class="kb-pod">Можно в&nbsp;рассрочку на&nbsp;3, 6 или&nbsp;12&nbsp;месяцев, Дарья всё расскажет</p>
-  </div>
-</section>""" % (
-        tarif_card("Самостоятельный", "Весь метод и все техники. Самостоятельное прохождение.",
-                   CONFIG["PRICE_SELF"], [], "Самостоятельный"),
-        tarif_card("С Виолой", "Всё то же самое — и Виола отвечает на ваши вопросы.",
-                   CONFIG["PRICE_VIOLA"], TARIF_VIOLA, "С Виолой", seats))
 
 
 def kak():
@@ -180,42 +110,12 @@ def kak():
         "и выдаёт доступы.",
     ]
     return """
-<section class="kb-sec">
+<section class="kb kb-sec" aria-label="Как это работает">
   <div class="kb-in">
     <h2>Как это работает</h2>
     <ol class="kb-steps">%s</ol>
   </div>
 </section>""" % "".join("<li><span>%s</span></li>" % nb(esc(t)) for t in steps)
-
-
-def programma():
-    mods = []
-    for w in build.WEEKS:
-        tricks = "".join("<li>%s</li>" % nb(esc(it["text"])) for it in w["items"])
-        lead = "".join("<p>%s</p>" % nb(esc(p)) for p in w["lead"].split("\n\n"))
-        note = '<p class="kb-note">%s</p>' % esc(w["note"]) if w["note"] else ""
-        mods.append("""
-      <details class="kb-acc">
-        <summary><span class="kb-num">0%s</span><span>%s</span></summary>
-        <div class="kb-acc-body">
-          <p class="kb-q">«%s»</p>
-          %s
-          <p class="kb-tag">3 техники</p>
-          <ul class="kb-list">%s</ul>%s
-        </div>
-      </details>""" % (w["n"], esc(w["title"]), nb(esc(w["q"])), lead, tricks, note))
-    bonus = ", ".join("%s" % t[0].lower() + t[1:] if not t.startswith("«") else t
-                      for t, _tail in build.PRE_FOR_EARLY)
-    return """
-<section class="kb-sec kb-pink">
-  <div class="kb-in">
-    <h2>Что будет на&nbsp;практикуме</h2>
-    <p class="kb-shapka">6&nbsp;модулей, 18&nbsp;техник, финальный мастер-класс</p>
-    <div class="kb-accs">%s
-    </div>
-    <p class="kb-bonus">После оплаты 4&nbsp;бонуса: %s.</p>
-  </div>
-</section>""" % ("".join(mods), nb(esc(bonus)))
 
 
 def komu():
@@ -233,7 +133,7 @@ def komu():
         "Если вы хотите, чтобы изменился кто-то другой. Техники работают для вас, не для них.",
     ]
     return """
-<section class="kb-sec">
+<section class="kb kb-sec" aria-label="Кому подойдёт">
   <div class="kb-in">
     <h2>Кому подойдёт</h2>
     <ul class="kb-cards kb-da">%s</ul>
@@ -251,7 +151,7 @@ def otzyvy(files):
                    '<img src="/kabinet/reviews/%s" alt="Отзыв участницы" loading="lazy" decoding="async"></button>'
                    % (esc(f), esc(f)) for f in files)
     return """
-<section class="kb-sec">
+<section class="kb kb-sec" aria-label="Отзывы">
   <div class="kb-in kb-wide">
     <h2>Отзывы</h2>
     <div class="kb-otzyvy">%s</div>
@@ -277,7 +177,7 @@ def voprosy():
          "Поставьте в заявке «Пока не знаю», Дарья поможет."),
     ]
     return """
-<section class="kb-sec kb-pink">
+<section class="kb kb-sec kb-pink" aria-label="Вопросы">
   <div class="kb-in">
     <h2>Вопросы</h2>
     <div class="kb-accs">%s
@@ -298,7 +198,7 @@ def radios(name, options, required=False):
 
 def forma():
     return """
-<section class="kb-sec kb-forma" id="zayavka">
+<section class="kb kb-sec kb-forma" id="zayavka" aria-label="Заявка">
   <div class="kb-in">
     <form class="kb-form" novalidate>
       <h2>Оставить заявку</h2>
@@ -368,26 +268,15 @@ def forma():
 
 
 CSS = r"""
+.kb-small-dark { color: #5A5559; font-size: 15px; line-height: 1.4; }
 .kb { --red: #C4142C; --red2: #B21028; --ink: #1C1A1D; --grey: #EAE7E2; --line: #DDD8D1; --pink: #FBE4E7;
       --prata: 'Prata', 'Times New Roman', Georgia, serif;
-      background: var(--grey); color: var(--ink); font-size: 18px; line-height: 1.55; overflow-x: hidden; }
+      color: var(--ink); font-size: 18px; line-height: 1.55; }
 .kb *, .kb *::before, .kb *::after { box-sizing: border-box; }
-.kb h1, .kb h2, .kb h3 { font-family: var(--prata); font-weight: 400; margin: 0; text-wrap: balance; }
+.kb h2 { margin: 0; }
 .kb p { margin: 0; }
 .kb ul, .kb ol { margin: 0; padding: 0; list-style: none; }
 .kb a { color: var(--red); }
-
-/* первый экран */
-.kb-hero { background: linear-gradient(150deg, #DE1E38 0%, #C4142C 62%, #B21028 100%); color: #FFFFFF; text-align: center; overflow: hidden; }
-.kb-hero-top { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 26px 20px 0; }
-.kb-eyebrow { padding: 8px 16px; border-radius: 999px; background: rgba(255,255,255,.16); font-size: 14.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-.kb-hero h1 { font-size: min(9.6vw, 62px); line-height: 1.1; letter-spacing: .01em; text-transform: uppercase; }
-.kb-sub { max-width: 520px; font-size: 17.5px; line-height: 1.45; }
-.kb-small { max-width: 360px; font-size: 15px; line-height: 1.4; color: rgba(255,255,255,.92); }
-.kb-small-dark { color: #5A5559; }
-.kb-hero-photo { position: relative; height: clamp(340px, 96vw, 560px); margin-top: 10px; }
-.kb-hero-photo::before { content: ""; position: absolute; left: 50%; bottom: -34%; width: 132%; aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%; background: linear-gradient(180deg, #FFFFFF 0%, #E9E7E4 70%); }
-.kb-hero-photo img { position: absolute; left: 50%; bottom: 0; height: 100%; width: auto; max-width: none; transform: translateX(-50%); }
 
 /* кнопки */
 .kb-btn { display: flex; align-items: center; justify-content: center; width: min(100%, 360px); min-height: 66px; margin: 0 auto; padding: 16px 26px; border: 0; border-radius: 16px; background: var(--red); color: #FFFFFF !important; font: inherit; font-size: 16px; font-weight: 700; letter-spacing: .09em; line-height: 1.25; text-align: center; text-decoration: none; text-transform: uppercase; cursor: pointer; box-shadow: 0 16px 30px -16px rgba(196,20,44,.55); -webkit-tap-highlight-color: transparent; }
@@ -397,16 +286,11 @@ CSS = r"""
 .kb-btn[disabled] { opacity: .6; cursor: default; }
 
 /* блоки */
-.kb-sec { padding: clamp(64px, 9vw, 120px) 20px; }
 .kb-in { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
 .kb-wide { max-width: 1020px; }
-.kb h2 { font-size: clamp(30px, 4.2vw, 50px); line-height: 1.14; letter-spacing: .015em; text-transform: uppercase; }
-.kb h2::first-line { color: var(--red); }
 .kb-h2b { margin-top: 34px !important; }
 .kb-lead { font-size: 18.5px; color: #343034; }
-.kb-pink { background: var(--pink); border-radius: clamp(36px, 6vw, 80px); }
-.kb-red { background: linear-gradient(150deg, #DE1E38 0%, #C4142C 62%, #B21028 100%); }
-.kb-red > .kb-in > h2, .kb-red > .kb-in > h2::first-line { color: #FFFFFF; text-align: center; }
+main > section.kb-pink { background: var(--pink) !important; border-radius: clamp(36px, 6vw, 80px); }
 .kb-tag { align-self: flex-start; width: fit-content; padding: 6px 14px; border-radius: 999px; background: #FCE9EA; color: var(--red); font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 
 .kb-list { display: flex; flex-direction: column; gap: 12px; }
@@ -415,28 +299,11 @@ CSS = r"""
 .kb-list li::after { content: ""; position: absolute; left: 8px; top: calc(.28em + 4px); width: 5px; height: 10px; border: solid #FFFFFF; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .kb-sec > .kb-in > .kb-list { padding: 24px 22px; border-radius: 26px; background: #FFFFFF; box-shadow: 0 0 0 1px var(--line), 0 26px 46px -28px rgba(28,26,29,.34); }
 
-/* тарифы */
-.kb-tarify { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 40px 24px; align-items: start; }
-.kb-tarif { position: relative; display: flex; flex-direction: column; gap: 16px; padding: 30px 24px 26px; border-radius: 26px; background: #FFFFFF; box-shadow: 0 30px 50px -30px rgba(70,4,14,.7); }
-.kb-tarif-main { box-shadow: 0 0 0 5px rgba(255,255,255,.4), 0 30px 50px -30px rgba(70,4,14,.7); }
-.kb-rekom { position: absolute; left: 50%; top: -14px; transform: translateX(-50%); padding: 6px 16px; border-radius: 999px; background: #1C1A1D; color: #FFFFFF; font-size: 13.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
-.kb-tarif h3 { font-size: 30px; line-height: 1.15; }
-.kb-tarif-lead { padding-bottom: 16px; border-bottom: 1px solid var(--line); color: #5A5559; }
-.kb-weeks, .kb-yes, .kb-no { display: flex; flex-direction: column; gap: 8px; font-size: 16.5px; line-height: 1.4; }
-.kb-weeks li, .kb-yes li, .kb-no li { position: relative; padding-left: 34px; }
-.kb-weeks li { color: #5A5559; }
-.kb-weeks li::before { content: "—"; position: absolute; left: 2px; color: var(--red); }
-.kb-yes li::before { content: ""; position: absolute; left: 0; top: .1em; width: 22px; height: 22px; border-radius: 50%; background: #FCE9EA; }
-.kb-yes li::after { content: ""; position: absolute; left: 8px; top: calc(.1em + 4px); width: 5px; height: 10px; border: solid var(--red); border-width: 0 2px 2px 0; transform: rotate(45deg); }
-.kb-no { padding-top: 14px; border-top: 1px solid var(--line); color: #9A9498; text-decoration: line-through; }
-.kb-no li::before { content: "×"; position: absolute; left: 5px; text-decoration: none; display: inline-block; }
-.kb-mest { align-self: flex-start; padding: 7px 14px; border-radius: 999px; background: #FCE9EA; color: var(--red); font-size: 15.5px; font-weight: 700; }
-.kb-cena { padding: 20px 22px; border-radius: 20px; background: linear-gradient(150deg, #DE1E38 0%, #C4142C 62%, #B21028 100%); color: #FFFFFF; }
-.kb-cena span { font-family: var(--prata); font-size: 40px; line-height: 1; }
-.kb-deshevle { padding: 12px 16px; border-radius: 14px; background: #FCE9EA; color: #A30F23; font-size: 16px; font-weight: 700; line-height: 1.35; }
-.kb-tarif .kb-btn { width: 100%; }
-.kb-pod { text-align: center; color: #FFFFFF; font-size: 17px; font-weight: 600; }
+/* тарифы: плашка под ценой и строка под карточками */
+.kb-deshevle { margin: 0; padding: 12px 16px; border-radius: 14px; background: #FCE9EA; color: #A30F23; font-size: 16px; font-weight: 700; line-height: 1.35; }
+.kb-pod { margin: 0; text-align: center; color: #FFFFFF; font-size: 17px; font-weight: 600; }
 .kb-pod-dark { color: #5A5559; }
+#tarify a.kb-tarif-btn[data-btn] { display: flex; align-items: center; justify-content: center; width: 100% !important; min-height: 68px; padding: 14px 14px !important; white-space: normal !important; text-align: center; font-size: 15px !important; letter-spacing: .07em !important; line-height: 1.3 !important; text-decoration: none; }
 
 /* шаги */
 .kb-steps { counter-reset: shag; display: flex; flex-direction: column; gap: 12px; }
@@ -477,7 +344,7 @@ CSS = r"""
 .kb-zoom button { position: absolute; right: 12px; top: 12px; width: 48px; height: 48px; border: 0; border-radius: 50%; background: #FFFFFF; color: #1C1A1D; font-size: 28px; line-height: 1; cursor: pointer; }
 
 /* форма */
-.kb-forma { background: var(--grey); }
+.kb-form h2, .kb-sent h2 { font-size: clamp(30px, 4vw, 46px) !important; }
 .kb-form, .kb-sent { display: flex; flex-direction: column; gap: 22px; padding: 30px 22px 28px; border-radius: 28px; background: #FFFFFF; box-shadow: 0 0 0 1px var(--line), 0 30px 54px -30px rgba(28,26,29,.4); }
 .kb-sent { align-items: center; text-align: center; padding: 44px 22px; }
 .kb-sent[hidden], .kb-form[hidden] { display: none; }
@@ -501,13 +368,7 @@ CSS = r"""
 .kb-form .kb-submit { width: 100%; }
 
 @media (min-width: 900px) {
-  .kb-hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); align-items: end; text-align: left; padding: 0 max(40px, calc(50% - 560px)); }
-  .kb-hero-top { align-items: flex-start; padding: 70px 0 80px; }
-  .kb-hero .kb-btn { margin: 0; }
-  .kb-hero h1 { font-size: clamp(44px, 4.6vw, 66px); }
-  .kb-hero-photo { height: 600px; margin: 0; }
-  .kb-hero-photo::before { width: 120%; bottom: -46%; }
-  .kb-pink { margin: 0 20px; }
+  main > section.kb-pink { margin: 0 20px; }
 }
 """
 
@@ -703,23 +564,129 @@ def site_js_value(name):
     return m.group(1)
 
 
-def check_tarify():
-    """Состав тарифов должен совпадать с главной страницей."""
-    p = os.path.join(build.ROOT, "site", "index.html")
-    if not os.path.exists(p):
-        raise SystemExit("сначала соберите основной сайт: python3 build.py --theme barhat --noindex")
-    text = re.sub(r"<[^>]+>", " ", build.read(p))
-    text = re.sub(r"\s+", " ", html.unescape(text).replace(NBSP, " "))
-    for line in TARIF_COMMON + TARIF_VIOLA:
-        if line not in text:
-            print("  кабинет: строки тарифа нет на главной, сверьте: %s" % line)
+def sec_span(page, label):
+    """Границы секции с данной подписью: начало <section …> и конец </section>."""
+    i = page.find('aria-label="%s"' % label)
+    if i < 0:
+        raise SystemExit("кабинет: на странице нет блока «%s»" % label)
+    a = page.rfind("<section", 0, i)
+    blk = build.find_block(page, "section", a)
+    return blk[0], blk[3]
+
+
+def swap(page, old, new, count=1, what=""):
+    """Замена с проверкой: если образец пропал, сборка говорит об этом."""
+    if page.count(old) < 1:
+        print("  кабинет: не найдено для замены: %s" % (what or old[:60]))
+        return page
+    return page.replace(old, new, count) if count else page.replace(old, new)
+
+
+TITLE = "Заявка на практикум для Кабинета"
+H1 = "Заявка на <br>«Прикладную <br>эмпатию&nbsp;2.0»"
+SUB = ("Старт 1&nbsp;ноября. Для тех, кто в&nbsp;Кабинете, цена ниже, чем на&nbsp;сайте. "
+       "Её назовёт Дарья после заявки.")
+POD = "После заявки вы попадёте в&nbsp;чат с&nbsp;Дарьей из&nbsp;команды Виолы."
+
+
+def rework(page, files):
+    # ── заголовок вкладки и превью ──
+    page = re.sub(r"<title>.*?</title>", "<title>%s</title>" % TITLE, page, count=1)
+    page = re.sub(r'(<meta property="og:title" content=")[^"]*', lambda m: m.group(1) + TITLE, page, count=1)
+    page = swap(page, '<meta property="og:locale"',
+                '<meta property="og:image" content="%s/assets/img/hero.jpg">\n'
+                '<meta property="og:url" content="%s/kabinet/">\n<meta property="og:locale"'
+                % (SITE_URL, SITE_URL), what="og:locale")
+
+    # ── первый экран, телефон: метка, заголовок, подзаголовок, строка под кнопкой ──
+    page = re.sub(r'(<p data-h2-title=""[^>]*style="--bukv: )\d+(;">).*?</p>',
+                  lambda m: '<span data-h2-tag="">Только для Кабинета</span>' + m.group(1) + "12" + m.group(2) + H1 + "</p>",
+                  page, count=1, flags=re.S)
+    page = re.sub(r'<p data-h2-sub="">.*?</p>', '<p data-h2-sub="">%s</p>' % SUB, page, count=1, flags=re.S)
+    i = page.find('<div data-h2-top="">')
+    j = page.find("</a>", i) + 4
+    page = page[:j] + '<p data-h2-pod="">%s</p>' % POD + page[j:]
+
+    # ── первый экран, широкий: то же в его разметке ──
+    i = page.find('data-hero-card=""')
+    j = page.find("<h1", i)
+    k = page.rfind(">", i, page.rfind("</div>", i, j)) + 1          # текст надзаголовка
+    page = page[:k] + "Только для Кабинета" + page[page.find("</div>", k):]
+    page = re.sub(r"(<h1[^>]*>).*?(</h1>)", lambda m: m.group(1) + H1 + m.group(2), page, count=1, flags=re.S)
+    i = page.find('data-hero-card=""')
+    j = page.find("</a>", i) + 4
+    j = page.find("</div>", page.find("</div>", j) + 6) + 6             # за строкой с кнопкой и плашкой старта
+    page = page[:j] + ('<p data-hero-pod="" style="margin: 0; font-size: 17px; line-height: 1.45;">%s %s</p>'
+                       % (SUB.split(". ", 1)[1], POD)) + page[j:]
+
+    # ── тарифы: цена без валют, плашка, одна кнопка, строка про рассрочку ──
+    a, b = sec_span(page, "Тарифы")
+    t = page[a:b]
+    t = re.sub(r'<div style="[^"]*">\s*\$\d+[^<]*</div>', "", t)                      # $240 €215
+    t = re.sub(r'<button\b[^>]*data-btn="quiet"[^>]*>.*?</button>', "", t, flags=re.S)  # «Хочу в рассрочку»
+    names = iter(["Самостоятельный", "С Виолой"])
+
+    def card_btn(m):
+        style = re.search(r'style="([^"]*)"', m.group(0)).group(1)
+        return ('<p class="kb-deshevle">В&nbsp;Кабинете дешевле. Цену назовёт Дарья после заявки</p>'
+                '<a class="kb-tarif-btn" href="#zayavka" data-cta="" data-tarif="%s" data-btn="primary" '
+                'style="%s">Оставить заявку на&nbsp;этот тариф</a>' % (next(names), style))
+    t, n = re.subn(r'<button\b[^>]*data-btn="primary"[^>]*>.*?</button>', card_btn, t, flags=re.S)
+    if n != 2:
+        print("  кабинет: кнопок тарифа найдено %d, ждали 2" % n)
+    if CONFIG["SEATS_LEFT"]:
+        t = t.replace("Всего 50&nbsp;мест", "Всего 50&nbsp;мест, осталось %s" % esc(str(CONFIG["SEATS_LEFT"])))
+    # строка под карточками — перед подписью про аккаунт
+    k = t.rfind('<div style="max-width: 760px;')
+    line = '<p class="kb-pod">Можно в&nbsp;рассрочку на&nbsp;3, 6 или&nbsp;12&nbsp;месяцев, Дарья всё расскажет</p>'
+    t = t[:k] + line + t[k:] if k > 0 else t + line
+    page = page[:a] + t + page[b:]
+
+    # ── блоки про оплату здесь не нужны ──
+    for label in ("Проблемы с оплатой", "Рассрочка"):
+        a, b = sec_span(page, label)
+        page = page[:a] + page[b:]
+
+    # ── подарки: колонка «за саму заявку» обещает закрытый канал, а читатель
+    #    уже в нём. Остаются четыре бонуса после оплаты. ──
+    a, b = sec_span(page, "Подарки и условия")
+    g = page[a:b]
+    i = g.find('<div data-za-zayavku=""')
+    if i >= 0:
+        blk = build.find_block(g, "div", i)
+        g = g[:blk[0]] + g[blk[3]:]
+    g = g.replace("Что даёт заявка?", "Что вы получаете?").replace('id="zapis"', 'id="podarki"')
+    page = page[:a] + g + page[b:]
+
+    # ── все кнопки ведут к форме внизу ──
+    page = re.sub(r'(<a\b[^>]*?)href="#(?:tarify|zapis)"([^>]*data-btn="primary")',
+                  r'\1href="#zayavka" data-cta=""\2', page)
+    page = re.sub(r'\sdata-open-form="[^"]*"', "", page)
+
+    # ── свои блоки ──
+    def after(page, label, block):
+        _a, b = sec_span(page, label)
+        return page[:b] + block + page[b:]
+
+    def before(page, label, block):
+        a, _b = sec_span(page, label)
+        return page[:a] + block + page[a:]
+
+    page = after(page, "Первый экран", posle())
+    page = after(page, "Зачем мне это", komu())
+    page = after(page, "Тарифы", kak())
+    page = before(page, "Финальный призыв", otzyvy(files) + voprosy())
+    page = after(page, "Финальный призыв", forma())
+    return page
 
 
 def build_page():
-    check_tarify()
+    # Основа — страница заявки основного сайта, собранная в свою папку.
     if os.path.isdir(OUT):
         shutil.rmtree(OUT)
-    os.makedirs(OUT)
+    subprocess.run([sys.executable, os.path.join(build.ROOT, "build.py"), "--mode", "zayavka",
+                    "--theme", "barhat", "--out", OUT, "--base", "/kabinet", "--docs-root", "--noindex"],
+                   check=True, stdout=subprocess.DEVNULL)
 
     files = []
     if os.path.isdir(REVIEWS):
@@ -729,17 +696,15 @@ def build_page():
             for f in files:
                 shutil.copyfile(os.path.join(REVIEWS, f), os.path.join(OUT, "reviews", f))
 
+    site_js = build.read(os.path.join(build.BUILD_ASSETS, "site.js"))
     cfg = {
         "endpoint": site_js_value("LEAD_ENDPOINT"),
         "secret": site_js_value("FORM_SECRET"),
         "form": CONFIG["FORM_KIND"],
         "chat": CONFIG["MANAGER_CHAT_URL"],
         "metrika": CONFIG["METRIKA_ID"],
-        "docConsent": re.search(r"doc_version_consent: '([^']+)'",
-                                build.read(os.path.join(build.BUILD_ASSETS, "site.js"))).group(1),
+        "docConsent": re.search(r"doc_version_consent: '([^']+)'", site_js).group(1),
     }
-    css_file = os.path.join(build.ROOT, "site", "assets", "site.css")
-    ver = hashlib.md5(open(css_file, "rb").read()).hexdigest()[:8]
     metrika = ""
     if CONFIG["METRIKA_ID"]:
         metrika = ("<script>(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};"
@@ -748,44 +713,11 @@ def build_page():
                    "ym(%s,'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true});</script>\n"
                    % int(CONFIG["METRIKA_ID"]))
 
-    title = "Заявка на практикум для Кабинета"
-    desc = "Заявка на «Прикладную эмпатию 2.0» для подписчиков Кабинета Виолы Маро. Старт 1 ноября."
-    page = """<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>%(title)s</title>
-<meta name="description" content="%(desc)s">
-<meta name="theme-color" content="#C4142C">
-<meta property="og:type" content="website">
-<meta property="og:title" content="%(title)s">
-<meta property="og:description" content="%(desc)s">
-<meta property="og:image" content="%(site)s/assets/img/hero.jpg">
-<meta property="og:url" content="%(site)s/kabinet/">
-<meta property="og:locale" content="ru_RU">
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/site.css?v=%(ver)s">
-<style>%(css)s</style>
-%(metrika)s</head>
-<body>
-<a class="skip" href="#main">К основному содержанию</a>
-<div id="main" class="kb" role="main">%(body)s
-</div>
-%(footer)s
-%(cookie)s
-<script>%(js)s</script>
-<script>%(cookiejs)s</script>
-</body>
-</html>
-""" % {
-        "title": esc(title), "desc": esc(desc), "site": SITE_URL, "ver": ver, "css": CSS, "metrika": metrika,
-        "body": hero() + posle() + tarify() + kak() + programma() + komu() + otzyvy(files) + voprosy() + forma(),
-        "footer": build.footer_html(), "cookie": build.COOKIE_HTML, "cookiejs": build.COOKIE_JS,
-        "js": JS % {"cfg": json.dumps(cfg, ensure_ascii=False)},
-    }
-    with open(os.path.join(OUT, "index.html"), "w", encoding="utf-8") as f:
+    path = os.path.join(OUT, "index.html")
+    page = rework(build.read(path), files)
+    page = page.replace("</head>", "<style>%s</style>\n%s</head>" % (CSS, metrika), 1)
+    page = page.replace("</body>", "<script>%s</script>\n</body>" % (JS % {"cfg": json.dumps(cfg, ensure_ascii=False)}), 1)
+    with open(path, "w", encoding="utf-8") as f:
         f.write(page)
     print("Кабинет → %s (%d КБ, отзывов: %d)" % (os.path.relpath(OUT, build.ROOT),
                                                   len(page.encode("utf-8")) // 1024, len(files)))
