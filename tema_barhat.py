@@ -622,7 +622,17 @@ section[aria-label="Первый экран"] { background: var(--noch) !importa
 #tarify span[style*="color: #C4142C"] { background: #FCE9EA; color: var(--vino) !important; }
 #tarify [style*="height: 1px"] { background: var(--liniya) !important; }
 [data-cena] { border-radius: 20px; padding: 22px 22px;  }
-[data-cena] [style*="font-size"] { font-family: var(--prata); font-weight: 400 !important; }
+/* Антиквой набраны только сама сумма и строка с валютами. Подписи к платежу
+   на странице внутренней рассрочки — обычным шрифтом. */
+[data-cena] span[style*="font-size: 40px"], [data-cena] > div[style*="font-size: 16px"] { font-family: var(--prata); font-weight: 400 !important; }
+[data-cena] [data-cena-note], [data-cena] [data-cena-note] b {
+  font-family: 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #FFFFFF !important;
+}
+[data-cena] [data-cena-note] { font-weight: 500 !important; font-size: 15.5px !important; }
+[data-cena] [data-cena-note] b { font-weight: 700 !important; }
 [data-mest] { background: #FCE9EA !important; }
 [data-mest] > span:first-child { background: var(--vino) !important; }
 [data-mest] > span:last-child { color: var(--vino) !important; }
@@ -770,6 +780,8 @@ section[aria-label="Подарки и условия"]::before { right: max(6px,
 [data-cifry] > span:nth-child(even) { box-shadow: var(--ten); }
 #tarify { background: var(--barhat) !important; }
 #tarify > div > h2, #tarify > div > h2::first-line { color: #FFFFFF !important; }
+/* вводная строка под заголовком (рассрочка, предзапись) стоит на красном */
+#tarify > div > p, #tarify > div > p * { color: #FFFFFF !important; }
 #tarify > div > div:last-child:not([style*="grid"]) p,
 #tarify > div > div:last-child:not([style*="grid"]) b,
 #tarify > div > div:last-child:not([style*="grid"]) a { color: #FFFFFF !important; }
