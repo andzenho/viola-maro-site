@@ -40,6 +40,8 @@ import re
 import shutil
 import sys
 
+import tema_barhat
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(ROOT, "source")
 LEGAL = os.path.join(ROOT, "Страницы-к-публикации")
@@ -392,6 +394,9 @@ THEME_HERO = {
 def _theme_terrace(size, centering):
     """Терраса из презентации, обрезанная под кадр и слегка размытая."""
     from PIL import Image, ImageFilter, ImageOps
+    if THEME == "barhat":
+        # Телефон: присланная сцена идёт фоном, иначе бархат.
+        return tema_barhat.scene("hero-m", size) or tema_barhat.velvet(size)
     bg = Image.open(os.path.join(THEME_DIR, "terrasa.jpg")).convert("RGB")
     return ImageOps.fit(bg, size, Image.LANCZOS, centering=centering).filter(ImageFilter.GaussianBlur(5))
 
@@ -409,6 +414,12 @@ def _theme_cutout(scale):
 def theme_hero_image(kind):
     """Кадр первого экрана одним слоем: терраса и на ней Виола."""
     cfg = THEME_HERO[kind]
+    if THEME == "barhat":
+        # Присланная сцена с Виолой идёт как есть; пока её нет, настоящий
+        # снимок ставится на бархатный фон.
+        ready = tema_barhat.scene("hero-d" if kind == "desktop" else "hero-m", cfg["size"])
+        if ready:
+            return ready
     bg = _theme_terrace(cfg["size"], cfg["centering"])
     cut = _theme_cutout(cfg["scale"])
     bg.paste(cut, (cfg["left"], cfg["top"]), cut)
@@ -1852,6 +1863,9 @@ def apply_theme(text, path):
         text = _theme_layout(text)
     if path.endswith(os.path.join("assets", "site.css")):
         text += THEME_CSS
+    # «Бархат» работает поверх «моря»: те же блоки, свои цвета и стили.
+    if THEME == "barhat":
+        text = tema_barhat.apply(text, path)
     return text
 
 
@@ -2238,6 +2252,8 @@ def build_images():
         p = os.path.join(outdir, "terrasa.jpg")
         _theme_terrace((900, 1000), (0.62, 0.5)).save(p, quality=80, optimize=True, progressive=True)
         made.append(p)
+    if THEME == "barhat":
+        made += tema_barhat.copy_slots(outdir)
 
     total = sum(os.path.getsize(p) for p in made)
     print("  картинки: %d файлов, %.0f КБ" % (len(made), total / 1024))
@@ -4139,8 +4155,8 @@ def parse_args(argv):
         elif a == "--theme":
             i += 1
             THEME = argv[i]
-            if THEME != "more":
-                sys.exit("оформление бывает только more, получено: %s" % THEME)
+            if THEME not in ("more", "barhat"):
+                sys.exit("оформление бывает more или barhat, получено: %s" % THEME)
         else:
             sys.exit("неизвестный аргумент: %s" % a)
         i += 1
