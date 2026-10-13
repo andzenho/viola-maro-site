@@ -185,7 +185,9 @@ def copy_slots(outdir):
     import shutil
     made = []
     for name in sorted(SLOTS):
-        if est(name):
+        # вырезка и готовые сцены уходят в кадр первого экрана, отдельным
+        # файлом на сайте не нужны
+        if est(name) and name not in ("viola", "hero-d", "hero-m"):
             p = os.path.join(outdir, "b-" + SLOTS[name])
             shutil.copyfile(os.path.join(DIR, SLOTS[name]), p)
             made.append(p)
