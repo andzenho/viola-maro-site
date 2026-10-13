@@ -32,32 +32,33 @@ jobs:
       - name: Установить Pillow
         run: pip install --quiet pillow
 
-      # Все страницы практикума собираются в новом оформлении: полная оплата (/),
-      # бронь (/bron), внутренняя рассрочка (/rassrochka) и заявка (/zayavka).
+      # Все страницы практикума собираются в оформлении --theme barhat (красное
+      # с белым): полная оплата (/), бронь (/bron), внутренняя рассрочка
+      # (/rassrochka), заявка (/zayavka) и анкета предзаписи (/predzapis).
+      # Прежнее оформление: --theme more.
       - name: Собрать сайт с оплатой
-        run: python3 build.py --theme more --noindex
+        run: python3 build.py --theme barhat --noindex
 
       - name: Собрать редирект со старой страницы /pre
         run: python3 build.py --mode pre --out site/pre --base /pre --noindex
 
       - name: Собрать страницу брони
-        run: python3 build.py --mode bron --theme more --out site/bron --base /bron --noindex
+        run: python3 build.py --mode bron --theme barhat --out site/bron --base /bron --noindex
 
       # Анкета предзаписи: без цен и оплаты, после анкеты открывается
       # закрытый канал. Адрес /pre при этом остаётся редиректом на заявку.
       - name: Собрать страницу анкеты предзаписи
-        run: python3 build.py --mode predzapis --theme more --out site/predzapis --base /predzapis --docs-root --noindex
+        run: python3 build.py --mode predzapis --theme barhat --out site/predzapis --base /predzapis --docs-root --noindex
 
       - name: Собрать страницу внутренней рассрочки
-        run: python3 build.py --mode rassrochka --theme more --out site/rassrochka --base /rassrochka --docs-root --noindex
+        run: python3 build.py --mode rassrochka --theme barhat --out site/rassrochka --base /rassrochka --docs-root --noindex
 
       - name: Собрать страницу заявки
-        run: python3 build.py --mode zayavka --theme more --out site/zayavka --base /zayavka --noindex
+        run: python3 build.py --mode zayavka --theme barhat --out site/zayavka --base /zayavka --noindex
 
-      # Тестовая страница оформления «бархат» (тёмно-бордовый, золото,
-      # антиква). Наполнение то же, что у главной; действующие страницы
-      # от неё не зависят.
-      - name: Собрать тестовую страницу оформления «бархат» по адресу /dizayn
+      # Прежний адрес тестовой страницы оформления: та же сборка, что
+      # и главная. Оставлен, чтобы разосланная ссылка не сломалась.
+      - name: Собрать копию главной по адресу /dizayn
         run: python3 build.py --theme barhat --out site/dizayn --base /dizayn --docs-root --noindex
 
       - name: Добавить мини-аппы
