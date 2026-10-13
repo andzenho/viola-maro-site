@@ -231,7 +231,7 @@ CSS = r"""
   --zol: #E2B96A;
   --zol-svet: #FFFFFF;
   --kost: #FFFFFF;
-  --fon: #F3F2F0;
+  --fon: #EAE7E2;
   --liniya: #E9E6E2;
   --barhat: linear-gradient(150deg, #DE1E38 0%, #C4142C 62%, #B21028 100%);
   --sky: var(--barhat);
@@ -239,7 +239,7 @@ CSS = r"""
   --spot: linear-gradient(160deg, #FFFFFF 0%, #F6F5F3 100%);
   --zoloto: linear-gradient(#FCE9EA, #FCE9EA);
   --tochki: linear-gradient(transparent, transparent);
-  --ten: 0 1px 2px rgba(28,26,29,.04), 0 22px 44px -30px rgba(28,26,29,.2);
+  --ten: 0 0 0 1px #DDD8D1, 0 26px 46px -28px rgba(28,26,29,.34);
   --blesk: 0 16px 30px -16px rgba(196,20,44,.55);
   --prata: 'Prata', 'Times New Roman', Georgia, serif;
 }
@@ -280,9 +280,7 @@ main > section:not([aria-label="Первый экран"]):not([data-mk]):not([d
   padding-bottom: clamp(76px, 10vw, 150px) !important;
 }
 main > section:not([aria-label="Первый экран"]) { background: var(--fon) !important; }
-main > section[aria-label="Программа шесть недель"],
-main > section[aria-label="Рассрочка"],
-main > section[aria-label="Контакты команды"] { background: #FFFFFF !important; }
+main > section[aria-label="Программа шесть недель"] { background: #FBE4E7 !important; }
 main [style*="border-radius: 14px"], main [style*="border-radius: 16px"] { border-radius: 26px !important; }
 
 /* ── метки ── */
@@ -674,9 +672,7 @@ section[aria-label="Первый экран"] { background: var(--noch) !importa
 /* ── фигуры: дуги, кольца, крупные цифры ── */
 
 /* Белые блоки — большими скруглёнными листами на сером. */
-main > section[aria-label="Программа шесть недель"],
-main > section[aria-label="Рассрочка"],
-main > section[aria-label="Контакты команды"] { border-radius: clamp(36px, 6vw, 80px); }
+main > section[aria-label="Программа шесть недель"] { border-radius: clamp(36px, 6vw, 80px); }
 
 /* Первый экран снизу закрыт дугой. */
 @media (min-width: 901px) {
@@ -764,4 +760,23 @@ section[aria-label="Программа шесть недель"]::before { right
 #tarify::before { right: max(6px, calc(50% - 520px)); top: -10px; width: clamp(96px, 22vw, 180px); }
 section[aria-label="Подарки и условия"]::before { right: max(6px, calc(50% - 520px)); top: -44px; width: clamp(96px, 22vw, 180px); }
 [data-final]::before { right: max(6px, calc(50% - 400px)); top: -30px; }
+
+/* ── контраст: белое не лежит на белом ── */
+
+/* Серый фон страницы заметно темнее белых карточек, у карточек тонкая
+   кромка. Блок программы — на розовом листе. Тарифы — на красном. */
+[data-bubble], [data-audio], [data-h2-note] { background: #F1EEEA; }
+[data-vopros] { background: #FBE4E7; }
+[data-week-card]::before { color: #F9DCE0; }
+[data-cifry] > span:nth-child(even) { box-shadow: var(--ten); }
+#tarify { background: var(--barhat) !important; }
+#tarify > div > h2, #tarify > div > h2::first-line { color: #FFFFFF !important; }
+#tarify > div > div:last-child:not([style*="grid"]) p,
+#tarify > div > div:last-child:not([style*="grid"]) b,
+#tarify > div > div:last-child:not([style*="grid"]) a { color: #FFFFFF !important; }
+#tarify > div > div[style*="grid"] > div { box-shadow: 0 30px 50px -30px rgba(70,4,14,.7) !important; }
+#tarify > div > div[style*="grid"] > div:last-child { box-shadow: 0 0 0 5px rgba(255,255,255,.4), 0 30px 50px -30px rgba(70,4,14,.7) !important; }
+#tarify [style*="top: -14px"] { background: #1C1A1D !important; }
+#tarify::before { filter: drop-shadow(0 22px 26px rgba(70,4,14,.5)); }
+[data-mk] { padding-bottom: clamp(48px, 7vw, 90px) !important; }
 """
