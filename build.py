@@ -423,6 +423,8 @@ def theme_hero_image(kind):
     bg = _theme_terrace(cfg["size"], cfg["centering"])
     cut = _theme_cutout(cfg["scale"])
     bg.paste(cut, (cfg["left"], cfg["top"]), cut)
+    if THEME == "barhat":
+        bg = tema_barhat.fade_frame(bg)
     return bg
 
 
@@ -2248,7 +2250,10 @@ def build_images():
         # Первый экран на телефоне собран из двух слоёв: терраса на фоне
         # и Виола отдельной картинкой с прозрачностью, строго по центру.
         p = os.path.join(outdir, "viola.webp")
-        _theme_cutout(0.83).save(p, "WEBP", quality=88, method=6)
+        cut = _theme_cutout(0.83)
+        if THEME == "barhat":
+            cut = tema_barhat.fade_cutout(cut)
+        cut.save(p, "WEBP", quality=88, method=6)
         made.append(p)
         p = os.path.join(outdir, "terrasa.jpg")
         _theme_terrace((900, 1000), (0.62, 0.5)).save(p, quality=80, optimize=True, progressive=True)
