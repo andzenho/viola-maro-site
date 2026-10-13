@@ -84,21 +84,22 @@ def tg(s):
 # ── блоки ──
 
 def posle():
+    # Главное в каждом пункте выделено жирным: блок читается по этим словам.
     items = [
-        "расскажет подробно о программе и покажет презентацию практикума;",
-        "ответит на ваши вопросы и поможет выбрать тариф;",
-        "назовёт цену для Кабинета (она ниже, чем на сайте) и закрепит её за вами до %s;" % CONFIG["PRICE_DEADLINE"],
-        "поможет оплатить, в том числе в рассрочку или из-за границы, и получить доступы к «Прикладной эмпатии».",
+        ("расскажет подробно о программе", " и покажет презентацию практикума;"),
+        ("ответит на ваши вопросы", " и поможет выбрать тариф;"),
+        ("назовёт цену для Кабинета", " (она ниже, чем на сайте) и закрепит её за вами до %s;" % CONFIG["PRICE_DEADLINE"]),
+        ("поможет оплатить,", " в том числе в рассрочку или из-за границы, и получить доступы к «Прикладной эмпатии»."),
     ]
+    cards = "".join("<li><p><b>%s</b>%s</p></li>" % (nb(esc(a)), nb(esc(b))) for a, b in items)
     return """
-<section class="kb kb-sec" aria-label="После заявки">
+<section class="kb kb-sec kb-posle" aria-label="После заявки">
   <div class="kb-in">
-    <h2>После заявки вы попадёте в&nbsp;чат с&nbsp;Дарьей из&nbsp;команды Виолы</h2>
-    <p class="kb-lead">%s</p>
-    <ul class="kb-list">%s</ul>
+    <h2>После заявки вы&nbsp;попадёте <br>в&nbsp;чат с&nbsp;Дарьей <br>из&nbsp;команды Виолы</h2>
+    <p class="kb-esli"><span>Если чат не&nbsp;откроется, Дарья сама напишет вам с&nbsp;аккаунта <b>@%s</b>.</span> <i>Она:</i></p>
+    <ol class="kb-ona">%s</ol>
   </div>
-</section>""" % (tg(nb("Если чат не откроется, Дарья сама напишет вам с аккаунта @violamaroteam. Она:")),
-                 "".join("<li>%s</li>" % nb(esc(t)) for t in items))
+</section>""" % (esc(CONFIG["MANAGER_TG"]), cards)
 
 
 def kak():
@@ -304,6 +305,21 @@ main > section.kb-pink { background: var(--pink) !important; border-radius: clam
 .kb-pod { margin: 0; text-align: center; color: #FFFFFF; font-size: 17px; font-weight: 600; }
 .kb-pod-dark { color: #5A5559; }
 #tarify a.kb-tarif-btn[data-btn] { display: flex; align-items: center; justify-content: center; width: 100% !important; min-height: 68px; padding: 14px 14px !important; white-space: normal !important; text-align: center; font-size: 15px !important; letter-spacing: .07em !important; line-height: 1.3 !important; text-decoration: none; }
+
+/* «После заявки»: спокойный заголовок, строка про аккаунт плашкой,
+   четыре дела менеджера карточками с номерами */
+main > section.kb-posle .kb-in { max-width: 860px; gap: 20px; }
+main > section.kb-posle h2 { font-size: clamp(27px, 3.5vw, 44px) !important; line-height: 1.18 !important; }
+.kb-esli { display: flex; flex-direction: column; gap: 18px; font-size: 17.5px; line-height: 1.45; color: #343034; }
+.kb-esli span { padding: 14px 18px; border-radius: 16px; background: #FCE9EA; }
+.kb-esli span b { color: #A30F23; white-space: nowrap; }
+.kb-esli i { font-family: var(--prata); font-style: normal; font-size: 24px; line-height: 1; color: var(--red); }
+.kb-ona { counter-reset: ona; display: grid; grid-template-columns: 1fr; gap: 10px; }
+.kb-ona li { counter-increment: ona; display: grid; grid-template-columns: 52px 1fr; gap: 4px; align-items: start; padding: 20px 20px 20px 18px; border-radius: 22px 22px 22px 6px; background: #FFFFFF; box-shadow: 0 0 0 1px var(--line), 0 26px 46px -28px rgba(28,26,29,.34); }
+.kb-ona li::before { content: "0" counter(ona); font-family: var(--prata); font-size: 34px; line-height: 1.05; color: var(--red); }
+.kb-ona p { font-size: 17.5px; line-height: 1.5; color: #5A5559; }
+.kb-ona b { display: block; margin-bottom: 2px; font-size: 19px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+@media (min-width: 760px) { .kb-ona { grid-template-columns: 1fr 1fr; gap: 14px; } }
 
 /* шаги */
 .kb-steps { counter-reset: shag; display: flex; flex-direction: column; gap: 12px; }
