@@ -779,4 +779,22 @@ section[aria-label="Подарки и условия"]::before { right: max(6px,
 #tarify [style*="top: -14px"] { background: #1C1A1D !important; }
 #tarify::before { filter: drop-shadow(0 22px 26px rgba(70,4,14,.5)); }
 [data-mk] { padding-bottom: clamp(48px, 7vw, 90px) !important; }
+
+/* ── два предмета со смыслом ── */
+
+/* Открытая шкатулка стоит над заголовком «Что вы получаете?»: это подарки.
+   Приоткрытая дверь — в последнем призыве, над словами «Набор открыт». */
+section[aria-label="Подарки и условия"]::before {
+  left: 50%; right: auto; top: clamp(34px, 5vw, 70px);
+  width: clamp(150px, 34vw, 210px);
+  transform: translateX(-50%);
+}
+main > section[aria-label="Подарки и условия"]:not([aria-label="Первый экран"]):not([data-mk]):not([data-final]) { padding-top: clamp(220px, 30vw, 310px) !important; }
+[data-final]::before {
+  left: 50%; right: auto; top: clamp(4px, 2vw, 30px);
+  width: clamp(150px, 30vw, 200px);
+  transform: translateX(-50%);
+  filter: drop-shadow(0 22px 26px rgba(70,4,14,.55));
+}
+[data-final-card] { padding-top: clamp(150px, 24vw, 200px) !important; }
 """
