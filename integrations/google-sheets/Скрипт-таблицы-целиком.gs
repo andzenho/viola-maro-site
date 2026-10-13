@@ -20,7 +20,7 @@
 // Версия для интеграции мини-аппов. SaleBot-callback по-прежнему выключен,
 // пока в свойствах скрипта явно не выставлено SALEBOT_ENABLED=1.
 // У теста 2.0 свой выключатель: SALEBOT_T2_ENABLED=1.
-var ВЕРСИЯ = '2026-10-03 test2';
+var ВЕРСИЯ = '2026-10-14 kabinet';
 
 /* ═══ ИМЕНА ВКЛАДОК — ЕДИНСТВЕННОЕ МЕСТО, ГДЕ ОНИ ЗАДАЮТСЯ ═══════════
    Должны совпадать с именами вкладок в таблице ДОСЛОВНО. Разойдутся хоть
@@ -261,6 +261,9 @@ function route_(d) {
   try {
     /* Список форм — в SITE_SHEETS, чтобы новая форма подключалась одной
        строкой там, а не двумя правками в разных местах. */
+    /* Страница-заявка для Кабинета: свой лист, приоритет, дубли, бот. */
+    if (d.form === 'кабинет') { return saveKabinet_(d); }
+
     if (SITE_SHEETS[d.form]) { return saveSite_(d); }
 
     /* Тест 2.0 — раньше всего остального: его записи идут со своими типами
@@ -781,6 +784,130 @@ function saveKlWay_(d) {
     }
   }
   return json_({ ok: true, версия: ВЕРСИЯ, note: 'заявка не найдена, способ не записан' });
+}
+
+/* ───────────────────────── заявки со страницы для Кабинета (/kabinet) ──
+
+   Лист «Кабинет». Порядок колонок задан здесь; поменяете — разъедется шапка.
+   «Статус» и «Комментарий» ведёт менеджер руками: при повторной заявке
+   скрипт их не трогает. */
+var KABINET_SHEET = 'Кабинет';
+var KABINET_HEADERS = [
+  'Дата и время (МСК)', 'Имя', 'Telegram', 'Телефон', 'Тариф', 'Что важнее',
+  'Когда готовы', 'utm_source', 'utm_campaign', 'utm_content',
+  'Приоритет', 'Статус', 'Комментарий'
+];
+var KABINET_STATUSES = ['новая', 'написала', 'оплатила', 'отказ'];
+
+/**
+ * Заявка со страницы для Кабинета.
+ *
+ * Пишет строку в лист «Кабинет», ту же заявку кладёт в общий лист заявок
+ * с меткой «Кабинет» и шлёт уведомление в Telegram. Повторная заявка
+ * с тем же ником в течение суток обновляет прежнюю строку.
+ *
+ * Бот: в свойствах скрипта (Настройки проекта → Свойства скрипта) нужны
+ * KABINET_BOT_TOKEN и KABINET_CHAT_ID. Пока их нет, уведомление просто
+ * не отправляется, заявка всё равно записывается.
+ */
+function saveKabinet_(d) {
+  if (SITE_SECRET && d.secret !== SITE_SECRET) return json_({ ok: false, error: 'forbidden' });
+  if (d.website) return json_({ ok: true });
+  if (!String(d.name || '').trim()) return json_({ ok: false, error: 'no name' });
+  var nick = String(d.telegram || '').trim().replace(/^@+/, '');
+  if (!nick) return json_({ ok: false, error: 'no contact' });
+  if (d.accept_pd !== true) return json_({ ok: false, error: 'no consent' });
+
+  var tarif = String(d.tarif || '');
+  var kogda = String(d.kogda || '');
+  var hot = (tarif === 'Самостоятельный' || tarif === 'С Виолой') && kogda === 'Сейчас';
+  var prio = hot ? 'горячая' : 'тёплая';
+  var now = new Date();
+  var stamp = Utilities.formatDate(now, 'Europe/Moscow', 'dd.MM.yyyy HH:mm');
+
+  var sheet = getSheet2_(KABINET_SHEET, KABINET_HEADERS);
+  var colStatus = KABINET_HEADERS.indexOf('Статус') + 1;
+  /* Выпадающий список статусов — на всю колонку, один раз. */
+  if (!sheet.getRange(2, colStatus).getDataValidation()) {
+    sheet.getRange(2, colStatus, sheet.getMaxRows() - 1, 1).setDataValidation(
+      SpreadsheetApp.newDataValidation().requireValueInList(KABINET_STATUSES, true).build());
+  }
+
+  var поля = [stamp, какТекст_(d.name), какТекст_(nick), какТекст_(d.phone || ''), tarif,
+              String(d.vazhno || ''), kogda, какТекст_(d.utm_source || ''),
+              какТекст_(d.utm_campaign || ''), какТекст_(d.utm_content || ''), prio];
+
+  /* Дубль: тот же ник за последние 24 часа. Ищем с конца — свежие внизу. */
+  var row = 0;
+  var last = sheet.getLastRow();
+  if (last > 1) {
+    var from = Math.max(2, last - 300);
+    var данные = sheet.getRange(from, 1, last - from + 1, 3).getValues();
+    for (var i = данные.length - 1; i >= 0; i--) {
+      if (String(данные[i][2]).replace(/^['@]+/, '').toLowerCase() !== nick.toLowerCase()) continue;
+      var когда = kabinetDate_(данные[i][0]);
+      if (когда && now.getTime() - когда.getTime() < 24 * 3600 * 1000) row = from + i;
+      break;
+    }
+  }
+
+  var duplicate = row > 0;
+  if (duplicate) {
+    sheet.getRange(row, 1, 1, поля.length).setValues([поля]);
+  } else {
+    sheet.appendRow(поля.concat(['новая', '']));
+    /* Та же заявка — в общий лист заявок, с меткой источника. */
+    d.received_at = now;
+    d.form = 'заявка';
+    d.plan = 'Кабинет: ' + tarif;
+    d.readiness = 'Кабинет · ' + prio + (d.vazhno ? ' · важно: ' + d.vazhno : '') + (kogda ? ' · когда: ' + kogda : '');
+    d.src = 'kabinet';
+    var общий = getSheet2_(ЛИСТЫ.сайтОплата, SITE_FIELDS.map(function (f) { return f[1]; }));
+    общий.appendRow(SITE_FIELDS.map(function (f) {
+      var v = d[f[0]];
+      if (v === true) return 'да';
+      if (v === false) return 'нет';
+      return (v === undefined || v === null) ? '' : какТекст_(v);
+    }));
+  }
+
+  kabinetNotify_([
+    (hot ? '🔥 ' : '') + 'Приоритет: ' + prio + (duplicate ? ' (повторная заявка)' : ''),
+    'Кабинет, заявка на «Прикладную эмпатию 2.0»',
+    'Имя: ' + d.name,
+    'Telegram: @' + nick,
+    'Телефон: ' + (d.phone || 'не указан'),
+    'Тариф: ' + (tarif || 'не выбран'),
+    'Что важнее: ' + (d.vazhno || 'не указано'),
+    'Когда готовы: ' + (kogda || 'не указано'),
+    'Метки: ' + [d.utm_source, d.utm_campaign, d.utm_content].filter(String).join(' / '),
+    'https://t.me/' + nick
+  ].join('\n'));
+
+  return json_({ ok: true, версия: ВЕРСИЯ, лист: sheet.getName(), duplicate: duplicate });
+}
+
+/** Дата из колонки листа «Кабинет»: «14.10.2026 09:30» по Москве или готовая дата. */
+function kabinetDate_(v) {
+  if (v instanceof Date) return v;
+  var m = /^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2})/.exec(String(v));
+  if (!m) return null;
+  return new Date(m[3] + '-' + m[2] + '-' + m[1] + 'T' + m[4] + ':' + m[5] + ':00+03:00');
+}
+
+/** Уведомление в Telegram. Сбой бота не должен ронять запись заявки. */
+function kabinetNotify_(text) {
+  try {
+    var props = PropertiesService.getScriptProperties();
+    var token = props.getProperty('KABINET_BOT_TOKEN');
+    var chat = props.getProperty('KABINET_CHAT_ID');
+    if (!token || !chat) return;
+    UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+      method: 'post',
+      payload: { chat_id: chat, text: text, disable_web_page_preview: 'true' },
+      muteHttpExceptions: true
+    });
+  } catch (err) { /* заявка уже записана */ }
 }
 
 /** Заявка с сайта предзаписи, оплаты, брони или страницы заявки. */
