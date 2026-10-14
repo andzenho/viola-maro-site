@@ -1,0 +1,591 @@
+/* Прикладная эмпатия — поведение страницы.
+   Ноль зависимостей, ноль внешних запросов. */
+
+(function () {
+  'use strict';
+
+  /* ─────────────────────────────────────────────────── настройка ──
+     Заполняется один раз перед публикацией.
+
+     LEAD_ENDPOINT — адрес веб-приложения Apps Script при таблице, куда
+       падают и результаты теста эмпата. Заявка с предзаписи ложится
+       в лист «Предзапись с сайта», с оплаты — в «Заявки на продукт».
+       Код скрипта — в integrations/google-sheets/.
+       Пока пусто, форма не делает вид, что заявка принята: она
+       проверяет согласия и отправляет человека в службу заботы.
+
+     FORM_SECRET — та же строка, что SECRET в Code.gs. Отсекает ботов.
+
+     Адреса оплаты практикума задаются в build.py (словарь PAY) и приходят
+       в разметке окна, в data-pay-config: у каждой страницы свои ссылки
+       и суммы. После формы человек сам выбирает способ: российской картой
+       (GetPlatinum, там же рассрочка от банка) или зарубежной (Lava).
+
+     PAY_URLS — запасной путь для страниц без такого шага: одна ссылка,
+       переход сразу после того, как согласия записаны. */
+
+  var LEAD_ENDPOINT = 'https://script.google.com/macros/s/AKfycby3T-T1o2X9Y29957ZDDQs7r6vtltiKiyLkYT97cyin-roOagb3vUMBWWQoK0-P8Mzbsg/exec';
+  var FORM_SECRET = 'PxlGXL9bQSjc0dHcLoiCZJZWtNdfv9D8yY9SHBuJ';
+
+  var PAY_URLS = {
+    /* Событие «Неудобные», билет 3 500 ₽ до 4 сентября. Пока пусто,
+       форма не делает вид, что оплата открылась: она проверяет согласия,
+       записывает заявку и отправляет человека в службу заботы. */
+    neudobnye: ''
+  };
+
+  var SUPPORT_TG = 'https://t.me/violamaroteam';
+
+  /* Закрытый канал Виолы — куда уходит человек после заявки на предзапись. */
+  var CHANNEL_URL = 'https://t.me/+iIqJoSn2UBU3Yzky';
+
+  /* Чат команды — куда уходит человек со страницы заявки. Это не то же самое,
+     что SUPPORT_TG: там служба заботы для тех, у кого что-то сломалось,
+     а здесь начинается разговор про участие. */
+  var TEAM_CHAT_URL = 'https://t.me/m/t7W8mt1mYjdi';
+
+  /* Редакции документов на момент акцепта — уходят вместе с заявкой
+     и должны меняться вместе с текстом документов. */
+  var DOC_VERSIONS = {
+    doc_version_offer: '2026-08-10',
+    doc_version_annex: '2026-08-10',
+    doc_version_consent: '2026-08-10'
+  };
+
+  var ATTRIBUTION_KEY = 'viola_attribution';
+  var ATTRIBUTION_FIELDS = [
+    'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src', 'k'
+  ];
+
+  function readAttribution() {
+    var saved = {};
+    try { saved = JSON.parse(sessionStorage.getItem(ATTRIBUTION_KEY) || '{}'); }
+    catch (e) { saved = {}; }
+
+    var params = new URLSearchParams(window.location.search);
+    ATTRIBUTION_FIELDS.forEach(function (key) {
+      var value = params.get(key);
+      if (!saved[key] && value) saved[key] = value;
+    });
+    if (!saved.referrer && document.referrer) saved.referrer = document.referrer;
+
+    try { sessionStorage.setItem(ATTRIBUTION_KEY, JSON.stringify(saved)); }
+    catch (e) {}
+    return saved;
+  }
+
+  var attribution = readAttribution();
+
+  /* ───────────────────────────────────────────────────── модалка ── */
+
+  var modal = document.getElementById('lead-modal');
+  if (!modal) return;
+
+  /* Чем кончается отправка: 'pay' — страница оплаты, 'channel' — закрытый
+     канал, 'team' — чат службы заботы: человек попадает прямо в переписку
+     с командой, а не ждёт, пока напишут ему.
+     Задаётся в разметке, чтобы скрипт остался один на все версии. */
+  var AFTER = modal.getAttribute('data-after') || 'pay';
+  var IS_PRE = AFTER === 'channel';
+  var IS_TEAM = AFTER === 'team';
+
+  var planLabel = document.getElementById('form-plan');
+  var errBox = document.getElementById('form-error');
+  var errText = document.getElementById('form-error-text');
+  var sentBox = document.getElementById('form-sent');
+  var submit = document.getElementById('form-submit');
+  /* Стрелка в разметке кнопки стоит отдельным значком. Подпись после
+     «Отправляем…» возвращается текстом, и стрелка без значка смотрелась
+     бы опечаткой в конце слова, поэтому в подпись она не попадает. */
+  var submitLabel = submit ? submit.textContent.replace(/\s*→\s*$/, '') : '';
+  var closers = modal.querySelectorAll('[data-close-form]');
+
+  var inputs = {
+    name: modal.querySelector('[name="name"]'),
+    phone: modal.querySelector('[name="phone"]'),
+    tg: modal.querySelector('[name="tg"]')
+  };
+
+  var boxes = {
+    accept_offer: modal.querySelector('[name="accept_offer"]'),
+    accept_pd: modal.querySelector('[name="accept_pd"]'),
+    accept_ads: modal.querySelector('[name="accept_ads"]')
+  };
+
+  var CB_MESSAGES = {
+    accept_offer: 'Без принятия оферты оплата невозможна',
+    accept_pd: (IS_PRE || IS_TEAM)
+      ? 'Без согласия на обработку данных заявку оформить нельзя'
+      : 'Без согласия на обработку данных оплата невозможна'
+  };
+
+  var lastTrigger = null;
+  var currentPlan = '';
+  var currentPay = '';
+
+  /* Анкета предзаписи: тариф человек выбирает прямо в форме, из двух
+     вариантов с ценами. На остальных страницах этих переключателей нет. */
+  var tarifs = modal.querySelectorAll('[name="tarif"]');
+  function pickedTarif() {
+    for (var i = 0; i < tarifs.length; i++) if (tarifs[i].checked) return tarifs[i];
+    return null;
+  }
+  Array.prototype.forEach.call(tarifs, function (t) {
+    t.addEventListener('change', function () { hide(errBox); });
+  });
+
+  /* Второй шаг окна: выбор способа оплаты. Есть только на страницах,
+     где принимаются деньги за практикум. */
+  var payStep = document.getElementById('pay-step');
+  var formParts = modal.querySelectorAll('[data-step="form"]');
+  var PAY = null;
+  if (payStep) {
+    try { PAY = JSON.parse(payStep.getAttribute('data-pay-config') || 'null'); }
+    catch (e) { PAY = null; }
+  }
+
+  function setText(id, text) {
+    var node = document.getElementById(id);
+    if (node) node.textContent = text;
+  }
+
+  function showFormStep() {
+    Array.prototype.forEach.call(formParts, show);
+    hide(payStep);
+  }
+
+  /* Возвращает false, если для нажатой кнопки нет адресов оплаты. */
+  function showPayStep(notSaved) {
+    var plan = PAY && PAY.plans ? PAY.plans[currentPay] : null;
+    if (!payStep || !plan || !plan.ru || !PAY.intl) return false;
+
+    setText('pay-plan', currentPlan);
+    setText('pay-ru-price', plan.rub.replace(/ /g, '\u00a0') + '\u00a0₽');
+    setText('pay-intl-usd', '$' + plan.usd);
+    setText('pay-intl-eur', '€' + plan.eur);
+    document.getElementById('pay-ru').href = plan.ru;
+    document.getElementById('pay-intl').href = PAY.intl;
+
+    /* У зарубежной оплаты одна страница на оба тарифа: подсказываем,
+       какой выбрать, чтобы человек не оплатил чужой. */
+    var hint = document.getElementById('pay-intl-hint');
+    if (hint) {
+      hint.hidden = !plan.name;
+      setText('pay-intl-plan', plan.name || '');
+    }
+    var warn = document.getElementById('pay-warn');
+    if (warn) warn.hidden = !notSaved;
+
+    Array.prototype.forEach.call(formParts, hide);
+    show(payStep);
+    setSending(false);
+    if (modal.firstElementChild) modal.firstElementChild.scrollTop = 0;
+    var title = document.getElementById('pay-title');
+    if (title) title.focus();
+    return true;
+  }
+
+  function errorFor(box) {
+    var row = box.closest('label');
+    return row ? row.querySelector('.cb-err') : null;
+  }
+
+  /* На предзаписи галки про оферту нет вовсе, поэтому проверяем только те,
+     что реально есть на странице. */
+  var required = ['accept_offer', 'accept_pd'].filter(function (k) { return boxes[k]; });
+
+  function requiredOk() {
+    return required.every(function (k) { return boxes[k].checked; });
+  }
+
+  function syncSubmit() {
+    submit.disabled = !requiredOk();
+  }
+
+  function showCheckboxErrors(mark) {
+    required.forEach(function (key) {
+      var slot = errorFor(boxes[key]);
+      if (!slot) return;
+      var bad = mark && !boxes[key].checked;
+      slot.textContent = bad ? CB_MESSAGES[key] : '';
+      slot.hidden = !bad;
+    });
+  }
+
+  Object.keys(boxes).forEach(function (key) {
+    var box = boxes[key];
+    if (!box) return;
+    box.addEventListener('change', function () {
+      showCheckboxErrors(true);
+      syncSubmit();
+      hide(errBox);
+    });
+  });
+
+  function hide(el) { if (el) el.hidden = true; }
+
+  function show(el) { if (el) el.hidden = false; }
+
+  function fail(message) {
+    if (errText) errText.textContent = message;
+    show(errBox);
+    hide(sentBox);
+  }
+
+  function setSending(active) {
+    if (!submit) return;
+    submit.textContent = active ? 'Отправляем…' : submitLabel;
+    submit.classList.toggle('is-loading', active);
+    submit.setAttribute('aria-busy', active ? 'true' : 'false');
+  }
+
+  function openModal(plan, payKey, trigger) {
+    currentPlan = plan;
+    currentPay = payKey || '';
+    lastTrigger = trigger || null;
+    if (planLabel) planLabel.textContent = plan;
+    /* Открыли кнопкой тарифа — этот тариф уже отмечен. Открыли общей
+       кнопкой — выбор остаётся за человеком. */
+    Array.prototype.forEach.call(tarifs, function (t) {
+      if (payKey && t.getAttribute('data-key') === payKey) t.checked = true;
+    });
+    showFormStep();
+    hide(errBox);
+    hide(sentBox);
+    setSending(false);
+    showCheckboxErrors(false);
+    syncSubmit();
+    modal.hidden = false;
+    document.body.classList.add('modal-open');
+    var first = closers[0] || inputs.name;
+    if (first) first.focus();
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    document.body.classList.remove('modal-open');
+    if (lastTrigger) lastTrigger.focus();
+  }
+
+  Array.prototype.forEach.call(closers, function (btn) {
+    btn.addEventListener('click', closeModal);
+  });
+
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal.firstElementChild) closeModal();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.hidden) closeModal();
+  });
+
+  /* удержание фокуса внутри открытой модалки */
+  modal.addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') return;
+    var focusable = modal.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+    var first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  /* ─────────────────────────────────── кнопки тарифов и рассрочки ── */
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-open-form]'), function (btn) {
+    btn.addEventListener('click', function (e) {
+      /* Часть кнопок — ссылки с якорем: он запасной путь, если скрипта нет. */
+      if (btn.tagName === 'A') e.preventDefault();
+      openModal(btn.getAttribute('data-open-form'),
+                btn.getAttribute('data-pay'), btn);
+    });
+  });
+
+  /* ──────────────────────────────────────────────────── отправка ── */
+
+  submit.addEventListener('click', function () {
+    var name = (inputs.name.value || '').trim();
+    var phone = (inputs.phone.value || '').trim();
+    var tg = (inputs.tg.value || '').trim();
+
+    if (!name) { fail('Укажите имя.'); inputs.name.focus(); return; }
+    if (!phone && !tg) { fail('Оставьте телефон или Telegram для связи.'); inputs.phone.focus(); return; }
+    if (tarifs.length && !pickedTarif()) { fail('Выберите тариф для предзаписи.'); tarifs[0].focus(); return; }
+
+    if (!requiredOk()) {
+      showCheckboxErrors(true);
+      fail(required.length > 1 ? 'Отметьте оба обязательных согласия.'
+                               : 'Отметьте обязательное согласие.');
+      var missing = required.filter(function (k) { return !boxes[k].checked; })[0];
+      boxes[missing].focus();
+      return;
+    }
+
+    var honey = modal.querySelector('[name="website"]');
+
+    var payload = {
+      secret: FORM_SECRET,
+      website: honey ? honey.value : '',   // приманка: человек её не видит
+      name: name,
+      phone: phone,
+      telegram: tg,
+      plan: pickedTarif() ? currentPlan + ': ' + pickedTarif().value : currentPlan,
+      /* 'заявка' ложится в тот же лист, что и оплата: команде удобнее
+         видеть всех, кто выбрал тариф, в одном месте. Отличает их
+         колонка «Готовность». */
+      form: IS_PRE ? 'предзапись' : (IS_TEAM ? 'заявка' : 'оплата'),
+      readiness: IS_TEAM ? 'Заявка с канала, без оплаты'
+                         : (modal.querySelector('[name="readiness"]:checked') || {}).value || '',
+      accept_offer: !!(boxes.accept_offer && boxes.accept_offer.checked),
+      accept_pd: !!(boxes.accept_pd && boxes.accept_pd.checked),
+      accept_ads: !!(boxes.accept_ads && boxes.accept_ads.checked),
+      consent_ts: new Date().toISOString(),
+      page: window.location.href,
+      ua: navigator.userAgent
+    };
+    ATTRIBUTION_FIELDS.concat(['referrer']).forEach(function (key) {
+      payload[key] = attribution[key] || '';
+    });
+    Object.keys(DOC_VERSIONS).forEach(function (k) { payload[k] = DOC_VERSIONS[k]; });
+
+    /* Переход к оплате. Согласия пишутся до платежа — так требует
+       раздел 3 правового ТЗ: акцепт оферты должен быть зафиксирован
+       раньше, чем человек расстался с деньгами. На страницах практикума
+       после записи открывается выбор способа оплаты, а не сама оплата. */
+    function goToPayment() {
+      /* Заявка записана — уводим в чат с командой. Ждать, пока напишут
+         первыми, человек не обязан: разговор начинается сразу. */
+      if (IS_TEAM) {
+        hide(errBox);
+        show(sentBox);
+        window.location.href = TEAM_CHAT_URL;
+        return;
+      }
+      if (IS_PRE) {
+        hide(errBox);
+        show(sentBox);
+        window.location.href = CHANNEL_URL;
+        return;
+      }
+      if (showPayStep(false)) {
+        hide(errBox);
+        syncSubmit();
+        return;
+      }
+      var url = PAY_URLS[currentPay];
+      if (!url) {
+        setSending(false);
+        fail('Не нашли страницу оплаты для этого тарифа. Напишите нам в Telegram: ' + SUPPORT_TG);
+        syncSubmit();
+        return;
+      }
+      hide(errBox);
+      show(sentBox);
+      window.location.href = url;
+    }
+
+    if (!LEAD_ENDPOINT) {
+      /* Запись согласий не подключена. Продажу не блокируем, но и молча
+         терять акцепт нельзя — поэтому уходим на оплату, оставив след
+         в консоли. Заполните LEAD_ENDPOINT, и эта ветка исчезнет. */
+      console.warn('LEAD_ENDPOINT не задан: согласие не записано');
+      goToPayment();
+      return;
+    }
+
+    submit.disabled = true;
+    setSending(true);
+    hide(errBox);
+
+    /* text/plain, а не application/json: так запрос считается «простым»
+       и браузер не шлёт предварительный OPTIONS, на который Apps Script
+       отвечать не умеет. Тело при этом остаётся JSON.
+
+       redirect: 'manual' — принципиально. Apps Script отвечает кодом 302
+       на script.googleusercontent.com, а этот домен в ряде стран
+       заблокирован (Индонезия, периодически РФ): сам POST доходит
+       и строка записывается, а чтение ответа по редиректу падает —
+       и форма зря показывала «не удалось сохранить» человеку, чья
+       заявка уже лежала в таблице. Останавливаемся на самом 302:
+       он приходит только после того, как doPost отработал. Тело ответа
+       при этом не прочитать, но всё, что doPost мог бы отклонить
+       (имя, контакт, согласия, секрет), проверено до отправки. */
+    var request = fetch(LEAD_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+      redirect: 'manual',
+      keepalive: true
+    }).then(function (res) {
+      if (res.type !== 'opaqueredirect' && !res.ok) throw new Error('HTTP ' + res.status);
+      return 'sent';
+    });
+    var timeout = new Promise(function (resolve) {
+      setTimeout(function () { resolve('timeout'); }, 1500);
+    });
+
+    Promise.race([request, timeout]).then(function () {
+      goToPayment();
+    }).catch(function () {
+      /* Записать не вышло. Продажу не блокируем: даём уйти на оплату
+         вручную, но об этом говорим прямо, а не делаем вид, что всё цело. */
+      setSending(false);
+      syncSubmit();
+      /* На страницах практикума способ оплаты человек выбирает сам:
+         показываем тот же шаг и строку о том, что данные не записались. */
+      if (!IS_PRE && !IS_TEAM && showPayStep(true)) return;
+      var url = IS_PRE ? CHANNEL_URL
+              : IS_TEAM ? TEAM_CHAT_URL
+              : (PAY_URLS[currentPay] || SUPPORT_TG);
+      if (errText) {
+        errText.textContent = IS_TEAM ? 'Не удалось отправить заявку. '
+                                      : 'Не удалось сохранить ваши данные. ';
+        var a = document.createElement('a');
+        a.href = url;
+        a.textContent = IS_PRE ? 'Открыть закрытый канал'
+                      : IS_TEAM ? 'Напишите нам в Telegram'
+                      : 'Перейти к оплате';
+        a.style.color = 'inherit';
+        errText.appendChild(a);
+        if (!IS_TEAM) {
+          errText.appendChild(document.createTextNode(
+            ' — или напишите нам в Telegram: ' + SUPPORT_TG));
+        }
+      }
+      show(errBox);
+      hide(sentBox);
+    });
+  });
+
+  syncSubmit();
+})();
+
+/* ─────────────────────── первый экран: высота не пляшет при скролле ──
+   Высота задана в долях экрана, а на телефоне экран «дышит»: при скролле
+   прячется адресная строка, высота растёт, кадр внутри пересчитывается —
+   и портрет заметно наезжает. Единица svh это чинит, но её не знают
+   старые iOS и встроенные браузеры мессенджеров, а именно оттуда чаще
+   всего и открывают ссылку.
+
+   Поэтому высота считается один раз при загрузке и прибивается в пикселях.
+   Пересчёт — только когда меняется ШИРИНА, то есть при повороте экрана:
+   изменение одной высоты и есть та самая уехавшая адресная строка. */
+
+(function () {
+  'use strict';
+
+  var stage = document.querySelector('[data-hero-stage]');
+  if (!stage || !window.matchMedia) return;
+
+  var phone = window.matchMedia('(max-width: 760px)');
+  var pinnedWidth = null;
+
+  function pin() {
+    if (!phone.matches) {
+      stage.style.removeProperty('min-height');
+      pinnedWidth = null;
+      return;
+    }
+    /* Прибивается минимум, а не высота: если текста больше, экран должен
+       вырасти под него, иначе кнопка уедет за обрезанный край. */
+    var h = Math.min(Math.max(window.innerHeight * 0.94, 600), 960);
+    stage.style.setProperty('min-height', Math.round(h) + 'px', 'important');
+    pinnedWidth = window.innerWidth;
+  }
+
+  pin();
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth !== pinnedWidth) pin();
+  });
+
+  window.addEventListener('orientationchange', function () {
+    setTimeout(pin, 250);            // размеры устаканиваются не сразу
+  });
+
+  if (phone.addEventListener) phone.addEventListener('change', pin);
+})();
+
+/* ───────────────────────────────────────── срок предзаписи ──
+   Таймер противоречит красной линии проекта: обратные отсчёты в брифе
+   запрещены прямой правкой эксперта. Поставлен по решению заказчика,
+   поэтому сделан максимально тихо — палитра страницы, без красного,
+   без мигания и без «осталось N мест».
+
+   Когда срок вышел, полоса не показывает нули и не остаётся висеть:
+   она убирается целиком. Нули читаются как сломанная страница. */
+
+(function () {
+  'use strict';
+
+  var box = document.getElementById('countdown');
+  if (!box) return;
+
+  var band = document.getElementById('srok');
+  var target = Date.parse(box.getAttribute('data-deadline'));
+  if (isNaN(target)) { if (band) band.hidden = true; return; }
+
+  var cells = {
+    d: box.querySelector('[data-cd="d"]'),
+    h: box.querySelector('[data-cd="h"]'),
+    m: box.querySelector('[data-cd="m"]'),
+    s: box.querySelector('[data-cd="s"]')
+  };
+
+  function two(n) { return n < 10 ? '0' + n : String(n); }
+
+  function syncPrices(raised) {
+    document.querySelectorAll('[data-price-before][data-price-after]').forEach(function (node) {
+      node.textContent = node.getAttribute(raised ? 'data-price-after' : 'data-price-before');
+    });
+    document.querySelectorAll('[data-price-note]').forEach(function (node) {
+      node.textContent = node.getAttribute(raised ? 'data-after' : 'data-before');
+    });
+    document.querySelectorAll('[data-price-before-row]').forEach(function (node) {
+      node.style.setProperty('display', raised ? 'none' : 'grid', raised ? 'important' : '');
+    });
+    document.querySelectorAll('[data-price-after-label]').forEach(function (node) {
+      node.textContent = node.getAttribute(raised ? 'data-after' : 'data-before');
+    });
+    document.querySelectorAll('[data-price-delta]').forEach(function (node) {
+      node.style.setProperty('display', raised ? 'none' : '', raised ? 'important' : '');
+    });
+  }
+
+  function tick() {
+    var left = target - Date.now();
+    syncPrices(left <= 0);
+    if (left <= 0) {
+      if (band) band.hidden = true;
+      clearInterval(timer);
+      return;
+    }
+    var sec = Math.floor(left / 1000);
+    cells.d.textContent = String(Math.floor(sec / 86400));
+    cells.h.textContent = two(Math.floor(sec / 3600) % 24);
+    cells.m.textContent = two(Math.floor(sec / 60) % 60);
+    cells.s.textContent = two(sec % 60);
+  }
+
+  tick();
+  var timer = setInterval(tick, 1000);
+})();
+
+
+(function () {
+  var KEY = 'cookie_ok', bar = document.getElementById('cookie-bar');
+  if (!bar) return;
+  function initAnalytics() {
+    /* Сюда — инициализация Яндекс.Метрики и рекламных пикселей.
+       До нажатия «Хорошо» ни один аналитический скрипт стартовать не должен. */
+  }
+  var stored = null;
+  try { stored = localStorage.getItem(KEY); } catch (e) {}
+  if (stored) { initAnalytics(); return; }
+  bar.hidden = false;
+  document.getElementById('cookie-ok').addEventListener('click', function () {
+    try { localStorage.setItem(KEY, new Date().toISOString()); } catch (e) {}
+    bar.hidden = true;
+    initAnalytics();
+  });
+})();

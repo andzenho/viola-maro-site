@@ -155,33 +155,9 @@
   .s-sec { --s-red: #C4142C; --s-ink: #1C1A1D; --s-line: #E6E1DA; }
   .s-h2 { font-family: "Prata", Georgia, "Times New Roman", serif; font-weight: 400; font-size: 1.75rem; line-height: 1.15; letter-spacing: .01em; text-transform: uppercase; color: var(--s-ink); text-wrap: balance; }
   .s-h2::first-line { color: var(--s-red); }
-  .s-pink { background: #FBE4E7; border-radius: 28px; padding: 1.6rem 1rem; }
-  .s-red { background: linear-gradient(150deg, #DE1E38 0%, #C4142C 62%, #B21028 100%); border-radius: 28px; padding: 1.8rem 1rem; }
-  .s-red .s-h2, .s-red .s-h2::first-line { color: #FFFFFF; text-align: center; }
-  .s-weeks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .7rem; }
-  .s-week { position: relative; display: flex; flex-direction: column; gap: .55rem; padding: 1.1rem 1rem 1.15rem; border-radius: 22px; background: #FFFFFF; box-shadow: 0 0 0 1px #F1CDD2; }
-  .s-week.mine { box-shadow: 0 0 0 2px var(--deep); }
-  .s-week .tag { align-self: flex-start; }
-  .s-week-n { font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--s-red); }
-  .s-week h3 { margin: 0; font-family: "Prata", Georgia, serif; font-weight: 400; font-size: 1.3rem; line-height: 1.2; color: var(--s-ink); }
-  .s-week-q { padding: .65rem .8rem; border-radius: 4px 16px 16px 16px; background: #FBE4E7; color: #A30F23; font-family: "Prata", Georgia, serif; line-height: 1.4; }
-  .s-week p { margin: 0; line-height: 1.5; }
-  .s-tarify { display: flex; flex-direction: column; gap: 1.6rem; margin-top: .4rem; }
-  .s-tarif { position: relative; display: flex; flex-direction: column; gap: .8rem; padding: 1.3rem 1.05rem 1.1rem; border-radius: 24px; background: #FFFFFF; color: var(--s-ink); box-shadow: 0 26px 46px -28px rgba(70,4,14,.7); }
-  .s-tarif-full { box-shadow: 0 0 0 5px rgba(255,255,255,.4), 0 26px 46px -28px rgba(70,4,14,.7); }
-  .s-rec { position: absolute; left: 50%; top: -.75rem; transform: translateX(-50%); padding: .3rem .85rem; border-radius: 999px; background: #1C1A1D; color: #FFFFFF; font-size: .76rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
-  .s-tarif h3 { margin: 0; font-family: "Prata", Georgia, serif; font-weight: 400; font-size: 1.55rem; line-height: 1.15; }
-  .s-tarif-lead { margin: 0; padding-bottom: .8rem; border-bottom: 1px solid var(--s-line); color: #5A5559; }
-  .s-yes, .s-no { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .45rem; font-size: .93rem; line-height: 1.4; }
-  .s-yes li, .s-no li { position: relative; padding-left: 1.75rem; }
-  .s-yes li::before { content: ""; position: absolute; left: 0; top: .1em; width: 1.2rem; height: 1.2rem; border-radius: 50%; background: #FCE9EA; }
-  .s-yes li::after { content: ""; position: absolute; left: .42rem; top: calc(.1em + .22rem); width: .3rem; height: .58rem; border: solid var(--s-red); border-width: 0 2px 2px 0; transform: rotate(45deg); }
-  .s-no { padding-top: .7rem; border-top: 1px solid var(--s-line); color: #9A9498; text-decoration: line-through; }
-  .s-no li::before { content: "×"; position: absolute; left: .3rem; display: inline-block; text-decoration: none; }
-  .s-seats { margin: 0; font-size: .86rem; font-weight: 600; color: #5A5559; }
-  .s-cena { display: flex; flex-direction: column; gap: .2rem; padding: 1rem 1.1rem; border-radius: 18px; background: linear-gradient(150deg, #DE1E38 0%, #C4142C 62%, #B21028 100%); color: #FFFFFF; }
-  .s-cena b { font-family: "Prata", Georgia, serif; font-weight: 400; font-size: 2.1rem; line-height: 1; }
-  .s-cena span { font-family: "Prata", Georgia, serif; font-size: .95rem; opacity: .92; }
+  /* Сайт рамкой во всю ширину экрана, без своей прокрутки. */
+  .site-wrap { padding-left: 0; padding-right: 0; }
+  .site-frame { display: block; width: 100vw; max-width: 100vw; height: 1600px; margin-left: calc(50% - 50vw); border: 0; background: #EAE7E2; }
   .s-points { margin: 0 0 .6rem; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .6rem; }
   .s-points li { display: flex; flex-direction: column; gap: .25rem; padding: 1rem 1rem 1.05rem; border-radius: 20px 20px 20px 6px; background: #FFFFFF; box-shadow: 0 0 0 1px var(--s-line), 0 22px 40px -28px rgba(28,26,29,.3); }
   .s-points b { font-size: 1.05rem; line-height: 1.3; color: var(--s-ink); }
@@ -1082,17 +1058,6 @@ const NEXT = {
    Программа, тарифы и цены — как на сайте violamaro.ru (правка 14.10).
    Дата старта и закрытия набора считаются сами: поток стартует каждое
    первое число, набор закрывается в последний день месяца в 23:59 по Москве. */
-/* Недели и их описания — как на сайте violamaro.ru (build.py, WEEKS).
-   Поменялись там — переносим сюда. */
-const WEEKS = [
-  { n: 1, sf: "ya", t: "Фигура эмпата", q: "Кто я такой? Это дар или со мной что-то не так?", lead: ["Начинается всё с вас самих. Как работают ваши эмоции и как гармонизировать внутренние процессы, чтобы сформировать стабильный внутренний стержень, на котором стоят самооценка и личные границы."] },
-  { n: 2, sf: "otn", t: "Эмпат и отношения с людьми", q: "Почему мной пользуются? Как отказать и не чувствовать себя виноватым? Почему на работе больше всех достаётся мне?", lead: ["Как выстроить ваш уникальный баланс в разных системах отношений, чтобы ваши внутренние силы и ресурсы не утекали на постоянной основе и не растворялись в них."] },
-  { n: 3, sf: "semya", t: "Эмпат-родители и эмпат-дети", q: "Как быть опорой родным и жить при этом свою жизнь? Мой ребёнок эмпат — что ему нужно?", lead: ["Токсичные родительские фигуры: как выстроить безопасный баланс, техники и методы.", "Дети с повышенной чувствительностью и эмпатией: как их растить и на что обращать внимание, чтобы вырастить сильных, стабильных и внутренне свободных детей."] },
-  { n: 4, sf: "telo", t: "Психосоматика у эмпата", q: "Почему у меня всё время что-то болит, а врачи ничего не находят?", lead: ["Основные принципы психосоматики, чтобы понять, отследить и вовремя откалибровать внутренние процессы. Как работает связка от эмоции до симптома.", "Основные превентивные методы заботы о своей психосоматике, чтобы тело и психика гармонично служили вам во благо."] },
-  { n: 5, sf: "delo", t: "Самореализация людей с повышенной чувствительностью", q: "Как найти своё место? Внутри богато, а снаружи будто всё слишком грубо.", lead: ["Особенности самореализации людей с повышенной чувствительностью и эмпатов. Как найти то, что будет созвучно вам внутренне и будет приносить внешние результаты и финансовую стабильность."] },
-  { n: 6, sf: "dengi", t: "Психология наполненности и деньги", q: "Почему я не могу удержать деньги? В чём моя ценность?", lead: ["Изобилие — это внутреннее состояние, которое проявляется как ощущение наполненности и любви внутри и как постоянный финансовый поток, финансовое благополучие снаружи.", "Как выстраивать эту связку, поддерживать и питать её на ежедневной основе в своей жизни."] }
-];
-
 const PROGRAM = {
   head: "Что такое <span class=\"gold\">Прикладная эмпатия 2.0</span>?",
   bridge: "Вы узнали свой профиль. Что с этим делать, разбираем на Прикладной эмпатии 2.0.",
@@ -1128,22 +1093,6 @@ const PROGRAM = {
     ["Успею ли я, если у меня работа и семья?", "Одна лекция в неделю и три техники к ней. Всё в записи, поэтому идти можно в своём темпе."],
     ["А если во время работы станет тяжело?", "Так бывает, и об этом лучше знать заранее: когда начинаешь разбирать то, что годами лежало нетронутым, какое-то время может быть неспокойно. Темп здесь ваш, никто не подгоняет. Практикум не заменяет очную психотерапию — если сейчас у вас острое состояние, сначала стоит опереться на своего специалиста."],
     ["Я живу не в России. Смогу участвовать?", "Да. Лекции в записи, а оплата из-за рубежа работает."]
-  ]
-};
-
-/* Тарифы — те же строки и цены, что на сайте. Кнопок оплаты здесь нет:
-   под тарифами блок «что вы получите» и кнопка заявки. */
-const TARIFY = {
-  head: "Тарифы",
-  common: ["18 техник эмпата, по три на неделю", "Задание после каждой лекции", "Записи лекций с таймкодами",
-           "PDF-методички к каждой лекции", "Аудиомедитации от Виолы", "Доступ навсегда"],
-  viola: ["Вопросы Виоле в чате: команда собирает их каждый день, Виола отвечает аудио",
-          "Мастер-класс Виолы с ответами на ваши вопросы", "Чат потока"],
-  list: [
-    { name: "Самостоятельный", lead: "Весь метод и все техники. Самостоятельное прохождение.",
-      price: "19\u00a0900\u00a0₽", cur: "$240 &nbsp; €215", seats: "Мест без ограничений", full: false },
-    { name: "С Виолой", lead: "Всё то же самое — и Виола отвечает на ваши вопросы.",
-      price: "39\u00a0900\u00a0₽", cur: "$480 &nbsp; €430", seats: "Всего 50 мест", full: true, rec: "Рекомендуем" }
   ]
 };
 
@@ -1778,25 +1727,6 @@ function ctaHtml_(place) {
     : `<button class="go" data-cta="form" data-place="${place}">${NEXT.cta}&nbsp;<span aria-hidden="true">→</span></button>`;
 }
 
-/* Тарифы в виде сайта: белые карточки, красная плашка цены. */
-function secTarify_() {
-  const card = t => `
-    <article class="s-tarif${t.full ? " s-tarif-full" : ""}">
-      ${t.rec ? `<span class="s-rec">${t.rec}</span>` : ""}
-      <h3>${t.name}</h3>
-      <p class="s-tarif-lead">${t.lead}</p>
-      <ul class="s-yes">${TARIFY.common.concat(t.full ? TARIFY.viola : []).map(x => `<li>${x}</li>`).join("")}</ul>
-      ${t.full ? "" : `<ul class="s-no">${TARIFY.viola.map(x => `<li>${x}</li>`).join("")}</ul>`}
-      <p class="s-seats">${t.seats}</p>
-      <div class="s-cena"><b>${t.price}</b><span>${t.cur}</span></div>
-    </article>`;
-  return `
-    <section class="sec s-sec s-red" data-block="tarify">
-      <h2 class="s-h2">${TARIFY.head}</h2>
-      <div class="s-tarify">${TARIFY.list.map(card).join("")}</div>
-    </section>`;
-}
-
 /* «Что вы получите сразу после заявки» и «Почему не откладывать», под ними кнопка. */
 function secZayavka_() {
   const part = x => `
@@ -1810,57 +1740,24 @@ function secZayavka_() {
     </section>`;
 }
 
-/* Программа — что это и когда, шесть недель, что внутри, вторая кнопка,
-   вопросы. Недели идут в порядке программы; неделя под сферу человека
-   выделена на своём месте и подписана. */
+/* Под результатом — сайт практикума целиком, как на violamaro.ru: первый
+   экран, «Эмпатия — это способность», шесть недель, формат ответов,
+   мастер-класс, тарифы (правка 14.10). Страницу собирает programma.py
+   в /test2/programma/, тест вставляет её рамкой во всю ширину и подгоняет
+   высоту по сообщениям от неё. Её кнопки открывают форму заявки теста.
+   Неделя под сферу человека подсвечена: #nedelya=N в адресе рамки.
+   Ниже рамки — блок перед заявкой с кнопкой и частые вопросы. */
 function secProgram_(r) {
   const st = stream();
   const sp = r && r.sphere ? SPHERE[r.sphere] : null;
-  const mine = sp ? WEEKS[sp.week - 1] : null;
-  const weeks = WEEKS.map(w => {
-    const isMine = !!mine && w.n === mine.n;
-    return `
-    <li class="s-week${isMine ? " mine" : ""}">
-      ${isMine ? `<span class="tag deep">${PROGRAM.mineTag}</span>` : ""}
-      <span class="s-week-n">Неделя ${w.n}</span>
-      <h3>${w.t}</h3>
-      <p class="s-week-q">«${w.q}»</p>
-      ${w.lead.map(p => `<p>${p}</p>`).join("")}
-    </li>`;
-  }).join("");
   const faq = PROGRAM.faq.map(f =>
     `<details><summary>${f[0]}</summary><p>${f[1].replace("{start}", st.start)}</p></details>`).join("");
   return `
-    <section class="sec" data-block="program" id="program">
-      <h2>${PROGRAM.head}</h2>
+    <section class="sec site-wrap" data-block="program" id="program">
       ${r ? `<p class="lead">${PROGRAM.bridge}</p>` : ""}
-      <div class="copy">
-        <p>${PROGRAM.what}</p>
-        ${PROGRAM.body.map(p => `<p>${p}</p>`).join("")}
-      </div>
-      <p class="panel"><b>Ближайший поток стартует ${st.start}.</b> Набор закрывается ${st.close} в 23:59 по Москве.</p>
+      <iframe class="site-frame" src="programma/${sp ? "#nedelya=" + sp.week : ""}" title="Прикладная эмпатия 2.0" scrolling="no"></iframe>
     </section>
 
-    <section class="sec s-sec s-pink" data-block="program">
-      <h2 class="s-h2">${PROGRAM.weeksHead}</h2>
-      <p class="lead">${PROGRAM.weeksLead}</p>
-      <ol class="s-weeks">${weeks}</ol>
-    </section>
-
-    <section class="sec" data-block="program">
-      <h2>${PROGRAM.insideHead}</h2>
-      <ul class="checks">${PROGRAM.inside.map(i => `<li>${i}</li>`).join("")}</ul>
-    </section>
-
-    ${PROGRAM.reviews.length ? `
-    <section class="sec" data-block="program">
-      <h2>${PROGRAM.reviewsHead}</h2>
-      <div class="reviews">
-        ${PROGRAM.reviews.map(v => `<div class="review">${esc(v.t)}<small>${esc(v.who)}</small></div>`).join("")}
-      </div>
-    </section>` : ""}
-
-    ${secTarify_()}
     ${secZayavka_()}
 
     <section class="sec" data-block="program">
@@ -1868,6 +1765,22 @@ function secProgram_(r) {
       <div class="faq">${faq}</div>
     </section>`;
 }
+
+/* Сообщения от страницы сайта в рамке: её высота и нажатая кнопка заявки. */
+window.addEventListener("message", (e) => {
+  if (e.origin !== location.origin || !e.data) return;
+  const frame = document.querySelector(".site-frame");
+  if (e.data.type === "t2-height" && frame) {
+    frame.style.height = Math.max(400, Number(e.data.h) || 0) + "px";
+    if (window.__refocus) window.__refocus();
+  }
+  if (e.data.type === "t2-cta") {
+    if (leadSent) { done(); return; }
+    event_("form_open", "site");
+    if (e.data.tarif === "Самостоятельный" || e.data.tarif === "С Виолой") form.tarif = e.data.tarif;
+    prefillForm_(); formStep = 0; saveState(); formScreen();
+  }
+});
 
 /* focus: "zayavka" — после отрисовки подвести экран к блоку с кнопкой заявки
    (вход из бота startapp=zayavka). */
@@ -1918,9 +1831,18 @@ function bindCta_(n) {
   n.querySelectorAll('[data-cta="sent"]').forEach(b => b.addEventListener("click", () => done()));
 }
 
+/* Рамка с сайтом догружается и растёт уже после прокрутки, блок уезжает вниз.
+   Поэтому первые секунды держим его на месте при каждом новом размере рамки. */
+let focusUntil = 0;
 function focusZayavka_(n) {
-  const blk = n.querySelector("#zayavka-blok");
-  if (blk && blk.scrollIntoView) setTimeout(() => blk.scrollIntoView({ block: "start" }), 60);
+  focusUntil = Date.now() + 5000;
+  const go = () => {
+    const blk = document.querySelector("#zayavka-blok");
+    if (blk && blk.scrollIntoView) blk.scrollIntoView({ block: "start" });
+  };
+  setTimeout(go, 60);
+  window.__refocus = () => { if (Date.now() < focusUntil) go(); };
+  ["touchstart", "wheel"].forEach(t => window.addEventListener(t, () => { focusUntil = 0; }, { once: true, passive: true }));
 }
 
 /* Программа, цены и кнопка без результата теста: вход из бота по кнопке
