@@ -2112,6 +2112,7 @@ function formScreen() {
         <h2>${st.title}</h2>
       </div>
       ${formStep === 0 ? `<p class="soft">Заполните заявку, и Дарья из команды Виолы напишет вам в Телеграме. Это не оплата.</p>` : ""}
+      ${formStep === 0 || last ? perksHtml_() : ""}
       ${st.fields.length ? `<div class="fields">${st.fields.map(fieldHtml_).join("")}</div>` : ""}
       ${st.consent ? `
         <div class="consents">
@@ -2207,6 +2208,16 @@ function formScreen() {
     if (lastResult) result(lastResult); else offerPage_();
   });
   render(n);
+}
+
+/* Что человек получит за заявку — напоминание в форме: на первом шаге
+   и над кнопкой отправки. Названия тех же пунктов, что в блоке перед
+   кнопкой; подробности там, здесь коротко, чтобы поля не уезжали вниз. */
+function perksHtml_() {
+  return `<div class="perks-box">
+      <p>За заявку вы сразу получите:</p>
+      <ul class="checks">${ZAYAVKA.now.items.map(i => `<li><b>${i[0]}</b></li>`).join("")}</ul>
+    </div>`;
 }
 
 /* Ссылки на Телеграм: внутри мини-аппа — через openTelegramLink, в обычном
