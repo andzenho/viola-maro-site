@@ -112,7 +112,7 @@ def rework(page):
     def card_btn(m):
         style = re.search(r'style="([^"]*)"', m.group(0)).group(1)
         return ('<a class="t2-tarif-btn" href="#" data-t2-cta="" data-tarif="%s" data-btn="primary" '
-                'style="%s">Хочу принять участие в&nbsp;этом тарифе</a>' % (next(names), style))
+                'style="%s">Хочу принять участие<br>в&nbsp;этом тарифе</a>' % (next(names), style))
     t = re.sub(r'<button\b[^>]*data-btn="primary"[^>]*>.*?</button>', card_btn, t, flags=re.S)
     k = t.rfind('<div style="max-width: 760px;')       # «Пишем только с этого аккаунта»
     if k > 0:
