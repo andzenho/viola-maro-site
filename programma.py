@@ -9,7 +9,8 @@
 
 Заявка остаётся в тесте: по ней бот узнаёт, что заявка есть. Поэтому кнопки
 этой страницы не открывают ничего своего, а просят тест открыть его форму
-(postMessage {type: "t2-cta", tarif}). Оплаты, рассрочки, подарков, контактов
+(postMessage {type: "t2-cta", tarif}), а остальные кнопки «Принять участие»
+ведут к тарифам ({type: "t2-tarify"}). Оплаты, рассрочки, подарков, контактов
 и подвала здесь нет.
 
 Как собирается. Сборщик сайта делает страницу заявки (--mode zayavka)
@@ -61,12 +62,15 @@ JS = r"""
   setInterval(size, 1500);
   size();
 
-  /* Кнопки — открыть форму заявки в тесте. */
+  /* Кнопки «Принять участие». В карточке тарифа — открыть форму заявки
+     в тесте с этим тарифом. Остальные ведут к тарифам: прокручивает тест,
+     у этой страницы своей прокрутки нет. */
   document.addEventListener("click", function (e) {
     var a = e.target.closest && e.target.closest("[data-t2-cta]");
     if (!a) return;
     e.preventDefault();
-    post({ type: "t2-cta", tarif: a.getAttribute("data-tarif") || "" });
+    var tarif = a.getAttribute("data-tarif") || "";
+    post(tarif ? { type: "t2-cta", tarif: tarif } : { type: "t2-tarify" });
   });
 
   /* Неделя под сферу человека: #nedelya=N. */
@@ -108,7 +112,7 @@ def rework(page):
     def card_btn(m):
         style = re.search(r'style="([^"]*)"', m.group(0)).group(1)
         return ('<a class="t2-tarif-btn" href="#" data-t2-cta="" data-tarif="%s" data-btn="primary" '
-                'style="%s">Оставить заявку на&nbsp;этот тариф</a>' % (next(names), style))
+                'style="%s">Хочу принять участие в&nbsp;этом тарифе</a>' % (next(names), style))
     t = re.sub(r'<button\b[^>]*data-btn="primary"[^>]*>.*?</button>', card_btn, t, flags=re.S)
     k = t.rfind('<div style="max-width: 760px;')       # «Пишем только с этого аккаунта»
     if k > 0:
@@ -120,6 +124,8 @@ def rework(page):
     page = re.sub(r'(<a\b[^>]*?)href="#(?:tarify|zapis)"([^>]*data-btn="primary")',
                   r'\1href="#" data-t2-cta=""\2', page)
     page = re.sub(r"\sdata-open-form=\"[^\"]*\"", "", page)
+    # подпись кнопок как на основном сайте
+    page = page.replace(">Оставить заявку<", ">Принять участие<")
 
     # подвал и полоса cookie не нужны; окно заявки сайта остаётся спрятанным:
     # на него опирается site.js
