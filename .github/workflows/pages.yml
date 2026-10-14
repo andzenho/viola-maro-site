@@ -66,6 +66,11 @@ jobs:
       - name: Собрать копию главной по адресу /dizayn
         run: python3 build.py --theme barhat --out site/dizayn --base /dizayn --docs-root --noindex
 
+      # Сайт практикума для экрана результата теста 2.0: тот же сайт без оплаты,
+      # подарков и подвала. Тест вставляет его рамкой из /test2/programma/.
+      - name: Собрать сайт практикума для теста 2.0
+        run: python3 programma.py
+
       - name: Добавить мини-аппы
         run: |
           mkdir -p site/test site/koleso site/test2
