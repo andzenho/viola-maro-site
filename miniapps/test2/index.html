@@ -797,7 +797,6 @@ const CONFIG = {
      «Заявка у Дарьи». Открываются через openTelegramLink. */
   cabinetUrl: "https://t.me/+ot1pJz8KHlo2YTky",
   dashaUrl: "https://t.me/m/z-NyuTteZmVi",
-  publicChannel: "https://t.me/violamaro1",        // открытый — для тех, кто не эмпат
   /* Правовые страницы живут на сайте оплаты — тексты и редакции там одни на всё. */
   docs: {
     consent: "https://violamaro.ru/consent/",
@@ -1656,8 +1655,8 @@ function ageScreen() {
    Порядок блоков: тип и сфера · что видно по ответам · суперспособности ·
    кто рядом · что сделать сегодня вечером · что дальше (кнопка анкеты) ·
    программа (вторая кнопка анкеты).
-   Трём типам без анкеты (Считывающий, Сочувствующий, Другая настройка):
-   тип и кнопка в открытый канал.
+   Трём типам не-эмпатов (Считывающий, Сочувствующий, Другая настройка):
+   их тип, а под ним, как у всех, программа с ценами и заявка (правка 14.10).
    Каждый блок — отдельная секция со своим заголовком. data-block нужен
    счётчику «до какого блока долистали»; у блока может быть несколько секций. */
 const BLOCKS = ["type", "portrait", "powers", "ryadom", "vecher", "next", "program"];
@@ -1870,16 +1869,6 @@ function secProgram_(r) {
     </section>`;
 }
 
-function secChannel_() {
-  return `
-    <section class="sec">
-      <div class="foot">
-        <a class="go" id="channel" href="${CONFIG.publicChannel}" target="_blank" rel="noopener">Читать Виолу в Телеграме&nbsp;<span aria-hidden="true">→</span></a>
-        <p class="fine center">Каждый день — про людей, границы и чувствительность.</p>
-      </div>
-    </section>`;
-}
-
 /* focus: "zayavka" — после отрисовки подвести экран к блоку с кнопкой заявки
    (вход из бота startapp=zayavka). */
 function result(prev, focus) {
@@ -1895,7 +1884,7 @@ function result(prev, focus) {
       ${empath ? secPowers_(powers(r.scales, answers)) : ""}
       ${empath && CONFIG.blocks.ryadom ? secRyadom_() : ""}
       ${empath && CONFIG.blocks.vecher ? secVecher_() : ""}
-      ${empath ? secProgram_(r) : secChannel_()}
+      ${secProgram_(r)}
       <div class="tail">
         <button class="ghost" id="again">Пройти заново</button>
         <p class="fine">${DISCLAIM}</p>
@@ -1903,12 +1892,6 @@ function result(prev, focus) {
     </div>`);
 
   bindCta_(n);
-  const toChannel = n.querySelector("#channel");
-  if (toChannel) toChannel.addEventListener("click", (e) => {
-    event_("channel");
-    const tg = tgApp();
-    if (inTg_() && tg.openTelegramLink) { e.preventDefault(); tg.openTelegramLink(CONFIG.publicChannel); }
-  });
 
   n.querySelector("#again").addEventListener("click", () => {
     answers.length = 0; lastResult = null; words = ""; age = ""; pid = "";
@@ -1922,7 +1905,7 @@ function result(prev, focus) {
   render(n);
   lightGauges_(n);
   watchBlocks_(n);
-  if (empath) fabWatch_(n);
+  fabWatch_(n);
   if (focus === "zayavka") focusZayavka_(n);
 }
 
