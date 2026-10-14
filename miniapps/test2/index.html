@@ -432,6 +432,7 @@
   .perks-box p { font-weight: 700; line-height: 1.35; }
   .perks-box .checks { gap: .6rem; }
   .perks-box .checks li::before { background: #FFFFFF; }
+  .perks-box .perk-sub { display: block; margin-top: .2rem; font-size: .88rem; font-weight: 400; line-height: 1.45; color: var(--ink-soft); }
   .chip:hover { border-color: var(--deep); }
   .chip.on { background: var(--deep); color: #FFFFFF; border-color: var(--deep); }
 
@@ -1048,9 +1049,9 @@ const VECHER = {
 /* Подписи кнопок заявки (правка 14.10: анкеты предзаписи и бонусов за неё
    больше нет, человек оставляет заявку на практикум). */
 const NEXT = {
-  cta: "Оставить заявку",
+  cta: "Принять участие",
   /* Название практикума не рвётся: перенос возможен только после первых слов. */
-  fab: "Оставить заявку на&nbsp;Прикладную&nbsp;эмпатию&nbsp;2.0",
+  fab: "Принять участие в&nbsp;Прикладной&nbsp;эмпатии&nbsp;2.0",
   sent: "Заявка у&nbsp;Дарьи"
 };
 
@@ -1724,7 +1725,7 @@ function secVecher_() {
 function ctaHtml_(place) {
   return leadSent
     ? `<button class="go" data-cta="sent">${NEXT.sent}&nbsp;<span aria-hidden="true">→</span></button>`
-    : `<button class="go" data-cta="form" data-place="${place}">${NEXT.cta}&nbsp;<span aria-hidden="true">→</span></button>`;
+    : `<button class="go" data-cta="tarify" data-place="${place}">${NEXT.cta}&nbsp;<span aria-hidden="true">→</span></button>`;
 }
 
 /* «Что вы получите сразу после заявки» и «Почему не откладывать», под ними кнопка. */
@@ -1774,6 +1775,7 @@ window.addEventListener("message", (e) => {
     frame.style.height = Math.max(400, Number(e.data.h) || 0) + "px";
     if (window.__refocus) window.__refocus();
   }
+  if (e.data.type === "t2-tarify") { goTarify_(); return; }
   if (e.data.type === "t2-cta") {
     if (leadSent) { done(); return; }
     event_("form_open", "site");
@@ -1829,14 +1831,33 @@ function bindCta_(n) {
     prefillForm_(); formStep = 0; saveState(); formScreen();
   }));
   n.querySelectorAll('[data-cta="sent"]').forEach(b => b.addEventListener("click", () => done()));
+  n.querySelectorAll('[data-cta="tarify"]').forEach(b => b.addEventListener("click", () => {
+    if (!goTarify_()) { event_("form_open", b.getAttribute("data-place")); prefillForm_(); formStep = 0; saveState(); formScreen(); }
+  }));
 }
 
-/* Рамка с сайтом догружается и растёт уже после прокрутки, блок уезжает вниз.
-   Поэтому первые секунды держим его на месте при каждом новом размере рамки. */
+/* Кнопки «Принять участие» ведут к тарифам сайта в рамке: там человек
+   выбирает тариф, и его кнопка открывает форму заявки. Рамка своей прокрутки
+   не имеет, поэтому прокручивает тест: до начала рамки плюс положение тарифов
+   в ней (страница с того же адреса, её документ доступен). false — тарифов нет. */
+function goTarify_(smooth) {
+  const frame = document.querySelector(".site-frame");
+  let t = null;
+  try { t = frame && frame.contentDocument && frame.contentDocument.getElementById("tarify"); } catch (e) {}
+  if (!t) return false;
+  const y = frame.getBoundingClientRect().top + window.scrollY + t.getBoundingClientRect().top;
+  window.scrollTo({ top: Math.max(0, y - 8), behavior: smooth === false ? "auto" : "smooth" });
+  return true;
+}
+
+/* Вход startapp=zayavka: к тарифам. Рамка догружается и растёт уже после
+   прокрутки, поэтому первые секунды держим тарифы на месте при каждом новом
+   размере рамки. Пока тарифов нет — к блоку с кнопкой под рамкой. */
 let focusUntil = 0;
 function focusZayavka_(n) {
   focusUntil = Date.now() + 5000;
   const go = () => {
+    if (goTarify_(false)) return;
     const blk = document.querySelector("#zayavka-blok");
     if (blk && blk.scrollIntoView) blk.scrollIntoView({ block: "start" });
   };
@@ -1884,8 +1905,18 @@ const wrap = document.querySelector(".wrap");
 let fabIo = [];
 fabGo.innerHTML = NEXT.fab + '&nbsp;<span aria-hidden="true">→</span>';
 typograf_(fabGo);
+/* Пока человек не дошёл до сайта практикума под результатом, плавающая кнопка
+   ведёт к его первому экрану: сначала программа и цены. Сайт уже на экране
+   или пролистан — к тарифам, где выбирают тариф и открывают заявку. */
 fabGo.addEventListener("click", () => {
   if ((stage !== "result" && stage !== "offer") || leadSent) return;
+  const site = document.querySelector(".site-frame");
+  if (site && site.getBoundingClientRect().top > window.innerHeight * 0.5) {
+    site.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+  /* Сайт уже листают — к тарифам, там выбирают тариф. */
+  if (goTarify_()) return;
   event_("form_open", "float");
   prefillForm_(); formStep = 0; saveState(); formScreen();
 });
@@ -2211,12 +2242,12 @@ function formScreen() {
 }
 
 /* Что человек получит за заявку — напоминание в форме: на первом шаге
-   и над кнопкой отправки. Названия тех же пунктов, что в блоке перед
-   кнопкой; подробности там, здесь коротко, чтобы поля не уезжали вниз. */
+   и над кнопкой отправки. Те же пункты, что в блоке перед кнопкой:
+   название жирным, под ним пояснение мельче. */
 function perksHtml_() {
   return `<div class="perks-box">
       <p>За заявку вы сразу получите:</p>
-      <ul class="checks">${ZAYAVKA.now.items.map(i => `<li><b>${i[0]}</b></li>`).join("")}</ul>
+      <ul class="checks">${ZAYAVKA.now.items.map(i => `<li><b>${i[0]}</b><span class="perk-sub">${i[1]}</span></li>`).join("")}</ul>
     </div>`;
 }
 
