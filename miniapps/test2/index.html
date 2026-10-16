@@ -760,13 +760,14 @@
     font-weight: 800; font-size: 1.1rem; line-height: 1.35;
   }
 
-  /* Заявка уже оставлена: тёплая плашка с двумя кнопками. */
+  /* Заявка уже оставлена: голубая плашка с двумя кнопками — отличается
+     от тёплой плашки со стартом, которая стоит прямо над ней. */
   .sent-box {
     margin-top: .3rem; padding: 1.1rem 1.05rem 1.15rem; border-radius: 18px;
-    background: var(--accent-soft);
+    background: var(--deep-soft);
     display: flex; flex-direction: column; gap: .8rem;
   }
-  .sent-box h3 { font-size: 1.3rem; line-height: 1.2; color: var(--accent-text); }
+  .sent-box h3 { font-size: 1.3rem; line-height: 1.2; color: var(--deep); }
   .sent-box .go { font-size: 1.04rem; padding: 1.05rem .5rem; text-wrap: balance; }
   .sent-box .go.quiet { background: var(--surface); box-shadow: 0 0 0 1px var(--line-strong); }
 
@@ -1825,14 +1826,13 @@ function secInvite_(r) {
           <h2>${P.title}</h2>
         </div>
         <p>${P.text}</p>
-        ${leadSent ? "" : `
         <h3 class="invite-offer">${P.offer}</h3>
-        <p>${P.offerText}</p>`}
+        <p>${P.offerText}</p>
         ${sf ? `<p>${P.sferaLine.replace("{тема}", `<b class="invite-sf">${sf}</b>`)}</p>` : ""}
-        ${leadSent ? sentBox_() : `
         <h3 class="invite-get">${P.getHead}</h3>
         <ul class="checks">${P.get.map(x => `<li>${x}</li>`).join("")}</ul>
-        <p class="invite-start">${P.start}</p>`}
+        <p class="invite-start">${P.start}</p>
+        ${leadSent ? sentBox_() : ""}
       </div>
     </section>`;
 }
@@ -1986,8 +1986,8 @@ function goTarify_() {
 }
 
 /* ——— плавающая кнопка «Посмотреть программу» ———
-   Закреплена внизу экрана результата, пока заявка не отправлена, видна
-   всё время (правка 16.10). На экране программы, в форме и на экране
+   Закреплена внизу экрана результата и видна всё время, в том числе после
+   заявки: программу можно смотреть снова (правка 16.10). На экране программы, в форме и на экране
    «Заявка у Дарьи» её нет: любая смена экрана гасит её в render().
    Открывает экран программы. */
 const fab = document.getElementById("fab");
@@ -1996,7 +1996,7 @@ const wrap = document.querySelector(".wrap");
 fabGo.innerHTML = PRIGLASHENIE.cta + '&nbsp;<span aria-hidden="true">→</span>';
 typograf_(fabGo);
 fabGo.addEventListener("click", () => {
-  if (stage !== "result" || leadSent) return;
+  if (stage !== "result") return;
   programScreen(true);
 });
 
@@ -2007,7 +2007,6 @@ function fabOff_() {
 
 function fabWatch_() {
   fabOff_();
-  if (leadSent) return;
   wrap.classList.add("has-fab");
   fab.classList.add("on");
 }
