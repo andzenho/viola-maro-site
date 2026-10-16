@@ -760,6 +760,16 @@
     font-weight: 800; font-size: 1.1rem; line-height: 1.35;
   }
 
+  /* Заявка уже оставлена: тёплая плашка с двумя кнопками. */
+  .sent-box {
+    margin-top: .3rem; padding: 1.1rem 1.05rem 1.15rem; border-radius: 18px;
+    background: var(--accent-soft);
+    display: flex; flex-direction: column; gap: .8rem;
+  }
+  .sent-box h3 { font-size: 1.3rem; line-height: 1.2; color: var(--accent-text); }
+  .sent-box .go { font-size: 1.04rem; padding: 1.05rem .5rem; text-wrap: balance; }
+  .sent-box .go.quiet { background: var(--surface); box-shadow: 0 0 0 1px var(--line-strong); }
+
   /* — экран программы (правка 16.10) — */
   .back-res { font-size: 1.05rem; font-weight: 600; color: var(--deep); padding: .3rem 0 .6rem; min-height: 2.75rem; }
   .tail .ghost { font-size: 1.02rem; min-height: 2.75rem; }
@@ -1151,7 +1161,12 @@ const SENT = {
   title: "Заявка у Дарьи",
   text: "Дарья из команды Виолы скоро напишет вам в Телеграме. Можно не ждать и написать ей первой: она ответит на вопросы и поможет выбрать тариф.",
   dasha: "Написать Дарье",
-  channel: "Закрытый канал Прикладной эмпатии 2.0"
+  channel: "Закрытый канал Прикладной эмпатии 2.0",
+  /* Блок для тех, кто уже оставил заявку: в приглашении под результатом
+     и внизу экрана программы (правка 16.10). */
+  already: "Вы уже оставили заявку",
+  alreadyGo: "Перейти в закрытый канал",
+  alreadyText: "Дарья из моей команды скоро напишет вам в Телеграм. Можно не ждать: напишите ей сами или переходите в закрытый канал практикума."
 };
 
 /* ——— приглашение под результатом (ТЗ 16.10, вторая редакция текста) ———
@@ -1810,15 +1825,30 @@ function secInvite_(r) {
           <h2>${P.title}</h2>
         </div>
         <p>${P.text}</p>
+        ${leadSent ? "" : `
         <h3 class="invite-offer">${P.offer}</h3>
-        <p>${P.offerText}</p>
+        <p>${P.offerText}</p>`}
         ${sf ? `<p>${P.sferaLine.replace("{тема}", `<b class="invite-sf">${sf}</b>`)}</p>` : ""}
+        ${leadSent ? sentBox_() : `
         <h3 class="invite-get">${P.getHead}</h3>
         <ul class="checks">${P.get.map(x => `<li>${x}</li>`).join("")}</ul>
-        <p class="invite-start">${P.start}</p>
-        ${leadSent ? `<button class="go" data-cta="sent">${NEXT.sent}&nbsp;<span aria-hidden="true">→</span></button>` : ""}
+        <p class="invite-start">${P.start}</p>`}
       </div>
     </section>`;
+}
+
+/* Заявка уже оставлена: напоминание и две дороги — написать Дарье
+   или перейти в закрытый канал. Кнопки те же, что на экране «Заявка у Дарьи». */
+function sentBox_() {
+  return `
+        <div class="sent-box">
+          <h3>${SENT.already}</h3>
+          <p>${SENT.alreadyText}</p>
+          <div class="foot">
+            <a class="go" data-go="dasha" href="${CONFIG.dashaUrl}" target="_blank" rel="noopener">${SENT.dasha}&nbsp;<span aria-hidden="true">→</span></a>
+            <a class="go quiet" data-go="cab" href="${CONFIG.cabinetUrl}" target="_blank" rel="noopener">${SENT.alreadyGo}</a>
+          </div>
+        </div>`;
 }
 
 /* back: вернулись с экрана программы — ставим экран на приглашение,
@@ -1868,7 +1898,8 @@ function result(prev, back) {
 function bindCta_(n) {
   n.querySelectorAll('[data-cta="programma"]').forEach(b => b.addEventListener("click", () => programScreen(true)));
   n.querySelectorAll('[data-cta="form"]').forEach(b => b.addEventListener("click", () => openForm_(b.getAttribute("data-place"))));
-  n.querySelectorAll('[data-cta="sent"]').forEach(b => b.addEventListener("click", () => done()));
+  n.querySelectorAll('[data-go="dasha"]').forEach(a => a.addEventListener("click", (e) => { e.preventDefault(); event_("darya"); openTg_(CONFIG.dashaUrl); }));
+  n.querySelectorAll('[data-go="cab"]').forEach(a => a.addEventListener("click", (e) => { e.preventDefault(); event_("cabinet"); openTg_(CONFIG.cabinetUrl); }));
 }
 
 /* Форма заявки. place уходит в таблицу: видно, с какой кнопки человек пошёл
@@ -1903,12 +1934,11 @@ function programScreen(fromResult) {
         <iframe class="site-frame" src="programma/${sp ? "#nedelya=" + sp.week : ""}" title="Программа и тарифы Прикладной эмпатии 2.0" scrolling="no"></iframe>
       </section>
       <section class="sec" id="zayavka-blok">
-        ${leadSent ? "" : `<p class="posle">${E.posle}</p>`}
+        ${leadSent ? sentBox_() : `
+        <p class="posle">${E.posle}</p>
         <div class="foot">
-          ${leadSent
-            ? `<button class="go" data-cta="sent">${NEXT.sent}&nbsp;<span aria-hidden="true">→</span></button>`
-            : `<button class="go" data-cta="form" data-place="program">${E.cta}&nbsp;<span aria-hidden="true">→</span></button>`}
-        </div>
+          <button class="go" data-cta="form" data-place="program">${E.cta}&nbsp;<span aria-hidden="true">→</span></button>
+        </div>`}
       </section>
       <div class="tail">
         ${r ? `<button class="ghost" id="back-res-2">${E.back}</button>`
