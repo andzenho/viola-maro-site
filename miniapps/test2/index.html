@@ -748,6 +748,10 @@
     box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--accent-soft);
   }
   .invite-sf { color: var(--deep); }
+  /* «Приглашаю вас на мой практикум…» — заголовком, красным, как название
+     практикума на сайте. Текст под ним прижат ближе. */
+  .invite-offer { margin-top: .5rem; font-size: 1.45rem; line-height: 1.2; font-weight: 800; letter-spacing: -.02em; color: var(--accent-text); }
+  .invite-offer + p { margin-top: -.4rem; }
 
   /* — экран программы (правка 16.10) — */
   .back-res { font-size: 1.05rem; font-weight: 600; color: var(--deep); padding: .3rem 0 .6rem; min-height: 2.75rem; }
@@ -1794,7 +1798,8 @@ function secInvite_(r) {
           <h2>${P.title}</h2>
         </div>
         <p>${P.text}</p>
-        <p><b>${P.offer}</b><br>${P.offerText}</p>
+        <h3 class="invite-offer">${P.offer}</h3>
+        <p>${P.offerText}</p>
         ${sf ? `<p>${P.sferaLine.replace("{тема}", `<b class="invite-sf">${sf}</b>`)}</p>` : ""}
         <p>${P.format}<br><b>${P.start}</b></p>
         ${leadSent ? `<button class="go" data-cta="sent">${NEXT.sent}&nbsp;<span aria-hidden="true">→</span></button>` : ""}
