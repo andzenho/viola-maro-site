@@ -752,6 +752,13 @@
      практикума на сайте. Текст под ним прижат ближе. */
   .invite-offer { margin-top: .5rem; font-size: 1.45rem; line-height: 1.2; font-weight: 800; letter-spacing: -.02em; color: var(--accent-text); }
   .invite-offer + p { margin-top: -.4rem; }
+  .invite-get { margin-top: .3rem; font-size: 1.2rem; line-height: 1.25; }
+  /* Старт и «последний поток» — тёплой плашкой, красным и жирно. */
+  .invite-start {
+    margin-top: .3rem; padding: .9rem 1rem; border-radius: 16px;
+    background: var(--accent-soft); color: var(--accent-text);
+    font-weight: 800; font-size: 1.1rem; line-height: 1.35;
+  }
 
   /* — экран программы (правка 16.10) — */
   .back-res { font-size: 1.05rem; font-weight: 600; color: var(--deep); padding: .3rem 0 .6rem; min-height: 2.75rem; }
@@ -1167,8 +1174,13 @@ const PRIGLASHENIE = {
     delo:  "тема дела и работы",
     dengi: "тема денег и своей ценности"
   },
-  format: "Лекции в записи, смотрите в удобное время с телефона.",
-  start: "Старт 1 ноября.",
+  getHead: "Что вы получите:",
+  get: [
+    "Каждую неделю — мою лекцию и техники на ваши ситуации",
+    "Мои личные ответы голосом на ваши вопросы (на тарифе «С Виолой»)",
+    "Общий чат с участницами, где можно задать вопрос и поделиться тем, что получается"
+  ],
+  start: "Старт 1 ноября. Последний поток в этом году.",
   cta: "Посмотреть программу"
 };
 
@@ -1801,7 +1813,9 @@ function secInvite_(r) {
         <h3 class="invite-offer">${P.offer}</h3>
         <p>${P.offerText}</p>
         ${sf ? `<p>${P.sferaLine.replace("{тема}", `<b class="invite-sf">${sf}</b>`)}</p>` : ""}
-        <p>${P.format}<br><b>${P.start}</b></p>
+        <h3 class="invite-get">${P.getHead}</h3>
+        <ul class="checks">${P.get.map(x => `<li>${x}</li>`).join("")}</ul>
+        <p class="invite-start">${P.start}</p>
         ${leadSent ? `<button class="go" data-cta="sent">${NEXT.sent}&nbsp;<span aria-hidden="true">→</span></button>` : ""}
       </div>
     </section>`;
