@@ -14,7 +14,7 @@ function load(file) {
     apply() { return any; }, set() { return true; }, construct() { return any; }
   });
   const store = {};
-  const ctx = { window: {}, document: any, navigator: {}, location: { search: '' },
+  const ctx = { window: { addEventListener() {} }, document: any, navigator: {}, location: { search: '' },
     localStorage: { getItem: k => store[k] || null, setItem(k, v) { store[k] = v; }, removeItem(k) { delete store[k]; } },
     setTimeout: () => 0, clearTimeout() {}, fetch: () => ({ then: () => ({ then: () => ({ catch: () => ({ then() {} }) }) }), catch() {} }),
     URLSearchParams, URL, Date, Math, JSON, console, Set };

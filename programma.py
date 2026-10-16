@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Сайт практикума внутри теста 2.0: violamaro.ru/test2/programma/.
+"""Программа и тарифы внутри теста 2.0: violamaro.ru/test2/programma/.
 
-Под результатом теста человек видит тот же сайт, что на violamaro.ru: первый
-экран, «Эмпатия — это способность», шесть недель, формат ответов,
-мастер-класс и тарифы, в том же оформлении. Тест вставляет эту страницу
-рамкой (iframe) и подгоняет её высоту под содержимое.
+На экране программы теста (правка 16.10) человек видит первый экран сайта,
+шесть недель и тарифы с ценами — те же блоки, что на violamaro.ru, в том же
+оформлении. «Зачем мне это» и мастер-класса здесь нет. Тест вставляет эту
+страницу рамкой (iframe) и подгоняет её высоту под содержимое.
 
 Заявка остаётся в тесте: по ней бот узнаёт, что заявка есть. Поэтому кнопки
 этой страницы не открывают ничего своего, а просят тест открыть его форму
@@ -32,12 +32,14 @@ import build
 OUT = os.path.join(build.ROOT, "site", "test2", "programma")
 MINE_TAG = "Самая важная для вас неделя на основе теста"
 
-DROP = ("Проблемы с оплатой", "Рассрочка", "Подарки и условия", "Контакты команды", "Финальный призыв")
+DROP = ("Зачем мне это", "Финальный мастер-класс", "Проблемы с оплатой", "Рассрочка", "Подарки и условия", "Контакты команды", "Финальный призыв")
 
 CSS = r"""
 /* Страница живёт внутри теста: прокручивает её сам тест, у рамки нет
    своей полосы прокрутки и нижней плашки. */
 html, body { overflow: hidden; }
+/* Нижней плашки сайта здесь нет — и отступа под неё тоже. */
+body { padding-bottom: 0 !important; }
 [data-sticky-bar], .cookie-bar, .skip, #lead-modal { display: none !important; }
 main { padding-bottom: 0 !important; }
 #tarify a.t2-tarif-btn[data-btn] { display: flex; align-items: center; justify-content: center; width: 100% !important; min-height: 68px; padding: 14px 14px !important; white-space: normal !important; text-align: center; font-size: 15px !important; letter-spacing: .07em !important; line-height: 1.3 !important; text-decoration: none; }
