@@ -492,14 +492,14 @@ def sec_nedeli():
     </article>""" % {"k": i + 1, "title": title, "text": text, "items": items,
                      "note": ('<p class="g-week-note">%s</p>' % note) if note else ""})
     return """
-<section class="g-sec g-grey" id="programma" data-blok="Как вы пройдёте программу">
+<section class="g-sec g-grey" id="programma" data-blok="Как проходит программа">
   <div class="g-in">
     %s
     <div class="g-weeks">%s
     </div>
     <p class="g-weeks-pod">%s</p>
   </div>
-</section>""" % (h2("Как вы пройдёте", "программу", " g-center"), "".join(cards), NEDELI_POD)
+</section>""" % (h2("Как проходит", "программа", " g-center"), "".join(cards), NEDELI_POD)
 
 
 def sec_tarify():
