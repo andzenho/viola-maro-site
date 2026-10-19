@@ -464,7 +464,7 @@ PLANSHET_ALT = "Программа «Прикладная эмпатия» на 
 def sec_planshet():
     from PIL import Image
     src = None
-    for ext in ("png", "webp", "jpg", "jpeg"):
+    for ext in ("webp", "png", "jpg", "jpeg"):
         p = os.path.join(PLANSHET_SRC, "planshet." + ext)
         if os.path.isfile(p):
             src = p
@@ -814,7 +814,7 @@ body { padding-bottom: 0 !important; background: #fff; }
 /* Широкий экран: правее Виолы, на уровне руки. */
 .g-fakty-stage { right: max(24px, 3vw); bottom: 14%; width: 270px; }
 .g-planshet { background: #fff; padding: 20px 0 0; }
-.g-planshet img { display: block; width: 100%; max-width: 980px; height: auto; margin: 0 auto; }
+.g-planshet img { display: block; width: 100%; max-width: 980px; height: auto; margin: 0 auto; filter: drop-shadow(0 24px 30px rgba(28,26,29,.18)); }
 .g-about-list { margin: 4px 0 4px; }
 .g-about-name { font-family: 'Prata', 'Times New Roman', Georgia, serif; font-size: 26px; line-height: 1.2; margin-bottom: 18px !important; }
 [data-h2-def].g-offer { margin: 0 !important; font-size: 23px !important; line-height: 1.35 !important; font-weight: 600 !important;
