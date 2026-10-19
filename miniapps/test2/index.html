@@ -799,7 +799,7 @@
   </header>
   <main id="screen"></main>
 </div>
-<div class="fab" id="fab"><button class="go" id="fab-go" type="button"></button></div>
+
 
 <script>
 "use strict";
@@ -998,44 +998,6 @@ const RESULTS = {
 const FON_NOTE = "Отдельно: часть того, что вас грузит, идёт не от людей, а от общего фона — шум, свет, слишком много всего. Это не про эмпатию, и в тесте оно не решается.";
 const DISCLAIM = "Это не диагностика и не диагноз. Это способ посмотреть на себя со стороны.";
 
-/* ——— что видно по вашим ответам ———
-   Четыре шкалы, которые тест и так считает, — словами, а не числами: «2 из 9»
-   человеку ничего не говорит. Баллы переводятся в пять уровней, на экране
-   пять делений и слово. В таблицу по-прежнему уходят сами баллы. */
-const SEEN = {
-  title: "Что видно по вашим ответам?",
-  /* [название строки, шкала, из скольких баллов, слова уровней] */
-  rows: [
-    ["Считываете людей",     "A", 9,  "feel"],
-    ["Чужое заходит внутрь", "P", 9,  "feel"],   // шкала как есть, без переворота
-    ["Тело отзывается",      "B", 9,  "feel"],
-    ["Отдаёте другим",       "C", 12, "give"]
-  ],
-  words: {
-    feel: ["слабо", "умеренно", "заметно", "сильно", "очень сильно"],
-    give: ["мало", "умеренно", "заметно", "много", "очень много"]
-  },
-  /* Главная фраза над строками. Есть только у тех, кто чувствует людей сильно. */
-  headIn:  "Вы чувствуете людей очень сильно, и почти всё чужое заходит внутрь.",
-  headOut: "Вы чувствуете людей очень сильно и умеете оставлять чужое снаружи.",
-  quote: "Быть человеком с высокой эмпатией значит обладать мощным радаром восприятия, к которому, к сожалению, не прилагали инструкцию по эксплуатации."
-};
-/* Уровень от 1 до 5. Шкалы из девяти баллов: 0–1, 2–3, 4–5, 6–7, 8–9.
-   Шкала из двенадцати: 0–2, 3–4, 5–7, 8–9, 10–12. */
-function level_(v, max) {
-  if (max === 12) return v <= 2 ? 1 : v <= 4 ? 2 : v <= 7 ? 3 : v <= 9 ? 4 : 5;
-  return v <= 1 ? 1 : v <= 3 ? 2 : v <= 5 ? 3 : v <= 7 ? 4 : 5;
-}
-/* Пороги главной фразы: «сильно» это уровень от 4, «снаружи» — уровень до 2.
-   Это предложение, их надо сверить с таблицей прохождений. */
-const LEVEL_HIGH = 4, LEVEL_LOW = 2;
-function seenHead(sc) {
-  const a = level_(sc.A, 9), p = level_(sc.P, 9);
-  if (a >= LEVEL_HIGH && p >= LEVEL_HIGH) return SEEN.headIn;
-  if (a >= LEVEL_HIGH && p <= LEVEL_LOW) return SEEN.headOut;
-  return "";
-}
-
 /* ——— почему пользуются именно вами ———
    Блок под конверсию (правка 03.10, заменяет все прежние версии блока
    «Кто оказывается рядом с вами и почему?»). Человек видит свои же ответы:
@@ -1062,242 +1024,6 @@ const RYADOM = {
   /* Финал. Первая фраза стоит полужирным. */
   out: ["Доброту менять не нужно.", "Ей нужна защита. Первый шаг ниже."]
 };
-
-/* ——— что можно сделать уже сегодня вечером ———
-   Техника Т3 в три шага: поймать момент, сказать себе, ответить человеку.
-   Слова Виолы (words, quote, why) стоят дословно, их не правим ни на букву.
-   Заголовки шагов и связки — наши. */
-const VECHER = {
-  title: "Что можно сделать уже сегодня вечером?",
-  sub: "Заменить «должна» на «могу»",
-  steps: [
-    { h: "Поймайте момент",
-      t: "Вас о чём-то просят, а внутри сразу звучит «я должна»." },
-    { h: "Скажите себе",
-      words: [
-        ["Мне можно.", "Мне можно выбирать себя, ставить свои задачи на первое место."],
-        ["Могу.", "Могу помочь, могу не помочь. Могу дать, могу не дать. У меня есть право тебе отказать."]
-      ] },
-    { h: "Ответьте человеку уже из «могу»",
-      t: "Вот как это звучит у Виолы:",
-      quote: "Я по-человечески могу любить этого человека, но сейчас ты мной пользуешься, и я тебе говорю «нет»." }
-  ],
-  whyHead: "Почему это работает?",
-  why: "Должен, обязан это принуждение, а могу это право. Когда вы возвращаете себе своё собственное законное право, любой отказ перестаёт быть для вас предательством."
-};
-
-/* ——— что дальше ———
-   Переход от результата к бонусам через три вопроса (правка 03.10, прежнее
-   вступление со сценой из завтрашнего дня убрано целиком). Порядок:
-   вступление в три строки, затем три пары «вопрос → карточка», строка
-   про канал, метка предзаписи и кнопка. Вопросы стоят от первого лица
-   и набраны крупнее текста карточек: это вопросы самого человека,
-   а карточка под каждым — ответ Виолы. Тема эфира подбирается по ответу
-   на «Где вас съедает сильнее всего?». Минут эфира на экране нет нигде. */
-/* Подписи кнопок заявки (правка 14.10: анкеты предзаписи и бонусов за неё
-   больше нет, человек оставляет заявку на практикум). */
-const NEXT = {
-  cta: "Принять участие",
-  sent: "Заявка у&nbsp;Дарьи"
-};
-
-/* ——— программа ———
-   Программа, тарифы и цены — как на сайте violamaro.ru (правка 14.10).
-   Дата старта и закрытия набора считаются сами: поток стартует каждое
-   первое число, набор закрывается в последний день месяца в 23:59 по Москве. */
-const PROGRAM = {
-  head: "Что такое <span class=\"gold\">Прикладная эмпатия 2.0</span>?",
-  bridge: "Вы узнали свой профиль. Что с этим делать, разбираем на Прикладной эмпатии 2.0.",
-  what: "Это 6-недельный практикум Виолы Маро для эмпатов.",
-  body: [
-    "Эмпатия — это способность. <span class=\"hl\">У вас она есть.</span> Пользоваться ей вас никто не учил.",
-    "Здесь вы научитесь пользоваться своей эмпатией во всех сферах жизни."
-  ],
-  weeksHead: "Что будет за шесть недель?",
-  weeksLead: "Одна неделя — одна сфера вашей жизни.",
-  insideHead: "Что внутри Прикладной эмпатии 2.0?",
-  /* Жирным — что это, дальше подробность. Состав по правке Ильи 03.10. */
-  inside: [
-    "<b>Лекции Виолы в записи</b> на каждую неделю",
-    "<b>18 прикладных техник для эмпата</b>, по три в неделю",
-    "<b>Мастер-класс Виолы</b> с ответами на ваши вопросы",
-    "<b>Обратная связь от Виолы:</b> ответы в аудио в закрытом чате",
-    "<b>Общий чат всех участников</b> на тарифе «С Виолой»",
-    "<b>Аудиомедитации от Виолы</b>",
-    "<b>Текстовая методичка</b> на каждую лекцию"
-  ],
-  /* Метка на неделе под сферу человека. */
-  mineTag: "Самая важная для вас неделя на основе теста",
-  /* Отзывы выпускниц: { t: "текст", who: "имя, откуда" }. Ставим только с разрешением
-     на публикацию. Пока список пуст, блок на экране не показывается. */
-  reviewsHead: "Что говорят выпускницы?",
-  reviews: [],
-  faqHead: "Остались вопросы?",
-  /* {start} — дата старта ближайшего потока. */
-  faq: [
-    ["Заявка — это оплата?", "Нет. Заявка ни к чему не обязывает. После неё Дарья из команды Виолы напишет вам в Телеграме, ответит на вопросы и поможет выбрать тариф."],
-    ["Когда старт и как проходят лекции?", "Ближайший поток стартует {start}. Лекции идут в записи, смотреть их можно в удобное для вас время."],
-    ["Успею ли я, если у меня работа и семья?", "Одна лекция в неделю и три техники к ней. Всё в записи, поэтому идти можно в своём темпе."],
-    ["А если во время работы станет тяжело?", "Так бывает, и об этом лучше знать заранее: когда начинаешь разбирать то, что годами лежало нетронутым, какое-то время может быть неспокойно. Темп здесь ваш, никто не подгоняет. Практикум не заменяет очную психотерапию — если сейчас у вас острое состояние, сначала стоит опереться на своего специалиста."],
-    ["Я живу не в России. Смогу участвовать?", "Да. Лекции в записи, а оплата из-за рубежа работает."]
-  ]
-};
-
-/* Блок перед кнопкой заявки (ТЗ 14.10): две части, названия пунктов жирным. */
-const ZAYAVKA = {
-  now: { head: "Что вы получите сразу после заявки", items: [
-    ["Разбор вашего запроса", "Дарья из команды Виолы спросит, что вы хотите изменить в первую очередь, и покажет, на какой неделе программы это разбираем"],
-    ["Закрытый канал Прикладной эмпатии 2.0", "Подготовительные материалы к старту: эфир Виолы с таймкодами, медитация, подкасты, которых нет в открытом канале"],
-    ["Помощь с тарифом и оплатой", "Дарья подберёт тариф под ваш запрос и подскажет удобный способ оплаты: рассрочку для граждан СНГ или оплату зарубежной картой"]
-  ] },
-  why: { head: "Почему не откладывать", items: [
-    ["Последний поток в этом году", "Старт 1 ноября, следующий набор уже в новом году"],
-    ["На тарифе «С Виолой» 50 мест", "На нём Виола голосом отвечает на вопросы каждой участницы"],
-    ["Время подготовиться", "До старта вы успеете пройти материалы закрытого канала и войти в программу спокойно"]
-  ] }
-};
-
-/* Экран после отправки заявки (ТЗ 14.10). */
-const SENT = {
-  title: "Заявка у Дарьи",
-  text: "Дарья из команды Виолы скоро напишет вам в Телеграме. Можно не ждать и написать ей первой: она ответит на вопросы и поможет выбрать тариф.",
-  dasha: "Написать Дарье",
-  channel: "Закрытый канал Прикладной эмпатии 2.0",
-  /* Блок для тех, кто уже оставил заявку: в приглашении под результатом
-     и внизу экрана программы (правка 16.10). */
-  already: "Вы уже оставили заявку",
-  alreadyGo: "Перейти в закрытый канал",
-  alreadyText: "Дарья из моей команды скоро напишет вам в Телеграм. Можно не ждать: напишите ей сами или переходите в закрытый канал практикума."
-};
-
-/* ——— приглашение под результатом (ТЗ 16.10, вторая редакция текста) ———
-   Текст дословный. {тема} — сфера, которая по тесту проседает сильнее всего,
-   в форме, которая встаёт во фразу «болит тема …»: родительный падеж
-   от названия сферы в результате. Сферы нет (у лучшей меньше трёх баллов) —
-   строки про неё на экране нет. Кнопка «Посмотреть программу» закреплена
-   внизу экрана результата (плавающая кнопка). */
-const PRIGLASHENIE = {
-  title: "Узнали себя?",
-  text: "С вами всё в порядке. Вы просто чувствуете людей сильнее других и годами отдаёте больше, чем получаете.",
-  offer: "Приглашаю вас на мой практикум «Прикладная эмпатия 2.0».",
-  offerText: "За шесть недель вы научитесь говорить «нет» без вины, перестанете тащить на себе чужие проблемы и вернёте силы себе.",
-  sferaLine: "Сильнее всего у вас сейчас болит {тема}. Ей в программе посвящена отдельная неделя.",
-  sfera: {
-    ya:    "тема заботы о себе",
-    otn:   "тема отношений с людьми",
-    semya: "тема родителей и детей",
-    telo:  "тема тела и здоровья",
-    delo:  "тема дела и работы",
-    dengi: "тема денег и своей ценности"
-  },
-  getHead: "Что вы получите:",
-  get: [
-    "Каждую неделю — мою лекцию и техники на ваши ситуации",
-    "Мои личные ответы голосом на ваши вопросы (на тарифе «С Виолой»)",
-    "Общий чат с участницами, где можно задать вопрос и поделиться тем, что получается"
-  ],
-  start: "Старт 1 ноября. Последний поток в этом году.",
-  cta: "Посмотреть программу"
-};
-
-/* Экран программы (ТЗ 16.10). Заголовок и описание — первый экран сайта
-   в рамке, своей шапки у экрана нет. */
-const PROG_EKRAN = {
-  back: "← К моему результату",
-  posle: "<b>Что будет после заявки:</b> Дарья из моей команды напишет вам в Телеграм и ответит на вопросы. Звонков не будет, заявка ни к чему не обязывает.",
-  cta: "Оставить заявку"
-};
-
-/* ——— заявка на Прикладную эмпатию 2.0 (бывшая анкета предзаписи) ———
-   Поля, их порядок и то, что уходит в таблицу, прежние: по этой записи бот
-   узнаёт, что заявка есть («anketa»: «1» в ответе на запрос статуса).
-   Поменялись только слова, которые видит человек.
-   Шесть шагов: имя и контакт, готовность и что может помешать, запрос на
-   программу (проблема, бюджет, что пробовали), тариф с ценами, вопрос про
-   Дарью, согласие.
-   Порядок и тексты шагов 2–3 — правка 08.10: сначала готовность, потом
-   запрос. Поля типа one обязательны, как и остальные.
-   LEADER — вопросы про «Женщину-лидера»: их даёт Илья. Формат:
-   { id: "leader1", label: "Вопрос", type: "one", opts: ["да", "нет"] }
-   или type: "area" для ответа своими словами. Пока пусто, шаг идёт без них. */
-const LEADER = [];
-const FORM = [
-  { title: "Как вас зовут?", fields: [
-    { id: "name", label: "Ваше имя", type: "text", auto: "given-name", max: 60 },
-    { id: "contact", label: "Ваш ник в Телеграме или телефон", type: "text", max: 60,
-      hint: "Чтобы Дарья могла вам написать. Например, @anna или +7 900 000-00-00" }
-  ] },
-  { title: "Прикладная эмпатия 2.0", fields: [
-    { id: "ready", label: "Насколько вы планируете пойти на <b>платный</b> шестинедельный практикум Прикладная эмпатия 2.0, который стартует 1&nbsp;ноября?", type: "scale",
-      hint: "Ответьте, пожалуйста, максимально честно",
-      lo: "1, пока только смотрю", hi: "10, точно иду" },
-    { id: "meshaet", label: "Что сейчас может помешать вам пойти?", type: "one",
-      opts: ["Ничего, хочу идти", "Хочу сначала узнать цену", "Сомневаюсь, что мне подойдёт",
-             "Не будет времени в ноябре", "Пока просто интересно"] }
-  ].concat(LEADER) },
-  { title: "Ваш запрос на программу", fields: [
-    /* Ответ из теста в поле не подставляется: здесь вопрос уже про программу,
-       и нужен ответ на него. Прежние слова человека показаны под подсказкой. */
-    { id: "change", label: "Какую главную проблему вы хотите решить на Прикладной эмпатии 2.0?", type: "area", max: 400,
-      hint: "Своими словами: ситуация, в которой вам сейчас труднее всего",
-      note: () => words ? "В тесте вы написали: «" + esc(words) + "»" : "" },
-    { id: "budget", label: "Сколько вы готовы заплатить за полное решение этой проблемы?", type: "one",
-      opts: ["До 10\u00a0000\u00a0₽", "10\u00a0000–20\u00a0000\u00a0₽", "20\u00a0000–40\u00a0000\u00a0₽",
-             "Больше 40\u00a0000\u00a0₽", "Пока не знаю", "Нисколько, платить не готов(а)"] },
-    { id: "tried", label: "Что вы уже пробовали, чтобы это решить?", type: "area", max: 400,
-      hint: "Книги, курсы, психолог, программы Виолы. Если ничего, так и напишите" }
-  ] },
-  /* Цены и выбор тарифа (правка 12.10). Шаг стоит после вопросов про
-     готовность и бюджет: на них человек отвечает ещё без нашей цены перед
-     глазами. Цены те же, что на сайте. Над тарифами напоминание, что даёт
-     сама предзапись: цена не должна быть единственным, что человек видит
-     перед кнопкой. */
-  { title: "Какой тариф вам ближе?", fields: [
-    { id: "tarif", label: "Какой тариф вы выбираете?", type: "one",
-      hint: "Платить сейчас не нужно. Оплатить потом можно целиком или в рассрочку",
-      rich: [
-        { v: "Самостоятельный", price: "19\u00a0900\u00a0₽", cur: "$240 / €215",
-          text: "Весь метод и все техники. Самостоятельное прохождение." },
-        { v: "С Виолой", price: "39\u00a0900\u00a0₽", cur: "$480 / €430",
-          text: "Всё то же самое, и Виола отвечает на ваши вопросы." }
-      ] }
-  ] },
-  { kind: "darya" },
-  { title: "Согласие на обработку данных", consent: true, fields: [] }
-];
-
-/* Шаг про Дарью. До кнопки анкеты менеджер не упоминается нигде: ни на экране
-   результата, ни в частых вопросах, ни у кнопок. Здесь человек сам решает,
-   писать ему или нет. При любом ответе он идёт дальше и получает канал.
-   Ответ уходит в таблицу отдельным полем konsultaciya: da или net. */
-const DARYA = {
-  title: "Хотите, чтобы вам написала Дарья из команды Виолы?",
-  list: [
-    "поможет выбрать тариф и оформить оплату, целиком или в рассрочку",
-    "ответит на все вопросы о программе"
-  ],
-  note: "Это переписка в Телеграме, без звонков.",
-  yes: "Да, пусть напишет",
-  no: "Пока нет, напишу сама, если будут вопросы"
-};
-
-/* ——— «ваши суперспособности»: выводим из ответов, а не раздаём всем одинаково.
-   Берём три самые сильные стороны — так это читается как вывод, а не как лесть.
-   Перенесено из первого теста без изменений. */
-function powers(sc, v) {
-  const list = [
-    { w: sc.A,        t: "Считываете человека раньше, чем он открыл рот" },
-    { w: v[1] * 3,    t: "Слышите, когда слова про одно, а человек про другое" },
-    { w: v[2] * 3,    t: "Заходите в комнату и уже знаете, что тут было пять минут назад" },
-    { w: sc.C,        t: "Вам рассказывают то, о чём с другими молчат" },
-    { w: sc.B,        t: "Тело понимает раньше головы" },
-    { w: sc.I,        t: "Растворялись в другом человеке — и собрали себя обратно" },
-    { w: 9 - sc.P,    t: "Держите дистанцию и при этом не остываете к людям" },
-    { w: (6 - sc.G) * 1.5, t: "Восстанавливаетесь заранее, пока ещё не накрыло" },
-    { w: sc.L * 1.5,  t: "Точно знаете, от кого именно устали" }
-  ];
-  return list.sort((a, b) => b.w - a.w).slice(0, 3).map(x => x.t);
-}
 
 /* ——— состояние ——— */
 let stage = "intro";      // intro | q | fork | words | age | result | program | form | done
@@ -1494,7 +1220,6 @@ function lower1(s) { s = String(s || ""); return s.charAt(0).toLowerCase() + s.s
 
 /* Без replaceChildren: на неподновлённых Android его нет — падал весь скрипт. */
 function render(node) {
-  fabOff_();
   while (screen.firstChild) screen.removeChild(screen.firstChild);
   linksThroughTelegram_(node);
   screen.appendChild(node);
@@ -1552,7 +1277,6 @@ function intro() {
   const n = el(`
     <div class="card">
       <div class="hero">
-        <span class="tag">Версия 2.0</span>
         <h1>Какой вы эмпат?</h1>
         <p class="lead">Узнаете, какой вы эмпат и какая сфера жизни забирает у вас больше всего.</p>
       </div>
@@ -1690,660 +1414,95 @@ function ageScreen() {
   render(n);
 }
 
-/* ——— экран результата ———
-   Порядок блоков: тип и сфера · что видно по ответам · суперспособности ·
-   кто рядом · что сделать сегодня вечером · приглашение на практикум.
-   Программа с тарифами — отдельный экран (правка 16.10).
-   Трём типам не-эмпатов (Считывающий, Сочувствующий, Другая настройка):
-   их тип, а под ним, как у всех, приглашение.
-   Каждый блок — отдельная секция со своим заголовком. data-block нужен
-   счётчику «до какого блока долистали»; у блока может быть несколько секций. */
-const BLOCKS = ["type", "portrait", "powers", "ryadom", "vecher", "next", "program"];
-const BLOCK_NAMES = {
-  type: "Тип", portrait: "Что видно по ответам", powers: "Суперспособности",
-  float: "плавающая кнопка",
-  ryadom: "Почему пользуются", vecher: "Сегодня вечером", next: "Что дальше", program: "Программа"
-};
+/* ——— после теста: результат ждёт в боте (правка 19.10) ———
+   Экрана результата, программы и формы заявки в приложении больше нет.
+   После последнего вопроса прохождение записывается в таблицу (тип и
+   passed = 1 для запроса статуса бота), и только потом появляется кнопка
+   в бот. Не записалось — запись остаётся в очереди viola2-pending, а на
+   экране предлагаем повторить. */
+const BOT_URL = "https://t.me/viola_maro_bot?start=t2_done";
 
-function secType_(r, empath) {
-  const t = RESULTS[r.key];
-  const sp = empath && r.sphere ? SPHERE[r.sphere] : null;
-  return `
-    <section class="sec" data-block="type">
-      <div class="hero">
-        <span class="tag">Ваш тип</span>
-        <h1 class="type-name">${t.name}</h1>
-      </div>
-      <div class="copy">${t.body.map((p, i) => `<p${i === t.body.length - 1 ? ' class="punch"' : ""}>${p}</p>`).join("")}</div>
-      ${r.fon ? `<p class="soft">${FON_NOTE}</p>` : ""}
-    </section>
-    ${sp ? `
-    <section class="sec" data-block="type">
-      <h2>Где у вас уходит больше всего сил?</h2>
-      <div class="spot">
-        <p class="answer">${sp.t}</p>
-        <p>${sp.line}</p>
-      </div>
-    </section>` : ""}`;
-}
-
-/* Строка шкалы: название, слово уровня и пять делений. Горит столько делений,
-   каков уровень. Чисел на экране нет. */
-function gauge_(name, level, word) {
-  let ticks = "";
-  for (let i = 1; i <= 5; i++) ticks += i <= level ? "<i data-lit></i>" : "<i></i>";
-  return `
-    <div class="gauge">
-      <div class="gauge-name">${name}</div>
-      <div class="gauge-row">
-        <div class="gauge-ticks" aria-hidden="true">${ticks}</div>
-        <span class="gauge-word">${word}</span>
-      </div>
-    </div>`;
-}
-
-function secPortrait_(r) {
-  const sc = r.scales;
-  const head = seenHead(sc);
-  return `
-    <section class="sec" data-block="portrait" id="portrait">
-      <h2>${SEEN.title}</h2>
-      ${head ? `<p class="pull">${head}</p>` : ""}
-      <div class="gauges">
-        ${SEEN.rows.map(x => {
-          const lv = level_(sc[x[1]], x[2]);
-          return gauge_(x[0], lv, SEEN.words[x[3]][lv - 1]);
-        }).join("")}
-      </div>
-      ${viola_(SEEN.quote)}
-    </section>`;
-}
-
-function secPowers_(pw) {
-  return `
-    <section class="sec" data-block="powers">
-      <h2>Какие у вас суперспособности?</h2>
-      <ul class="powers">${pw.map(x => `<li>${x}</li>`).join("")}</ul>
-    </section>`;
-}
-
-function secRyadom_() {
-  const list = ryadomList();
-  if (!list.length) return "";
-  return `
-    <section class="sec" data-block="ryadom">
-      <h2>${RYADOM.title}</h2>
-      <div class="mine">
-        <p class="mine-h">${RYADOM.lead}</p>
-        <ul class="checks">${list.map(x => `<li>${stmt_(x.i)}</li>`).join("")}</ul>
-      </div>
-      <p>${RYADOM.text}</p>
-      ${viola_(RYADOM.quote)}
-      <p><b>${RYADOM.out[0]}</b> ${RYADOM.out[1]}</p>
-    </section>`;
-}
-
-function secVecher_() {
-  const step = (x, i) => `
-    <li>
-      <span class="step-n" aria-hidden="true">${i + 1}</span>
-      <div class="step-head">
-        <h3>${x.h}</h3>
-        ${x.t ? `<p class="soft">${x.t}</p>` : ""}
-      </div>
-      ${x.words ? `
-      <div class="panel mantra step-wide">
-        ${x.words.map(w => `<p><b>${w[0]}</b>${w[1]}</p>`).join("")}
-      </div>` : ""}
-      ${x.quote ? `<div class="step-wide">${viola_(x.quote)}</div>` : ""}
-    </li>`;
-  return `
-    <section class="sec" data-block="vecher">
-      <h2>${VECHER.title}</h2>
-      <p class="pull">${VECHER.sub}</p>
-      <ol class="steps">${VECHER.steps.map(step).join("")}</ol>
-      <div class="group">
-        <h3>${VECHER.whyHead}</h3>
-        ${viola_(VECHER.why)}
-      </div>
-    </section>`;
-}
-
-/* ——— приглашение под результатом (правка 16.10) ———
-   Программы с тарифами под результатом больше нет. Сразу за результатом —
-   приглашение Виолы с фото. Кнопка «Посмотреть программу» закреплена внизу
-   экрана (плавающая кнопка): она открывает экран программы, где подсвечена
-   неделя под сферу человека. data-block="next": для таблицы это прежняя
-   точка «дошла до кнопки» в воронке. */
-function secInvite_(r) {
-  const P = PRIGLASHENIE;
-  const sf = r && r.sphere ? P.sfera[r.sphere] : "";
-  return `
-    <section class="sec" data-block="next" id="invite">
-      <div class="invite">
-        <div class="invite-head">
-          <img class="invite-foto" src="${IMG.foto}" alt="Виола Маро" width="84" height="84">
-          <h2>${P.title}</h2>
-        </div>
-        <p>${P.text}</p>
-        <h3 class="invite-offer">${P.offer}</h3>
-        <p>${P.offerText}</p>
-        ${sf ? `<p>${P.sferaLine.replace("{тема}", `<b class="invite-sf">${sf}</b>`)}</p>` : ""}
-        <h3 class="invite-get">${P.getHead}</h3>
-        <ul class="checks">${P.get.map(x => `<li>${x}</li>`).join("")}</ul>
-        <p class="invite-start">${P.start}</p>
-        ${leadSent ? sentBox_() : ""}
-      </div>
-    </section>`;
-}
-
-/* Заявка уже оставлена: напоминание и две дороги — написать Дарье
-   или перейти в закрытый канал. Кнопки те же, что на экране «Заявка у Дарьи». */
-function sentBox_() {
-  return `
-        <div class="sent-box">
-          <h3>${SENT.already}</h3>
-          <p>${SENT.alreadyText}</p>
-          <div class="foot">
-            <a class="go" data-go="dasha" href="${CONFIG.dashaUrl}" target="_blank" rel="noopener">${SENT.dasha}&nbsp;<span aria-hidden="true">→</span></a>
-            <a class="go quiet" data-go="cab" href="${CONFIG.cabinetUrl}" target="_blank" rel="noopener">${SENT.alreadyGo}</a>
-          </div>
-        </div>`;
-}
-
-/* back: вернулись с экрана программы — ставим экран на приглашение,
-   откуда человек ушёл, а не в начало длинного результата. */
-function result(prev, back) {
-  stage = "result";
+function result(prev) {
   const r = prev || score();
   lastResult = r;
-  const empath = EMPATH.indexOf(r.key) !== -1;
-
-  const n = el(`
-    <div class="page">
-      ${secType_(r, empath)}
-      ${empath ? secPortrait_(r) : ""}
-      ${empath ? secPowers_(powers(r.scales, answers)) : ""}
-      ${empath && CONFIG.blocks.ryadom ? secRyadom_() : ""}
-      ${empath && CONFIG.blocks.vecher ? secVecher_() : ""}
-      ${secInvite_(r)}
-      <div class="tail">
-        <button class="ghost" id="again">Пройти заново</button>
-        <p class="fine">${DISCLAIM}</p>
-      </div>
-    </div>`);
-
-  bindCta_(n);
-
-  n.querySelector("#again").addEventListener("click", () => {
-    answers.length = 0; lastResult = null; words = ""; age = ""; pid = "";
-    Object.keys(forks).forEach(k => { delete forks[k]; });
-    clearState(); flush();   // если в прошлый раз что-то не ушло
-    intro();
-  });
-
-  if (!prev) send(r);
-  saveState();          // чтобы перезагрузка вернула человека на результат, а не в начало
-  render(n);
-  lightGauges_(n);
-  watchBlocks_(n);
-  fabWatch_();
-  if (back) {
-    const inv = n.querySelector("#invite");
-    if (inv && inv.scrollIntoView) inv.scrollIntoView({ block: "start" });
-  }
-}
-
-/* Кнопки на экране результата и на экране программы. */
-function bindCta_(n) {
-  n.querySelectorAll('[data-cta="programma"]').forEach(b => b.addEventListener("click", () => programScreen(true)));
-  n.querySelectorAll('[data-cta="form"]').forEach(b => b.addEventListener("click", () => openForm_(b.getAttribute("data-place"))));
-  n.querySelectorAll('[data-go="dasha"]').forEach(a => a.addEventListener("click", (e) => { e.preventDefault(); event_("darya"); openTg_(CONFIG.dashaUrl); }));
-  n.querySelectorAll('[data-go="cab"]').forEach(a => a.addEventListener("click", (e) => { e.preventDefault(); event_("cabinet"); openTg_(CONFIG.cabinetUrl); }));
-}
-
-/* Форма заявки. place уходит в таблицу: видно, с какой кнопки человек пошёл
-   в заявку. tarif — тариф, кнопку которого нажали, он отмечается в форме.
-   Заявка уже отправлена — экран «Заявка у Дарьи». */
-function openForm_(place, tarif) {
-  if (leadSent) { done(); return; }
-  event_("form_open", place);
-  if (tarif === "Самостоятельный" || tarif === "С Виолой") form.tarif = tarif;
-  prefillForm_(); formStep = 0; saveState(); formScreen();
-}
-
-/* ——— экран программы (правка 16.10) ———
-   Отдельный экран: сверху «← К моему результату» (если результат есть),
-   дальше первый экран сайта, шесть недель и тарифы с ценами — как на
-   violamaro.ru, внизу строка о том, что будет после заявки, и кнопка заявки.
-   Сайт — страница /test2/programma/ (её собирает programma.py), тест вставляет её рамкой во всю ширину и подгоняет высоту по
-   сообщениям от неё. Неделя под сферу человека подсвечена: #nedelya=N.
-   Экран открывается с начала, никуда сам не прокручивается.
-   fromResult: пришли кнопкой с результата — «назад» вернёт к приглашению. */
-let progFromResult = false;
-function programScreen(fromResult) {
-  stage = "program";
-  progFromResult = !!fromResult;
-  const r = lastResult;
-  const sp = r && r.sphere ? SPHERE[r.sphere] : null;
-  const E = PROG_EKRAN;
-  const n = el(`
-    <div class="page prog">
-      ${r ? `<button class="ghost back-res" id="back-res">${E.back}</button>` : ""}
-      <section class="sec site-wrap" data-block="program">
-        <iframe class="site-frame" src="programma/${sp ? "#nedelya=" + sp.week : ""}" title="Программа и тарифы Прикладной эмпатии 2.0" scrolling="no"></iframe>
-      </section>
-      <section class="sec" id="zayavka-blok">
-        ${leadSent ? sentBox_() : `
-        <p class="posle">${E.posle}</p>
-        <div class="foot">
-          <button class="go" data-cta="form" data-place="program">${E.cta}&nbsp;<span aria-hidden="true">→</span></button>
-        </div>`}
-      </section>
-      <div class="tail">
-        ${r ? `<button class="ghost" id="back-res-2">${E.back}</button>`
-            : `<button class="ghost" id="to-test">Пройти тест</button>`}
-      </div>
-    </div>`);
-  bindCta_(n);
-  ["#back-res", "#back-res-2"].forEach(id => {
-    const b = n.querySelector(id);
-    if (b) b.addEventListener("click", () => result(lastResult, progFromResult));
-  });
-  const toTest = n.querySelector("#to-test");
-  if (toTest) toTest.addEventListener("click", () => {
-    answers.length = 0; lastResult = null; words = ""; age = "";
-    Object.keys(forks).forEach(k => { delete forks[k]; });
-    intro();
-  });
+  stage = "ready";
   saveState();
-  render(n);
-  watchBlocks_(n);
-}
-
-/* Сообщения от страницы в рамке: её высота и нажатые кнопки. */
-window.addEventListener("message", (e) => {
-  if (e.origin !== location.origin || !e.data || stage !== "program") return;
-  const frame = document.querySelector(".site-frame");
-  if (e.data.type === "t2-height" && frame) {
-    frame.style.height = Math.max(400, Number(e.data.h) || 0) + "px";
+  if (prev) {
+    /* Результат с этого устройства уже отправлялся. Если он так и лежит
+       в очереди, досылаем его до кнопки. */
+    if (pendingResult_()) { saving_(pendingResult_()); return; }
+    readyScreen();
+    return;
   }
-  /* «Принять участие» под неделями — к тарифам; кнопка тарифа — форма заявки. */
-  if (e.data.type === "t2-tarify") { goTarify_(); return; }
-  if (e.data.type === "t2-cta") openForm_("site", e.data.tarif);
-});
-
-/* Прокрутка к тарифам по кнопке «Принять участие» в рамке. Своей прокрутки
-   у рамки нет, поэтому прокручивает тест: до начала рамки плюс положение
-   тарифов в ней (страница с того же адреса, её документ доступен). */
-function goTarify_() {
-  const frame = document.querySelector(".site-frame");
-  let t = null;
-  try { t = frame && frame.contentDocument && frame.contentDocument.getElementById("tarify"); } catch (e) {}
-  if (!t) return;
-  const y = frame.getBoundingClientRect().top + window.scrollY + t.getBoundingClientRect().top;
-  window.scrollTo({ top: Math.max(0, y - 8), behavior: "smooth" });
+  saving_(resultPayload_(r));
 }
 
-/* ——— плавающая кнопка «Посмотреть программу» ———
-   Закреплена внизу экрана результата и видна всё время, в том числе после
-   заявки: программу можно смотреть снова (правка 16.10). На экране программы, в форме и на экране
-   «Заявка у Дарьи» её нет: любая смена экрана гасит её в render().
-   Открывает экран программы. */
-const fab = document.getElementById("fab");
-const fabGo = document.getElementById("fab-go");
-const wrap = document.querySelector(".wrap");
-fabGo.innerHTML = PRIGLASHENIE.cta + '&nbsp;<span aria-hidden="true">→</span>';
-typograf_(fabGo);
-fabGo.addEventListener("click", () => {
-  if (stage !== "result") return;
-  programScreen(true);
-});
-
-function fabOff_() {
-  fab.classList.remove("on");
-  wrap.classList.remove("has-fab");
+/* Запись прохождения, которая ещё не подтверждена приёмником. */
+function pendingResult_() {
+  try {
+    const all = JSON.parse(localStorage.getItem(BUFFER_KEY) || "[]");
+    return all.filter(x => x.type === "t2_result" && x.pid === pid)[0] || null;
+  } catch (e) { return null; }
 }
 
-function fabWatch_() {
-  fabOff_();
-  wrap.classList.add("has-fab");
-  fab.classList.add("on");
-}
-
-/* Деления шкал загораются по одному, когда блок появляется на экране:
-   так видно, что это замер, а не картинка. Таймер, а не кадры анимации:
-   в свёрнутом окне кадры не идут, и шкалы остались бы пустыми. */
-function lightGauges_(node) {
-  const sec = node.querySelector("#portrait");
-  if (!sec) return;
-  const still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let done = false;
-  const light = () => {
-    if (done) return;
-    done = true;
-    const rows = sec.querySelectorAll(".gauge-ticks");
-    for (let g = 0; g < rows.length; g++) {
-      const lit = rows[g].querySelectorAll("i[data-lit]");
-      for (let i = 0; i < lit.length; i++) {
-        if (still) lit[i].className = "on";
-        else setTimeout(() => { lit[i].className = "on"; }, 120 + g * 220 + i * 80);
-      }
-    }
-  };
-  if (!("IntersectionObserver" in window)) { light(); return; }
-  const io = new IntersectionObserver(entries => {
-    if (entries.some(e => e.isIntersecting)) { light(); io.disconnect(); }
-  }, { rootMargin: "0px 0px -20% 0px", threshold: 0 });
-  io.observe(sec);
-  /* Страховка: если наблюдатель по какой-то причине промолчал, шкалы всё равно
-     не должны остаться пустыми. */
-  setTimeout(light, 6000);
-}
-
-/* ——— до какого блока человек долистал ———
-   В таблицу уходит самый дальний блок, не каждый по отдельности: шлём после
-   паузы и когда человек уходит со страницы. Приёмник хранит максимум. */
-let seenMax = -1, seenSent = -1, seenTimer = null;
-
-function watchBlocks_(node) {
-  seenMax = -1; seenSent = -1;
-  if (!("IntersectionObserver" in window)) return;
-  /* Считаем блок увиденным, когда его верх поднялся в верхние две трети экрана.
-     По доле площади нельзя: блок программы выше экрана в несколько раз. */
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      const i = BLOCKS.indexOf(e.target.getAttribute("data-block"));
-      if (i > seenMax) {
-        seenMax = i;
-        clearTimeout(seenTimer);
-        seenTimer = setTimeout(flushSeen_, 4000);
-      }
-    });
-  }, { rootMargin: "0px 0px -33% 0px", threshold: 0 });
-  const blocks = node.querySelectorAll("[data-block]");
-  for (let i = 0; i < blocks.length; i++) io.observe(blocks[i]);
-}
-
-function flushSeen_() {
-  clearTimeout(seenTimer);
-  if (seenMax <= seenSent) return;
-  seenSent = seenMax;
-  event_("scroll", BLOCKS[seenMax]);
-}
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "hidden") flushSeen_();
-});
-
-/* ——— анкета предзаписи ——— */
-/* Пусто ли поле анкеты. Одна проверка на всё: и для кнопки «Дальше»,
-   и для возврата к недозаполненному шагу. */
-function fieldEmpty_(f) {
-  const v = form[f.id];
-  return (f.type === "scale" || f.type === "one")
-    ? !v
-    : String(v || "").trim().length < (f.id === "contact" ? 3 : 2);
-}
-
-/* Первый шаг, где ещё нет ответа. Анкету могли начать до правки 08.10:
-   шаги шли в другом порядке, двух вопросов не было. Без этой проверки
-   человек с сохранённым шагом проскочил бы новые вопросы, и в таблицу
-   ушла бы анкета с пустыми «Помешать» и «Готова заплатить». */
-function firstGap_() {
-  for (let i = 0; i < FORM.length; i++) {
-    const st = FORM[i];
-    if (st.kind === "darya") { if (!form.konsultaciya) return i; continue; }
-    if ((st.fields || []).some(fieldEmpty_)) return i;
-  }
-  return FORM.length - 1;
-}
-
-function prefillForm_() {
-  const u = tgUser();
-  if (!form.name && u.first_name) form.name = u.first_name;
-  if (!form.contact && u.username) form.contact = "@" + u.username;
-  /* До 08.10 сюда подставлялся ответ из теста. Если он так и лежит в поле
-     нетронутым, убираем: вопрос теперь другой, а слова человека показаны
-     под подсказкой. */
-  if (words && form.change === words) form.change = "";
-}
-
-/* Цвета десяти плиток шкалы готовности, от золота к красному, как деления
-   шкал в результате. c — заливка выбранной плитки, m — плитки до выбранной,
-   t — обычная плитка, k — цвет цифры на заливке (белый там, где он читается). */
-const SCALE10 = {
-  c: ["#F0B13F", "#EDA23D", "#E9933B", "#E68438", "#E37536", "#DF6734", "#DC5832", "#D9492F", "#D53A2D", "#D22B2B"],
-  m: ["#F8D89F", "#F6D19E", "#F4C99D", "#F2C29C", "#F1BA9B", "#EFB399", "#EEAB98", "#ECA497", "#EA9C96", "#E89595"],
-  t: ["#FBECD1", "#FBE9D0", "#FAE5D0", "#F9E2CF", "#F8DECF", "#F7DACE", "#F7D7CE", "#F6D3CD", "#F5D0CD", "#F4CCCC"],
-  k: ["#18213A", "#18213A", "#18213A", "#18213A", "#18213A", "#18213A", "#18213A", "#FFFFFF", "#FFFFFF", "#FFFFFF"]
-};
-
-function fieldHtml_(f) {
-  const v = form[f.id];
-  if (f.type === "scale") {
-    const btns = [];
-    for (let i = 1; i <= 10; i++) {
-      const cls = v === i ? " on" : (v > i ? " pre" : "");
-      const css = `--c:${SCALE10.c[i - 1]};--m:${SCALE10.m[i - 1]};--t:${SCALE10.t[i - 1]};--k:${SCALE10.k[i - 1]}`;
-      btns.push(`<button type="button" class="chip${cls}" style="${css}" aria-pressed="${v === i}" data-f="${f.id}" data-v="${i}">${i}</button>`);
-    }
-    return `
-      <div class="field-l" data-field="${f.id}">
-        <span>${f.label}</span>
-        ${f.hint ? `<span class="field-hint">${f.hint}</span>` : ""}
-        <div class="scale10">${btns.join("")}</div>
-        <div class="scale-ends"><span>${f.lo || ""}</span><span>${f.hi || ""}</span></div>
-      </div>`;
-  }
-  if (f.type === "one") {
-    /* Обычный вариант — строка текста. У тарифа вариант крупнее: название,
-       цена и одна строка о том, чем он отличается. */
-    const chips = f.rich
-      ? f.rich.map(r => `<button type="button" class="chip tarif${v === r.v ? " on" : ""}" data-f="${f.id}" data-v="${esc(r.v)}"><b>${esc(r.v)}</b><span class="tarif-price">${r.price}<i>${r.cur}</i></span><span class="tarif-text">${r.text}</span></button>`)
-      : f.opts.map(o => `<button type="button" class="chip${v === o ? " on" : ""}" data-f="${f.id}" data-v="${esc(o)}">${esc(o)}</button>`);
-    return `
-      <div class="field-l" data-field="${f.id}">
-        <span>${f.label}</span>
-        ${f.hint ? `<span class="field-hint">${f.hint}</span>` : ""}
-        <div class="chips">${chips.join("")}</div>
-      </div>`;
-  }
-  const input = f.type === "area"
-    ? `<textarea id="f-${f.id}" data-f="${f.id}" rows="3" maxlength="${f.max || 400}">${esc(v || "")}</textarea>`
-    : `<input id="f-${f.id}" data-f="${f.id}" type="text" maxlength="${f.max || 80}" value="${esc(v || "")}"${f.auto ? ` autocomplete="${f.auto}"` : ' autocomplete="off"'}>`;
-  const note = f.note ? f.note() : "";
-  return `
-    <label data-field="${f.id}">${f.label}
-      ${f.hint ? `<span class="field-hint">${f.hint}</span>` : ""}
-      ${note ? `<span class="field-hint field-note">${note}</span>` : ""}
-      ${input}
-    </label>`;
-}
-
-function daryaStep_() {
-  stage = "form";
-  const n = el(`
-    <div class="card">
-      <div class="head">
-        <div class="eyebrow">Заявка на Прикладную эмпатию 2.0, шаг ${formStep + 1} из ${FORM.length}</div>
-        <h2>${DARYA.title}</h2>
-      </div>
-      <ul class="checks">${DARYA.list.map(x => `<li>${x}</li>`).join("")}</ul>
-      <p class="soft">${DARYA.note}</p>
-      <div class="foot">
-        <div class="pair">
-          <button class="go" data-k="da">${DARYA.yes}</button>
-          <button class="go quiet" data-k="net">${DARYA.no}</button>
-        </div>
-        <button class="ghost" id="back">← Назад</button>
-      </div>
-    </div>`);
-  n.querySelectorAll("[data-k]").forEach(b => b.addEventListener("click", () => {
-    form.konsultaciya = b.getAttribute("data-k");
-    formStep++; saveState(); formScreen();
-  }));
-  n.querySelector("#back").addEventListener("click", () => { formStep--; saveState(); formScreen(); });
-  render(n);
-}
-
-function formScreen() {
-  stage = "form";
-  const st = FORM[formStep];
-  if (st.kind === "darya") { daryaStep_(); return; }
-  const last = formStep === FORM.length - 1;
-  const n = el(`
-    <div class="card">
-      <div class="head">
-        <div class="eyebrow">Заявка на Прикладную эмпатию 2.0, шаг ${formStep + 1} из ${FORM.length}</div>
-        <h2>${st.title}</h2>
-      </div>
-      ${formStep === 0 ? `<p class="soft">Заполните заявку, и Дарья из команды Виолы напишет вам в Телеграме. Если после разговора с ней вы захотите принять участие, Дарья поможет сделать это на лучших для вас условиях.</p>` : ""}
-      ${last ? perksHtml_() : ""}
-      ${st.fields.length ? `<div class="fields">${st.fields.map(fieldHtml_).join("")}</div>` : ""}
-      ${formStep === 0 ? perksHtml_() : ""}
-      ${st.consent ? `
-        <div class="consents">
-          <label class="cb" id="cb-pd-l">
-            <input type="checkbox" id="cb-pd"${form.accept_pd ? " checked" : ""}>
-            <span>Я даю <a href="${CONFIG.docs.consent}" target="_blank" rel="noopener">согласие</a> на обработку моих персональных данных и ознакомлена с <a href="${CONFIG.docs.privacy}" target="_blank" rel="noopener">Политикой обработки персональных данных</a>.</span>
-          </label>
-          <label class="cb">
-            <input type="checkbox" id="cb-ads"${form.accept_ads ? " checked" : ""}>
-            <span>Я хочу получать письма и сообщения о программах и эфирах. Отписаться можно в один клик. <a href="${CONFIG.docs.ads}" target="_blank" rel="noopener">Условия рассылки</a></span>
-          </label>
-        </div>` : ""}
-      <div class="foot">
-        <button class="go" id="next">${last ? "Отправить заявку" : "Дальше"}&nbsp;<span aria-hidden="true">→</span></button>
-        <p class="fine center" id="hint"></p>
-        <button class="ghost" id="back">← Назад</button>
-      </div>
-    </div>`);
-
-  const hint = n.querySelector("#hint");
-  const hintText = hint.textContent;
-  function warn(msg) { hint.textContent = msg; hint.classList.add("err"); }
-  function calm() { hint.textContent = hintText; hint.classList.remove("err"); }
-
-  n.querySelectorAll("input[data-f], textarea[data-f]").forEach(inp => inp.addEventListener("input", () => {
-    form[inp.getAttribute("data-f")] = inp.value;
-    inp.classList.remove("err");
-    calm();
-    saveState();
-  }));
-  n.querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => {
-    const id = c.getAttribute("data-f");
-    const def = st.fields.filter(f => f.id === id)[0];
-    form[id] = def && def.type === "scale" ? Number(c.getAttribute("data-v")) : c.getAttribute("data-v");
-    const box = c.parentNode;
-    const scale = box.classList.contains("scale10");
-    const at = Array.prototype.indexOf.call(box.children, c);
-    for (let i = 0; i < box.children.length; i++) {
-      box.children[i].classList.remove("on");
-      /* На шкале плитки до выбранной подсвечены: шкала наполнена до цифры. */
-      box.children[i].classList.toggle("pre", scale && i < at);
-      if (scale) box.children[i].setAttribute("aria-pressed", i === at ? "true" : "false");
-    }
-    c.classList.add("on");
-    box.classList.remove("err");
-    calm();
-    saveState();
-  }));
-  const pd = n.querySelector("#cb-pd");
-  const pdLabel = n.querySelector("#cb-pd-l");
-  const ads = n.querySelector("#cb-ads");
-  if (pd) pd.addEventListener("change", () => { form.accept_pd = pd.checked; if (pd.checked) { pdLabel.classList.remove("err"); calm(); } saveState(); });
-  if (ads) ads.addEventListener("change", () => { form.accept_ads = ads.checked; saveState(); });
-
-  const btn = n.querySelector("#next");
-  btn.addEventListener("click", () => {
-    /* Первое незаполненное поле подсвечиваем и подводим к нему экран: подсказку
-       под кнопкой человек не видит, если поле осталось выше сгиба. */
-    let bad = null;
-    st.fields.forEach(f => {
-      if (!fieldEmpty_(f)) return;
-      const box = n.querySelector('[data-field="' + f.id + '"]');
-      const mark = box && (box.querySelector("input, textarea, .scale10, .chips"));
-      if (mark) mark.classList.add("err");
-      if (!bad) bad = { f: f, box: box };
-    });
-    if (bad) {
-      warn(bad.f.type === "scale" ? "Выберите цифру от 1 до 10."
-         : bad.f.type === "one" ? "Выберите один из вариантов."
-         : "Заполните, пожалуйста: " + lower1(bad.f.label).replace(/\?$/, "") + ".");
-      if (bad.box && bad.box.scrollIntoView) bad.box.scrollIntoView({ behavior: "smooth", block: "center" });
-      return;
-    }
-    if (!last) { formStep++; saveState(); formScreen(); return; }
-    if (pd && !pd.checked) {
-      /* Без согласия на обработку данных заявку принимать нельзя. */
-      pdLabel.classList.add("err");
-      if (pdLabel.scrollIntoView) pdLabel.scrollIntoView({ behavior: "smooth", block: "center" });
-      warn("Отметьте согласие на обработку персональных данных.");
-      return;
-    }
-    btn.disabled = true;
-    btn.textContent = "Отправляю…";
-    sendLead();
-    leadSent = true;
-    saveState();
-    /* Сами никуда не уводим: на экране «Заявка у Дарьи» две кнопки,
-       человек выбирает, куда идти. */
-    done();
+function saving_(p) {
+  render(el(`<div class="card"><p class="soft center">Сохраняю ваш результат…</p></div>`));
+  saveResult_(p).then(ok => {
+    if (ok) { readyScreen(); return; }
+    const n = el(`
+      <div class="card">
+        <h2>Не получилось сохранить результат</h2>
+        <p class="lead">Проверьте интернет и нажмите кнопку ещё раз.</p>
+        <div class="foot"><button class="go" id="retry">Сохранить ещё раз</button></div>
+      </div>`);
+    n.querySelector("#retry").addEventListener("click", () => saving_(p));
+    render(n);
   });
-  n.querySelector("#back").addEventListener("click", () => {
-    if (formStep > 0) { formStep--; saveState(); formScreen(); return; }
-    /* Форму открывают с экрана программы — туда и возвращаемся. */
-    programScreen(progFromResult);
+}
+
+/* Шлём прохождение и ждём {"ok":true}. До подтверждения запись лежит
+   в очереди: закроют приложение — уйдёт при следующем открытии. */
+function saveResult_(p) {
+  if (!CONFIG.sheetUrl) return Promise.resolve(true);
+  buffer(p);
+  let tries = 0;
+  return new Promise(resolve => {
+    const attempt = () => {
+      tries++;
+      const slow = new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 9000));
+      Promise.race([send_(p).then(res => res.text()), slow])
+        .then(txt => {
+          if (!/"ok"\s*:\s*true/.test(String(txt))) throw new Error("not ok");
+          unbuffer(p);
+          resolve(true);
+        })
+        .catch(() => { if (tries < 3) setTimeout(attempt, 1500); else resolve(false); });
+    };
+    attempt();
   });
-  render(n);
 }
 
-/* Что человек получит за заявку — напоминание в форме: на первом шаге под
-   полями имени и контакта (над заголовком «Как вас зовут?» читалось странно)
-   и на последнем над кнопкой отправки. Те же пункты, что в блоке перед кнопкой:
-   название жирным, под ним пояснение мельче. */
-function perksHtml_() {
-  return `<div class="perks-box">
-      <p>За заявку вы сразу получите:</p>
-      <ul class="checks">${ZAYAVKA.now.items.map(i => `<li><b>${i[0]}</b><span class="perk-sub">${i[1]}</span></li>`).join("")}</ul>
-    </div>`;
-}
-
-/* Ссылки на Телеграм: внутри мини-аппа — через openTelegramLink, в обычном
-   браузере — новой вкладкой. */
-function openTg_(url) {
-  const tg = tgApp();
-  if (inTg_() && tg.openTelegramLink) {
-    try { tg.openTelegramLink(url); return; } catch (e) {}
-  }
-  window.open(url, "_blank", "noopener");
-}
-
-function done() {
-  stage = "done";
-  fabOff_();
-  const n = el(`
-    <div class="card">
-      <h2>${SENT.title}</h2>
-      <div class="copy">
-        <p class="lead">${SENT.text}</p>
-      </div>
-      <div class="foot">
-        <a class="go" id="dasha" href="${CONFIG.dashaUrl}" target="_blank" rel="noopener">${SENT.dasha}&nbsp;<span aria-hidden="true">→</span></a>
-        <a class="go quiet" id="cab" href="${CONFIG.cabinetUrl}" target="_blank" rel="noopener">${SENT.channel}</a>
-      </div>
-      ${lastResult ? `<button class="ghost" id="back-res">← Вернуться к результату</button>`
-                   : `<button class="ghost" id="to-test">Пройти тест</button>`}
-    </div>`);
-  n.querySelector("#dasha").addEventListener("click", (e) => { e.preventDefault(); event_("darya"); openTg_(CONFIG.dashaUrl); });
-  n.querySelector("#cab").addEventListener("click", (e) => { e.preventDefault(); event_("cabinet"); openTg_(CONFIG.cabinetUrl); });
-  const back = n.querySelector("#back-res");
-  if (back) back.addEventListener("click", () => result(lastResult));
-  /* Заявку оставили по кнопке из бота, а результата на этом устройстве нет. */
-  const toTest = n.querySelector("#to-test");
-  if (toTest) toTest.addEventListener("click", () => { answers.length = 0; intro(); });
+function readyScreen() {
+  stage = "ready";
   saveState();
+  const n = el(`
+    <div class="card">
+      <h2>Ваш результат готов ✨</h2>
+      <p class="lead">Я уже отправила его вам в бот, возвращайтесь, там всё ждёт</p>
+      <div class="foot">
+        <a class="go" id="to-bot" href="${BOT_URL}" target="_blank" rel="noopener">Получить результат в боте</a>
+      </div>
+    </div>`);
+  n.querySelector("#to-bot").addEventListener("click", (e) => {
+    const tg = tgApp();
+    if (inTg_() && tg.openTelegramLink) {
+      e.preventDefault();
+      try { tg.openTelegramLink(BOT_URL); } catch (err) { window.location.href = BOT_URL; return; }
+      /* Новые клиенты Телеграма после перехода оставляют приложение открытым —
+         закрываем сами. Старые закрывают его при переходе. */
+      setTimeout(() => { try { tg.close(); } catch (err) {} }, 300);
+    }
+  });
   render(n);
 }
 
@@ -2416,12 +1575,12 @@ function event_(name, block) {
   if (!CONFIG.sheetUrl || !pid) return;
   const e = base_("t2_event");
   e.event = name;
-  e.block = block ? BLOCK_NAMES[block] || block : "";
+  e.block = block || "";
   e.t = Date.now();
   queue(e);
 }
 
-function send(r) {
+function resultPayload_(r) {
   const seconds = startedAt ? Math.round((Date.now() - startedAt) / 1000) : 0;
   const same = answers.length && answers.every(x => x === answers[0]);
   const p = base_("t2_result");
@@ -2443,37 +1602,7 @@ function send(r) {
   p.ryadom_n = shown.length;
   p.ryadom_list = shown.map(x => x.key).join(", ");
   window.__result = p;
-  /* Через буфер, как и анкета: обрыв связи на этом шаге иначе терял бы прохождение молча. */
-  if (CONFIG.sheetUrl) queue(p);
-}
-
-function sendLead() {
-  const r = lastResult || {};
-  const p = base_("t2_lead");
-  p.name = String(form.name || "").trim();
-  p.contact = String(form.contact || "").trim();
-  p.change = String(form.change || "").trim();
-  p.tried = String(form.tried || "").trim();
-  p.ready = form.ready || "";
-  p.konsultaciya = form.konsultaciya || "";   // da | net: писать ли человеку Дарье
-  /* Два новых ответа едут в поле leader двумя строками: приёмник таблицы
-     кладёт его в одну колонку как есть, и менять его ради них не нужно.
-     В таблицу идут обычные пробелы: по ним удобнее искать и фильтровать. */
-  const plain = v => String(v || "").replace(/\u00a0/g, " ");
-  const tarif = FORM.reduce((all, st) => all.concat(st.fields || []), [])
-    .filter(f => f.id === "tarif")[0].rich.filter(r => r.v === form.tarif)[0];
-  p.leader = ["Тариф: " + (tarif ? tarif.v + ", " + plain(tarif.price) : ""),
-              "Помешать: " + plain(form.meshaet), "Готова заплатить: " + plain(form.budget)]
-    .concat(LEADER.map(f => f.label + ": " + (form[f.id] || ""))).join("\n");
-  p.rank = r.key || "";
-  p.sphere = r.sphere || "";
-  p.age = age;
-  /* Акцепт фиксируем так же, как на сайте: сами галочки, время и редакция документа. */
-  p.accept_pd = form.accept_pd ? "да" : "";
-  p.accept_ads = form.accept_ads ? "да" : "";
-  p.consent_ts = new Date().toISOString();
-  p.doc_version_consent = CONFIG.docVersionConsent || "";
-  queue(p);
+  return p;
 }
 
 function buffer(item) {
@@ -2614,44 +1743,37 @@ function boot() {
   flush();   // всё, что не ушло в прошлый раз, отправляем при каждом открытии
 
   const sp = startParam_();
-  /* Кнопки бота (правка 16.10): startapp=programma, zayavka и прежние
-     anketa_* — экран программы; startapp=rezultat — экран результата. */
-  const wantProgram = sp === "programma" || sp === "zayavka" || sp.indexOf("anketa") === 0;
-  const wantResult = sp === "rezultat";
+  /* Прежние кнопки бота «Мой результат» и «Посмотреть программу»
+     (startapp=rezultat, programma, zayavka, anketa_*) ведут на экран
+     «Ваш результат готов», а если теста ещё не было — к его началу. */
+  const fromBot = sp === "rezultat" || sp === "programma" || sp === "zayavka" || sp.indexOf("anketa") === 0;
   const s = loadState();
 
   if (s) {
     (s.answers || []).forEach(v => answers.push(v));
     Object.keys(s.forks || {}).forEach(k => { forks[k] = s.forks[k]; });
-    Object.keys(s.form || {}).forEach(k => { form[k] = s.form[k]; });
     words = s.words || "";
     age = s.age || "";
     startedAt = s.startedAt || 0;
     pid = s.pid || "";
-    formStep = Math.min(s.formStep || 0, FORM.length - 1, firstGap_());
-    leadSent = !!s.leadSent;
     lastResult = s.res || null;
   }
+  const finished = !!lastResult || (answers.length === ALL.length && !!age);
 
-  if (wantProgram || wantResult) { entry_(wantProgram); return; }
-
-  /* Заявка уже отправлена — экран «Заявка у Дарьи», а не тест с начала. */
-  if (leadSent && (!s || s.stage === "done" || s.stage === "form")) { done(); return; }
+  if (fromBot) {
+    if (finished) { result(lastResult); return; }
+    entry_();
+    return;
+  }
 
   if (!s) { intro(); return; }
-  /* Экран программы — и с результатом, и без него. "offer" — прежнее имя
-     страницы программы без результата, у кого оно осталось в памяти. */
-  if (s.stage === "program" || s.stage === "offer") { programScreen(); return; }
-  if (s.stage === "form" && !lastResult) { formScreen(); return; }
 
   if (answers.length === ALL.length) {
-    if (s.stage === "form") { formScreen(); return; }
     if (s.stage === "fork") { idx = Math.min(s.idx || 0, FORKS.length - 1); fork(); return; }
     if (s.stage === "words") { wordsScreen(); return; }
     if (s.stage === "age") { ageScreen(); return; }
     /* Аргумент обязателен: без него result() отправит прохождение в таблицу второй раз.
-       Берём сохранённый вердикт — тогда тип не переиграется. Вердикта нет только
-       у того, кто закрыл тест на вопросе про возраст: его и досчитываем. */
+       Вердикта нет только у того, кто закрыл тест на вопросе про возраст. */
     if (lastResult) { result(lastResult); return; }
     if (age) { result(); return; }
     idx = 0; fork();
@@ -2663,12 +1785,10 @@ function boot() {
   intro();
 }
 
-/* ——— вход по кнопке бота ———
-   Результат и отметку о заявке берём из памяти браузера, а если их нет
-   (другое устройство) — из таблицы по ID в Телеграме: тот же запрос статуса,
-   что у бота. Ответы теста приёмник отдаёт с версии «2026-10-14 test2-zayavka»;
-   до её развёртывания результат на другом устройстве не восстановится,
-   и человек увидит программу, цены и кнопку заявки. */
+/* ——— вход по кнопке бота без результата на этом устройстве ———
+   Тест мог быть пройден на другом устройстве: спрашиваем таблицу тем же
+   запросом статуса, что у бота. Пройден — экран «Ваш результат готов»,
+   нет — начало теста. */
 function status_() {
   const u = tgUser();
   if (!CONFIG.sheetUrl || !u.id) return Promise.resolve(null);
@@ -2679,37 +1799,10 @@ function status_() {
   return Promise.race([req, slow]);
 }
 
-/* Ответы из таблицы → то же состояние, что после прохождения. */
-function restore_(st) {
-  const a = String(st.answers || "").split(",").map(Number);
-  if (a.length !== ALL.length || a.some(v => !(v >= 0 && v <= 3))) return false;
-  answers.length = 0; a.forEach(v => answers.push(v));
-  const bol = FORKS[0].a.filter(x => x[1] === st.bol || x[0] === st.bol)[0];
-  if (bol) { forks.bol = bol[1]; forks.bol_text = bol[0]; }
-  words = String(st.words || "");
-  age = String(st.age || "");
-  lastResult = score();
-  saveState();
-  return true;
-}
-
-/* wantProgram: экран программы. С результатом (с этого устройства или из
-   таблицы) на нём кнопка «← К моему результату», без результата — нет.
-   Заявка уже отправлена — экран «Заявка у Дарьи», как и раньше. */
-function entry_(wantProgram) {
-  if (wantProgram && leadSent) { done(); return; }
+function entry_() {
   render(el(`<div class="card"><p class="soft center">Открываю…</p></div>`));
   status_().then(st => {
-    if (st && String(st.anketa) === "1") { leadSent = true; saveState(); }
-    if (!lastResult && st && String(st.passed) === "1") restore_(st);
-    if (wantProgram) {
-      if (leadSent) { done(); return; }
-      programScreen();
-      return;
-    }
-    if (lastResult) { result(lastResult); return; }
-    /* Тест пройден на другом устройстве, но ответов приёмник не отдал. */
-    if (st && String(st.passed) === "1") { programScreen(); return; }
+    if (st && String(st.passed) === "1") { readyScreen(); return; }
     intro();
   });
 }
