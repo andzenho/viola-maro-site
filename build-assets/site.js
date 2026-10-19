@@ -290,6 +290,22 @@
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 
+  /* Вход сразу в шаг «Способ оплаты». Страницы оплаты (oplata.py) собирают
+     контакты формой на самой странице, сами пишут их в таблицу и открывают
+     это окно уже на выборе карты, с теми же ссылками из data-pay-config.
+     false — для этого тарифа на странице нет ссылок оплаты. */
+  window.violaPay = function (plan, payKey, notSaved, trigger) {
+    currentPlan = plan;
+    currentPay = payKey || '';
+    lastTrigger = trigger || null;
+    modal.hidden = false;
+    document.body.classList.add('modal-open');
+    if (showPayStep(!!notSaved)) return true;
+    modal.hidden = true;
+    document.body.classList.remove('modal-open');
+    return false;
+  };
+
   /* ─────────────────────────────────── кнопки тарифов и рассрочки ── */
 
   Array.prototype.forEach.call(document.querySelectorAll('[data-open-form]'), function (btn) {

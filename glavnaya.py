@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Главная violamaro.ru: «Прикладная эмпатия», правки от 19.10.2026.
+"""Страница заявки violamaro.ru/zayavka/: «Прикладная эмпатия», правки от 19.10.2026.
+
+До 19.10 эта страница была главной; главная теперь страница оплаты
+(oplata.py). Ссылка из бота и мини-приложения: /zayavka/?uid=<ID в Телеграме>.
 
 Сайт стоит внутри воронки: оплаты на нём нет, везде одна кнопка «Оставить
 заявку». После заявки первой пишет Виола со второго аккаунта.
 
 Страница собирается поверх основного сайта: сначала build.py (шрифты, фото,
 стили подвала и cookie, правовые страницы), потом этот модуль переписывает
-site/index.html. Остальные страницы (оплата, рассрочка, бронь, предзапись)
-не трогает.
+site/zayavka/index.html. Первый экран берёт из site/index.html, поэтому
+идёт сразу после сборки главной и до oplata.py.
 
     python3 build.py --theme barhat --noindex
     python3 glavnaya.py
@@ -25,6 +28,7 @@ import hashlib
 import html as html_mod
 import os
 import re
+import shutil
 import sys
 
 import build
@@ -1408,7 +1412,7 @@ def page():
     form = typograf(form_html())
     css_v = file_hash(os.path.join(ASSETS, "site.css"))
     head = build.head(TITLE, DESCRIPTION, "/assets/site.css?v=%s" % css_v,
-                      '<link rel="canonical" href="https://violamaro.ru/">\n'
+                      '<link rel="canonical" href="https://violamaro.ru/zayavka/">\n'
                       '<style>%s</style>\n' % (CSS + ".g-p2 { margin-top: 16px !important; }"))
     js = JS % {
         "endpoint": json.dumps(LEAD_ENDPOINT), "secret": json.dumps(FORM_SECRET),
@@ -1446,9 +1450,13 @@ def main():
     check(text)
     if "--noindex" in sys.argv or build.NOINDEX:
         text = text.replace("<head>\n", '<head>\n<meta name="robots" content="noindex, nofollow">\n', 1)
-    with open(os.path.join(OUT, "index.html"), "w", encoding="utf-8") as f:
+    dest = os.path.join(OUT, "zayavka")
+    if os.path.isdir(dest):
+        shutil.rmtree(dest)
+    os.makedirs(dest)
+    with open(os.path.join(dest, "index.html"), "w", encoding="utf-8") as f:
         f.write(text)
-    print("Главная → site/index.html (%d КБ)" % (len(text.encode("utf-8")) // 1024))
+    print("Заявка → site/zayavka/index.html (%d КБ)" % (len(text.encode("utf-8")) // 1024))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Прикладная эмпатия: шестинедельная программа Виолы Маро</title>
+<meta name="description" content="Шесть недель с психологом Виолой Маро: учитесь пользоваться своей эмпатией, перестаёте спасать всех и терпеть тех, кто вами пользуется. Старт 1 ноября.">
+<meta name="theme-color" content="#241C18">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Прикладная эмпатия: шестинедельная программа Виолы Маро">
+<meta property="og:description" content="Шесть недель с психологом Виолой Маро: учитесь пользоваться своей эмпатией, перестаёте спасать всех и терпеть тех, кто вами пользуется. Старт 1 ноября.">
+<meta property="og:locale" content="ru_RU">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site.css?v=3321036f">
+<link rel="canonical" href="https://violamaro.ru/">
+<style>
+/* Главная (glavnaya.py). Схема блоков — по mentorstvo2025 (красная сцена
+   с названием, белая панель поверх неё, этапы-недели с меткой в рамке,
+   нумерованный список, квадратные галочки, заголовки в два цвета),
+   цвета и название программы — как на сайтах Виолы.
+   Сайт уже несёт assets/site.css: шрифты, подвал, cookie. Его правила для
+   main > section и main h2 сюда не дотягиваются: блоки стоят внутри .gl,
+   а размеры заголовков заданы с !important. */
+@font-face { font-family: 'Bebas Neue'; font-weight: 700; font-display: swap;
+  src: url(/assets/fonts/BebasNeue-Bold.ttf) format('truetype'); }
+body { padding-bottom: 0 !important; background: #fff; }
+.gl { --red: #C4142C; --red-d: #A30F23; --ink: #1C1A1D; --soft: #55505A; --pink: #FCE9EA; --grey: #F3F2F0;
+  --line: #E6E1DA; --barhat: linear-gradient(150deg, #DE1E38 0%, #C4142C 62%, #B21028 100%);
+  --bebas: 'Bebas Neue', 'Arial Narrow', Impact, sans-serif;
+  --card: 0 0 0 1px #E6E1DA, 0 24px 44px -30px rgba(28,26,29,.35);
+  color: var(--ink); font-size: 18px; line-height: 1.6; }
+.gl *, .gl *::before, .gl *::after { box-sizing: border-box; }
+.gl p { margin: 0; }
+.gl ul, .gl ol { margin: 0; padding: 0; list-style: none; }
+.gl b { font-weight: 700; }
+.g-in { max-width: 1120px; margin: 0 auto; padding: 0 18px; }
+.g-narrow { max-width: 800px; }
+.g-sec { padding: 60px 0; background: #fff; }
+.g-grey { background: var(--grey); }
+.g-red { background: var(--barhat); color: #fff; }
+
+/* заголовки в два цвета */
+.gl .g-h2, .gl .g-modal-h { font-family: var(--bebas) !important; font-weight: 700 !important; text-transform: uppercase;
+  font-size: 40px !important; line-height: .98; letter-spacing: .01em; margin: 0 0 26px; text-wrap: balance; }
+.gl .g-h2::first-line { color: inherit; }
+.g-ink { color: var(--ink); }
+.g-acc { color: var(--red); }
+.g-center { text-align: center; }
+.g-light .g-ink, .g-light .g-acc { color: #fff; }
+.g-lead { color: var(--soft); margin: -10px 0 26px !important; }
+.g-accent-p { font-weight: 700; color: var(--red-d); font-size: 20px; line-height: 1.45; margin-top: 22px !important; }
+.g-accent-box { background: #fff; border-left: 5px solid var(--red); border-radius: 0 16px 16px 0; padding: 16px 18px; }
+
+/* метка в рамке, как «Для каждого участника» и «Этап 1.» */
+.g-label { display: inline-block; padding: 8px 14px; border: 2px solid var(--red); border-radius: 8px;
+  color: var(--red); font-weight: 800; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; line-height: 1.2; }
+
+/* кнопки */
+.g-btn { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 440px;
+  min-height: 64px; margin: 26px auto 0; padding: 16px 22px; border: 0; border-radius: 18px; cursor: pointer;
+  font: 800 16px/1.25 'Golos Text', system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase;
+  text-decoration: none; text-align: center; color: #fff; background: linear-gradient(135deg, #E2283F 0%, #B01027 100%);
+  box-shadow: 0 18px 32px -14px rgba(196,20,44,.65), inset 0 1px 0 rgba(255,255,255,.25); transition: transform .15s ease, filter .15s ease; }
+.g-btn:hover { filter: brightness(1.06); color: #fff; }
+.g-btn:active { transform: scale(.985); }
+.g-btn-white { background: #fff; color: var(--red); box-shadow: 0 18px 34px -16px rgba(0,0,0,.45); }
+.g-btn-white:hover { color: var(--red); }
+.g-btn:focus-visible { outline: 3px solid #1C1A1D; outline-offset: 3px; }
+.g-red .g-btn:focus-visible { outline-color: #fff; }
+
+/* квадратные галочки */
+.g-checks { display: flex; flex-direction: column; gap: 16px; }
+.g-checks li { position: relative; padding-left: 38px; line-height: 1.45; }
+.g-checks li::before { content: ""; position: absolute; left: 0; top: .12em; width: 24px; height: 24px; border-radius: 6px;
+  background: var(--red); box-shadow: 0 6px 12px -6px rgba(196,20,44,.8); }
+.g-checks li::after { content: ""; position: absolute; left: 8.5px; top: calc(.12em + 4.5px); width: 6px; height: 11px;
+  border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); }
+.g-checks li span { display: block; color: var(--soft); font-size: 16px; margin-top: 2px; }
+.g-checks-sm { gap: 12px; }
+
+/* 1. первый экран — разметка и стили сайта (build.py, тема barhat). Здесь
+   только плашка старта в карточке и белая панель целей под ним. */
+[data-hero-stage] [data-hero-card] p[data-hero-def] { max-width: min(46vw, 560px) !important; }
+/* Регалии: одна прозрачная плашка на фото, правее центра, поверх Виолы
+   ниже лица; факты списком, один шрифт, важное жирным. */
+.g-fakty { position: absolute; z-index: 3; margin: 0; padding: 12px 16px; list-style: none; border-radius: 16px;
+  background: rgba(255,255,255,.9); box-shadow: 0 8px 24px rgba(28,26,29,.14);
+  display: flex; flex-direction: column; gap: 8px; text-align: left; pointer-events: none;
+  font-family: 'Golos Text', system-ui, sans-serif; color: #1C1A1D; font-size: 14px; line-height: 1.3; font-weight: 400; }
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .g-fakty { background: rgba(255,255,255,.72); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+}
+.g-fakty li { position: relative; padding-left: 14px; }
+.g-fakty li::before { content: ""; position: absolute; left: 0; top: .5em; width: 6px; height: 6px; border-radius: 50%; background: #C4142C; }
+.g-fakty b { font-weight: 800; color: #1C1A1D; }
+/* Телефон и планшет (вариант с аркой): внизу фото, правее центра. */
+.g-fakty-h2 { right: 8px; bottom: 28px; width: min(67%, 270px); font-size: 12px; line-height: 1.25; gap: 4px; padding: 9px 11px; }
+.g-fakty-h2 li { padding-left: 12px; }
+/* Карточка с оффером в теме наезжает на низ фото на 64 px; с плашкой — на 20. */
+[data-h2] [data-h2-card] { margin-top: -20px !important; }
+@media (min-width: 560px) { .g-fakty-h2 { right: calc(50% - 300px); } }
+/* Широкий экран: правее Виолы, на уровне руки. */
+.g-fakty-stage { right: max(24px, 3vw); bottom: 14%; width: 270px; }
+.g-planshet { position: relative; margin: 0 -6px 34px; }
+.g-planshet img { display: block; width: 100%; height: auto; filter: drop-shadow(0 22px 26px rgba(28,26,29,.2)); }
+/* Плашка на планшете, как «Менторство проходит только раз в год»
+   на mentorstvo2025: глянцевая карточка, мелкая строка и крупная. */
+.g-planshet-badge { position: absolute; right: 3%; bottom: -10%; width: 40%; max-width: 190px; margin: 0;
+  padding: 14px 12px 15px; border-radius: 20px; text-align: center; color: #fff;
+  background: radial-gradient(120% 90% at 30% 0%, #F24A5E 0%, rgba(242,74,94,0) 60%), linear-gradient(160deg, #E2283F 0%, #B01027 100%);
+  box-shadow: 0 18px 30px -12px rgba(176,16,39,.75), inset 0 1px 0 rgba(255,255,255,.45), inset 0 -2px 0 rgba(0,0,0,.12);
+  display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.g-planshet-badge span { white-space: nowrap; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; opacity: .9; line-height: 1.2; }
+.g-planshet-badge b { font-family: var(--bebas); font-weight: 700; font-size: 22px; line-height: 1.02; letter-spacing: .02em;
+  text-transform: uppercase; text-wrap: balance; }
+.g-panel-lh, .g-panel-lt { display: none; }
+.g-planshet-mob { background: #fff; padding: 12px 0 26px; }
+.g-planshet-mob .g-planshet { margin: 0 -10px 18px; }
+.g-panel-l { display: none; }
+.g-about-list { margin: 4px 0 4px; }
+.g-about-name { font-family: 'Prata', 'Times New Roman', Georgia, serif; font-size: 26px; line-height: 1.2; margin-bottom: 18px !important; }
+[data-h2-def].g-offer { margin: 0 !important; font-size: 23px !important; line-height: 1.35 !important; font-weight: 600 !important;
+  color: #1C1A1D !important; text-wrap: pretty; }
+[data-h2-def].g-offer b { color: #B01027 !important; font-weight: 800 !important; }
+.g-goals-sec { background: #fff; padding: 8px 0 8px; }
+.g-panel { background: var(--grey); border-radius: 26px; padding: 26px 20px 28px; }
+.g-panel .g-h2 { margin-bottom: 16px; }
+.g-panel .g-label { margin-bottom: 20px; }
+
+/* 2. недели этапами */
+.g-weeks { display: grid; gap: 0; position: relative; }
+.g-week { position: relative; padding: 0 0 34px 26px; border-left: 2px dashed rgba(196,20,44,.35); margin-left: 8px; }
+.g-week:last-child { border-left-color: transparent; padding-bottom: 6px; }
+.g-week::before { content: ""; position: absolute; left: -9px; top: 6px; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--red); box-shadow: 0 0 0 5px rgba(196,20,44,.15); }
+.gl .g-week-n { display: inline-block; font-family: var(--bebas); font-size: 26px; line-height: 1; padding: 7px 12px 5px; border: 2px solid var(--red);
+  border-radius: 8px; color: var(--red); letter-spacing: .02em; }
+.gl .g-week-h { font-family: 'Prata', 'Times New Roman', Georgia, serif !important; font-weight: 400; color: var(--red-d); font-size: 26px !important;
+  line-height: 1.2; margin: 14px 0 10px; }
+.g-week-t { margin-bottom: 16px !important; }
+.g-week-box { background: #fff; border-radius: 18px; padding: 18px 16px 20px; box-shadow: var(--card); }
+.g-week-tr { font-family: var(--bebas); font-size: 22px; letter-spacing: .03em; color: var(--ink); margin-bottom: 12px !important; }
+.g-week-note { margin-top: 12px !important; color: var(--soft); font-size: 15px; font-style: italic; }
+.g-weeks-pod { margin-top: 8px !important; background: #fff; border-radius: 18px; padding: 18px; box-shadow: var(--card); font-weight: 600; }
+
+/* 3. тарифы: шапка-плашка, как «Основная группа» и «Личная работа» */
+.g-tarify { display: grid; gap: 26px; }
+.g-tarify > *, .g-stories > *, .g-weeks > * { min-width: 0; }
+.g-tarif { position: relative; background: #fff; color: var(--ink); border-radius: 26px; padding: 14px 14px 22px; box-shadow: 0 30px 50px -30px rgba(0,0,0,.5); }
+.g-tarif-head { position: relative; border-radius: 18px; padding: 22px 16px 20px; text-align: center; background: #F6F5F3; box-shadow: inset 0 0 0 1px #E6E1DA; }
+.g-tarif-top .g-tarif-head { background: var(--barhat); color: #fff; box-shadow: 0 16px 30px -18px rgba(196,20,44,.8); }
+.gl .g-tarif-h { font-family: var(--bebas) !important; font-weight: 700; text-transform: uppercase; font-size: 46px !important; line-height: 1; margin: 0; color: var(--red); }
+.g-tarif-top .g-tarif-h { color: #fff; }
+.g-badge { display: inline-block; margin-bottom: 10px; padding: 5px 12px; border-radius: 999px; background: #1C1A1D; color: #fff;
+  font-weight: 800; font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; }
+.g-mest { position: absolute; right: 10px; bottom: -14px; transform: rotate(-4deg); padding: 6px 14px; border-radius: 8px; background: #fff;
+  color: var(--red-d); font-weight: 800; font-size: 15px; box-shadow: 0 8px 18px -8px rgba(0,0,0,.4); }
+.g-tarif-t { margin: 22px 6px 0 !important; font-size: 22px; line-height: 1.3; font-weight: 800; color: var(--ink); }
+.g-tarif-l { margin: 18px 6px 12px !important; font-weight: 800; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: var(--red); }
+.g-tarif-list { margin: 0 6px !important; }
+.g-tarif-list li { font-size: 17px; }
+.g-cena { margin-top: 16px; padding: 16px 16px 14px; border-radius: 18px; background: var(--pink); color: var(--ink); }
+.g-cena-old { font-size: 18px; color: var(--soft); min-height: 1em; }
+.g-cena-new { font-family: var(--bebas); font-size: 54px; line-height: 1; color: var(--red); }
+.g-po { font-family: 'Golos Text', system-ui, sans-serif; font-size: 16px; font-weight: 800; vertical-align: middle; color: var(--red-d); }
+.g-cena-mes { margin-top: 6px !important; font-weight: 700; font-size: 17px; }
+.g-cena-val { margin-top: 2px !important; font-size: 16px; color: var(--soft); }
+.g-cena-val s { margin-right: 6px; }
+.g-tarif .g-btn { margin-top: 16px; max-width: none; }
+.g-timer { margin-top: 28px !important; text-align: center; font-size: 19px; }
+.g-timer b { display: inline-block; font-family: var(--bebas); font-size: 34px; letter-spacing: .04em; vertical-align: -3px;
+  padding: 2px 10px 0; border-radius: 8px; background: rgba(0,0,0,.2); }
+.gl .g-rass { margin-top: 16px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 640px; margin-left: auto; margin-right: auto; }
+.gl .g-pod { margin-top: 14px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 520px; margin-left: auto; margin-right: auto; }
+.gl[data-istek] [data-po-zayavke] { display: none !important; }
+
+/* 4. что ещё входит */
+.g-box { background: var(--grey); border-radius: 24px; padding: 24px 18px; }
+.g-checks-2 { gap: 18px; }
+
+/* 5. истории: метки «С чем пришла» / «Что изменилось», как «До» / «После» */
+.g-stories { display: grid; gap: 18px; }
+.g-story { background: #fff; border-radius: 22px; padding: 22px 18px 24px; box-shadow: var(--card); }
+.gl .g-story-h { font-family: var(--bebas) !important; font-weight: 700; font-size: 30px !important; line-height: 1.02; color: var(--red); margin: 0; text-transform: uppercase; }
+.g-story-age { color: var(--soft); font-size: 15px; margin-top: 6px !important; }
+.g-tag { display: inline-block; margin: 16px 0 8px !important; padding: 5px 10px; border-radius: 6px; border: 1.5px solid #CFC8BF;
+  font-weight: 800; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+.g-tag-red { background: var(--red); border-color: var(--red); color: #fff; }
+.g-story-ch { font-weight: 600; }
+
+/* 6. о Виоле */
+.g-about { display: grid; gap: 26px; align-items: center; }
+.g-about-foto img { width: 100%; height: auto; border-radius: 24px; display: block; }
+.g-about-text p + p { margin-top: 16px; }
+.g-quotes { margin-top: 22px; display: grid; gap: 10px; }
+.g-quotes[hidden] { display: none; }
+.g-quotes li { padding: 14px 16px; border-radius: 16px; background: var(--pink); font-style: italic; }
+
+/* 8. для кого: номера 01–06 */
+.g-nums { display: grid; gap: 14px; }
+.g-nums li { display: flex; gap: 14px; align-items: center; line-height: 1.4; }
+.g-num { flex: none; display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; border-radius: 12px;
+  background: var(--barhat); color: #fff; font-family: var(--bebas); font-size: 26px; padding-top: 3px;
+  box-shadow: 0 10px 18px -10px rgba(196,20,44,.9); }
+
+/* 10. вопросы */
+.g-faq { border-radius: 20px; background: #fff; box-shadow: var(--card); overflow: hidden; }
+.g-faq-i { border-top: 1px solid var(--line); padding: 18px 18px; }
+.g-faq-i:first-child { border-top: 0; }
+.g-faq-i summary { cursor: pointer; list-style: none; position: relative; padding-right: 40px; font-weight: 700; line-height: 1.4; }
+.g-faq-i summary::-webkit-details-marker { display: none; }
+.g-faq-i summary::before { content: ""; position: absolute; right: 0; top: -2px; width: 28px; height: 28px; border-radius: 8px; background: var(--pink); }
+.g-faq-i summary::after { content: ""; position: absolute; right: 10px; top: 5px; width: 8px; height: 8px;
+  border: solid var(--red); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); transition: transform .2s ease; }
+.g-faq-i[open] summary::after { transform: rotate(-135deg); top: 10px; }
+.g-faq-i p { margin-top: 10px !important; color: var(--soft); }
+
+/* панель внизу экрана: высота до 80 px плюс полоса «домой» на айфоне */
+.g-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 64px; max-height: calc(80px + env(safe-area-inset-bottom, 0px));
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)); background: var(--barhat); color: #fff;
+  box-shadow: 0 -12px 30px -14px rgba(28,26,29,.55); transform: translateY(0); transition: transform .25s ease; }
+.g-bar[hidden] { display: none; }
+.g-bar [hidden] { display: none !important; }
+.g-bar.g-bar-off { transform: translateY(110%); pointer-events: none; }
+.g-bar-small { font-size: 13px; line-height: 1.2; font-weight: 600; opacity: .95; }
+.g-bar-time { display: flex; align-items: flex-start; gap: 4px; margin-top: 2px !important; }
+.g-bar-time span { display: flex; flex-direction: column; align-items: center; min-width: 30px; }
+.g-bar-time b { font-family: var(--bebas); font-weight: 700; font-size: 28px; line-height: 1; letter-spacing: .03em; font-variant-numeric: tabular-nums; }
+.g-bar-time i { font-style: normal; font-size: 10.5px; line-height: 1.1; opacity: .85; }
+.g-bar-time em { font-style: normal; font-family: var(--bebas); font-size: 24px; line-height: 1.1; opacity: .8; }
+.g-bar-posle { font-size: 15px; line-height: 1.3; font-weight: 700; }
+.g-bar-btn { flex: none; min-height: 50px; padding: 0 16px; border: 0; border-radius: 14px; background: #fff; color: var(--red);
+  font: 800 14px/1.2 'Golos Text', system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+  box-shadow: 0 10px 20px -10px rgba(0,0,0,.5); }
+.g-bar-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+body.g-has-bar { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important; }
+body.g-bar-on .cookie-bar { bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important; }
+body.g-lock .g-bar { display: none; }
+@media (prefers-reduced-motion: reduce) { .g-bar { transition: none; } }
+
+/* форма */
+.g-modal { position: fixed; inset: 0; z-index: 100; background: rgba(28,26,29,.6); display: flex; align-items: flex-end; justify-content: center; }
+.g-modal[hidden] { display: none; }
+.g-modal-box { position: relative; width: 100%; max-width: 560px; max-height: 100%; overflow-y: auto; background: #fff; color: var(--ink);
+  border-radius: 24px 24px 0 0; padding: 26px 20px calc(24px + env(safe-area-inset-bottom, 0px)); font-size: 18px; line-height: 1.5; }
+.g-x { position: absolute; right: 10px; top: 10px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F3F2F0; font-size: 18px; cursor: pointer; color: var(--ink); }
+.gl .g-modal-h { font-size: 40px !important; margin: 0 44px 4px 0; }
+.g-modal-sub { color: var(--soft); margin-bottom: 14px !important; }
+.g-modal-tarif { margin-bottom: 16px !important; }
+.g-hp { position: absolute; left: -9999px; }
+.g-f { display: block; font-weight: 700; margin-bottom: 14px; }
+.g-f input, .g-f textarea { display: block; width: 100%; margin-top: 6px; padding: 14px 14px; border: 1.5px solid #D9D3CB; border-radius: 14px;
+  font: 400 18px/1.4 'Golos Text', system-ui, sans-serif; color: var(--ink); background: #FBFAF9; }
+.g-f input:focus, .g-f textarea:focus { outline: none; border-color: var(--red); background: #fff; }
+.g-f .g-bad { border-color: var(--red); }
+.g-opt { font-weight: 400; color: var(--soft); font-size: 15px; }
+.g-cb { display: flex; gap: 12px; align-items: flex-start; font-size: 15.5px; line-height: 1.45; color: var(--soft); margin: 10px 0; cursor: pointer; }
+.g-cb input { flex: none; width: 24px; height: 24px; margin: 1px 0 0; accent-color: var(--red); }
+.g-cb em { font-style: normal; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: #8A5A2B; white-space: nowrap; }
+.g-cb.g-bad span { color: var(--red); }
+.g-err { margin-top: 12px !important; color: var(--red); font-weight: 700; }
+.g-form .g-btn { max-width: none; margin-top: 18px; }
+.g-pod-dark { margin-top: 12px !important; text-align: center; color: var(--soft); font-size: 15.5px; }
+.g-done { padding-top: 18px; }
+.g-done-t { font-size: 21px; line-height: 1.45; font-weight: 700; margin-bottom: 12px !important; }
+.g-done-sign { margin-top: 14px !important; font-family: 'Prata', 'Times New Roman', Georgia, serif; font-size: 26px; color: var(--red); }
+.g-done .g-btn { max-width: none; }
+body.g-lock { overflow: hidden; }
+
+
+/* ── Типографика и воздух (правка 19.10) ──────────────────────────────
+   Три роли шрифтов и не больше: Bebas — только заголовки блоков, цены
+   и метки; Golos — весь читаемый текст и заголовки карточек; Prata —
+   только название программы на первом экране и имя в «Обо мне».
+   Основной текст 18 px / 1.65, абзацы не жирные, жирным только смысловые
+   слова. Между блоками 88 px на телефоне, внутри карточек 24 px. */
+.gl { font-size: 18px; line-height: 1.65; letter-spacing: .005em; }
+.g-in { padding: 0 20px; }
+.g-sec { padding: 88px 0; }
+.gl .g-h2, .gl .g-modal-h { font-size: 42px !important; line-height: 1.02; margin-bottom: 32px; letter-spacing: .015em; }
+.g-lead { margin: -14px 0 32px !important; font-size: 17px; line-height: 1.6; }
+.g-accent-p { font-size: 19px; line-height: 1.5; font-weight: 700; }
+.g-checks { gap: 18px; }
+.g-checks li { line-height: 1.55; padding-left: 40px; }
+.g-checks li b { font-weight: 700; }
+/* недели */
+.g-week { padding-bottom: 52px; padding-left: 28px; }
+.gl .g-week-n { font-size: 22px; padding: 6px 12px 4px; }
+.gl .g-week-h { font-family: 'Golos Text', system-ui, sans-serif !important; font-weight: 800; font-size: 23px !important;
+  line-height: 1.25; letter-spacing: -.01em; color: var(--ink); margin: 16px 0 12px; text-wrap: balance; }
+.g-week-t { margin-bottom: 22px !important; color: #3A363C; }
+.g-week-box { padding: 22px 20px 24px; border-radius: 20px; }
+.g-week-tr { font-family: 'Golos Text', system-ui, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--red); margin-bottom: 16px !important; }
+.g-tricks, .g-week-box .g-checks { gap: 14px; }
+.g-week-box .g-checks li { font-weight: 400; font-size: 17px; line-height: 1.45; }
+.g-weeks-pod { font-weight: 400; padding: 22px 20px; line-height: 1.6; margin-top: 4px !important; }
+/* тарифы */
+.g-tarify { gap: 36px; }
+/* Шапки тарифов одной высоты: у «С Виолой» есть «Рекомендуем», у второго нет. */
+.g-tarif-head { min-height: 132px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.g-tarif-head .g-badge { margin-bottom: 10px; }
+.g-tarif { padding: 16px 16px 26px; }
+.gl .g-tarif-h { font-size: clamp(34px, 10vw, 46px) !important; }
+.g-tarif-t { font-size: 21px; line-height: 1.3; margin: 26px 6px 0 !important; }
+.g-tarif-l { margin: 22px 6px 14px !important; }
+.g-tarif-list li { font-size: 17px; line-height: 1.45; }
+.g-cena { margin-top: 24px; padding: 20px 18px 18px; }
+.g-timer { margin-top: 40px !important; }
+.gl .g-rass, .gl .g-pod { line-height: 1.6; margin-top: 20px !important; }
+/* истории: заголовок карточки обычным шрифтом, отзыв без жирного */
+.g-stories { gap: 22px; }
+.g-story { padding: 26px 22px 28px; }
+.gl .g-story-h { font-family: 'Golos Text', system-ui, sans-serif !important; font-weight: 800; font-size: 21px !important; line-height: 1.3;
+  text-transform: none; letter-spacing: -.01em; color: var(--ink); text-wrap: balance; }
+.g-story-age { margin-top: 8px !important; }
+.g-tag { margin: 22px 0 10px !important; }
+.g-story p { line-height: 1.6; }
+.g-story-ch { font-weight: 400; color: var(--ink); border-left: 3px solid var(--red); padding-left: 14px; }
+/* обо мне, для кого, вопросы */
+.g-about { gap: 36px; }
+.g-about-name { margin-bottom: 24px !important; }
+.g-nums { gap: 18px; }
+.g-nums li { line-height: 1.5; align-items: flex-start; }
+.g-num { margin-top: 2px; }
+.g-accent-box { padding: 20px 22px; margin-top: 32px !important; }
+.g-box { padding: 26px 22px; line-height: 1.65; }
+.g-faq-i { padding: 22px 20px; }
+.g-faq-i summary { line-height: 1.45; }
+.g-faq-i p { margin-top: 14px !important; line-height: 1.65; }
+.g-btn { margin-top: 36px; }
+/* цели */
+.g-goals-sec { padding-bottom: 32px; }
+.g-panel { padding: 30px 22px 32px; }
+.g-panel .g-label { margin-bottom: 26px; }
+/* первый экран на телефоне: название не упирается в края, регалии читаются */
+[data-h2-title] { font-size: clamp(36px, 10.6vw, 64px) !important; padding: 0 12px; }
+.g-fakty-h2 { font-size: 13px; line-height: 1.35; gap: 7px; padding: 12px 14px; width: min(72%, 280px); }
+
+@media (min-width: 760px) {
+  .gl { font-size: 19px; }
+  .gl .g-h2 { font-size: 64px !important; }
+  .g-sec { padding: 92px 0; }
+  /* Недели столбиком, одна неделя в строке: слева номер и название,
+     справа текст и техники (просьба 19.10). */
+  .g-weeks { max-width: 1000px; margin: 0 auto; }
+  .g-week { display: grid; grid-template-columns: 300px 1fr; column-gap: 36px; align-items: start; padding-bottom: 40px; }
+  .g-week > .g-week-n, .g-week > .g-week-h { grid-column: 1; }
+  .g-week > .g-week-t, .g-week > .g-week-box, .g-week > .g-week-note { grid-column: 2; }
+  .g-week > .g-week-t { grid-row: 1 / span 2; margin-top: 2px !important; }
+  .g-week > .g-week-box { grid-row: 3; }
+  .g-week > .g-week-note { grid-row: 4; }
+  .g-weeks-pod { max-width: 1000px; margin-left: auto !important; margin-right: auto !important; }
+  .g-panel { padding: 48px 52px 52px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 56px; align-items: start;
+    background: #fff; box-shadow: 0 30px 60px -34px rgba(28,26,29,.45), 0 0 0 1px #EEE9E3; }
+  .g-planshet-mob { display: none; }
+  .g-panel-l { display: block; }
+  .g-panel-lh { display: block; margin-bottom: 14px !important; }
+  .g-panel-lt { display: block; margin-bottom: 26px !important; font-size: 18px; line-height: 1.5; }
+  .g-panel-lt b { color: var(--red-d); }
+  .g-planshet { margin: 0 -10px 0 -20px; }
+  .g-planshet-badge { right: 0; bottom: -4%; width: 34%; max-width: 200px; padding: 18px 14px 19px; border-radius: 22px; }
+  .g-planshet-badge span { font-size: 12px; }
+  .g-planshet-badge b { font-size: 26px; }
+  .g-panel-r .g-btn { margin-left: 0; }
+  .g-goals-sec { padding-top: 0; background: transparent; position: relative; z-index: 4; }
+  .g-panel { margin-top: -56px; }
+  /* Панель наезжает на низ первого экрана на 56 px: держим под кнопкой
+     запас, чтобы панель её не перекрывала ни при каком размере окна. */
+  [data-hero-stage] [data-hero-copy] { padding-bottom: 104px !important; }
+  [data-hero-stage] { min-height: max(clamp(600px, 94vh, 960px), var(--g-hero-min, 0px)); height: auto !important; }
+  .g-stories, .g-checks-2 { grid-template-columns: 1fr 1fr; display: grid; }
+  .g-tarify { grid-template-columns: 1fr 1fr; align-items: start; }
+  .g-about { grid-template-columns: 420px 1fr; gap: 56px; }
+  .g-modal { align-items: center; }
+  .g-bar { justify-content: center; gap: 32px; padding: 8px 24px; }
+  .g-bar-l { display: flex; align-items: center; gap: 16px; }
+  .g-bar-small { font-size: 16px; }
+  .g-bar-time { margin-top: 0 !important; }
+  .g-bar-time b { font-size: 32px; }
+  .g-bar-posle { font-size: 18px; }
+  .g-bar-btn { padding: 0 30px; }
+  .g-modal-box { border-radius: 24px; max-height: 92vh; padding: 32px 30px 30px; }
+}
+@media (prefers-reduced-motion: reduce) { .g-btn, .g-faq-i summary::after { transition: none; } }
+@media (min-width: 760px) {
+  .g-sec { padding: 120px 0; }
+  .gl .g-h2 { font-size: 64px !important; margin-bottom: 44px; }
+  .gl .g-week-h { font-size: 26px !important; margin-top: 18px; }
+  .g-week { padding-bottom: 56px; }
+  .g-stories { gap: 28px; }
+  .g-story { padding: 32px 30px 34px; }
+  .g-tarify { gap: 32px; align-items: stretch; }
+  .g-tarif-head { min-height: 150px; }
+  .g-tarif { display: flex; flex-direction: column; }
+  .g-tarif-list { margin-bottom: 8px !important; }
+  .g-tarif .g-cena { margin-top: auto; }
+  .g-faq-i { padding: 24px 28px; }
+}
+.g-p2 { margin-top: 16px !important; }</style>
+</head>
+<body>
+<a class="skip" href="#main">К основному содержанию</a>
+<main id="main" data-glavnaya="1"><section style="background: linear-gradient(160deg, #D6223A 0%, #B51228 45%, #7E0A1A 100%); color: #FAF9F8; padding: 0;" aria-label="Первый экран" data-blok="Первый экран">
+  <div style="width: 100%; margin: 0 auto; display: flex; flex-direction: column;">
+    <div data-h2=""><div data-h2-top=""><div data-h2-chips=""><span><i>Старт:</i><b>1 ноября</b></span><em aria-hidden="true"></em><span><i>Длительность:</i><b>6&nbsp;недель</b></span></div><p data-h2-title="" role="heading" aria-level="1" style="--bukv: 10;">Прикладная <br>эмпатия</p><p data-h2-sub="">Моя 6-недельная программа для эмпатов</p><a class="s55f03b1" href="#tarify" role="button" data-zayavka="Первый экран" data-btn="primary" style="pointer-events: auto; display: inline-flex; white-space: nowrap; flex: 0 0 auto; flex: 0 0 auto; align-items: center; gap: 14px; background: linear-gradient(135deg, #D6223A 0%, #A30F23 100%); color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: clamp(18px, 1.9vw, 22px); letter-spacing: .01em; padding: 23px 34px 23px 48px; border-radius: 999px; box-shadow: 0 16px 30px -14px rgba(196,20,44,.62); transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;">Оставить заявку<span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: rgba(140,12,30,.9); color: #F8ECCB; font-size: 16px; line-height: 1;">→</span></a></div><div data-h2-photo=""><img data-h2-fon="" src="/assets/img/terrasa.jpg?v=eada1fa6" alt="" width="900" height="1000" decoding="async"><img data-h2-viola="" src="/assets/img/viola.webp?v=e2a4cb88" alt="Виола Маро" width="901" height="1202" fetchpriority="high" decoding="async"><ul class="g-fakty g-fakty-h2" aria-label="Регалии Виолы Маро"><li><b>25 лет</b> практики психолога и психотерапевта</li><li><b>СПбГУ и Sapienza</b>: психологическое образование, Санкт-Петербург и Рим</li><li>Спикер <b>ООН</b> на Специальной сессии по вопросам детей и молодёжи</li><li><b>713 000</b> подписчиков в YouTube, TikTok и Instagram</li></ul></div><div data-h2-card=""><p data-h2-def="" class="g-offer">Научитесь вместе со мной пользоваться своей эмпатией, чтобы <b>перестать спасать всех, уступать и терпеть тех, кто вами пользуется</b>, и <b>начать себя любить, ценить и уважать</b></p></div></div><div data-hero-stage="" style="position: relative; overflow: hidden; height: clamp(600px, 94vh, 960px);">
+      <div data-hero-photo="" style="position: absolute; inset: 0;">
+        <picture>
+          <source media="(max-width: 760px)" type="image/webp"
+                  srcset="/assets/img/hero-mob-sm.webp?v=a28d22e6 620w, /assets/img/hero-mob.webp?v=93cc1685 900w"
+                  sizes="100vw">
+          <source media="(max-width: 760px)" type="image/jpeg"
+                  srcset="/assets/img/hero-mob-sm.jpg?v=01b25fde 620w, /assets/img/hero-mob.jpg?v=5beb704d 900w"
+                  sizes="100vw">
+          <source type="image/webp"
+                  srcset="/assets/img/hero-sm.webp?v=126d02da 1200w, /assets/img/hero.webp?v=cbdbb2f5 1672w"
+                  sizes="100vw">
+          <img src="/assets/img/hero.jpg?v=fd644bff"
+               srcset="/assets/img/hero-sm.jpg?v=dde6201b 1200w, /assets/img/hero.jpg?v=fd644bff 1672w"
+               sizes="100vw"
+               alt="Виола Маро сидит в кресле"
+               width="1672" height="941"
+               loading="lazy" decoding="async">
+        </picture>
+      </div>
+      <div data-hero-veil="" style="position: absolute; inset: 0; background: linear-gradient(100deg, rgba(126,10,26,.94) 0%, rgba(126,10,26,.86) 26%, rgba(126,10,26,.55) 46%, rgba(126,10,26,0) 66%); pointer-events: none;"></div>
+      <div data-hero-veil="" style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(126,10,26,.88) 0%, rgba(126,10,26,.5) 28%, rgba(126,10,26,0) 56%); pointer-events: none;"></div>
+      <ul class="g-fakty g-fakty-stage" aria-label="Регалии Виолы Маро"><li><b>25 лет</b> практики психолога и психотерапевта</li><li><b>СПбГУ и Sapienza</b>: психологическое образование, Санкт-Петербург и Рим</li><li>Спикер <b>ООН</b> на Специальной сессии по вопросам детей и молодёжи</li><li><b>713 000</b> подписчиков в YouTube, TikTok и Instagram</li></ul>
+      <div data-hero-copy="" style="position: absolute; inset: 0; width: min(1240px, 100%); margin: 0 auto; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(26px, 5vw, 60px) clamp(20px, 4.5vw, 56px) clamp(24px, 4vw, 48px); pointer-events: none;"><div data-hero-card="">
+        <div style="max-width: min(62%, 620px);">
+          <div style="font-size: clamp(10px, 1.7vw, 12.5px); letter-spacing: .2em; text-transform: uppercase; color: #E5BE73; line-height: 1.5;">Моя 6-недельная программа для эмпатов</div>
+          <h1 style="font-family: 'Prata', Georgia, serif; font-weight: 400; letter-spacing: -.01em; font-size: clamp(34px, 4.4vw, 64px); line-height: 1.05; margin: 18px 0 0; text-wrap: balance; text-shadow: 0 2px 28px rgba(126,10,26,.55);">Прикладная <br>эмпатия</h1>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: clamp(16px, 2.6vw, 24px); max-width: min(92%, 620px);">
+          <p data-hero-def="" style="margin: 0; max-width: min(48vw, 560px); font-family: 'Golos Text', system-ui, sans-serif; font-weight: 500; letter-spacing: -.01em; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.5; color: #FAF9F8; text-shadow: 0 2px 22px rgba(126,10,26,.85);">Научитесь вместе со мной пользоваться своей эмпатией, чтобы <b>перестать спасать всех, уступать и терпеть тех, кто вами пользуется</b>, и <b>начать себя любить, ценить и уважать</b></p>
+          <p id="plashka" style="margin: 0; width: fit-content; max-width: min(58%, 600px); font-size: clamp(14px, 1.5vw, 18px); font-weight: 500; line-height: 1.45; color: #FAF9F8; background: rgba(126,10,26,.62); backdrop-filter: blur(8px); border-left: 2px solid #E5BE73; border-radius: 0 8px 8px 0; padding: 10px 12px 10px 12px;">Старт 1 ноября</p>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px 24px;">
+            <a class="s55f03b1" href="#tarify" role="button" data-zayavka="Первый экран" data-btn="primary" style="pointer-events: auto; display: inline-flex; white-space: nowrap; flex: 0 0 auto; flex: 0 0 auto; align-items: center; gap: 14px; background: linear-gradient(135deg, #D6223A 0%, #A30F23 100%); color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: clamp(18px, 1.9vw, 22px); letter-spacing: .01em; padding: 23px 34px 23px 48px; border-radius: 999px; box-shadow: 0 16px 30px -14px rgba(196,20,44,.62); transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;">Оставить заявку<span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: rgba(140,12,30,.9); color: #F8ECCB; font-size: 16px; line-height: 1;">→</span></a>
+            
+          </div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</section><div class="gl">
+<section class="g-planshet-mob" data-blok="Планшет">
+  <div class="g-in">
+      <div class="g-planshet">
+        <img src="/assets/img/planshet-1280.webp?v=c20c643a" srcset="/assets/img/planshet-720.webp?v=31efa5d1 720w, /assets/img/planshet-1280.webp?v=c20c643a 1280w" sizes="(max-width: 900px) 100vw, 560px"
+             alt="Программа «Прикладная эмпатия» на планшете: лекции, шесть недель, техники, медитации, ответы и методички" width="1280" height="853" loading="lazy" decoding="async">
+        <p class="g-planshet-badge"><span>Старт 1 ноября</span><b>Последний поток в&nbsp;этом году</b></p>
+      </div>
+  </div>
+</section>
+<section class="g-goals-sec" data-blok="Цели программы">
+  <div class="g-in">
+    <div class="g-panel">
+      <div class="g-panel-l">
+        <h2 class="g-h2 g-panel-lh"><span class="g-acc">Прикладная эмпатия</span></h2>
+        <p class="g-panel-lt">Это шестинедельная программа для эмпатов. Каждую неделю <b>одна сфера жизни</b>: мои лекции, техники, медитации и <b>мои ответы на ваши вопросы</b></p>
+        
+      <div class="g-planshet">
+        <img src="/assets/img/planshet-1280.webp?v=c20c643a" srcset="/assets/img/planshet-720.webp?v=31efa5d1 720w, /assets/img/planshet-1280.webp?v=c20c643a 1280w" sizes="(max-width: 900px) 100vw, 560px"
+             alt="Программа «Прикладная эмпатия» на планшете: лекции, шесть недель, техники, медитации, ответы и методички" width="1280" height="853" loading="lazy" decoding="async">
+        <p class="g-planshet-badge"><span>Старт 1 ноября</span><b>Последний поток в&nbsp;этом году</b></p>
+      </div>
+      </div>
+      <div class="g-panel-r">
+        <h2 class="g-h2"><span class="g-acc">Цели</span> <span class="g-ink">программы</span></h2>
+        <p class="g-label">Для каждого участника:</p>
+        <ul class="g-checks g-goals"><li><b>сразу видеть манипуляцию</b> и не вестись на жалость, вину и сладкие обещания</li><li><b>не попадать в токсичные отношения</b> ни с партнёром, ни на работе, ни среди близких</li><li><b>говорить «нет» без оправданий</b> и не винить себя потом весь вечер</li><li><b>не уносить с собой чужую боль:</b> сочувствовать человеку, но его проблему оставлять ему</li><li><b>любить, ценить и уважать себя,</b> чтобы рядом были те, кто относится к вам так же</li></ul>
+        <button type="button" class="g-btn" data-zayavka="Цели программы">Оставить заявку</button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="g-sec g-grey" id="programma" data-blok="Как проходит программа">
+  <div class="g-in">
+    <h2 class="g-h2 g-center"><span class="g-ink">Как проходит</span> <span class="g-acc">программа</span></h2>
+    <div class="g-weeks">
+    <article class="g-week">
+      <p class="g-week-n">Неделя 1.</p>
+      <h3 class="g-week-h">Фигура эмпата</h3>
+      <p class="g-week-t">Поймёте, почему так остро чувствуете людей, и перестанете считать себя странной. Научитесь возвращать внимание к себе, а не улетать в чужие эмоции</p>
+      <div class="g-week-box">
+        <p class="g-week-tr">Техники недели</p>
+        <ul class="g-checks g-checks-sm"><li>Возврат в свой центр</li><li>Вижу, но не участвую</li><li>Растождествление с негативным фоном</li></ul>
+      </div>
+      
+    </article>
+    <article class="g-week">
+      <p class="g-week-n">Неделя 2.</p>
+      <h3 class="g-week-h">Эмпат и отношения с людьми</h3>
+      <p class="g-week-t">Научитесь сразу видеть манипуляцию: жалость, вину, сладкие обещания. Будете отказывать партнёру, родным и коллегам коротко и без оправданий и быстро возвращаться в себя после тяжёлого разговора</p>
+      <div class="g-week-box">
+        <p class="g-week-tr">Техники недели</p>
+        <ul class="g-checks g-checks-sm"><li>Карта автономии</li><li>Дезактивация эмпатического крючка</li><li>Коммуникация из внутреннего центра</li><li>Шесть столпов самооценки</li></ul>
+      </div>
+      
+    </article>
+    <article class="g-week">
+      <p class="g-week-n">Неделя 3.</p>
+      <h3 class="g-week-h">Эмпат-родители и эмпат-дети</h3>
+      <p class="g-week-t">Останетесь рядом с мамой и взрослыми детьми и перестанете жить их жизнью. Спокойно выдержите «ты изменилась» и «ты думаешь только о себе». Поймёте, что нужно вашему чувствительному ребёнку</p>
+      <div class="g-week-box">
+        <p class="g-week-tr">Техники недели</p>
+        <ul class="g-checks g-checks-sm"><li>Комната во внутреннем доме</li><li>Право передумать</li><li>Кукла</li><li>Каталог чувств</li><li>Интеллектуальное одиночество и магия масштаба</li><li>Диалог с миром</li></ul>
+      </div>
+      
+    </article>
+    <article class="g-week">
+      <p class="g-week-n">Неделя 4.</p>
+      <h3 class="g-week-h">Психосоматика у эмпата</h3>
+      <p class="g-week-t">Поймёте, почему тело болит за всех, а врачи ничего не находят. Научитесь замечать первые сигналы тела и возвращать с ним контакт</p>
+      <div class="g-week-box">
+        <p class="g-week-tr">Техники недели</p>
+        <ul class="g-checks g-checks-sm"><li>Карта тела: какая эмоция в какую зону уходит</li><li>Признаки начинающейся психосоматики</li><li>Простые телесные практики возвращения контакта с собой</li></ul>
+      </div>
+      <p class="g-week-note">Программа не заменяет обследование и лечение у врача</p>
+    </article>
+    <article class="g-week">
+      <p class="g-week-n">Неделя 5.</p>
+      <h3 class="g-week-h">Самореализация людей с повышенной чувствительностью</h3>
+      <p class="g-week-t">Найдёте, где в вашей жизни вы сами, и дело, в котором не нужно ломать себя. Научитесь быть среди людей и не выгорать</p>
+      <div class="g-week-box">
+        <p class="g-week-tr">Техники недели</p>
+        <ul class="g-checks g-checks-sm"><li>Поиск своих ниш и форматов самовыражения</li><li>Баланс уединения и социальной активности</li><li>Практики безопасной проявленности</li></ul>
+      </div>
+      
+    </article>
+    <article class="g-week">
+      <p class="g-week-n">Неделя 6.</p>
+      <h3 class="g-week-h">Психология наполненности и деньги</h3>
+      <p class="g-week-t">Перестанете отдавать всё и оставаться ни с чем. Научитесь принимать решения о деньгах из спокойствия, а не из страха</p>
+      <div class="g-week-box">
+        <p class="g-week-tr">Техники недели</p>
+        <ul class="g-checks g-checks-sm"><li>Диагностика: зарабатываю я из наполненности или из дефицита</li><li>Как отличить денежную мотивацию из пустоты от мотивации из полноты</li><li>Практики возвращения в ресурсность перед финансовыми решениями</li></ul>
+      </div>
+      
+    </article>
+    </div>
+    <p class="g-weeks-pod">Каждую неделю лекция в записи с таймкодами, техники на конкретные ситуации, задание и PDF-конспект. Техниками можно пользоваться прямо в тот момент, когда ситуация происходит. Чат потока, доступ навсегда</p>
+  </div>
+</section>
+<section class="g-sec g-red" id="tarify" data-blok="Тарифы">
+  <div class="g-in">
+    <h2 class="g-h2 g-center g-light"><span class="g-ink">Тарифы</span></h2>
+    <div class="g-tarify">
+    <article class="g-tarif g-tarif-top">
+      <div class="g-tarif-head">
+        <span class="g-badge">Рекомендуем</span>
+        <h3 class="g-tarif-h">С Виолой</h3>
+        <span class="g-mest">50 мест</span>
+      </div>
+      <p class="g-tarif-t">Вся программа и мои ответы на ваши вопросы</p>
+      <p class="g-tarif-l">Что входит:</p>
+      <ul class="g-checks g-checks-sm g-tarif-list"><li>6 моих лекций в записи с таймкодами</li><li>Прикладные техники на каждую неделю, задания и PDF-конспекты</li><li><b>Я отвечаю в формате аудио на ваши вопросы в чате потока</b></li><li><b>Мой большой мастер-класс в финале с разбором вопросов участниц</b></li><li>Чат потока</li><li>Мои аудиомедитации</li><li>Запись терапевтического уикенда «Неудобные»</li><li>Лекция «Любовь и деньги»</li><li>Разбор фильма «Догвиль»</li><li>Большой мастер-класс на узнавание себя</li><li>Доступ ко всем материалам навсегда</li></ul>
+      
+        <div class="g-cena" data-g-cena="С Виолой">
+          <p class="g-cena-old"><s data-po-zayavke>39 900&nbsp;₽</s></p>
+          <p class="g-cena-new"><span data-g-sum>29 900</span>&nbsp;₽ <span class="g-po" data-po-zayavke>по заявке</span></p>
+          <p class="g-cena-mes">или от <span data-g-mes="С Виолой">2 492</span>&nbsp;₽ в месяц</p>
+          <p class="g-cena-val"><s data-po-zayavke>$480 / €430</s> <span data-g-val>$360 / €320</span></p>
+        </div>
+      <button type="button" class="g-btn g-btn-red" data-zayavka="Тарифы: С Виолой" data-tarif="С Виолой">Оставить заявку</button>
+    </article>
+    <article class="g-tarif">
+      <div class="g-tarif-head">
+        
+        <h3 class="g-tarif-h">Самостоятельный</h3>
+        
+      </div>
+      <p class="g-tarif-t">Вся программа в вашем темпе</p>
+      <p class="g-tarif-l">Что входит:</p>
+      <ul class="g-checks g-checks-sm g-tarif-list"><li>6 моих лекций в записи с таймкодами</li><li>Прикладные техники на каждую неделю, задания и PDF-конспекты</li><li>Мои аудиомедитации</li><li>Запись терапевтического уикенда «Неудобные»</li><li>Лекция «Любовь и деньги»</li><li>Разбор фильма «Догвиль»</li><li>Большой мастер-класс на узнавание себя</li><li>Доступ ко всем материалам навсегда</li></ul>
+      
+        <div class="g-cena" data-g-cena="Самостоятельный">
+          <p class="g-cena-old"><s data-po-zayavke>19 900&nbsp;₽</s></p>
+          <p class="g-cena-new"><span data-g-sum>14 900</span>&nbsp;₽ <span class="g-po" data-po-zayavke>по заявке</span></p>
+          <p class="g-cena-mes">или от <span data-g-mes="Самостоятельный">1 242</span>&nbsp;₽ в месяц</p>
+          <p class="g-cena-val"><s data-po-zayavke>$240 / €215</s> <span data-g-val>$180 / €160</span></p>
+        </div>
+      <button type="button" class="g-btn g-btn-red" data-zayavka="Тарифы: Самостоятельный" data-tarif="Самостоятельный">Оставить заявку</button>
+    </article>
+    </div>
+    <p class="g-timer" id="timer" hidden>Скидка до 10 000 ₽ сгорит через <b id="timer-v">48:00:00</b></p>
+    <p class="g-rass">Рассрочка на 3, 6 или 12 месяцев без процентов, первый платёж через месяц. Рассрочка банка доступна гражданам стран СНГ по паспорту, 18+</p>
+    <p class="g-pod"><span data-po-zayavke>Оставьте заявку, пока идёт таймер, и цена закрепится за вами. </span>Я лично напишу вам в Telegram в течение 15 минут. Если заявка придёт ночью, напишу утром</p>
+  </div>
+</section>
+<section class="g-sec g-grey" id="istorii" data-blok="Истории участниц">
+  <div class="g-in">
+    <h2 class="g-h2"><span class="g-ink">Истории участниц</span> <span class="g-acc">первого потока</span></h2>
+    <p class="g-lead">Участницы рассказали это сами. Имена остаются между ними и мной</p>
+    <div class="g-stories">
+    <article class="g-story">
+      <h3 class="g-story-h">Девушка, которая узнала своего партнёра в видео про нарциссов</h3>
+      <p class="g-story-age">35–44 года</p>
+      <p class="g-tag">С чем пришла:</p>
+      <p>«Я устала от того, что мной манипулируют в отношениях, на работе, выжимают мои силы». Смотрела ролики на YouTube о нарциссах, и «по всем показателям совпало с моим партнёром». И ещё: «Я не понимала, как я лезу к людям и навязываю им заботу»</p>
+      
+      <p class="g-tag g-tag-red">Что изменилось:</p>
+      <p class="g-story-ch">«Уже сейчас, на третьей неделе, я поняла, что перестраиваю своё поведение, не лезу к людям и занимаюсь своей жизнью. Я рассталась с партнёром-нарциссом, на работе меньше болтаю о себе, стало намного лучше». «Я уже сейчас могу не реагировать, ставить блок на чужие эмоции»</p>
+    </article>
+    <article class="g-story">
+      <h3 class="g-story-h">Женщина, которая всё видела и всё равно оставалась</h3>
+      <p class="g-story-age">45–54 года</p>
+      <p class="g-tag">С чем пришла:</p>
+      <p>«Расставание с партнёром, он ушёл, обвинив меня в ревности. Но до этого я долго закрывала глаза на многие несовпадения его слов и поступков. Чувствовала многое, но терпела, боялась потерять, так как люблю». «Дальше так жить невозможно»</p>
+      <p class="g-tag">Что пробовала:</p>
+      <p>Психолога раз в неделю и курсы про любовь к себе</p>
+      <p class="g-tag g-tag-red">Что изменилось:</p>
+      <p class="g-story-ch">«Я поняла, откуда у меня эта неуверенность, сомнения, постоянные подозрения. Почему я, ясно видя и понимая всё, всё равно до последнего оставалась в токсичных отношениях. Я чувствую, что мои мозги встают на место, я становлюсь трезвой, сильной, уверенной»</p>
+    </article>
+    <article class="g-story">
+      <h3 class="g-story-h">Девушка, которую разбудила подруга-нарцисс</h3>
+      <p class="g-story-age">35–44 года</p>
+      <p class="g-tag">С чем пришла:</p>
+      <p>«Сильное отличие от других людей, болезненность во взаимоотношениях, влияние манипуляторов, полное непонимание, кто я. Точка отсчёта началась, когда у меня появилась подруга-нарцисс. Здесь я проснулась»</p>
+      <p class="g-tag">Что пробовала:</p>
+      <p>«Я ничего не пробовала, так как не понимала вообще, с чего начать»</p>
+      <p class="g-tag g-tag-red">Что изменилось:</p>
+      <p class="g-story-ch">«Я уже сейчас чувствую множество изменений. Снизился индекс тревоги, спасательства, стала больше направлять фокус на свои интересы, желания, стала замечать проблемы своей семьи, а не чужих людей»</p>
+    </article>
+    <article class="g-story">
+      <h3 class="g-story-h">Женщина, которая всю жизнь угождала маме</h3>
+      <p class="g-story-age">45–54 года</p>
+      <p class="g-tag">С чем пришла:</p>
+      <p>«Сложные отношения с матерью. Устала угождать, в ответ одни упрёки. В прошлом году сказала себе, что с меня хватит»</p>
+      
+      <p class="g-tag g-tag-red">Что изменилось:</p>
+      <p class="g-story-ch">«Я хочу быть другой. В первую очередь относиться к себе с трепетом. Любить себя. До встречи с Виолой думала, что это эгоизм». И после третьей недели: «Я просто в шоке от лекции. Вы заглянули внутрь моей жизни с токсичной матерью»</p>
+    </article>
+    <article class="g-story">
+      <h3 class="g-story-h">Женщина, которая уступала и терпела</h3>
+      <p class="g-story-age">55–64 года</p>
+      <p class="g-tag">С чем пришла:</p>
+      <p>«Я всё время либо уступаю и терплю, либо убегаю. Люди мне могут сказать что угодно, типа они шутят, а если я скажу, обижаются. Я поняла, что всю жизнь не уважала себя. Мне очень горько и как-то безнадёжно. Мне 60 лет, глупо это всё со стороны смотрится»</p>
+      <p class="g-tag">Что пробовала:</p>
+      <p>«Только читала книги. Всегда боялась выбрать не того специалиста, боялась, что будет ещё хуже»</p>
+      <p class="g-tag g-tag-red">Что изменилось:</p>
+      <p class="g-story-ch">«Такой конкретики и реальных практичных вещей я ни у кого не слышала! Я не жила, а сейчас, кажется, начну жить»</p>
+    </article>
+    </div>
+    <button type="button" class="g-btn" data-zayavka="Истории участниц">Оставить заявку</button>
+  </div>
+</section>
+<section class="g-sec" id="o-viole" data-blok="Обо мне">
+  <div class="g-in g-about">
+    <div class="g-about-foto">
+      <picture>
+        <source type="image/webp" srcset="/assets/img/hero-mob.webp?v=93cc1685">
+        <img src="/assets/img/hero-mob.jpg?v=5beb704d" alt="Виола Маро" width="900" height="900" loading="lazy" decoding="async">
+      </picture>
+    </div>
+    <div class="g-about-text">
+      <h2 class="g-h2"><span class="g-ink">Обо</span> <span class="g-acc">мне</span></h2>
+      <p class="g-about-name">Меня зовут Виола Маро.</p>
+      <ul class="g-checks g-about-list"><li>Я психолог и психотерапевт, 25 лет веду частную практику в Италии на русском и итальянском</li><li>Окончила факультет психологии СПбГУ и римский университет Sapienza</li><li>Училась в Риме, Милане, Нью-Йорке, Париже и Сан-Паулу</li><li>Выступала спикером на Специальной сессии ООН по вопросам детей и молодёжи</li><li>Меня читают и смотрят 713 000 подписчиков в YouTube, TikTok и Instagram</li></ul>
+      <p class="g-accent-p">Я объясняю, почему вы так устроены, и показываю, что с этим делать</p>
+      <!-- Цитаты участниц: скрыты до их согласия (CITATY_VIDNY в glavnaya.py). -->
+      <ul class="g-quotes" hidden><li>«Виола рассказала обо мне, совсем меня не зная»</li><li>«Такой конкретики и реальных практичных вещей я ни у кого не слышала»</li><li>«Когда слушаешь Виолу, дыхание замирает»</li></ul>
+      <button type="button" class="g-btn" data-zayavka="Обо мне">Оставить заявку</button>
+    </div>
+  </div>
+</section>
+<section class="g-sec" data-blok="Оплата из другой страны">
+  <div class="g-in g-narrow">
+    <h2 class="g-h2"><span class="g-ink">Оплата</span> <span class="g-acc">из другой страны</span></h2>
+    <div class="g-box"><p>Оплатить можно из любой страны картой любого банка, в рублях, долларах или евро. Для карт других стран есть отдельные способы оплаты, менеджер пришлёт нужную ссылку. Деньги принимает ИП Нижевясова А. С., официальный организатор моих программ. Вопросы по оплате в службу заботы <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a></p></div>
+  </div>
+</section>
+<section class="g-sec g-grey" data-blok="Для кого эта программа">
+  <div class="g-in g-narrow">
+    <h2 class="g-h2"><span class="g-ink">Программа</span> <span class="g-acc">для вас, если</span></h2>
+    <ol class="g-nums"><li><span class="g-num">01</span><span>вы всем помогаете, а когда плохо вам, рядом никого</span></li><li><span class="g-num">02</span><span>уступаете и терпите, а потом весь вечер прокручиваете разговор в голове</span></li><li><span class="g-num">03</span><span>видите, что вами пользуются, и всё равно остаётесь</span></li><li><span class="g-num">04</span><span>из одних тяжёлых отношений попадаете в другие</span></li><li><span class="g-num">05</span><span>принимаете близко к сердцу каждое слово и каждый взгляд</span></li><li><span class="g-num">06</span><span>всю жизнь чувствуете себя белой вороной</span></li></ol>
+    <p class="g-accent-p g-accent-box">Характер тут ни при чём. У вас сильная эмпатия, а пользоваться ей вас никто не учил</p>
+  </div>
+</section>
+<section class="g-sec" data-blok="Почему не помогли книги и психологи">
+  <div class="g-in g-narrow">
+    <h2 class="g-h2"><span class="g-ink">Почему не помогли</span> <span class="g-acc">книги и психологи</span></h2>
+    <p>Вы уже читали книги, ходили к психологу, проходили курсы. Становилось понятнее, но не легче. Никто не объяснил, почему вы так остро чувствуете людей и что делать в ту минуту, когда на вас давят</p><p class="g-p2">С этого программа и начинается. Я объясняю, как вы устроены, и даю техники на ситуации, которые с вами уже происходят</p>
+  </div>
+</section>
+<section class="g-sec" id="voprosy" data-blok="Вопросы">
+  <div class="g-in g-narrow">
+    <h2 class="g-h2"><span class="g-acc">Вопросы</span></h2>
+    <div class="g-faq">
+      <details class="g-faq-i">
+        <summary>А если я не эмпат, а просто очень чувствительная?</summary>
+        <p>Если вы всё пропускаете через себя и после общения с людьми у вас не остаётся сил, программа про вас. Как это называть, не так важно: техники работают для любого человека, который чувствует других сильнее, чем хотел бы</p>
+      </details>
+      <details class="g-faq-i">
+        <summary>Я уже читала книги и ходила к психологу. Чем это отличается?</summary>
+        <p>Понимания у вас уже достаточно. Не хватает действия в ту минуту, когда на вас давят. Здесь каждая техника на конкретную сцену: мама обиделась на ваш отказ, коллега сливает на вас эмоции, партнёр снова давит на жалость</p>
+      </details>
+      <details class="g-faq-i">
+        <summary>Это дорого</summary>
+        <p>Есть рассрочка без процентов, от <span data-g-mes="Самостоятельный">1 242</span> ₽ в месяц. Одна личная встреча со мной стоит 200 €.<span data-po-zayavke> Вся программа с моими ответами на ваши вопросы по цене по заявке стоит дешевле двух таких встреч</span></p>
+      </details>
+      <details class="g-faq-i">
+        <summary>У меня нет времени: работа, семья</summary>
+        <p>Одна лекция в неделю, всё в записи. Смотрите, когда удобно, хоть по 15 минут. Доступ навсегда, пропущенное догоните в любой момент</p>
+      </details>
+      <details class="g-faq-i">
+        <summary>У меня совсем нет сил</summary>
+        <p>Программа рассчитана на уставших: одна лекция в неделю и техники маленькими шагами, по 10–15 минут в день. Первые перемены участницы замечают уже на первой неделе</p>
+      </details>
+      <details class="g-faq-i">
+        <summary>Мне уже поздно что-то менять</summary>
+        <p>В программе есть участницы старше 65 лет. Менять то, как вы реагируете на людей, можно в любом возрасте</p>
+      </details>
+      <details class="g-faq-i">
+        <summary>Я боюсь стать жёсткой. Близкие скажут, что я изменилась</summary>
+        <p>Вы останетесь такой же доброй. Просто перестанете отдавать себя тем, кто этого не ценит. Что отвечать на «ты изменилась» и «ты думаешь только о себе», разбираем отдельно, на третьей неделе</p>
+      </details>
+      <details class="g-faq-i">
+        <summary>Я не умею формулировать вопросы и стесняюсь писать</summary>
+        <p>Пишите общими словами, всю историю рассказывать не нужно. Я вижу, что стоит за вопросом, и отвечаю на то, что там на самом деле</p>
+      </details>
+      <details class="g-faq-i">
+        <summary>Чем «С Виолой» отличается от «Самостоятельного»?</summary>
+        <p>Программа в обоих тарифах одна. На тарифе «С Виолой» вы пишете вопрос в чат потока, и я отвечаю вам голосом. Поэтому мест в нём 50</p>
+      </details>
+      <details class="g-faq-i">
+        <summary>Я живу за границей и боюсь платить онлайн</summary>
+        <p>Оплатить можно из любой страны. После заявки я лично пишу вам, оплату проводит менеджер @violamaroteam, после оплаты приходит чек. Если вам пишет кто-то другой и просит деньги, это не мы</p>
+      </details>
+      <details class="g-faq-i">
+        <summary>Я не успею к старту или пропущу неделю</summary>
+        <p>Все лекции в записи и остаются у вас навсегда. Можно начать позже и идти в своём темпе</p>
+      </details>
+      <details class="g-faq-i">
+        <summary>У меня Telegram открывается только с VPN. Я смогу участвовать?</summary>
+        <p>Да. Ни одна часть программы не требует быть на связи в конкретную минуту: лекции в записи, вопросы вы пишете в чат, когда вам удобно</p>
+      </details>
+      <details class="g-faq-i">
+        <summary>А если во время работы станет тяжело?</summary>
+        <p>Так бывает, и об этом лучше знать заранее: когда начинаешь разбирать то, что годами лежало нетронутым, какое-то время может быть неспокойно. Темп здесь ваш, никто не подгоняет. Программа не заменяет очную психотерапию: если сейчас у вас острое состояние, сначала стоит опереться на своего специалиста</p>
+      </details>
+    </div>
+    <button type="button" class="g-btn" data-zayavka="Вопросы">Оставить заявку</button>
+  </div>
+</section>
+<div class="g-bar" id="g-bar" hidden>
+  <div class="g-bar-l" data-bar-timer>
+    <p class="g-bar-small">Скидка до 10 000 ₽ сгорит через</p>
+    <p class="g-bar-time" aria-live="off"><span><b id="bar-h">48</b><i>ч</i></span><em>:</em><span><b id="bar-m">00</b><i>мин</i></span><em>:</em><span><b id="bar-s">00</b><i>сек</i></span></p>
+  </div>
+  <p class="g-bar-posle" data-bar-posle hidden>Старт 1 ноября. Последний поток в этом году</p>
+  <button type="button" class="g-bar-btn" id="bar-btn">Закрепить цену</button>
+</div>
+<div class="g-modal" id="zayavka" role="dialog" aria-modal="true" aria-labelledby="zayavka-h" hidden>
+  <div class="g-modal-box">
+    <button type="button" class="g-x" data-g-close aria-label="Закрыть">✕</button>
+    <form class="g-form" id="zayavka-form" novalidate>
+      <p class="g-modal-h" id="zayavka-h"><span class="g-ink">Заявка</span> <span class="g-acc">на программу</span></p>
+      <p class="g-modal-sub">Моя программа «Прикладная эмпатия», 6 недель</p>
+      <p class="g-label g-modal-tarif" id="zayavka-tarif" hidden></p>
+      <label class="g-hp" aria-hidden="true">Не заполняйте это поле <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      <label class="g-f">Имя
+        <input type="text" name="name" autocomplete="given-name" required>
+      </label>
+      <label class="g-f">Telegram или телефон
+        <input type="text" name="contact" autocomplete="tel" inputmode="text" placeholder="@ник или +7…" required>
+      </label>
+      <label class="g-f">Что сейчас происходит и в какой сфере тяжелее всего <span class="g-opt">по желанию</span>
+        <textarea name="situation" rows="3"></textarea>
+      </label>
+      <label class="g-cb"><input type="checkbox" name="accept_pd" required>
+        <span>Я даю <a href="/consent" target="_blank" rel="noopener">согласие</a> на обработку моих персональных данных и ознакомлен(а) с <a href="/privacy" target="_blank" rel="noopener">Политикой обработки персональных данных</a>. <em>Обязательно</em></span>
+      </label>
+      <label class="g-cb"><input type="checkbox" name="accept_ads">
+        <span>Я хочу получать письма и сообщения о программах и эфирах. Отписаться можно в один клик. <a href="/consent-ads" target="_blank" rel="noopener">Условия рассылки</a> <em>По желанию</em></span>
+      </label>
+      <p class="g-err" id="zayavka-err" role="alert" hidden></p>
+      <button type="submit" class="g-btn g-btn-red" id="zayavka-send">Оставить заявку</button>
+      <p class="g-pod-dark">После заявки я лично напишу вам в Telegram в течение 15 минут. Если заявка придёт ночью, напишу утром</p>
+    </form>
+    <div class="g-done" id="zayavka-done" hidden>
+      <p class="g-done-t">Спасибо, я получила вашу заявку и напишу вам в Telegram в течение 15 минут, если ночью, то утром</p>
+      <p>Чтобы не ждать, можете написать мне сами</p>
+      <p class="g-done-sign">Виола</p>
+      <a class="g-btn g-btn-red" id="napisat-viole" href="https://t.me/violamarohelper" target="_blank" rel="noopener">Написать мне в Telegram</a>
+    </div>
+  </div>
+</div></div></main>
+
+<footer class="ft" aria-label="Реквизиты и документы">
+  <div class="ft-in">
+    <div class="ft-grid">
+
+      <div class="ft-col">
+        <p class="ft-org">Организатор программ Виолы&nbsp;Маро</p>
+        <p class="ft-legal">
+          ИП Нижевясова Анна Станиславовна<br>
+          ОГРНИП 321695200039136<br>
+          ИНН 690503942107<br>
+          Зарегистрирована Межрайонной ИФНС России №&nbsp;10 по&nbsp;Тверской области
+        </p>
+      </div>
+
+      <div class="ft-col">
+        <p class="ft-label"><span class="ft-ico" aria-hidden="true">✉</span>e-mail</p>
+        <a href="mailto:mg.ananizh@gmail.com">mg.ananizh@gmail.com</a>
+      </div>
+
+      <div class="ft-col">
+        <p class="ft-label"><span class="ft-ico" aria-hidden="true">✈</span>Служба заботы в&nbsp;Telegram</p>
+        <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>
+        <p class="ft-hours">пн–пт, 10:00–18:00&nbsp;МСК</p>
+      </div>
+
+      <nav class="ft-col ft-docs" aria-label="Правовые документы">
+        <p class="ft-label">Документы</p>
+        <a href="/offer">Публичная оферта</a>
+        <a href="/offer-prilozhenie">Приложение № 1 к Публичной оферте</a>
+        <a href="/privacy">Политика обработки персональных данных</a>
+        <a href="/consent">Согласие на обработку персональных данных</a>
+        <a href="/consent-ads">Согласие на рекламные и информационные сообщения</a>
+        <a href="/terms">Пользовательское соглашение</a>
+      </nav>
+
+    </div>
+
+    <p class="ft-disclaimer">
+      Информация на&nbsp;сайте носит информационно-просветительский характер,
+      не&nbsp;является медицинской услугой и&nbsp;не&nbsp;заменяет консультацию специалиста. 18+
+    </p>
+    <p class="ft-copy">
+      © Нижевясова А.&nbsp;С., 2026. Все права защищены. Любое использование или
+      копирование материалов сайта, элементов дизайна и&nbsp;оформления допускается
+      только с&nbsp;письменного разрешения правообладателя и&nbsp;со&nbsp;ссылкой на&nbsp;источник.
+    </p>
+    <p class="ft-note" id="meta-note">* Meta признана экстремистской организацией в&nbsp;России</p>
+  </div>
+</footer>
+
+<div class="cookie-bar" id="cookie-bar" hidden>
+  <p>
+    Мы используем файлы cookie, чтобы сайт работал корректно и&nbsp;чтобы понимать,
+    какие материалы вам полезны. Продолжая пользоваться сайтом, вы&nbsp;соглашаетесь
+    с&nbsp;их&nbsp;использованием.
+    <a href="/privacy#cookie">Подробнее</a>
+  </p>
+  <button type="button" id="cookie-ok">Хорошо</button>
+</div>
+<script>
+(function () {
+  'use strict';
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbxzJaSclK7FTBSK0X7cAIJcscvwt9qyAGSsYGCrFHehtTvYPPEzTloDjCgsDj7v77n9jQ/exec", SECRET = "PxlGXL9bQSjc0dHcLoiCZJZWtNdfv9D8yY9SHBuJ", METRIKA = 0;
+  var PLASHKA = [["2026-11-01T00:00:00+03:00", "Старт 1 ноября"], ["", "Набор на следующий поток открыт"]], PRICES = {"С Виолой": ["29 900", "39 900", "2 492", "3 325", "$360 / €320", "$480 / €430"], "Самостоятельный": ["14 900", "19 900", "1 242", "1 659", "$180 / €160", "$240 / €215"]}, HOURS = 48;
+  var KEY = 'viola_pe_zayavka';
+  var DOC_VERSION_CONSENT = '2026-08-10';
+
+  /* ── аналитика: цели Метрики, если счётчик задан ── */
+  var goalsQueue = [];
+  function goal(name, params) {
+    if (!METRIKA) return;
+    if (window.ym) { try { window.ym(METRIKA, 'reachGoal', name, params || {}); } catch (e) {} }
+    else goalsQueue.push([name, params]);
+  }
+  function initMetrika() {
+    if (!METRIKA || window.ym) return;
+    (function (m, e, t, r, i, k, a) { m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
+      m[i].l = 1 * new Date(); k = e.createElement(t), a = e.getElementsByTagName(t)[0]; k.async = 1; k.src = r;
+      a.parentNode.insertBefore(k, a); })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
+    window.ym(METRIKA, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true });
+    goalsQueue.forEach(function (g) { window.ym(METRIKA, 'reachGoal', g[0], g[1] || {}); });
+    goalsQueue = [];
+  }
+  /* Метрика стартует только после согласия на cookie. */
+  (function () {
+    var bar = document.getElementById('cookie-bar');
+    var ok = null;
+    try { ok = localStorage.getItem('cookie_ok'); } catch (e) {}
+    if (ok) { initMetrika(); return; }
+    if (!bar) return;
+    bar.hidden = false;
+    document.getElementById('cookie-ok').addEventListener('click', function () {
+      try { localStorage.setItem('cookie_ok', new Date().toISOString()); } catch (e) {}
+      bar.hidden = true;
+      initMetrika();
+    });
+  })();
+
+  /* ── плашка старта ── */
+  (function () {
+    var el = document.getElementById('plashka'), now = Date.now();
+    if (!el) return;
+    for (var i = 0; i < PLASHKA.length; i++) {
+      if (!PLASHKA[i][0] || now < Date.parse(PLASHKA[i][0])) { el.textContent = PLASHKA[i][1]; return; }
+    }
+  })();
+
+  /* ── uid из бота или мини-приложения: ?uid=<ID в Телеграме> ── */
+  var uid = '';
+  try { uid = (new URLSearchParams(location.search).get('uid') || '').replace(/[^0-9]/g, '').slice(0, 20); } catch (e) {}
+
+  /* ── личный таймер цены по заявке: 48 часов от первого захода ── */
+  var st = null, storage = true;
+  try {
+    st = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (!st || !st.deadline) {
+      var first = Date.now();
+      st = { first: first, deadline: first + HOURS * 3600e3, uid: uid, sent: '' };
+    }
+    if (uid && !st.uid) st.uid = uid;
+    localStorage.setItem(KEY, JSON.stringify(st));
+    if (JSON.parse(localStorage.getItem(KEY)).deadline !== st.deadline) throw 0;
+  } catch (e) { storage = false; st = null; }
+  if (!uid && st && st.uid) uid = st.uid;
+
+  goal(uid ? 'zahod_uid' : 'zahod_bez_uid');
+
+  /* Заход с uid — в таблицу: Даша видит, до какого времени у человека цена по заявке. */
+  if (uid && st && st.sent !== uid) {
+    send({ form: 'визит', secret: SECRET, uid: uid, first: new Date(st.first).toISOString(),
+           deadline: new Date(st.deadline).toISOString(), page: location.href }, function () {
+      try { st.sent = uid; localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {}
+    });
+  }
+
+  var timerP = document.getElementById('timer'), timerV = document.getElementById('timer-v');
+  var expired = false;
+  function two(n) { return (n < 10 ? '0' : '') + n; }
+  function setPrices(isExpired) {
+    expired = isExpired;
+    var root = document.querySelector('.gl');
+    if (isExpired) root.setAttribute('data-istek', ''); else root.removeAttribute('data-istek');
+    Object.keys(PRICES).forEach(function (name) {
+      var p = PRICES[name], box = document.querySelector('[data-g-cena="' + name + '"]');
+      if (box) {
+        box.querySelector('[data-g-sum]').textContent = isExpired ? p[1] : p[0];
+        box.querySelector('[data-g-val]').textContent = isExpired ? p[5] : p[4];
+      }
+      Array.prototype.forEach.call(document.querySelectorAll('[data-g-mes="' + name + '"]'), function (el) {
+        el.textContent = isExpired ? p[3] : p[2];
+      });
+    });
+  }
+  /* ── панель внизу экрана (правка 19.10) ──
+     Пока идёт таймер: «Скидка до 10 000 ₽ сгорит через ч : мин : сек»
+     и «Закрепить цену». Таймер вышел (или его нет без localStorage):
+     «Старт 1 ноября…» и «Оставить заявку». Кнопка ведёт к выбору тарифа.
+     Видна, когда кнопка первого экрана ушла вверх; прячется, пока на экране
+     блок тарифов (там свой таймер) и пока открыта форма. */
+  var bar = document.getElementById('g-bar');
+  var barH = document.getElementById('bar-h'), barM = document.getElementById('bar-m'), barS = document.getElementById('bar-s');
+  function barMode(timer) {
+    bar.querySelector('[data-bar-timer]').hidden = !timer;
+    bar.querySelector('[data-bar-posle]').hidden = timer;
+    document.getElementById('bar-btn').textContent = timer ? "Закрепить цену" : "Оставить заявку";
+  }
+  (function () {
+    var heroBtn = [].filter.call(document.querySelectorAll('section[aria-label="Первый экран"] [data-zayavka]'),
+      function (b) { return b.offsetParent; })[0];
+    var tar = document.getElementById('tarify');
+    var past = false, inTar = false;
+    function paint() {
+      var on = past && !inTar;
+      bar.classList.toggle('g-bar-off', !on);
+      document.body.classList.toggle('g-bar-on', on);
+    }
+    bar.hidden = false;
+    document.body.classList.add('g-has-bar');
+    if (!('IntersectionObserver' in window) || !heroBtn) { past = true; paint(); return; }
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { past = !e.isIntersecting && e.boundingClientRect.bottom <= 0; }); paint();
+    }).observe(heroBtn);
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { inTar = e.isIntersecting; }); paint();
+    }).observe(tar);
+    paint();
+  })();
+  document.getElementById('bar-btn').addEventListener('click', function () {
+    goal('knopka_paneli');
+    document.getElementById('tarify').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  barMode(!!(storage && st && st.deadline > Date.now()));
+
+  function tick() {
+    if (!st) return;
+    var left = st.deadline - Date.now();
+    if (left <= 0) { timerP.hidden = true; barMode(false); if (!expired) setPrices(true); return true; }
+    var s = Math.floor(left / 1000);
+    var h = two(Math.floor(s / 3600)), m = two(Math.floor(s % 3600 / 60)), c = two(s % 60);
+    timerV.textContent = h + ':' + m + ':' + c;
+    barH.textContent = h; barM.textContent = m; barS.textContent = c;
+    timerP.hidden = false;
+  }
+  if (storage && st) {
+    if (!tick()) { var iv = setInterval(function () { if (tick()) clearInterval(iv); }, 1000); }
+  }
+  /* localStorage недоступен — цены по заявке без таймера (так страница и свёрстана). */
+
+  function seenPrice(tarif) {
+    var names = tarif ? [tarif] : Object.keys(PRICES);
+    return names.map(function (n) {
+      var p = PRICES[n];
+      return n + ': ' + (expired ? p[1] + ' ₽' : p[0] + ' ₽ по заявке');
+    }).join('; ');
+  }
+
+  /* ── отправка: POST text/plain, как у формы сайта (без OPTIONS). Apps Script
+     отвечает редиректом; доходим до него и считаем запись сделанной. ── */
+  function send(payload, done, fail) {
+    if (!ENDPOINT || !window.fetch) { if (fail) fail(); return; }
+    var req = fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload), redirect: 'manual', keepalive: true })
+      .then(function (res) { if (res.type !== 'opaqueredirect' && !res.ok) throw new Error('HTTP ' + res.status); });
+    var slow = new Promise(function (r) { setTimeout(r, 1500); });
+    Promise.race([req, slow]).then(function () { if (done) done(); }, function () { if (fail) fail(); });
+  }
+
+  /* ── форма заявки ── */
+  var modal = document.getElementById('zayavka'), form = document.getElementById('zayavka-form');
+  var doneBox = document.getElementById('zayavka-done'), errP = document.getElementById('zayavka-err');
+  var tarifP = document.getElementById('zayavka-tarif'), sendBtn = document.getElementById('zayavka-send');
+  var curTarif = '', curBlok = '', lastFocus = null;
+
+  function open(tarif, blok) {
+    curTarif = tarif || ''; curBlok = blok || '';
+    tarifP.hidden = !curTarif;
+    tarifP.textContent = curTarif ? 'Тариф «' + curTarif + '»' : '';
+    lastFocus = document.activeElement;
+    modal.hidden = false;
+    document.body.classList.add('g-lock');
+    var first = form.hidden ? doneBox.querySelector('a') : form.querySelector('[name="name"]');
+    setTimeout(function () { try { first.focus(); } catch (e) {} }, 30);
+  }
+  function close() {
+    modal.hidden = true;
+    document.body.classList.remove('g-lock');
+    if (lastFocus) try { lastFocus.focus(); } catch (e) {}
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-zayavka]'), function (b) {
+    /* Форму открывают только кнопки в карточках тарифов (с data-tarif).
+       Остальные «Оставить заявку» ведут к выбору тарифа (правка 19.10). */
+    b.addEventListener('click', function (e) {
+      if (b.tagName === 'A') e.preventDefault();
+      goal('knopka_zayavki', { blok: b.getAttribute('data-zayavka') });
+      if (b.getAttribute('data-tarif')) open(b.getAttribute('data-tarif'), b.getAttribute('data-zayavka'));
+      else document.getElementById('tarify').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  Array.prototype.forEach.call(modal.querySelectorAll('[data-g-close]'), function (b) { b.addEventListener('click', close); });
+  modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) close(); });
+  document.getElementById('napisat-viole').addEventListener('click', function () { goal('napisat_viole'); });
+
+  function bad(msg, el) {
+    errP.textContent = msg; errP.hidden = false;
+    if (el) { el.classList.add('g-bad'); try { el.focus(); } catch (e) {} }
+  }
+  Array.prototype.forEach.call(form.querySelectorAll('input, textarea'), function (el) {
+    el.addEventListener('input', function () { el.classList.remove('g-bad'); errP.hidden = true; });
+    el.addEventListener('change', function () { var l = el.closest('.g-cb'); if (l) l.classList.remove('g-bad'); errP.hidden = true; });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = form.elements;
+    var name = f.name.value.trim(), contact = f.contact.value.trim();
+    if (!name) return bad('Напишите, как вас зовут.', f.name);
+    if (contact.replace(/[^0-9A-Za-zА-Яа-я]/g, '').length < 3) return bad('Оставьте Telegram или телефон, чтобы я могла вам написать.', f.contact);
+    if (!f.accept_pd.checked) { f.accept_pd.closest('.g-cb').classList.add('g-bad'); return bad('Отметьте согласие на обработку персональных данных.', f.accept_pd); }
+
+    /* Одно поле на контакт: цифры без букв — телефон, иначе Telegram. */
+    var isPhone = /^[+\d\s()\-]{7,}$/.test(contact);
+    var payload = {
+      secret: SECRET, website: f.website.value, form: 'заявка',
+      name: name, phone: isPhone ? contact : '', telegram: isPhone ? '' : contact,
+      readiness: 'Заявка с главной, без оплаты', plan: curTarif,
+      situation: f.situation.value.trim(),
+      uid: uid, deadline: st ? new Date(st.deadline).toISOString() : '',
+      price: seenPrice(curTarif), blok: curBlok,
+      accept_pd: true, accept_ads: !!f.accept_ads.checked,
+      consent_ts: new Date().toISOString(), doc_version_consent: DOC_VERSION_CONSENT,
+      page: location.href, ua: navigator.userAgent, referrer: document.referrer || ''
+    };
+    try {
+      var q = new URLSearchParams(location.search);
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src'].forEach(function (k) { payload[k] = q.get(k) || ''; });
+    } catch (err) {}
+
+    sendBtn.disabled = true; sendBtn.textContent = 'Отправляю…'; errP.hidden = true;
+    send(payload, function () {
+      goal('zayavka_otpravlena', { blok: curBlok, tarif: curTarif });
+      form.hidden = true; doneBox.hidden = false;
+      try { doneBox.querySelector('a').focus(); } catch (err) {}
+    }, function () {
+      sendBtn.disabled = false; sendBtn.textContent = 'Оставить заявку';
+      errP.innerHTML = 'Не получилось отправить заявку. Попробуйте ещё раз или напишите мне: '
+        + '<a href="https://t.me/violamarohelper" target="_blank" rel="noopener">@violamarohelper</a>';
+      errP.hidden = false;
+    });
+  });
+})();
+</script>
+</body>
+</html>
