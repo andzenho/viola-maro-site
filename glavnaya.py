@@ -1027,6 +1027,10 @@ body.g-lock { overflow: hidden; }
   .g-panel-r .g-btn { margin-left: 0; }
   .g-goals-sec { padding-top: 0; background: transparent; position: relative; z-index: 4; }
   .g-panel { margin-top: -56px; }
+  /* Панель наезжает на низ первого экрана на 56 px: держим под кнопкой
+     запас, чтобы панель её не перекрывала ни при каком размере окна. */
+  [data-hero-stage] [data-hero-copy] { padding-bottom: 104px !important; }
+  [data-hero-stage] { min-height: max(clamp(600px, 94vh, 960px), var(--g-hero-min, 0px)); height: auto !important; }
   .g-stories, .g-checks-2 { grid-template-columns: 1fr 1fr; display: grid; }
   .g-tarify { grid-template-columns: 1fr 1fr; align-items: start; }
   .g-about { grid-template-columns: 420px 1fr; gap: 56px; }
