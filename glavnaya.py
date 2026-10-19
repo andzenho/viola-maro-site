@@ -418,12 +418,9 @@ def hero_from_build():
     full, stage_h = h, stage
     h = stage_h
     sub(r"(<div style=\"font-size: clamp\(10px[^>]*>).*?</div>", lambda m: m.group(1) + HERO_SUB + "</div>")
-    sub(r"(<h1[^>]*>).*?</h1>", lambda m: m.group(1) + "Прикладная <br>эмпатия</h1>")
-    sub(r'<p style="([^"]*font-size: clamp\(23px[^"]*)">.*?</p>',
-        lambda m: '<p data-hero-def="" style="%s">%s</p>' % (
-            m.group(1).replace("font-size: clamp(23px, 2.4vw, 34px)", "font-size: clamp(18px, 1.6vw, 22px)")
-                      .replace("line-height: 1.25", "line-height: 1.5").replace("max-width: min(60%, 760px)", "max-width: min(48vw, 560px)"),
-            HERO_DEF))
+    # На ПК, как на телефоне: вместо названия программы — оффер крупным заголовком.
+    sub(r"<h1[^>]*>.*?</h1>", lambda m: '<h1 class="g-offer-h">%s</h1>' % HERO_DEF)
+    sub(r'<p style="[^"]*font-size: clamp\(23px[^"]*">.*?</p>', lambda m: "")
     sub(r'<p style="([^"]*backdrop-filter[^"]*)">.*?</p>',
         lambda m: '<p id="plashka" style="%s">%s</p>' % (m.group(1), PLASHKA[0][1]))
     sub(BTN_RE, btn_a)
@@ -506,6 +503,10 @@ def sec_goals():
     с меткой в рамке и квадратными галочками. На телефоне — планшет, потом цели."""
     goals = "".join("<li><b>%s</b>%s</li>" % g for g in GOALS)
     return """
+<section class="g-planshet-mob" data-blok="Планшет">
+  <div class="g-in">%(img)s
+  </div>
+</section>
 <section class="g-goals-sec" data-blok="Цели программы">
   <div class="g-in">
     <div class="g-panel">
@@ -807,7 +808,10 @@ body { padding-bottom: 0 !important; background: #fff; }
 
 /* 1. первый экран — разметка и стили сайта (build.py, тема barhat). Здесь
    только плашка старта в карточке и белая панель целей под ним. */
-[data-hero-stage] [data-hero-card] p[data-hero-def] { max-width: min(46vw, 560px) !important; }
+[data-hero-stage] h1.g-offer-h { margin: 16px 0 0 !important; max-width: min(40vw, 580px); font-family: 'Golos Text', system-ui, sans-serif !important;
+  font-weight: 600 !important; font-size: clamp(26px, 2.5vw, 38px) !important; line-height: 1.22 !important; letter-spacing: -.01em !important;
+  color: rgba(255,255,255,.88) !important; text-shadow: 0 2px 22px rgba(126,10,26,.55) !important; text-wrap: pretty; text-transform: none !important; }
+[data-hero-stage] h1.g-offer-h b { color: #FFFFFF; font-weight: 800; }
 /* Регалии: одна прозрачная плашка на фото, правее центра, поверх Виолы
    ниже лица; факты списком, один шрифт, важное жирным. */
 .g-fakty { position: absolute; z-index: 3; margin: 0; padding: 12px 16px; list-style: none; border-radius: 16px;
@@ -841,6 +845,9 @@ body { padding-bottom: 0 !important; background: #fff; }
 .g-planshet-badge b { font-family: var(--bebas); font-weight: 700; font-size: 22px; line-height: 1.02; letter-spacing: .02em;
   text-transform: uppercase; text-wrap: balance; }
 .g-panel-lh, .g-panel-lt { display: none; }
+.g-planshet-mob { background: #fff; padding: 12px 0 26px; }
+.g-planshet-mob .g-planshet { margin: 0 -10px 18px; }
+.g-panel-l { display: none; }
 .g-about-list { margin: 4px 0 4px; }
 .g-about-name { font-family: 'Prata', 'Times New Roman', Georgia, serif; font-size: 26px; line-height: 1.2; margin-bottom: 18px !important; }
 [data-h2-def].g-offer { margin: 0 !important; font-size: 23px !important; line-height: 1.35 !important; font-weight: 600 !important;
@@ -999,6 +1006,8 @@ body.g-lock { overflow: hidden; }
   .g-weeks { grid-template-columns: 1fr 1fr; column-gap: 40px; }
   .g-panel { padding: 48px 52px 52px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 56px; align-items: start;
     background: #fff; box-shadow: 0 30px 60px -34px rgba(28,26,29,.45), 0 0 0 1px #EEE9E3; }
+  .g-planshet-mob { display: none; }
+  .g-panel-l { display: block; }
   .g-panel-lh { display: block; margin-bottom: 14px !important; }
   .g-panel-lt { display: block; margin-bottom: 26px !important; font-size: 18px; line-height: 1.5; }
   .g-panel-lt b { color: var(--red-d); }
