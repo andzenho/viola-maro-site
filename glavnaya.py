@@ -454,6 +454,46 @@ def plashki_html(cls):
             % (cls, "".join("<li>%s</li>" % x for x in PLASHKI)))
 
 
+# Картинка с планшетом под оффером, над «Целями программы» (правка 19.10).
+# Исходник кладётся в build-assets/glavnaya/planshet.png (или .jpg/.webp);
+# пока файла нет, блока на странице нет.
+PLANSHET_SRC = os.path.join(build.BUILD_ASSETS, "glavnaya")
+PLANSHET_ALT = "Программа «Прикладная эмпатия» на планшете: лекции, шесть недель, техники, медитации, ответы и методички"
+
+
+def sec_planshet():
+    from PIL import Image
+    src = None
+    for ext in ("png", "webp", "jpg", "jpeg"):
+        p = os.path.join(PLANSHET_SRC, "planshet." + ext)
+        if os.path.isfile(p):
+            src = p
+            break
+    if not src:
+        return ""
+    im = Image.open(src)
+    im = im.convert("RGBA") if im.mode in ("RGBA", "LA", "P") else im.convert("RGB")
+    out = os.path.join(ASSETS, "img")
+    os.makedirs(out, exist_ok=True)
+    made = []
+    for w in (720, 1280):
+        if w > im.width and made:
+            continue
+        r = im.resize((min(w, im.width), round(im.height * min(w, im.width) / im.width)), Image.LANCZOS)
+        name = "planshet-%d.webp" % r.width
+        r.save(os.path.join(out, name), quality=84, method=6)
+        made.append((name, r.width, r.height))
+    srcset = ", ".join("/assets/img/%s?v=%s %dw" % (n, file_hash(os.path.join(out, n)), w) for n, w, _h in made)
+    n, w, h = made[-1]
+    return """
+<section class="g-planshet" data-blok="Планшет">
+  <div class="g-in">
+    <img src="/assets/img/%s?v=%s" srcset="%s" sizes="(max-width: 760px) 100vw, 980px"
+         alt="%s" width="%d" height="%d" loading="lazy" decoding="async">
+  </div>
+</section>""" % (n, file_hash(os.path.join(out, n)), srcset, PLANSHET_ALT, w, h)
+
+
 def sec_goals():
     """Цели — белой панелью под первым экраном, как «Цели менторства»
     на mentorstvo2025: метка в рамке и квадратные галочки."""
@@ -773,6 +813,8 @@ body { padding-bottom: 0 !important; background: #fff; }
 @media (min-width: 560px) { .g-fakty-h2 { right: calc(50% - 300px); } }
 /* Широкий экран: правее Виолы, на уровне руки. */
 .g-fakty-stage { right: max(24px, 3vw); bottom: 14%; width: 270px; }
+.g-planshet { background: #fff; padding: 20px 0 0; }
+.g-planshet img { display: block; width: 100%; max-width: 980px; height: auto; margin: 0 auto; }
 .g-about-list { margin: 4px 0 4px; }
 .g-about-name { font-family: 'Prata', 'Times New Roman', Georgia, serif; font-size: 26px; line-height: 1.2; margin-bottom: 18px !important; }
 [data-h2-def].g-offer { margin: 0 !important; font-size: 23px !important; line-height: 1.35 !important; font-weight: 600 !important;
@@ -1213,7 +1255,7 @@ def page():
     import json
     hero = hero_from_build()
     body = "".join([
-        sec_goals(), sec_nedeli(), sec_tarify(), sec_istorii(), sec_o_viole(),
+        sec_planshet(), sec_goals(), sec_nedeli(), sec_tarify(), sec_istorii(), sec_o_viole(),
         sec_text(h2("Оплата", "из другой страны"), '<div class="g-box"><p>%s</p></div>' % OPLATA,
                  "Оплата из другой страны"),
         sec_dlya_kogo(),
