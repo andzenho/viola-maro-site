@@ -66,9 +66,11 @@ DESCRIPTION = ("Шесть недель с психологом Виолой М�
                "перестаёте спасать всех и терпеть тех, кто вами пользуется. Старт 1 ноября.")
 
 HERO_SUB = "6-недельная программа для эмпатов от Виолы Маро"
-HERO_DEF = ("Это шестинедельная программа, на которой вы вместе с Виолой Маро учитесь "
-            "пользоваться своей эмпатией, чтобы <b>перестать спасать всех, уступать и терпеть "
-            "тех, кто вами пользуется</b>, и <b>начать себя любить, ценить и уважать</b>")
+# Оффер-заголовок первого экрана (правка Ильи 19.10 вместо определения
+# «Это шестинедельная программа…»).
+HERO_DEF = ("Научитесь вместе с Виолой Маро пользоваться своей эмпатией, чтобы <b>перестать "
+            "спасать всех, уступать и терпеть тех, кто вами пользуется</b>, и <b>начать себя "
+            "любить, ценить и уважать</b>")
 
 GOALS = [
     ("сразу видеть манипуляцию", " и не вестись на жалость, вину и сладкие обещания"),
@@ -388,9 +390,10 @@ def hero_from_build():
     sub(r'<p style="([^"]*font-size: clamp\(23px[^"]*)">.*?</p>',
         lambda m: '<p data-hero-def="" style="%s">%s</p>' % (
             m.group(1).replace("font-size: clamp(23px, 2.4vw, 34px)", "font-size: clamp(18px, 1.6vw, 22px)")
-                      .replace("line-height: 1.25", "line-height: 1.5").replace("max-width: min(60%, 760px)", "max-width: 640px"),
+                      .replace("line-height: 1.25", "line-height: 1.5").replace("max-width: min(60%, 760px)", "max-width: min(48vw, 560px)"),
             HERO_DEF))
-    sub(r'(<p style="[^"]*backdrop-filter[^"]*">).*?</p>', lambda m: m.group(1) + PLASHKA[0][1] + "</p>")
+    sub(r'<p style="([^"]*backdrop-filter[^"]*)">.*?</p>',
+        lambda m: '<p id="plashka" style="%s">%s</p>' % (m.group(1), PLASHKA[0][1]))
     sub(BTN_RE, btn_a)
     # Метка «Старт 1 ноября» рядом с кнопкой повторяла бы плашку: убираем.
     j = h.find("Старт 1 ноября</span>")
@@ -403,10 +406,9 @@ def hero_from_build():
     sub(r"(<p data-h2-title[^>]*>)(.*?)</p>", lambda m: m.group(1) + "Прикладная <br>эмпатия</p>")
     sub(r"(<p data-h2-sub[^>]*>).*?</p>", lambda m: m.group(1) + HERO_SUB + "</p>")
     sub(BTN_RE, btn_a)
-    sub(r"(<p data-h2-name[^>]*>).*?</p>", lambda m: m.group(1) + "Прикладная эмпатия</p>")
-    sub(r"(<p data-h2-def[^>]*>).*?</p>", lambda m: m.group(1) + HERO_DEF + "</p>")
-    sub(r"<p data-h2-note[^>]*>.*?</p>",
-        lambda m: '<p data-h2-note="" class="g-plashka-h2" id="plashka">%s</p>' % PLASHKA[0][1])
+    sub(r"<p data-h2-name[^>]*>.*?</p>", lambda m: "")
+    sub(r"<p data-h2-def[^>]*>.*?</p>", lambda m: '<p data-h2-def="" class="g-offer">%s</p>' % HERO_DEF)
+    sub(r"<p data-h2-note[^>]*>.*?</p>", lambda m: "")
     h = h.replace("%%STAGE%%", stage_h)
     h = h.replace('aria-label="Первый экран"', 'aria-label="Первый экран" data-blok="Первый экран"', 1)
     return h
@@ -711,9 +713,9 @@ body { padding-bottom: 0 !important; background: #fff; }
 
 /* 1. первый экран — разметка и стили сайта (build.py, тема barhat). Здесь
    только плашка старта в карточке и белая панель целей под ним. */
-#plashka.g-plashka-h2 { margin-top: 14px !important; padding: 12px 16px !important; border-radius: 12px !important;
-  background: #FCE9EA !important; color: #A30F23 !important; font-weight: 800 !important; font-size: 17px !important;
-  line-height: 1.35 !important; border-left: 5px solid #C4142C !important; }
+[data-h2-def].g-offer { margin: 0 !important; font-size: 23px !important; line-height: 1.35 !important; font-weight: 600 !important;
+  color: #1C1A1D !important; text-wrap: pretty; }
+[data-h2-def].g-offer b { color: #B01027 !important; font-weight: 800 !important; }
 .g-goals-sec { background: #fff; padding: 8px 0 8px; }
 .g-panel { background: var(--grey); border-radius: 26px; padding: 26px 20px 28px; }
 .g-panel .g-h2 { margin-bottom: 16px; }
@@ -893,6 +895,7 @@ JS = r"""
   /* ── плашка старта ── */
   (function () {
     var el = document.getElementById('plashka'), now = Date.now();
+    if (!el) return;
     for (var i = 0; i < PLASHKA.length; i++) {
       if (!PLASHKA[i][0] || now < Date.parse(PLASHKA[i][0])) { el.textContent = PLASHKA[i][1]; return; }
     }
