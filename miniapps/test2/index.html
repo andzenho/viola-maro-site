@@ -42,9 +42,10 @@
       '<p style="margin:0 0 .9rem"><button onclick="location.reload()" ' +
       'style="font:inherit;padding:.7rem 1.1rem;color:#fff;background:#A2703C;border:0;border-radius:4px">' +
       'Открыть заново</button></p>' +
-      '<p style="margin:0 0 .9rem;color:#5C5162">Не помогло — откройте ту же ссылку в обычном браузере: ' +
-      '<a href="https://violamaro.ru/test2/" style="color:#A2703C">violamaro.ru/test2</a></p>' +
-      '<p style="margin:0;font-size:.8rem;color:#8B7F92">Если и там не открылось, пришлите нам эту строку: ' +
+      /* Раньше здесь советовали обычный браузер. С 19.10 результат приходит
+         только в бот, и в браузере тест просит открыть себя в Телеграме. */
+      '<p style="margin:0 0 .9rem;color:#5C5162">Не помогло? Обновите Telegram и откройте тест из бота ещё раз.</p>' +
+      '<p style="margin:0;font-size:.8rem;color:#8B7F92">Если и тогда не открылось, пришлите нам эту строку: ' +
       String(msg).replace(/</g, "&lt;").slice(0, 200) + '</p></div>';
   }
   window.__fallback = fallback;
@@ -1049,6 +1050,10 @@ let lastResult = null;
 /* Номер прохождения. По нему приёмник находит строку, чтобы дописать в неё,
    до какого блока человек долистал и нажал ли кнопку анкеты. */
 let pid = "";
+/* Метка источника на старте теста. Нужна, когда прохождение досылается позже
+   (см. recheck_): тогда человек открыл тест другой кнопкой, и текущая метка
+   уже не та, по которой он пришёл. */
+let src0 = "";
 const form = {};           // ответы анкеты
 let formStep = 0;
 let leadSent = false;
@@ -1307,7 +1312,7 @@ function intro() {
       </div>
     </div>`);
   n.querySelector("#start").addEventListener("click", () => {
-    idx = 0; startedAt = Date.now(); pid = newPid_();
+    idx = 0; startedAt = Date.now(); pid = newPid_(); src0 = istochnik_();
     pingStart_(); stage = "q"; saveState(); question();
   });
   render(n);
@@ -1441,10 +1446,30 @@ function result(prev) {
     /* Результат с этого устройства уже отправлялся. Если он так и лежит
        в очереди, досылаем его до кнопки. */
     if (pendingResult_()) { saving_(pendingResult_()); return; }
-    readyScreen();
+    recheck_(r);
     return;
   }
   saving_(resultPayload_(r));
+}
+
+/* Телефон помнит «тест пройден», а бот смотрит в таблицу. Строку могли
+   удалить, или прохождение ушло без ID в Телеграме. Тогда тест говорил
+   «результат готов», бот отвечал «тест ещё не закончен», и человек ходил
+   по кругу (19.10). Поэтому перед кнопкой спрашиваем таблицу тем же
+   запросом статуса, что у бота. Не видит или не ответила — досылаем
+   прохождение из сохранённых ответов, уже под ID этого человека.
+   Без ID проверять нечем — как раньше, сразу экран «готово». */
+function recheck_(r) {
+  if (!CONFIG.sheetUrl || !inTg_() || !tgUser().id) { readyScreen(); return; }
+  render(el(`<div class="card"><p class="soft center">Открываю…</p></div>`));
+  status_().then(st => {
+    if (st && String(st.passed) === "1") { readyScreen(); return; }
+    const p = resultPayload_(r);
+    p.seconds = 0;               // время с первого прохождения — не время теста
+    p.fast = false;
+    if (src0) p.istochnik = src0;
+    saving_(p);
+  });
 }
 
 /* Запись прохождения, которая ещё не подтверждена приёмником. */
@@ -1534,6 +1559,48 @@ function istochnik_() {
   else if (p.indexOf("anketa") === 0 || p === "zayavka" || p === "rezultat" || p === "programma" || p === "reset") s = p;
   else { try { s = new URLSearchParams(location.search).get("src") || ""; } catch (e) {} }
   return String(s).replace(/[^\w\-]/g, "").slice(0, 40);
+}
+
+/* ——— тест открыли не в Телеграме (правка 19.10) ———
+   Результат приходит только в бот, а бот находит человека по ID в Телеграме.
+   В обычном браузере ID нет: прохождение ложилось в таблицу без него, бот
+   отвечал «тест ещё не закончен», и тест приходилось проходить второй раз.
+   Поэтому в браузере вместо вопросов одна кнопка: открыть тест в Телеграме
+   с той же меткой источника. Локальный просмотр (localhost, файл) — как раньше. */
+const APP_URL = "https://t.me/viola_maro_bot/test2";
+
+function plainBrowser_() {
+  try {
+    if (inTg_()) return false;
+    if (location.protocol === "file:" || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) return false;
+    /* Скрипт Телеграма мог не успеть загрузиться. Внутри Телеграма адрес всё
+       равно несёт tgWebApp…, а в приложениях есть свой мост. Хоть один признак —
+       считаем, что это Телеграм, и не мешаем. */
+    if (/tgWebApp/.test(String(location.hash) + String(location.search))) return false;
+    if (window.TelegramWebviewProxy) return false;
+    if (window.parent && window.parent !== window) return false;   // web.telegram.org держит приложение во фрейме
+    if (sessionStorage.getItem("__telegram__initParams")) return false;
+    return true;
+  } catch (e) { return false; }
+}
+
+function appLink_() {
+  let p = startParam_();
+  if (!p) { const s = istochnik_(); if (s) p = "src_" + s; }
+  p = String(p).replace(/[^\w\-]/g, "").slice(0, 64);
+  return APP_URL + (p ? "?startapp=" + p : "");
+}
+
+function browserScreen_() {
+  stage = "browser";
+  render(el(`
+    <div class="card">
+      <h2>Тест открывается в Telegram</h2>
+      <p class="lead">Результат я пришлю вам в бот, поэтому проходить тест нужно в Telegram. Нажмите кнопку, и тест откроется там 👇</p>
+      <div class="foot">
+        <a class="go" id="to-app" href="${esc(appLink_())}" rel="noopener">Открыть в Telegram</a>
+      </div>
+    </div>`));
 }
 
 /* ——— отправка в таблицу ———
@@ -1681,7 +1748,7 @@ function saveState() {
     localStorage.setItem(STATE_KEY, JSON.stringify({
       v: 2, t: Date.now(), stage: stage, idx: idx,
       answers: answers.slice(), forks: forks, words: words, age: age,
-      startedAt: startedAt, res: lastResult, pid: pid,
+      startedAt: startedAt, res: lastResult, pid: pid, src: src0,
       form: form, formStep: formStep, leadSent: leadSent
     }));
   } catch (e) {}
@@ -1752,6 +1819,10 @@ function boot() {
 
   const sp = startParam_();
 
+  /* Обычный браузер: проходить тест здесь бесполезно, результат до бота
+     не дойдёт. Неотправленное с прошлых раз всё же досылаем. */
+  if (plainBrowser_()) { flush(); browserScreen_(); return; }
+
   /* Сброс для проверок команды (правка 19.10). Ссылка t2_reset в боте снимает
      с человека метки и присылает кнопку с startapp=reset: тест забывает
      прохождение на этом устройстве и начинается с первого экрана.
@@ -1777,6 +1848,7 @@ function boot() {
     age = s.age || "";
     startedAt = s.startedAt || 0;
     pid = s.pid || "";
+    src0 = typeof s.src === "string" ? s.src : "";
     lastResult = s.res || null;
   }
   const finished = !!lastResult || (answers.length === ALL.length && !!age);
