@@ -47,7 +47,7 @@ METRIKA_ID = 0
 # срок ещё не наступил. Последняя без срока — что показывать после старта
 # (дату следующего потока уточнить у Ильи и вписать сюда).
 PLASHKA = [
-    ("2026-11-01T00:00:00+03:00", "Старт 1 ноября. Набор открыт до 31 октября"),
+    ("2026-11-01T00:00:00+03:00", "Старт 1 ноября"),
     ("", "Набор на следующий поток открыт"),
 ]
 
@@ -418,9 +418,12 @@ def hero_from_build():
     full, stage_h = h, stage
     h = stage_h
     sub(r"(<div style=\"font-size: clamp\(10px[^>]*>).*?</div>", lambda m: m.group(1) + HERO_SUB + "</div>")
-    # На ПК, как на телефоне: вместо названия программы — оффер крупным заголовком.
-    sub(r"<h1[^>]*>.*?</h1>", lambda m: '<h1 class="g-offer-h">%s</h1>' % HERO_DEF)
-    sub(r'<p style="[^"]*font-size: clamp\(23px[^"]*">.*?</p>', lambda m: "")
+    sub(r"(<h1[^>]*>).*?</h1>", lambda m: m.group(1) + "Прикладная <br>эмпатия</h1>")
+    sub(r'<p style="([^"]*font-size: clamp\(23px[^"]*)">.*?</p>',
+        lambda m: '<p data-hero-def="" style="%s">%s</p>' % (
+            m.group(1).replace("font-size: clamp(23px, 2.4vw, 34px)", "font-size: clamp(18px, 1.6vw, 22px)")
+                      .replace("line-height: 1.25", "line-height: 1.5").replace("max-width: min(60%, 760px)", "max-width: min(48vw, 560px)"),
+            HERO_DEF))
     sub(r'<p style="([^"]*backdrop-filter[^"]*)">.*?</p>',
         lambda m: '<p id="plashka" style="%s">%s</p>' % (m.group(1), PLASHKA[0][1]))
     sub(BTN_RE, btn_a)
@@ -808,10 +811,7 @@ body { padding-bottom: 0 !important; background: #fff; }
 
 /* 1. первый экран — разметка и стили сайта (build.py, тема barhat). Здесь
    только плашка старта в карточке и белая панель целей под ним. */
-[data-hero-stage] h1.g-offer-h { margin: 16px 0 0 !important; max-width: min(40vw, 580px); font-family: 'Golos Text', system-ui, sans-serif !important;
-  font-weight: 600 !important; font-size: clamp(26px, 2.5vw, 38px) !important; line-height: 1.22 !important; letter-spacing: -.01em !important;
-  color: rgba(255,255,255,.88) !important; text-shadow: 0 2px 22px rgba(126,10,26,.55) !important; text-wrap: pretty; text-transform: none !important; }
-[data-hero-stage] h1.g-offer-h b { color: #FFFFFF; font-weight: 800; }
+[data-hero-stage] [data-hero-card] p[data-hero-def] { max-width: min(46vw, 560px) !important; }
 /* Регалии: одна прозрачная плашка на фото, правее центра, поверх Виолы
    ниже лица; факты списком, один шрифт, важное жирным. */
 .g-fakty { position: absolute; z-index: 3; margin: 0; padding: 12px 16px; list-style: none; border-radius: 16px;
@@ -1003,7 +1003,16 @@ body.g-lock { overflow: hidden; }
   .gl { font-size: 19px; }
   .gl .g-h2 { font-size: 64px !important; }
   .g-sec { padding: 92px 0; }
-  .g-weeks { grid-template-columns: 1fr 1fr; column-gap: 40px; }
+  /* Недели столбиком, одна неделя в строке: слева номер и название,
+     справа текст и техники (просьба 19.10). */
+  .g-weeks { max-width: 1000px; margin: 0 auto; }
+  .g-week { display: grid; grid-template-columns: 300px 1fr; column-gap: 36px; align-items: start; padding-bottom: 40px; }
+  .g-week > .g-week-n, .g-week > .g-week-h { grid-column: 1; }
+  .g-week > .g-week-t, .g-week > .g-week-box, .g-week > .g-week-note { grid-column: 2; }
+  .g-week > .g-week-t { grid-row: 1 / span 2; margin-top: 2px !important; }
+  .g-week > .g-week-box { grid-row: 3; }
+  .g-week > .g-week-note { grid-row: 4; }
+  .g-weeks-pod { max-width: 1000px; margin-left: auto !important; margin-right: auto !important; }
   .g-panel { padding: 48px 52px 52px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 56px; align-items: start;
     background: #fff; box-shadow: 0 30px 60px -34px rgba(28,26,29,.45), 0 0 0 1px #EEE9E3; }
   .g-planshet-mob { display: none; }
@@ -1018,7 +1027,6 @@ body.g-lock { overflow: hidden; }
   .g-panel-r .g-btn { margin-left: 0; }
   .g-goals-sec { padding-top: 0; background: transparent; position: relative; z-index: 4; }
   .g-panel { margin-top: -56px; }
-  .g-week:nth-last-child(2) { border-left-color: transparent; }
   .g-stories, .g-checks-2 { grid-template-columns: 1fr 1fr; display: grid; }
   .g-tarify { grid-template-columns: 1fr 1fr; align-items: start; }
   .g-about { grid-template-columns: 420px 1fr; gap: 56px; }
