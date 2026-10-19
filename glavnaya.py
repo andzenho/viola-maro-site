@@ -141,8 +141,8 @@ TARIFY = [
      "items": [
          "6 лекций Виолы в записи с таймкодами",
          "Прикладные техники на каждую неделю, задания и PDF-конспекты",
-         "Виола в формате аудио отвечает на ваши вопросы в чате потока",
-         "Большой мастер-класс Виолы в финале с разбором вопросов участниц",
+         "<b>Виола в формате аудио отвечает на ваши вопросы в чате потока</b>",
+         "<b>Большой мастер-класс Виолы в финале с разбором вопросов участниц</b>",
          "Чат потока",
          "Аудиомедитации от Виолы",
          "Запись терапевтического уикенда «Неудобные»",
@@ -168,6 +168,17 @@ RASSROCHKA = ("Рассрочка на 3, 6 или 12 месяцев без пр
               "Рассрочка банка доступна гражданам стран СНГ по паспорту, 18+")
 POD_KNOPKOY = ("После заявки я лично напишу вам в Telegram в течение 15 минут. "
                "Если заявка придёт ночью, напишу утром")
+# Подпись под кнопкой в тарифах (правка 19.10). Первая фраза — только пока
+# идёт таймер: после него закреплять уже нечего.
+POD_TARIFY = ('<span data-po-zayavke>Оставьте заявку, пока идёт таймер, и цена закрепится за вами. </span>'
+              "Я лично напишу вам в Telegram в течение 15 минут. Если заявка придёт ночью, напишу утром")
+# Панель внизу экрана: пока идёт таймер и после него.
+PANEL = {
+    "small": "Скидка до 10 000 ₽ сгорит через",
+    "btn": "Закрепить цену",
+    "posle": "Старт 1 ноября. Последний поток в этом году",
+    "posle_btn": "Оставить заявку",
+}
 
 VKLYUCHENO = [
     ("Запись терапевтического уикенда «Неудобные», отдельно не продаётся",
@@ -520,12 +531,12 @@ def sec_tarify():
     %(h)s
     <div class="g-tarify">%(cards)s
     </div>
-    <p class="g-timer" id="timer" hidden>Цена по заявке действует ещё <b id="timer-v">48:00:00</b></p>
+    <p class="g-timer" id="timer" hidden>Скидка до 10 000 ₽ сгорит через <b id="timer-v">48:00:00</b></p>
     <p class="g-rass">%(rass)s</p>
     %(btn)s
     <p class="g-pod">%(pod)s</p>
   </div>
-</section>""" % {"cards": "".join(cards), "rass": RASSROCHKA, "pod": POD_KNOPKOY,
+</section>""" % {"cards": "".join(cards), "rass": RASSROCHKA, "pod": POD_TARIFY,
                  "h": h2("Тарифы", "", " g-center g-light"),
                  "btn": btn("Оставить заявку", "Тарифы", cls="g-btn g-btn-white")}
 
@@ -637,8 +648,12 @@ def sec_faq():
 def form_html():
     return """
 <div class="g-bar" id="g-bar" hidden>
-  <p class="g-bar-t">Цена по заявке действует ещё <b id="g-bar-t">48:00:00</b></p>
-  <button type="button" class="g-bar-btn" data-zayavka="Панель с таймером">Оставить заявку</button>
+  <div class="g-bar-l" data-bar-timer>
+    <p class="g-bar-small">%(ps)s</p>
+    <p class="g-bar-time" aria-live="off"><span><b id="bar-h">48</b><i>ч</i></span><em>:</em><span><b id="bar-m">00</b><i>мин</i></span><em>:</em><span><b id="bar-s">00</b><i>сек</i></span></p>
+  </div>
+  <p class="g-bar-posle" data-bar-posle hidden>%(pp)s</p>
+  <button type="button" class="g-bar-btn" id="bar-btn">%(pb)s</button>
 </div>
 <div class="g-modal" id="zayavka" role="dialog" aria-modal="true" aria-labelledby="zayavka-h" hidden>
   <div class="g-modal-box">
@@ -674,7 +689,8 @@ def form_html():
       <a class="g-btn g-btn-red" id="napisat-viole" href="%(tg)s" target="_blank" rel="noopener">Написать Виоле</a>
     </div>
   </div>
-</div>""" % {"pod": POD_KNOPKOY, "s1": SPASIBO[0], "s2": SPASIBO[1], "tg": VIOLA_TG}
+</div>""" % {"pod": POD_KNOPKOY, "s1": SPASIBO[0], "s2": SPASIBO[1], "tg": VIOLA_TG,
+             "ps": PANEL["small"], "pp": PANEL["posle"], "pb": PANEL["btn"]}
 
 
 CSS = r"""
@@ -841,20 +857,29 @@ body { padding-bottom: 0 !important; background: #fff; }
 .g-faq-i[open] summary::after { transform: rotate(-135deg); top: 10px; }
 .g-faq-i p { margin-top: 10px !important; color: var(--soft); }
 
-/* панель с таймером, закреплена внизу экрана */
-.g-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; display: flex; align-items: center; gap: 12px;
-  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--barhat); color: #fff;
-  box-shadow: 0 -12px 30px -14px rgba(28,26,29,.55); }
+/* панель внизу экрана: высота до 80 px плюс полоса «домой» на айфоне */
+.g-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 64px; max-height: calc(80px + env(safe-area-inset-bottom, 0px));
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)); background: var(--barhat); color: #fff;
+  box-shadow: 0 -12px 30px -14px rgba(28,26,29,.55); transform: translateY(0); transition: transform .25s ease; }
 .g-bar[hidden] { display: none; }
-.g-bar-t { flex: 1 1 auto; font-size: 14.5px; line-height: 1.25; font-weight: 600; }
-.g-bar-t b { display: block; font-family: var(--bebas); font-weight: 700; font-size: 30px; line-height: 1; letter-spacing: .04em; margin-top: 2px; }
-.g-bar-btn { flex: none; min-height: 52px; padding: 0 18px; border: 0; border-radius: 14px; background: #fff; color: var(--red);
-  font: 800 14.5px/1.2 'Golos Text', system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+.g-bar [hidden] { display: none !important; }
+.g-bar.g-bar-off { transform: translateY(110%); pointer-events: none; }
+.g-bar-small { font-size: 13px; line-height: 1.2; font-weight: 600; opacity: .95; }
+.g-bar-time { display: flex; align-items: flex-start; gap: 4px; margin-top: 2px !important; }
+.g-bar-time span { display: flex; flex-direction: column; align-items: center; min-width: 30px; }
+.g-bar-time b { font-family: var(--bebas); font-weight: 700; font-size: 28px; line-height: 1; letter-spacing: .03em; font-variant-numeric: tabular-nums; }
+.g-bar-time i { font-style: normal; font-size: 10.5px; line-height: 1.1; opacity: .85; }
+.g-bar-time em { font-style: normal; font-family: var(--bebas); font-size: 24px; line-height: 1.1; opacity: .8; }
+.g-bar-posle { font-size: 15px; line-height: 1.3; font-weight: 700; }
+.g-bar-btn { flex: none; min-height: 50px; padding: 0 16px; border: 0; border-radius: 14px; background: #fff; color: var(--red);
+  font: 800 14px/1.2 'Golos Text', system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
   box-shadow: 0 10px 20px -10px rgba(0,0,0,.5); }
 .g-bar-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
-body.g-has-bar { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
-body.g-has-bar .cookie-bar { bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
+body.g-has-bar { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important; }
+body.g-bar-on .cookie-bar { bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important; }
 body.g-lock .g-bar { display: none; }
+@media (prefers-reduced-motion: reduce) { .g-bar { transition: none; } }
 
 /* форма */
 .g-modal { position: fixed; inset: 0; z-index: 100; background: rgba(28,26,29,.6); display: flex; align-items: flex-end; justify-content: center; }
@@ -898,9 +923,12 @@ body.g-lock { overflow: hidden; }
   .g-tarify { grid-template-columns: 1fr 1fr; align-items: start; }
   .g-about { grid-template-columns: 420px 1fr; gap: 56px; }
   .g-modal { align-items: center; }
-  .g-bar { justify-content: center; gap: 28px; padding: 12px 24px; }
-  .g-bar-t { flex: 0 1 auto; font-size: 17px; }
-  .g-bar-t b { display: inline; font-size: 32px; margin: 0 0 0 8px; vertical-align: -4px; }
+  .g-bar { justify-content: center; gap: 32px; padding: 8px 24px; }
+  .g-bar-l { display: flex; align-items: center; gap: 16px; }
+  .g-bar-small { font-size: 16px; }
+  .g-bar-time { margin-top: 0 !important; }
+  .g-bar-time b { font-size: 32px; }
+  .g-bar-posle { font-size: 18px; }
   .g-bar-btn { padding: 0 30px; }
   .g-modal-box { border-radius: 24px; max-height: 92vh; padding: 32px 30px 30px; }
 }
@@ -1001,22 +1029,55 @@ JS = r"""
       });
     });
   }
-  /* Панель с таймером закреплена внизу экрана всё время, пока идёт цена
-     по заявке (просьба Ильи 19.10). Время вышло — панель уходит. */
-  var bar = document.getElementById('g-bar'), barV = document.getElementById('g-bar-t');
-  function showBar(on) {
-    bar.hidden = !on;
-    document.body.classList.toggle('g-has-bar', on);
+  /* ── панель внизу экрана (правка 19.10) ──
+     Пока идёт таймер: «Скидка до 10 000 ₽ сгорит через ч : мин : сек»
+     и «Закрепить цену». Таймер вышел (или его нет без localStorage):
+     «Старт 1 ноября…» и «Оставить заявку». Кнопка ведёт к выбору тарифа.
+     Видна, когда кнопка первого экрана ушла вверх; прячется, пока на экране
+     блок тарифов (там свой таймер) и пока открыта форма. */
+  var bar = document.getElementById('g-bar');
+  var barH = document.getElementById('bar-h'), barM = document.getElementById('bar-m'), barS = document.getElementById('bar-s');
+  function barMode(timer) {
+    bar.querySelector('[data-bar-timer]').hidden = !timer;
+    bar.querySelector('[data-bar-posle]').hidden = timer;
+    document.getElementById('bar-btn').textContent = timer ? %(pb)s : %(pa)s;
   }
+  (function () {
+    var heroBtn = [].filter.call(document.querySelectorAll('section[aria-label="Первый экран"] [data-zayavka]'),
+      function (b) { return b.offsetParent; })[0];
+    var tar = document.getElementById('tarify');
+    var past = false, inTar = false;
+    function paint() {
+      var on = past && !inTar;
+      bar.classList.toggle('g-bar-off', !on);
+      document.body.classList.toggle('g-bar-on', on);
+    }
+    bar.hidden = false;
+    document.body.classList.add('g-has-bar');
+    if (!('IntersectionObserver' in window) || !heroBtn) { past = true; paint(); return; }
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { past = !e.isIntersecting && e.boundingClientRect.bottom <= 0; }); paint();
+    }).observe(heroBtn);
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { inTar = e.isIntersecting; }); paint();
+    }).observe(tar);
+    paint();
+  })();
+  document.getElementById('bar-btn').addEventListener('click', function () {
+    goal('knopka_paneli');
+    document.getElementById('tarify').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  barMode(!!(storage && st && st.deadline > Date.now()));
+
   function tick() {
     if (!st) return;
     var left = st.deadline - Date.now();
-    if (left <= 0) { timerP.hidden = true; showBar(false); if (!expired) setPrices(true); return true; }
+    if (left <= 0) { timerP.hidden = true; barMode(false); if (!expired) setPrices(true); return true; }
     var s = Math.floor(left / 1000);
-    var t = two(Math.floor(s / 3600)) + ':' + two(Math.floor(s %% 3600 / 60)) + ':' + two(s %% 60);
-    timerV.textContent = t; barV.textContent = t;
+    var h = two(Math.floor(s / 3600)), m = two(Math.floor(s %% 3600 / 60)), c = two(s %% 60);
+    timerV.textContent = h + ':' + m + ':' + c;
+    barH.textContent = h; barM.textContent = m; barS.textContent = c;
     timerP.hidden = false;
-    if (bar.hidden) showBar(true);
   }
   if (storage && st) {
     if (!tick()) { var iv = setInterval(function () { if (tick()) clearInterval(iv); }, 1000); }
@@ -1154,6 +1215,7 @@ def page():
         "endpoint": json.dumps(LEAD_ENDPOINT), "secret": json.dumps(FORM_SECRET),
         "metrika": int(METRIKA_ID), "plashka": json.dumps(PLASHKA, ensure_ascii=False),
         "prices": json.dumps(PRICES, ensure_ascii=False), "hours": TIMER_HOURS, "viola": VIOLA_TG,
+        "pb": json.dumps(PANEL["btn"], ensure_ascii=False), "pa": json.dumps(PANEL["posle_btn"], ensure_ascii=False),
     }
     out = (head
            + '<main id="main" data-glavnaya="1">' + typograf(hero) + '<div class="gl">' + body + form + "</div></main>\n"
