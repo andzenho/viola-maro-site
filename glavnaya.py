@@ -140,7 +140,7 @@ NEDELI_POD = ("Каждую неделю лекция в записи с тай�
 
 # Карточки тарифов (правка Ильи 19.10): подзаголовок крупно и что входит.
 TARIFY = [
-    {"name": "С Виолой", "badge": "Рекомендуем", "mest": "50 мест",
+    {"name": "С Виолой", "badge": "Рекомендуем", "mest": (23, 50),   # занято, всего
      "text": "Вся программа и мои ответы на ваши вопросы",
      "items": [
          "6 моих лекций в записи с таймкодами",
@@ -173,8 +173,8 @@ POD_TARIFY = ('<span data-po-zayavke>Оставьте заявку, пока и�
 # красным жирным, остальное обычным, названия подарков жирным.
 PODARKI_H = "🎁 Подарки:"
 PODARKI = [
-    ("Если оставите заявку, пока идёт таймер,",
-     "вы получаете <b>запись трёхдневного уикенда «Неудобные»</b>, <b>лекцию «Любовь и деньги»</b>, "
+    ("Оставьте заявку, пока идёт таймер,",
+     "и после оплаты вы получите <b>запись трёхдневного уикенда «Неудобные»</b>, <b>лекцию «Любовь и деньги»</b>, "
      "<b>разбор фильма «Догвиль»</b> и <b>мастер-класс на узнавание себя</b>"),
     ("До конца таймера", "за вами закрепляется <b>цена со скидкой</b>"),
 ]
@@ -610,7 +610,10 @@ def sec_tarify():
                      "badge": ('<span class="g-badge">%s</span>' % t["badge"]) if top else "",
                      "name": t["name"], "text": t["text"],
                      "items": "".join("<li>%s</li>" % x for x in t["items"]),
-                     "mest": ('<span class="g-mest">%s</span>' % t["mest"]) if t["mest"] else "",
+                     "mest": ('<p class="g-mest">Занято %d из %d мест</p>'
+                              '<span class="g-mest-bar" aria-hidden="true"><i style="width:%d%%"></i></span>'
+                              % (t["mest"][0], t["mest"][1], round(100 * t["mest"][0] / t["mest"][1])))
+                             if t["mest"] else "",
                      "gift": podarki_html(),
                      "price": price_html(t["name"]),
                      "btn": btn("Оставить заявку", "Тарифы: " + t["name"], t["name"], "g-btn g-btn-red")})
@@ -749,7 +752,7 @@ def form_html():
       <label class="g-f">Telegram или телефон
         <input type="text" name="contact" autocomplete="tel" inputmode="text" placeholder="@ник или +7…" required>
       </label>
-      <label class="g-f">Что сейчас происходит и в какой сфере тяжелее всего <span class="g-opt">по желанию</span>
+      <label class="g-f">Опишите свой запрос к Виоле. Что хотите решить? <span class="g-opt">по желанию</span>
         <textarea name="situation" rows="3"></textarea>
       </label>
       <label class="g-cb"><input type="checkbox" name="accept_pd" required>
@@ -914,18 +917,22 @@ body { padding-bottom: 0 !important; background: #fff; }
 .g-tarif-top .g-tarif-h { color: #fff; }
 .g-badge { display: inline-block; margin-bottom: 10px; padding: 5px 12px; border-radius: 999px; background: #1C1A1D; color: #fff;
   font-weight: 800; font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; }
-.g-mest { position: absolute; right: 10px; bottom: -14px; transform: rotate(-4deg); padding: 6px 14px; border-radius: 8px; background: #fff;
-  color: var(--red-d); font-weight: 800; font-size: 15px; box-shadow: 0 8px 18px -8px rgba(0,0,0,.4); }
+/* Места: строка и полоса заполнения под названием тарифа. */
+.gl .g-mest { margin: 14px 0 0 !important; font-size: 14px; line-height: 1.3; font-weight: 700; letter-spacing: .02em; color: #fff; }
+.g-mest-bar { display: block; width: 100%; max-width: 220px; height: 6px; margin-top: 8px; border-radius: 99px; background: rgba(255,255,255,.28); overflow: hidden; }
+.g-mest-bar i { display: block; height: 100%; border-radius: inherit; background: #fff; }
 .g-tarif-t { margin: 22px 6px 0 !important; font-size: 22px; line-height: 1.3; font-weight: 800; color: var(--ink); }
 .g-tarif-l { margin: 18px 6px 12px !important; font-weight: 800; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: var(--red); }
 .g-tarif-list { margin: 0 6px !important; }
 .g-tarif-list li { font-size: 17px; }
-.g-cena { margin-top: 16px; padding: 16px 16px 14px; border-radius: 18px; background: var(--pink); color: var(--ink); }
-.g-cena-old { font-size: 18px; color: var(--soft); min-height: 1em; }
-.g-cena-new { font-family: var(--bebas); font-size: 54px; line-height: 1; color: var(--red); }
-.g-po { font-family: 'Golos Text', system-ui, sans-serif; font-size: 16px; font-weight: 800; vertical-align: middle; color: var(--red-d); }
+.g-cena { margin-top: 16px; padding: 16px 16px 14px; border-radius: 18px; background: var(--ink); color: #fff; }
+.g-cena-old { font-size: 18px; color: rgba(255,255,255,.55); min-height: 1em; }
+.g-cena-new { font-family: var(--bebas); font-size: 54px; line-height: 1; color: #fff; }
+.g-po { display: inline-block; margin-left: 4px; padding: 5px 10px 4px; border-radius: 999px; background: var(--red); color: #fff;
+  font-family: 'Golos Text', system-ui, sans-serif; font-size: 13px; line-height: 1.1; font-weight: 800; letter-spacing: .06em;
+  text-transform: uppercase; vertical-align: 10px; }
 .g-cena-mes { margin-top: 6px !important; font-weight: 700; font-size: 17px; }
-.g-cena-val { margin-top: 2px !important; font-size: 16px; color: var(--soft); }
+.g-cena-val { margin-top: 2px !important; font-size: 16px; color: rgba(255,255,255,.7); }
 .g-cena-val s { margin-right: 6px; }
 .g-tarif .g-btn { margin-top: 16px; max-width: none; }
 .gl .g-rass { margin-top: 16px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 640px; margin-left: auto; margin-right: auto; }
@@ -933,14 +940,14 @@ body { padding-bottom: 0 !important; background: #fff; }
 .gl[data-istek] [data-po-zayavke] { display: none !important; }
 
 /* Подарки в карточке тарифа: рамка, как блок «Бонусы» на egorpyrikov.ru. */
-.g-gift { margin: 24px 0 0; padding: 20px 24px; border: 2px solid var(--red); border-radius: 16px; background: #fff;
+.g-gift { margin: 32px 0 0; padding: 20px 24px; border: 2px solid var(--red); border-radius: 16px; background: #fff;
   color: var(--ink); font-size: 17px; line-height: 1.45; font-weight: 400; }
 .gl .g-gift p { margin: 0; }
 .gl .g-gift-h { font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--red); margin-bottom: 12px !important; }
 .gl .g-gift-p + .g-gift-p { margin-top: 16px !important; }
 .g-gift b { font-weight: 700; }
 .g-gift .g-gift-red { display: block; color: var(--red); }
-.g-gift + .g-cena { margin-top: 16px; }
+.g-gift + .g-cena { margin-top: 24px; }
 /* Таймер: тот же шрифт, насыщенность и межстрочный, что у текста вокруг.
    Цифры одной ширины, чтобы не прыгали при смене секунд. */
 .g-t { display: flex; align-items: flex-start; gap: 6px; font: inherit; font-variant-numeric: tabular-nums; }
@@ -1167,11 +1174,11 @@ body.g-lock { overflow: hidden; }
   .g-stories { gap: 28px; }
   .g-story { padding: 32px 30px 34px; }
   .g-tarify { gap: 32px; align-items: stretch; }
-  .g-tarif-head { min-height: 150px; }
+  .g-tarif-head { min-height: 176px; }
   .g-tarif { display: flex; flex-direction: column; }
-  .g-tarif-list { margin-bottom: 8px !important; }
+  .g-tarif-list { margin-bottom: 36px !important; }
   .g-tarif .g-gift { margin-top: auto; }
-  .g-tarif .g-gift + .g-cena { margin-top: 16px; }
+  .g-tarif .g-gift + .g-cena { margin-top: 24px; }
   .gl[data-istek] .g-tarif .g-cena { margin-top: auto; }
   .g-faq-i { padding: 24px 28px; }
 }
