@@ -149,10 +149,6 @@ TARIFY = [
          "<b>Мой большой мастер-класс в финале с разбором вопросов участниц</b>",
          "Чат потока",
          "Мои аудиомедитации",
-         "Запись терапевтического уикенда «Неудобные»",
-         "Лекция «Любовь и деньги»",
-         "Разбор фильма «Догвиль»",
-         "Большой мастер-класс на узнавание себя",
          "Доступ ко всем материалам навсегда",
      ]},
     {"name": "Самостоятельный", "badge": "", "mest": "",
@@ -161,10 +157,6 @@ TARIFY = [
          "6 моих лекций в записи с таймкодами",
          "Прикладные техники на каждую неделю, задания и PDF-конспекты",
          "Мои аудиомедитации",
-         "Запись терапевтического уикенда «Неудобные»",
-         "Лекция «Любовь и деньги»",
-         "Разбор фильма «Догвиль»",
-         "Большой мастер-класс на узнавание себя",
          "Доступ ко всем материалам навсегда",
      ]},
 ]
@@ -176,9 +168,19 @@ POD_KNOPKOY = ("После заявки я лично напишу вам в Tel
 # идёт таймер: после него закреплять уже нечего.
 POD_TARIFY = ('<span data-po-zayavke>Оставьте заявку, пока идёт таймер, и цена закрепится за вами. </span>'
               "Я лично напишу вам в Telegram в течение 15 минут. Если заявка придёт ночью, напишу утром")
+# Подарки в карточках тарифов (правка 19.10, заменяет прежние): видны,
+# пока идёт таймер; после него блок скрывается. Первая строка абзаца
+# красным жирным, остальное обычным, названия подарков жирным.
+PODARKI_H = "🎁 Подарки:"
+PODARKI = [
+    ("Если оставите заявку, пока идёт таймер,",
+     "вы получаете <b>запись трёхдневного уикенда «Неудобные»</b>, <b>лекцию «Любовь и деньги»</b>, "
+     "<b>разбор фильма «Догвиль»</b> и <b>мастер-класс на узнавание себя</b>"),
+    ("До конца таймера", "за вами закрепляется <b>цена со скидкой</b>"),
+]
 # Панель внизу экрана: пока идёт таймер и после него.
 PANEL = {
-    "small": "Скидка до 10 000 ₽ сгорит через",
+    "small": "Скидка и подарки сгорят через",
     "btn": "Закрепить цену",
     "posle": "Старт 1 ноября. Последний поток в этом году",
     "posle_btn": "Оставить заявку",
@@ -363,6 +365,23 @@ def h2(ink, red="", cls="", red_first=False):
 def btn(label, blok, tarif="", cls="g-btn"):
     return ('<button type="button" class="%s" data-zayavka="%s"%s>%s</button>'
             % (cls, blok, (' data-tarif="%s"' % tarif) if tarif else "", label))
+
+
+def timer_html(cls):
+    """Таймер «ЧЧ : ММ : СС» с подписями. Все таймеры страницы обновляет
+    один tick() в JS, поэтому время в них всегда одно."""
+    return ('<p class="g-t %s" data-g-timer aria-hidden="true">'
+            '<span><b data-t="h">48</b><i>ч</i></span><em>:</em>'
+            '<span><b data-t="m">00</b><i>мин</i></span><em>:</em>'
+            '<span><b data-t="s">00</b><i>сек</i></span></p>' % cls)
+
+
+def podarki_html():
+    """Блок подарков внутри карточки тарифа, над ценой. Скрыт после таймера
+    (data-po-zayavke); без localStorage виден, но без таймера."""
+    ps = "".join('<p class="g-gift-p"><b class="g-gift-red">%s</b> %s</p>' % x for x in PODARKI)
+    return ('<div class="g-gift" data-po-zayavke>'
+            '<p class="g-gift-h">%s</p>%s%s</div>' % (PODARKI_H, ps, timer_html("g-gift-t")))
 
 
 def price_html(name):
@@ -584,6 +603,7 @@ def sec_tarify():
       <p class="g-tarif-t">%(text)s</p>
       <p class="g-tarif-l">Что входит:</p>
       <ul class="g-checks g-checks-sm g-tarif-list">%(items)s</ul>
+      %(gift)s
       %(price)s
       %(btn)s
     </article>""" % {"cls": " g-tarif-top" if top else "",
@@ -591,6 +611,7 @@ def sec_tarify():
                      "name": t["name"], "text": t["text"],
                      "items": "".join("<li>%s</li>" % x for x in t["items"]),
                      "mest": ('<span class="g-mest">%s</span>' % t["mest"]) if t["mest"] else "",
+                     "gift": podarki_html(),
                      "price": price_html(t["name"]),
                      "btn": btn("Оставить заявку", "Тарифы: " + t["name"], t["name"], "g-btn g-btn-red")})
     return """
@@ -599,7 +620,6 @@ def sec_tarify():
     %(h)s
     <div class="g-tarify">%(cards)s
     </div>
-    <p class="g-timer" id="timer" hidden>Скидка до 10 000 ₽ сгорит через <b id="timer-v">48:00:00</b></p>
     <p class="g-rass">%(rass)s</p>
     <p class="g-pod">%(pod)s</p>
   </div>
@@ -705,7 +725,7 @@ def form_html():
 <div class="g-bar" id="g-bar" hidden>
   <div class="g-bar-l" data-bar-timer>
     <p class="g-bar-small">%(ps)s</p>
-    <p class="g-bar-time" aria-live="off"><span><b id="bar-h">48</b><i>ч</i></span><em>:</em><span><b id="bar-m">00</b><i>мин</i></span><em>:</em><span><b id="bar-s">00</b><i>сек</i></span></p>
+    %(bt)s
   </div>
   <p class="g-bar-posle" data-bar-posle hidden>%(pp)s</p>
   <button type="button" class="g-bar-btn" id="bar-btn">%(pb)s</button>
@@ -718,6 +738,11 @@ def form_html():
       <p class="g-modal-sub">Моя программа «Прикладная эмпатия», 6 недель</p>
       <p class="g-label g-modal-tarif" id="zayavka-tarif" hidden></p>
       <label class="g-hp" aria-hidden="true">Не заполняйте это поле <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      <input type="hidden" name="uid">
+      <input type="hidden" name="deadline">
+      <input type="hidden" name="price">
+      <input type="hidden" name="gifts">
+      <input type="hidden" name="plan">
       <label class="g-f">Имя
         <input type="text" name="name" autocomplete="given-name" required>
       </label>
@@ -745,7 +770,8 @@ def form_html():
     </div>
   </div>
 </div>""" % {"pod": POD_KNOPKOY, "s1": SPASIBO[0], "s2": SPASIBO[1], "tg": VIOLA_TG,
-             "ps": PANEL["small"], "pp": PANEL["posle"], "pb": PANEL["btn"]}
+             "ps": PANEL["small"], "pp": PANEL["posle"], "pb": PANEL["btn"],
+             "bt": timer_html("g-bar-time")}
 
 
 CSS = r"""
@@ -902,12 +928,30 @@ body { padding-bottom: 0 !important; background: #fff; }
 .g-cena-val { margin-top: 2px !important; font-size: 16px; color: var(--soft); }
 .g-cena-val s { margin-right: 6px; }
 .g-tarif .g-btn { margin-top: 16px; max-width: none; }
-.g-timer { margin-top: 28px !important; text-align: center; font-size: 19px; }
-.g-timer b { display: inline-block; font-family: var(--bebas); font-size: 34px; letter-spacing: .04em; vertical-align: -3px;
-  padding: 2px 10px 0; border-radius: 8px; background: rgba(0,0,0,.2); }
 .gl .g-rass { margin-top: 16px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 640px; margin-left: auto; margin-right: auto; }
 .gl .g-pod { margin-top: 14px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 520px; margin-left: auto; margin-right: auto; }
 .gl[data-istek] [data-po-zayavke] { display: none !important; }
+
+/* Подарки в карточке тарифа: рамка, как блок «Бонусы» на egorpyrikov.ru. */
+.g-gift { margin: 24px 0 0; padding: 20px 24px; border: 2px solid var(--red); border-radius: 16px; background: #fff;
+  color: var(--ink); font-size: 17px; line-height: 1.45; font-weight: 400; }
+.gl .g-gift p { margin: 0; }
+.gl .g-gift-h { font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--red); margin-bottom: 12px !important; }
+.gl .g-gift-p + .g-gift-p { margin-top: 16px !important; }
+.g-gift b { font-weight: 700; }
+.g-gift .g-gift-red { display: block; color: var(--red); }
+.g-gift + .g-cena { margin-top: 16px; }
+/* Таймер: тот же шрифт, насыщенность и межстрочный, что у текста вокруг.
+   Цифры одной ширины, чтобы не прыгали при смене секунд. */
+.g-t { display: flex; align-items: flex-start; gap: 6px; font: inherit; font-variant-numeric: tabular-nums; }
+.g-t span { display: flex; flex-direction: column; align-items: center; }
+.g-t b, .g-t em { font: inherit; font-style: normal; font-variant-numeric: tabular-nums; }
+.g-t i { font: inherit; font-style: normal; }
+.gl .g-gift-t { margin-top: 16px !important; justify-content: flex-start; }
+.g-gift-t b, .g-gift-t em { font-size: 1.5em; line-height: 1.2; color: var(--red); }
+.g-gift-t b { min-width: 1.3em; text-align: center; }
+.g-gift-t i { font-size: 12px; line-height: 1.3; color: var(--ink); }
+.g-t[hidden] { display: none !important; }
 
 /* 4. что ещё входит */
 .g-box { background: var(--grey); border-radius: 24px; padding: 24px 18px; }
@@ -959,11 +1003,10 @@ body { padding-bottom: 0 !important; background: #fff; }
 .g-bar [hidden] { display: none !important; }
 .g-bar.g-bar-off { transform: translateY(110%); pointer-events: none; }
 .g-bar-small { font-size: 13px; line-height: 1.2; font-weight: 600; opacity: .95; }
-.g-bar-time { display: flex; align-items: flex-start; gap: 4px; margin-top: 2px !important; }
-.g-bar-time span { display: flex; flex-direction: column; align-items: center; min-width: 30px; }
-.g-bar-time b { font-family: var(--bebas); font-weight: 700; font-size: 28px; line-height: 1; letter-spacing: .03em; font-variant-numeric: tabular-nums; }
-.g-bar-time i { font-style: normal; font-size: 10.5px; line-height: 1.1; opacity: .85; }
-.g-bar-time em { font-style: normal; font-family: var(--bebas); font-size: 24px; line-height: 1.1; opacity: .8; }
+.gl .g-bar-time { margin-top: 2px !important; gap: 4px; font-weight: 600; line-height: 1.2; }
+.g-bar-time b, .g-bar-time em { font-size: 22px; line-height: 1.05; }
+.g-bar-time b { min-width: 1.3em; text-align: center; font-weight: 700; }
+.g-bar-time i { font-size: 10.5px; line-height: 1.1; opacity: .85; }
 .g-bar-posle { font-size: 15px; line-height: 1.3; font-weight: 700; }
 .g-bar-btn { flex: none; min-height: 50px; padding: 0 16px; border: 0; border-radius: 14px; background: #fff; color: var(--red);
   font: 800 14px/1.2 'Golos Text', system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
@@ -1042,7 +1085,6 @@ body.g-lock { overflow: hidden; }
 .g-tarif-l { margin: 22px 6px 14px !important; }
 .g-tarif-list li { font-size: 17px; line-height: 1.45; }
 .g-cena { margin-top: 24px; padding: 20px 18px 18px; }
-.g-timer { margin-top: 40px !important; }
 .gl .g-rass, .gl .g-pod { line-height: 1.6; margin-top: 20px !important; }
 /* истории: заголовок карточки обычным шрифтом, отзыв без жирного */
 .g-stories { gap: 22px; }
@@ -1110,10 +1152,8 @@ body.g-lock { overflow: hidden; }
   .g-about { grid-template-columns: 420px 1fr; gap: 56px; }
   .g-modal { align-items: center; }
   .g-bar { justify-content: center; gap: 32px; padding: 8px 24px; }
-  .g-bar-l { display: flex; align-items: center; gap: 16px; }
   .g-bar-small { font-size: 16px; }
-  .g-bar-time { margin-top: 0 !important; }
-  .g-bar-time b { font-size: 32px; }
+  .g-bar-time b, .g-bar-time em { font-size: 24px; }
   .g-bar-posle { font-size: 18px; }
   .g-bar-btn { padding: 0 30px; }
   .g-modal-box { border-radius: 24px; max-height: 92vh; padding: 32px 30px 30px; }
@@ -1130,7 +1170,9 @@ body.g-lock { overflow: hidden; }
   .g-tarif-head { min-height: 150px; }
   .g-tarif { display: flex; flex-direction: column; }
   .g-tarif-list { margin-bottom: 8px !important; }
-  .g-tarif .g-cena { margin-top: auto; }
+  .g-tarif .g-gift { margin-top: auto; }
+  .g-tarif .g-gift + .g-cena { margin-top: 16px; }
+  .gl[data-istek] .g-tarif .g-cena { margin-top: auto; }
   .g-faq-i { padding: 24px 28px; }
 }
 """
@@ -1211,7 +1253,8 @@ JS = r"""
     });
   }
 
-  var timerP = document.getElementById('timer'), timerV = document.getElementById('timer-v');
+  /* Все таймеры страницы: подарки в обеих карточках и панель внизу. */
+  var timers = [].slice.call(document.querySelectorAll('[data-g-timer]'));
   var expired = false;
   function two(n) { return (n < 10 ? '0' : '') + n; }
   function setPrices(isExpired) {
@@ -1230,13 +1273,12 @@ JS = r"""
     });
   }
   /* ── панель внизу экрана (правка 19.10) ──
-     Пока идёт таймер: «Скидка до 10 000 ₽ сгорит через ч : мин : сек»
+     Пока идёт таймер: «Скидка и подарки сгорят через ч : мин : сек»
      и «Закрепить цену». Таймер вышел (или его нет без localStorage):
-     «Старт 1 ноября…» и «Оставить заявку». Кнопка ведёт к выбору тарифа.
+     «Старт 1 ноября…» и «Оставить заявку». Кнопка открывает форму заявки.
      Видна, когда кнопка первого экрана ушла вверх; прячется, пока на экране
-     блок тарифов (там свой таймер) и пока открыта форма. */
+     блок тарифов и пока открыта форма. */
   var bar = document.getElementById('g-bar');
-  var barH = document.getElementById('bar-h'), barM = document.getElementById('bar-m'), barS = document.getElementById('bar-s');
   function barMode(timer) {
     bar.querySelector('[data-bar-timer]').hidden = !timer;
     bar.querySelector('[data-bar-posle]').hidden = timer;
@@ -1265,32 +1307,30 @@ JS = r"""
   })();
   document.getElementById('bar-btn').addEventListener('click', function () {
     goal('knopka_paneli');
-    document.getElementById('tarify').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    open('', 'Панель внизу');
   });
   barMode(!!(storage && st && st.deadline > Date.now()));
 
   function tick() {
     if (!st) return;
     var left = st.deadline - Date.now();
-    if (left <= 0) { timerP.hidden = true; barMode(false); if (!expired) setPrices(true); return true; }
+    if (left <= 0) { barMode(false); if (!expired) setPrices(true); return true; }
     var s = Math.floor(left / 1000);
-    var h = two(Math.floor(s / 3600)), m = two(Math.floor(s %% 3600 / 60)), c = two(s %% 60);
-    timerV.textContent = h + ':' + m + ':' + c;
-    barH.textContent = h; barM.textContent = m; barS.textContent = c;
-    timerP.hidden = false;
+    var v = { h: two(Math.floor(s / 3600)), m: two(Math.floor(s %% 3600 / 60)), s: two(s %% 60) };
+    timers.forEach(function (t) {
+      Array.prototype.forEach.call(t.querySelectorAll('[data-t]'), function (b) { b.textContent = v[b.getAttribute('data-t')]; });
+      t.hidden = false;
+    });
   }
+  /* Без localStorage таймера нет: подарки и цены по заявке без часов. */
+  timers.forEach(function (t) { t.hidden = true; });
   if (storage && st) {
     if (!tick()) { var iv = setInterval(function () { if (tick()) clearInterval(iv); }, 1000); }
   }
   /* localStorage недоступен — цены по заявке без таймера (так страница и свёрстана). */
 
-  function seenPrice(tarif) {
-    var names = tarif ? [tarif] : Object.keys(PRICES);
-    return names.map(function (n) {
-      var p = PRICES[n];
-      return n + ': ' + (expired ? p[1] + ' ₽' : p[0] + ' ₽ по заявке');
-    }).join('; ');
-  }
+  /* Подарки и цена по заявке: пока таймер не вышел (без localStorage тоже да). */
+  function inTime() { return !(st && st.deadline <= Date.now()); }
 
   /* ── отправка: POST text/plain, как у формы сайта (без OPTIONS). Apps Script
      отвечает редиректом; доходим до него и считаем запись сделанной. ── */
@@ -1356,15 +1396,23 @@ JS = r"""
     if (contact.replace(/[^0-9A-Za-zА-Яа-я]/g, '').length < 3) return bad('Оставьте Telegram или телефон, чтобы я могла вам написать.', f.contact);
     if (!f.accept_pd.checked) { f.accept_pd.closest('.g-cb').classList.add('g-bad'); return bad('Отметьте согласие на обработку персональных данных.', f.accept_pd); }
 
+    /* Скрытые поля: uid, конец таймера, цена, подарки, тариф. */
+    var ok = inTime();
+    f.uid.value = uid;
+    f.deadline.value = st ? new Date(st.deadline).toISOString() : '';
+    f.price.value = ok ? 'по заявке' : 'полная';
+    f.gifts.value = ok ? 'да' : 'нет';
+    f.plan.value = curTarif;
+
     /* Одно поле на контакт: цифры без букв — телефон, иначе Telegram. */
     var isPhone = /^[+\d\s()\-]{7,}$/.test(contact);
     var payload = {
       secret: SECRET, website: f.website.value, form: 'заявка',
       name: name, phone: isPhone ? contact : '', telegram: isPhone ? '' : contact,
-      readiness: 'Заявка с главной, без оплаты', plan: curTarif,
+      readiness: 'Заявка с главной, без оплаты', plan: f.plan.value,
       situation: f.situation.value.trim(),
-      uid: uid, deadline: st ? new Date(st.deadline).toISOString() : '',
-      price: seenPrice(curTarif), blok: curBlok,
+      uid: f.uid.value, deadline: f.deadline.value,
+      price: f.price.value, gifts: f.gifts.value, blok: curBlok,
       accept_pd: true, accept_ads: !!f.accept_ads.checked,
       consent_ts: new Date().toISOString(), doc_version_consent: DOC_VERSION_CONSENT,
       page: location.href, ua: navigator.userAgent, referrer: document.referrer || ''

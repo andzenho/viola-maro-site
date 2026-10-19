@@ -131,7 +131,7 @@ console.log('— главная violamaro.ru (19.10) —');
 const post = payload => JSON.parse(ctx.doPost({ postData: { contents: JSON.stringify(payload) } }).text);
 const SECRET = 'PxlGXL9bQSjc0dHcLoiCZJZWtNdfv9D8yY9SHBuJ';
 const siteLead = extra => Object.assign({ secret: SECRET, website: '', form: 'заявка', name: 'Анна', phone: '', telegram: '@anna',
-  readiness: 'Заявка с главной, без оплаты', plan: 'С Виолой', situation: 'мама обижается на отказы', price: 'С Виолой: 29 900 ₽ по заявке',
+  readiness: 'Заявка с главной, без оплаты', plan: 'С Виолой', situation: 'мама обижается на отказы', price: 'по заявке', gifts: 'да',
   deadline: '2026-10-21T08:00:00.000Z', blok: 'Тарифы: С Виолой', accept_pd: true, accept_ads: false, consent_ts: '2026-10-19T08:00:00Z',
   doc_version_consent: '2026-08-10', page: 'https://violamaro.ru/?uid=888' }, extra);
 r = post({ form: 'визит', secret: SECRET, uid: '888', first: '2026-10-19T08:00:00.000Z', deadline: '2026-10-21T08:00:00.000Z', page: 'https://violamaro.ru/?uid=888' });
@@ -144,12 +144,12 @@ const anketBefore = sheets['Предзапись с теста 2.0'].rows.length
 const fetchedBefore = fetched.length;
 r = post(siteLead({ uid: '' }));
 let z = row('Заявки на продукт', sheets['Заявки на продукт'].rows.length - 1);
-ok(r.ok && z['Что происходит'] === 'мама обижается на отказы' && z['Тариф'] === 'С Виолой' && z['Цена, которую видел'] === 'С Виолой: 29 900 ₽ по заявке', 'заявка с главной без uid: «Заявки на продукт», новые колонки');
+ok(r.ok && z['Что происходит'] === 'мама обижается на отказы' && z['Тариф'] === 'С Виолой' && z['Цена, которую видел'] === 'по заявке' && z['Подарки'] === 'да', 'заявка с главной без uid: «Заявки на продукт», новые колонки');
 ok(sheets['Предзапись с теста 2.0'].rows.length === anketBefore, 'без uid в лист Дарьи не пишется');
 r = post(siteLead({ uid: '888' }));
 a = row('Предзапись с теста 2.0', sheets['Предзапись с теста 2.0'].rows.length - 1);
 ok(r.ok && a['ID в Телеграме'] === '888' && a['Статус'] === 'заявка с сайта' && a['Источник'] === 'сайт', 'заявка с uid: строка в «Предзапись с теста 2.0»');
-ok(/Тариф: С Виолой/.test(a['Женщина-лидер']) && /Цена по заявке до/.test(a['Женщина-лидер']) && a['Что хочет изменить'] === 'мама обижается на отказы', 'тариф, цена и срок цены в строке Дарьи');
+ok(/Тариф: С Виолой/.test(a['Женщина-лидер']) && /Цена по заявке до/.test(a['Женщина-лидер']) && /Подарки: да/.test(a['Женщина-лидер']) && a['Что хочет изменить'] === 'мама обижается на отказы', 'тариф, цена и срок цены в строке Дарьи');
 ok(status(888, 'empat2').anketa === '1', 'статус по uid: anketa = 1, бот ставит t2_anketa');
 ok(fetched.length === fetchedBefore + 1 && fetched[fetched.length - 1].user_id === '888' && fetched[fetched.length - 1].empat2_anketa === '1', 'SaleBot получил событие заявки с сайта');
 r = post(siteLead({ uid: '777', telegram: '', phone: '+7 900 111-22-33' }));
@@ -160,7 +160,7 @@ r = post(siteLead({ uid: '888', accept_pd: false }));
 ok(r.ok === false, 'без согласия на ПД заявка с главной отклоняется');
 
 r = JSON.parse(ctx.doGet({ parameter: {} }).text);
-ok(r.версия === '2026-10-19 glavnaya-uid', 'версия приёмника: ' + r.версия);
+ok(r.версия === '2026-10-19 zayavka-podarki', 'версия приёмника: ' + r.версия);
 
 console.log(fails ? '\nПРОВАЛОВ: ' + fails : '\nВсе проверки пройдены');
 process.exit(fails ? 1 : 0);
