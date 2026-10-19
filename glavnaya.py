@@ -542,11 +542,11 @@ def sec_nedeli():
                       build.WEEKS[i]["tricks"].split("\n") if line.strip()]
             tricks = [(t[0][:1].upper() + t[0][1:], "") for t in tricks]
         # Только названия техник, без описаний и без кавычек (просьба Ильи 19.10).
-        items = "".join("<li><b>%s</b></li>" % t.strip("«»") for t, _d in tricks)
+        items = "".join("<li>%s</li>" % t.strip("«»") for t, _d in tricks)
         cards.append("""
     <article class="g-week">
       <p class="g-week-n">Неделя %(k)d.</p>
-      <h3 class="g-week-h">«%(title)s»</h3>
+      <h3 class="g-week-h">%(title)s</h3>
       <p class="g-week-t">%(text)s</p>
       <div class="g-week-box">
         <p class="g-week-tr">Техники недели</p>
@@ -999,6 +999,73 @@ body.g-lock .g-bar { display: none; }
 .g-done .g-btn { max-width: none; }
 body.g-lock { overflow: hidden; }
 
+
+/* ── Типографика и воздух (правка 19.10) ──────────────────────────────
+   Три роли шрифтов и не больше: Bebas — только заголовки блоков, цены
+   и метки; Golos — весь читаемый текст и заголовки карточек; Prata —
+   только название программы на первом экране и имя в «Обо мне».
+   Основной текст 18 px / 1.65, абзацы не жирные, жирным только смысловые
+   слова. Между блоками 88 px на телефоне, внутри карточек 24 px. */
+.gl { font-size: 18px; line-height: 1.65; letter-spacing: .005em; }
+.g-in { padding: 0 20px; }
+.g-sec { padding: 88px 0; }
+.gl .g-h2, .gl .g-modal-h { font-size: 42px !important; line-height: 1.02; margin-bottom: 32px; letter-spacing: .015em; }
+.g-lead { margin: -14px 0 32px !important; font-size: 17px; line-height: 1.6; }
+.g-accent-p { font-size: 19px; line-height: 1.5; font-weight: 700; }
+.g-checks { gap: 18px; }
+.g-checks li { line-height: 1.55; padding-left: 40px; }
+.g-checks li b { font-weight: 700; }
+/* недели */
+.g-week { padding-bottom: 52px; padding-left: 28px; }
+.gl .g-week-n { font-size: 22px; padding: 6px 12px 4px; }
+.gl .g-week-h { font-family: 'Golos Text', system-ui, sans-serif !important; font-weight: 800; font-size: 23px !important;
+  line-height: 1.25; letter-spacing: -.01em; color: var(--ink); margin: 16px 0 12px; text-wrap: balance; }
+.g-week-t { margin-bottom: 22px !important; color: #3A363C; }
+.g-week-box { padding: 22px 20px 24px; border-radius: 20px; }
+.g-week-tr { font-family: 'Golos Text', system-ui, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--red); margin-bottom: 16px !important; }
+.g-tricks, .g-week-box .g-checks { gap: 14px; }
+.g-week-box .g-checks li { font-weight: 400; font-size: 17px; line-height: 1.45; }
+.g-weeks-pod { font-weight: 400; padding: 22px 20px; line-height: 1.6; margin-top: 4px !important; }
+/* тарифы */
+.g-tarify { gap: 36px; }
+.g-tarif { padding: 16px 16px 26px; }
+.gl .g-tarif-h { font-size: clamp(34px, 10vw, 46px) !important; }
+.g-tarif-t { font-size: 21px; line-height: 1.3; margin: 26px 6px 0 !important; }
+.g-tarif-l { margin: 22px 6px 14px !important; }
+.g-tarif-list li { font-size: 17px; line-height: 1.45; }
+.g-cena { margin-top: 24px; padding: 20px 18px 18px; }
+.g-timer { margin-top: 40px !important; }
+.gl .g-rass, .gl .g-pod { line-height: 1.6; margin-top: 20px !important; }
+/* истории: заголовок карточки обычным шрифтом, отзыв без жирного */
+.g-stories { gap: 22px; }
+.g-story { padding: 26px 22px 28px; }
+.gl .g-story-h { font-family: 'Golos Text', system-ui, sans-serif !important; font-weight: 800; font-size: 21px !important; line-height: 1.3;
+  text-transform: none; letter-spacing: -.01em; color: var(--ink); text-wrap: balance; }
+.g-story-age { margin-top: 8px !important; }
+.g-tag { margin: 22px 0 10px !important; }
+.g-story p { line-height: 1.6; }
+.g-story-ch { font-weight: 400; color: var(--ink); border-left: 3px solid var(--red); padding-left: 14px; }
+/* обо мне, для кого, вопросы */
+.g-about { gap: 36px; }
+.g-about-name { margin-bottom: 24px !important; }
+.g-nums { gap: 18px; }
+.g-nums li { line-height: 1.5; align-items: flex-start; }
+.g-num { margin-top: 2px; }
+.g-accent-box { padding: 20px 22px; margin-top: 32px !important; }
+.g-box { padding: 26px 22px; line-height: 1.65; }
+.g-faq-i { padding: 22px 20px; }
+.g-faq-i summary { line-height: 1.45; }
+.g-faq-i p { margin-top: 14px !important; line-height: 1.65; }
+.g-btn { margin-top: 36px; }
+/* цели */
+.g-goals-sec { padding-bottom: 32px; }
+.g-panel { padding: 30px 22px 32px; }
+.g-panel .g-label { margin-bottom: 26px; }
+/* первый экран на телефоне: название не упирается в края, регалии читаются */
+[data-h2-title] { font-size: clamp(36px, 10.6vw, 64px) !important; padding: 0 12px; }
+.g-fakty-h2 { font-size: 13px; line-height: 1.35; gap: 7px; padding: 12px 14px; width: min(72%, 280px); }
+
 @media (min-width: 760px) {
   .gl { font-size: 19px; }
   .gl .g-h2 { font-size: 64px !important; }
@@ -1045,6 +1112,16 @@ body.g-lock { overflow: hidden; }
   .g-modal-box { border-radius: 24px; max-height: 92vh; padding: 32px 30px 30px; }
 }
 @media (prefers-reduced-motion: reduce) { .g-btn, .g-faq-i summary::after { transition: none; } }
+@media (min-width: 760px) {
+  .g-sec { padding: 120px 0; }
+  .gl .g-h2 { font-size: 64px !important; margin-bottom: 44px; }
+  .gl .g-week-h { font-size: 26px !important; margin-top: 18px; }
+  .g-week { padding-bottom: 56px; }
+  .g-stories { gap: 28px; }
+  .g-story { padding: 32px 30px 34px; }
+  .g-tarify { gap: 32px; }
+  .g-faq-i { padding: 24px 28px; }
+}
 """
 
 JS = r"""
