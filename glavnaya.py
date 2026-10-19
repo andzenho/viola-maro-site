@@ -461,7 +461,14 @@ PLANSHET_SRC = os.path.join(build.BUILD_ASSETS, "glavnaya")
 PLANSHET_ALT = "Программа «Прикладная эмпатия» на планшете: лекции, шесть недель, техники, медитации, ответы и методички"
 
 
-def sec_planshet():
+# Левая колонка панели целей на широком экране (как «Моё менторство —»
+# на mentorstvo2025). На телефоне заголовка и текста нет: оффер стоит прямо над ними.
+PANEL_LEFT_H = "Прикладная эмпатия"
+PANEL_LEFT_T = ("Это шестинедельная программа для эмпатов. Каждую неделю <b>одна сфера жизни</b>: "
+                "мои лекции, техники, медитации и <b>мои ответы на ваши вопросы</b>")
+
+
+def planshet_img():
     from PIL import Image
     src = None
     for ext in ("webp", "png", "jpg", "jpeg"):
@@ -486,29 +493,37 @@ def sec_planshet():
     srcset = ", ".join("/assets/img/%s?v=%s %dw" % (n, file_hash(os.path.join(out, n)), w) for n, w, _h in made)
     n, w, h = made[-1]
     return """
-<section class="g-planshet" data-blok="Планшет">
-  <div class="g-in">
-    <img src="/assets/img/%s?v=%s" srcset="%s" sizes="(max-width: 760px) 100vw, 980px"
-         alt="%s" width="%d" height="%d" loading="lazy" decoding="async">
-  </div>
-</section>""" % (n, file_hash(os.path.join(out, n)), srcset, PLANSHET_ALT, w, h)
+      <div class="g-planshet">
+        <img src="/assets/img/%s?v=%s" srcset="%s" sizes="(max-width: 900px) 100vw, 560px"
+             alt="%s" width="%d" height="%d" loading="lazy" decoding="async">
+        <p class="g-planshet-badge"><span>Старт 1 ноября</span><b>Последний поток в&nbsp;этом году</b></p>
+      </div>""" % (n, file_hash(os.path.join(out, n)), srcset, PLANSHET_ALT, w, h)
 
 
 def sec_goals():
-    """Цели — белой панелью под первым экраном, как «Цели менторства»
-    на mentorstvo2025: метка в рамке и квадратные галочки."""
+    """Панель под первым экраном по схеме mentorstvo2025: на широком экране
+    слева «Прикладная эмпатия —», текст и планшет с плашкой, справа цели
+    с меткой в рамке и квадратными галочками. На телефоне — планшет, потом цели."""
     goals = "".join("<li><b>%s</b>%s</li>" % g for g in GOALS)
     return """
 <section class="g-goals-sec" data-blok="Цели программы">
   <div class="g-in">
     <div class="g-panel">
-      %(gh)s
-      <p class="g-label">Для каждого участника:</p>
-      <ul class="g-checks g-goals">%(goals)s</ul>
-      %(btn)s
+      <div class="g-panel-l">
+        <h2 class="g-h2 g-panel-lh"><span class="g-acc">%(lh)s</span></h2>
+        <p class="g-panel-lt">%(lt)s</p>
+        %(img)s
+      </div>
+      <div class="g-panel-r">
+        %(gh)s
+        <p class="g-label">Для каждого участника:</p>
+        <ul class="g-checks g-goals">%(goals)s</ul>
+        %(btn)s
+      </div>
     </div>
   </div>
 </section>""" % {"goals": goals, "gh": h2("программы", "Цели", red_first=True),
+                 "lh": PANEL_LEFT_H, "lt": PANEL_LEFT_T, "img": planshet_img(),
                  "btn": btn("Оставить заявку", "Цели программы")}
 
 
@@ -813,8 +828,19 @@ body { padding-bottom: 0 !important; background: #fff; }
 @media (min-width: 560px) { .g-fakty-h2 { right: calc(50% - 300px); } }
 /* Широкий экран: правее Виолы, на уровне руки. */
 .g-fakty-stage { right: max(24px, 3vw); bottom: 14%; width: 270px; }
-.g-planshet { background: #fff; padding: 20px 0 0; }
-.g-planshet img { display: block; width: 100%; max-width: 980px; height: auto; margin: 0 auto; filter: drop-shadow(0 24px 30px rgba(28,26,29,.18)); }
+.g-planshet { position: relative; margin: 0 -6px 34px; }
+.g-planshet img { display: block; width: 100%; height: auto; filter: drop-shadow(0 22px 26px rgba(28,26,29,.2)); }
+/* Плашка на планшете, как «Менторство проходит только раз в год»
+   на mentorstvo2025: глянцевая карточка, мелкая строка и крупная. */
+.g-planshet-badge { position: absolute; right: 3%; bottom: -10%; width: 40%; max-width: 190px; margin: 0;
+  padding: 14px 12px 15px; border-radius: 20px; text-align: center; color: #fff;
+  background: radial-gradient(120% 90% at 30% 0%, #F24A5E 0%, rgba(242,74,94,0) 60%), linear-gradient(160deg, #E2283F 0%, #B01027 100%);
+  box-shadow: 0 18px 30px -12px rgba(176,16,39,.75), inset 0 1px 0 rgba(255,255,255,.45), inset 0 -2px 0 rgba(0,0,0,.12);
+  display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.g-planshet-badge span { white-space: nowrap; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; opacity: .9; line-height: 1.2; }
+.g-planshet-badge b { font-family: var(--bebas); font-weight: 700; font-size: 22px; line-height: 1.02; letter-spacing: .02em;
+  text-transform: uppercase; text-wrap: balance; }
+.g-panel-lh, .g-panel-lt { display: none; }
 .g-about-list { margin: 4px 0 4px; }
 .g-about-name { font-family: 'Prata', 'Times New Roman', Georgia, serif; font-size: 26px; line-height: 1.2; margin-bottom: 18px !important; }
 [data-h2-def].g-offer { margin: 0 !important; font-size: 23px !important; line-height: 1.35 !important; font-weight: 600 !important;
@@ -971,9 +997,18 @@ body.g-lock { overflow: hidden; }
   .gl .g-h2 { font-size: 64px !important; }
   .g-sec { padding: 92px 0; }
   .g-weeks { grid-template-columns: 1fr 1fr; column-gap: 40px; }
-  .g-panel { padding: 44px 48px 48px; }
-  .g-goals { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; row-gap: 18px; }
-  .g-goals-sec { padding-top: 60px; }
+  .g-panel { padding: 48px 52px 52px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 56px; align-items: start;
+    background: #fff; box-shadow: 0 30px 60px -34px rgba(28,26,29,.45), 0 0 0 1px #EEE9E3; }
+  .g-panel-lh { display: block; margin-bottom: 14px !important; }
+  .g-panel-lt { display: block; margin-bottom: 26px !important; font-size: 18px; line-height: 1.5; }
+  .g-panel-lt b { color: var(--red-d); }
+  .g-planshet { margin: 0 -10px 0 -20px; }
+  .g-planshet-badge { right: 0; bottom: -4%; width: 34%; max-width: 200px; padding: 18px 14px 19px; border-radius: 22px; }
+  .g-planshet-badge span { font-size: 12px; }
+  .g-planshet-badge b { font-size: 26px; }
+  .g-panel-r .g-btn { margin-left: 0; }
+  .g-goals-sec { padding-top: 0; background: transparent; position: relative; z-index: 4; }
+  .g-panel { margin-top: -56px; }
   .g-week:nth-last-child(2) { border-left-color: transparent; }
   .g-stories, .g-checks-2 { grid-template-columns: 1fr 1fr; display: grid; }
   .g-tarify { grid-template-columns: 1fr 1fr; align-items: start; }
@@ -1255,7 +1290,7 @@ def page():
     import json
     hero = hero_from_build()
     body = "".join([
-        sec_planshet(), sec_goals(), sec_nedeli(), sec_tarify(), sec_istorii(), sec_o_viole(),
+        sec_goals(), sec_nedeli(), sec_tarify(), sec_istorii(), sec_o_viole(),
         sec_text(h2("Оплата", "из другой страны"), '<div class="g-box"><p>%s</p></div>' % OPLATA,
                  "Оплата из другой страны"),
         sec_dlya_kogo(),
