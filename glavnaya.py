@@ -713,6 +713,7 @@ body { padding-bottom: 0 !important; background: #fff; }
 
 /* 1. первый экран — разметка и стили сайта (build.py, тема barhat). Здесь
    только плашка старта в карточке и белая панель целей под ним. */
+[data-hero-stage] [data-hero-card] p[data-hero-def] { max-width: min(46vw, 560px) !important; }
 [data-h2-def].g-offer { margin: 0 !important; font-size: 23px !important; line-height: 1.35 !important; font-weight: 600 !important;
   color: #1C1A1D !important; text-wrap: pretty; }
 [data-h2-def].g-offer b { color: #B01027 !important; font-weight: 800 !important; }
