@@ -1029,6 +1029,9 @@ body.g-lock { overflow: hidden; }
 .g-weeks-pod { font-weight: 400; padding: 22px 20px; line-height: 1.6; margin-top: 4px !important; }
 /* тарифы */
 .g-tarify { gap: 36px; }
+/* Шапки тарифов одной высоты: у «С Виолой» есть «Рекомендуем», у второго нет. */
+.g-tarif-head { min-height: 132px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.g-tarif-head .g-badge { margin-bottom: 10px; }
 .g-tarif { padding: 16px 16px 26px; }
 .gl .g-tarif-h { font-size: clamp(34px, 10vw, 46px) !important; }
 .g-tarif-t { font-size: 21px; line-height: 1.3; margin: 26px 6px 0 !important; }
@@ -1119,7 +1122,11 @@ body.g-lock { overflow: hidden; }
   .g-week { padding-bottom: 56px; }
   .g-stories { gap: 28px; }
   .g-story { padding: 32px 30px 34px; }
-  .g-tarify { gap: 32px; }
+  .g-tarify { gap: 32px; align-items: stretch; }
+  .g-tarif-head { min-height: 150px; }
+  .g-tarif { display: flex; flex-direction: column; }
+  .g-tarif-list { margin-bottom: 8px !important; }
+  .g-tarif .g-cena { margin-top: auto; }
   .g-faq-i { padding: 24px 28px; }
 }
 """
