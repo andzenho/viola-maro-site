@@ -341,6 +341,16 @@
   /* Пока плавающая кнопка в работе, у страницы снизу больше воздуха:
      в самом конце кнопка не закрывает последний текст. */
   .wrap.has-fab { padding-bottom: calc(7.3rem + max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px))); }
+  /* Кнопка «Начать» на первом экране (правка 19.10): видна сразу, без
+     прокрутки, на любом телефоне. Прилипает к нижнему краю, пока под ней
+     ещё есть текст, и встаёт на своё место, когда человек долистал.
+     Подложка в цвет карточки, сходящая кверху на нет. */
+  .start-dock {
+    position: sticky; bottom: 0; z-index: 5;
+    margin: -.6rem -1.15rem 0;
+    padding: 1.4rem 1.15rem calc(.8rem + max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px)));
+    background: linear-gradient(to top, var(--surface) 0, var(--surface) 62%, rgba(255, 255, 255, 0) 100%);
+  }
   .go:hover { filter: brightness(1.06); }
   .go:active { transform: scale(.985); }
   .go:disabled { opacity: .6; cursor: default; }
@@ -1290,7 +1300,7 @@ function intro() {
         <p>Тут тридцать шесть утверждений, это <span class="nw hl">3–5 минут</span>. Отвечайте сразу, первым, что придёт в голову. Начнёте примерять каждое слово — получится про кого-то другого.</p>
         <p>Правильных ответов тут нет, оценивать вас никто не будет.</p>
       </div>
-      <button class="go" id="start">Начать</button>
+      <div class="start-dock"><button class="go" id="start">Начать</button></div>
       <div class="fine-print">
         <p>${DISCLAIM}</p>
         <p>Нажимая «Начать», вы соглашаетесь с <a href="${CONFIG.docs.privacy}" target="_blank" rel="noopener">Политикой обработки персональных данных</a>.</p>
