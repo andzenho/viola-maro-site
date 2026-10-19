@@ -585,8 +585,10 @@ def sec_nedeli():
     <div class="g-weeks">%s
     </div>
     <p class="g-weeks-pod">%s</p>
+    %s
   </div>
-</section>""" % (h2("Как проходит", "программа", " g-center"), "".join(cards), NEDELI_POD)
+</section>""" % (h2("Как проходит", "программа", " g-center"), "".join(cards), NEDELI_POD,
+                 btn("Оставить заявку", "Как проходит программа"))
 
 
 def sec_tarify():
@@ -692,8 +694,9 @@ def sec_text(head, body, blok, cls=""):
   <div class="g-in g-narrow">
     %s
     %s
+    %s
   </div>
-</section>""" % (cls, blok, head, body)
+</section>""" % (cls, blok, head, body, btn("Оставить заявку", blok))
 
 
 def sec_dlya_kogo():
