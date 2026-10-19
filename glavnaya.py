@@ -134,11 +134,35 @@ NEDELI_POD = ("Каждую неделю лекция в записи с тай�
               "задание и PDF-конспект. Техниками можно пользоваться прямо в тот момент, когда "
               "ситуация происходит. Чат потока, доступ навсегда")
 
+# Карточки тарифов (правка Ильи 19.10): подзаголовок крупно и что входит.
 TARIFY = [
     {"name": "С Виолой", "badge": "Рекомендуем", "mest": "50 мест",
-     "text": "Вся программа, и Виола голосом отвечает на ваши вопросы в чате потока"},
+     "text": "Вся программа и ответы Виолы на ваши вопросы",
+     "items": [
+         "6 лекций Виолы в записи с таймкодами",
+         "Прикладные техники на каждую неделю, задания и PDF-конспекты",
+         "Виола в формате аудио отвечает на ваши вопросы в чате потока",
+         "Большой мастер-класс Виолы в финале с разбором вопросов участниц",
+         "Чат потока",
+         "Аудиомедитации от Виолы",
+         "Запись терапевтического уикенда «Неудобные»",
+         "Лекция «Любовь и деньги»",
+         "Разбор фильма «Догвиль»",
+         "Большой мастер-класс на узнавание себя",
+         "Доступ ко всем материалам навсегда",
+     ]},
     {"name": "Самостоятельный", "badge": "", "mest": "",
-     "text": "Вся программа, техники, записи и подарки"},
+     "text": "Вся программа в вашем темпе",
+     "items": [
+         "6 лекций Виолы в записи с таймкодами",
+         "Прикладные техники на каждую неделю, задания и PDF-конспекты",
+         "Аудиомедитации от Виолы",
+         "Запись терапевтического уикенда «Неудобные»",
+         "Лекция «Любовь и деньги»",
+         "Разбор фильма «Догвиль»",
+         "Большой мастер-класс на узнавание себя",
+         "Доступ ко всем материалам навсегда",
+     ]},
 ]
 RASSROCHKA = ("Рассрочка на 3, 6 или 12 месяцев без процентов, первый платёж через месяц. "
               "Рассрочка банка доступна гражданам стран СНГ по паспорту, 18+")
@@ -442,8 +466,8 @@ def sec_nedeli():
             tricks = [(line.lstrip("— ").strip(), "") for line in
                       build.WEEKS[i]["tricks"].split("\n") if line.strip()]
             tricks = [(t[0][:1].upper() + t[0][1:], "") for t in tricks]
-        items = "".join(
-            "<li><b>%s</b>%s</li>" % (t, ("<span>%s</span>" % d) if d else "") for t, d in tricks)
+        # Только названия техник, без описаний и без кавычек (просьба Ильи 19.10).
+        items = "".join("<li><b>%s</b></li>" % t.strip("«»") for t, _d in tricks)
         cards.append("""
     <article class="g-week">
       <p class="g-week-n">Неделя %(k)d.</p>
@@ -479,11 +503,14 @@ def sec_tarify():
         %(mest)s
       </div>
       <p class="g-tarif-t">%(text)s</p>
+      <p class="g-tarif-l">Что входит:</p>
+      <ul class="g-checks g-checks-sm g-tarif-list">%(items)s</ul>
       %(price)s
       %(btn)s
     </article>""" % {"cls": " g-tarif-top" if top else "",
                      "badge": ('<span class="g-badge">%s</span>' % t["badge"]) if top else "",
                      "name": t["name"], "text": t["text"],
+                     "items": "".join("<li>%s</li>" % x for x in t["items"]),
                      "mest": ('<span class="g-mest">%s</span>' % t["mest"]) if t["mest"] else "",
                      "price": price_html(t["name"]),
                      "btn": btn("Оставить заявку", "Тарифы: " + t["name"], t["name"], "g-btn g-btn-red")})
@@ -754,7 +781,10 @@ body { padding-bottom: 0 !important; background: #fff; }
   font-weight: 800; font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; }
 .g-mest { position: absolute; right: 10px; bottom: -14px; transform: rotate(-4deg); padding: 6px 14px; border-radius: 8px; background: #fff;
   color: var(--red-d); font-weight: 800; font-size: 15px; box-shadow: 0 8px 18px -8px rgba(0,0,0,.4); }
-.g-tarif-t { color: var(--soft); margin: 20px 6px 0 !important; }
+.g-tarif-t { margin: 22px 6px 0 !important; font-size: 22px; line-height: 1.3; font-weight: 800; color: var(--ink); }
+.g-tarif-l { margin: 18px 6px 12px !important; font-weight: 800; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: var(--red); }
+.g-tarif-list { margin: 0 6px !important; }
+.g-tarif-list li { font-size: 17px; }
 .g-cena { margin-top: 16px; padding: 16px 16px 14px; border-radius: 18px; background: var(--pink); color: var(--ink); }
 .g-cena-old { font-size: 18px; color: var(--soft); min-height: 1em; }
 .g-cena-new { font-family: var(--bebas); font-size: 54px; line-height: 1; color: var(--red); }
@@ -766,8 +796,8 @@ body { padding-bottom: 0 !important; background: #fff; }
 .g-timer { margin-top: 28px !important; text-align: center; font-size: 19px; }
 .g-timer b { display: inline-block; font-family: var(--bebas); font-size: 34px; letter-spacing: .04em; vertical-align: -3px;
   padding: 2px 10px 0; border-radius: 8px; background: rgba(0,0,0,.2); }
-.g-rass { margin-top: 16px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 640px; margin-left: auto; margin-right: auto; }
-.g-pod { margin-top: 14px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 520px; margin-left: auto; margin-right: auto; }
+.gl .g-rass { margin-top: 16px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 640px; margin-left: auto; margin-right: auto; }
+.gl .g-pod { margin-top: 14px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 520px; margin-left: auto; margin-right: auto; }
 .gl[data-istek] [data-po-zayavke] { display: none !important; }
 
 /* 4. что ещё входит */
