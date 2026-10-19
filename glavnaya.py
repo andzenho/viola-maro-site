@@ -15,7 +15,7 @@ site/index.html. Остальные страницы (оплата, рассро
 
 Первый экран — прежний первый экран сайта (Виола на арке), его разметку
 даёт build.py, здесь меняются только тексты. Регалии отдельным списком
-не выводятся: они в тексте блока «О Виоле».
+выводятся пунктами в блоке «Обо мне» и плашками на фото первого экрана.
 
 Тексты блоков лежат ниже словарями и списками, по порядку страницы. Длинного
 тире в текстах нет: сборка падает, если оно где-то появится, как и «2.0».
@@ -65,10 +65,10 @@ TITLE = "Прикладная эмпатия: шестинедельная пр�
 DESCRIPTION = ("Шесть недель с психологом Виолой Маро: учитесь пользоваться своей эмпатией, "
                "перестаёте спасать всех и терпеть тех, кто вами пользуется. Старт 1 ноября.")
 
-HERO_SUB = "6-недельная программа для эмпатов от Виолы Маро"
+HERO_SUB = "Моя 6-недельная программа для эмпатов"
 # Оффер-заголовок первого экрана (правка Ильи 19.10 вместо определения
 # «Это шестинедельная программа…»).
-HERO_DEF = ("Научитесь вместе с Виолой Маро пользоваться своей эмпатией, чтобы <b>перестать "
+HERO_DEF = ("Научитесь вместе со мной пользоваться своей эмпатией, чтобы <b>перестать "
             "спасать всех, уступать и терпеть тех, кто вами пользуется</b>, и <b>начать себя "
             "любить, ценить и уважать</b>")
 
@@ -137,14 +137,14 @@ NEDELI_POD = ("Каждую неделю лекция в записи с тай�
 # Карточки тарифов (правка Ильи 19.10): подзаголовок крупно и что входит.
 TARIFY = [
     {"name": "С Виолой", "badge": "Рекомендуем", "mest": "50 мест",
-     "text": "Вся программа и ответы Виолы на ваши вопросы",
+     "text": "Вся программа и мои ответы на ваши вопросы",
      "items": [
-         "6 лекций Виолы в записи с таймкодами",
+         "6 моих лекций в записи с таймкодами",
          "Прикладные техники на каждую неделю, задания и PDF-конспекты",
-         "<b>Виола в формате аудио отвечает на ваши вопросы в чате потока</b>",
-         "<b>Большой мастер-класс Виолы в финале с разбором вопросов участниц</b>",
+         "<b>Я отвечаю в формате аудио на ваши вопросы в чате потока</b>",
+         "<b>Мой большой мастер-класс в финале с разбором вопросов участниц</b>",
          "Чат потока",
-         "Аудиомедитации от Виолы",
+         "Мои аудиомедитации",
          "Запись терапевтического уикенда «Неудобные»",
          "Лекция «Любовь и деньги»",
          "Разбор фильма «Догвиль»",
@@ -154,9 +154,9 @@ TARIFY = [
     {"name": "Самостоятельный", "badge": "", "mest": "",
      "text": "Вся программа в вашем темпе",
      "items": [
-         "6 лекций Виолы в записи с таймкодами",
+         "6 моих лекций в записи с таймкодами",
          "Прикладные техники на каждую неделю, задания и PDF-конспекты",
-         "Аудиомедитации от Виолы",
+         "Мои аудиомедитации",
          "Запись терапевтического уикенда «Неудобные»",
          "Лекция «Любовь и деньги»",
          "Разбор фильма «Догвиль»",
@@ -180,22 +180,7 @@ PANEL = {
     "posle_btn": "Оставить заявку",
 }
 
-VKLYUCHENO = [
-    ("Запись терапевтического уикенда «Неудобные», отдельно не продаётся",
-     "Три дня, 11–13 сентября. Запись останется у вас навсегда"),
-    ("Лекция «Любовь и деньги»",
-     "Почему и любовь, и деньги про одно и то же состояние наполненности"),
-    ("Разбор фильма «Догвиль»",
-     "Как эмпат оказывается в позиции жертвы, как устроена эмоциональная зависимость "
-     "и как из неё выходят"),
-    ("Большой мастер-класс на узнавание себя", ""),
-    ("Большой мастер-класс с разбором вопросов участниц в финале потока", ""),
-    ("Аудиомедитации от Виолы", ""),
-    ("Чат потока", ""),
-    ("Доступ ко всем материалам навсегда", ""),
-]
-
-ISTORII_POD = "Участницы рассказали это сами. Имена остаются между ними и Виолой"
+ISTORII_POD = "Участницы рассказали это сами. Имена остаются между ними и мной"
 ISTORII = [
     ("Девушка, которая узнала своего партнёра в видео про нарциссов", "35–44 года",
      "«Я устала от того, что мной манипулируют в отношениях, на работе, выжимают мои силы». "
@@ -237,12 +222,24 @@ ISTORII = [
      "кажется, начну жить»"),
 ]
 
-O_VIOLE = [
-    "Виола Маро, психолог и психотерапевт. 25 лет частной практики в Италии на русском "
-    "и итальянском. Выпускница факультета психологии СПбГУ и римского университета Sapienza, "
-    "училась в Риме, Милане, Нью-Йорке, Париже и Сан-Паулу. Спикер Специальной сессии ООН "
-    "по вопросам детей и молодёжи. 713 000 подписчиков в YouTube, TikTok и Instagram",
-    "Виола объясняет, почему вы так устроены, и показывает, что с этим делать",
+# «О Виоле» пунктами, а не сплошным текстом (правка 19.10). Слова правки те же.
+O_VIOLE_IMYA = "Меня зовут Виола Маро."
+O_VIOLE_PUNKTY = [
+    "Я психолог и психотерапевт, 25 лет веду частную практику в Италии на русском и итальянском",
+    "Окончила факультет психологии СПбГУ и римский университет Sapienza",
+    "Училась в Риме, Милане, Нью-Йорке, Париже и Сан-Паулу",
+    "Выступала спикером на Специальной сессии ООН по вопросам детей и молодёжи",
+    "Меня читают и смотрят 713 000 подписчиков в YouTube, TikTok и Instagram",
+]
+O_VIOLE = ["", "Я объясняю, почему вы так устроены, и показываю, что с этим делать"]
+
+# Регалии на фото первого экрана (правка 19.10): одна прозрачная плашка,
+# факты списком сверху вниз, одним шрифтом, важное жирным.
+PLASHKI = [
+    "<b>25 лет</b> практики психолога и психотерапевта",
+    "<b>СПбГУ и Sapienza</b>: психологическое образование, Санкт-Петербург и Рим",
+    "Спикер <b>ООН</b> на Специальной сессии по вопросам детей и молодёжи",
+    "<b>713 000</b> подписчиков в YouTube, TikTok и Instagram",
 ]
 # Цитаты участниц сверстаны, но скрыты до их согласия: показать — CITATY_VIDNY = True.
 CITATY = [
@@ -254,7 +251,7 @@ CITATY_VIDNY = False
 
 OPLATA = ("Оплатить можно из любой страны картой любого банка, в рублях, долларах или евро. "
           "Для карт других стран есть отдельные способы оплаты, менеджер пришлёт нужную ссылку. "
-          "Деньги принимает ИП Нижевясова А. С., официальный организатор программ Виолы. "
+          "Деньги принимает ИП Нижевясова А. С., официальный организатор моих программ. "
           "Вопросы по оплате в службу заботы "
           '<a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>')
 
@@ -273,7 +270,7 @@ KNIGI = [
     "Вы уже читали книги, ходили к психологу, проходили курсы. Становилось понятнее, но "
     "не легче. Никто не объяснил, почему вы так остро чувствуете людей и что делать в ту "
     "минуту, когда на вас давят",
-    "С этого программа и начинается. Виола объясняет, как вы устроены, и даёт техники "
+    "С этого программа и начинается. Я объясняю, как вы устроены, и даю техники "
     "на ситуации, которые с вами уже происходят",
 ]
 
@@ -290,8 +287,8 @@ FAQ = [
      "на вас эмоции, партнёр снова давит на жалость"),
     ("Это дорого",
      'Есть рассрочка без процентов, от <span data-g-mes="Самостоятельный">1 242</span> ₽ в месяц. '
-     "Одна личная встреча с Виолой стоит 200 €."
-     '<span data-po-zayavke> Вся программа с её ответами на ваши вопросы по цене по заявке '
+     "Одна личная встреча со мной стоит 200 €."
+     '<span data-po-zayavke> Вся программа с моими ответами на ваши вопросы по цене по заявке '
      "стоит дешевле двух таких встреч</span>"),
     ("У меня нет времени: работа, семья",
      "Одна лекция в неделю, всё в записи. Смотрите, когда удобно, хоть по 15 минут. Доступ "
@@ -307,13 +304,13 @@ FAQ = [
      "Что отвечать на «ты изменилась» и «ты думаешь только о себе», разбираем отдельно, "
      "на третьей неделе"),
     ("Я не умею формулировать вопросы и стесняюсь писать",
-     "Пишите общими словами, всю историю рассказывать не нужно. Виола видит, что стоит "
-     "за вопросом, и отвечает на то, что там на самом деле"),
+     "Пишите общими словами, всю историю рассказывать не нужно. Я вижу, что стоит "
+     "за вопросом, и отвечаю на то, что там на самом деле"),
     ("Чем «С Виолой» отличается от «Самостоятельного»?",
      "Программа в обоих тарифах одна. На тарифе «С Виолой» вы пишете вопрос в чат потока, "
-     "и Виола отвечает вам голосом. Поэтому мест в нём 50"),
+     "и я отвечаю вам голосом. Поэтому мест в нём 50"),
     ("Я живу за границей и боюсь платить онлайн",
-     "Оплатить можно из любой страны. После заявки вам пишет лично Виола, оплату проводит "
+     "Оплатить можно из любой страны. После заявки я лично пишу вам, оплату проводит "
      "менеджер @violamaroteam, после оплаты приходит чек. Если вам пишет кто-то другой "
      "и просит деньги, это не мы"),
     ("Я не успею к старту или пропущу неделю",
@@ -410,7 +407,7 @@ def hero_from_build():
         h = h2_
 
     def btn_a(m):
-        return ('<a class="%s" href="#zayavka" role="button" data-zayavka="Первый экран" '
+        return ('<a class="%s" href="#tarify" role="button" data-zayavka="Первый экран" '
                 'data-btn="primary" style="%s">Оставить заявку<span style="display: inline-flex; '
                 'align-items: center; justify-content: center; width: 34px; height: 34px; '
                 'border-radius: 50%%; background: rgba(140,12,30,.9); color: #F8ECCB; font-size: 16px; '
@@ -436,7 +433,8 @@ def hero_from_build():
         d = h.rfind('<div style="display: inline-flex', 0, j)
         db = build.find_block(h, "div", d)
         h = h[:db[0]] + h[db[3]:]
-    stage_h = h
+    # Плашки с регалиями на широком экране: столбиком справа от Виолы.
+    stage_h = h.replace('<div data-hero-copy=""', plashki_html("g-fakty-stage") + '\n      <div data-hero-copy=""', 1)
     h = full
     sub(r"(<p data-h2-title[^>]*>)(.*?)</p>", lambda m: m.group(1) + "Прикладная <br>эмпатия</p>")
     sub(r"(<p data-h2-sub[^>]*>).*?</p>", lambda m: m.group(1) + HERO_SUB + "</p>")
@@ -444,9 +442,16 @@ def hero_from_build():
     sub(r"<p data-h2-name[^>]*>.*?</p>", lambda m: "")
     sub(r"<p data-h2-def[^>]*>.*?</p>", lambda m: '<p data-h2-def="" class="g-offer">%s</p>' % HERO_DEF)
     sub(r"<p data-h2-note[^>]*>.*?</p>", lambda m: "")
+    # На телефоне и планшете (вариант с аркой, до 900 px) — сеткой 2 × 2 под фото.
+    sub(r'(</div>)(\s*<div data-h2-card)', lambda m: plashki_html("g-fakty-h2") + m.group(1) + m.group(2))
     h = h.replace("%%STAGE%%", stage_h)
     h = h.replace('aria-label="Первый экран"', 'aria-label="Первый экран" data-blok="Первый экран"', 1)
     return h
+
+
+def plashki_html(cls):
+    return ('<ul class="g-fakty %s" aria-label="Регалии Виолы Маро">%s</ul>'
+            % (cls, "".join("<li>%s</li>" % x for x in PLASHKI)))
 
 
 def sec_goals():
@@ -533,24 +538,10 @@ def sec_tarify():
     </div>
     <p class="g-timer" id="timer" hidden>Скидка до 10 000 ₽ сгорит через <b id="timer-v">48:00:00</b></p>
     <p class="g-rass">%(rass)s</p>
-    %(btn)s
     <p class="g-pod">%(pod)s</p>
   </div>
 </section>""" % {"cards": "".join(cards), "rass": RASSROCHKA, "pod": POD_TARIFY,
-                 "h": h2("Тарифы", "", " g-center g-light"),
-                 "btn": btn("Оставить заявку", "Тарифы", cls="g-btn g-btn-white")}
-
-
-def sec_vklyucheno():
-    items = "".join("<li><b>%s</b>%s</li>" % (h, ("<span>%s</span>" % d) if d else "")
-                    for h, d in VKLYUCHENO)
-    return """
-<section class="g-sec" data-blok="Что ещё входит">
-  <div class="g-in">
-    %s
-    <div class="g-box"><ul class="g-checks g-checks-2">%s</ul></div>
-  </div>
-</section>""" % (h2("Что ещё входит", "в оба тарифа"), items)
+                 "h": h2("Тарифы", "", " g-center g-light")}
 
 
 def sec_istorii():
@@ -584,7 +575,7 @@ def sec_istorii():
 def sec_o_viole():
     quotes = "".join("<li>%s</li>" % q for q in CITATY)
     return """
-<section class="g-sec" id="o-viole" data-blok="О Виоле">
+<section class="g-sec" id="o-viole" data-blok="Обо мне">
   <div class="g-in g-about">
     <div class="g-about-foto">
       <picture>
@@ -594,15 +585,16 @@ def sec_o_viole():
     </div>
     <div class="g-about-text">
       %(h)s
-      <p>%(p1)s</p>
+      <p class="g-about-name">%(imya)s</p>
+      <ul class="g-checks g-about-list">%(p1)s</ul>
       <p class="g-accent-p">%(p2)s</p>
       <!-- Цитаты участниц: скрыты до их согласия (CITATY_VIDNY в glavnaya.py). -->
       <ul class="g-quotes"%(hid)s>%(q)s</ul>
       %(btn)s
     </div>
   </div>
-</section>""" % {"p1": O_VIOLE[0], "p2": O_VIOLE[1], "q": quotes, "h": h2("О", "Виоле"),
-                 "btn": btn("Оставить заявку", "О Виоле"),
+</section>""" % {"p1": "".join("<li>%s</li>" % x for x in O_VIOLE_PUNKTY), "p2": O_VIOLE[1], "q": quotes, "h": h2("Обо", "мне"), "imya": O_VIOLE_IMYA,
+                 "btn": btn("Оставить заявку", "Обо мне"),
                  "hid": "" if CITATY_VIDNY else " hidden",
                  "h1": file_hash(os.path.join(ASSETS, "img", "hero-mob.webp")),
                  "h2": file_hash(os.path.join(ASSETS, "img", "hero-mob.jpg"))}
@@ -660,7 +652,7 @@ def form_html():
     <button type="button" class="g-x" data-g-close aria-label="Закрыть">✕</button>
     <form class="g-form" id="zayavka-form" novalidate>
       <p class="g-modal-h" id="zayavka-h"><span class="g-ink">Заявка</span> <span class="g-acc">на программу</span></p>
-      <p class="g-modal-sub">«Прикладная эмпатия» с Виолой Маро</p>
+      <p class="g-modal-sub">Моя программа «Прикладная эмпатия», 6 недель</p>
       <p class="g-label g-modal-tarif" id="zayavka-tarif" hidden></p>
       <label class="g-hp" aria-hidden="true">Не заполняйте это поле <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
       <label class="g-f">Имя
@@ -686,7 +678,7 @@ def form_html():
       <p class="g-done-t">%(s1)s</p>
       <p>%(s2)s</p>
       <p class="g-done-sign">Виола</p>
-      <a class="g-btn g-btn-red" id="napisat-viole" href="%(tg)s" target="_blank" rel="noopener">Написать Виоле</a>
+      <a class="g-btn g-btn-red" id="napisat-viole" href="%(tg)s" target="_blank" rel="noopener">Написать мне в Telegram</a>
     </div>
   </div>
 </div>""" % {"pod": POD_KNOPKOY, "s1": SPASIBO[0], "s2": SPASIBO[1], "tg": VIOLA_TG,
@@ -761,6 +753,28 @@ body { padding-bottom: 0 !important; background: #fff; }
 /* 1. первый экран — разметка и стили сайта (build.py, тема barhat). Здесь
    только плашка старта в карточке и белая панель целей под ним. */
 [data-hero-stage] [data-hero-card] p[data-hero-def] { max-width: min(46vw, 560px) !important; }
+/* Регалии: одна прозрачная плашка на фото, правее центра, поверх Виолы
+   ниже лица; факты списком, один шрифт, важное жирным. */
+.g-fakty { position: absolute; z-index: 3; margin: 0; padding: 12px 16px; list-style: none; border-radius: 16px;
+  background: rgba(255,255,255,.9); box-shadow: 0 8px 24px rgba(28,26,29,.14);
+  display: flex; flex-direction: column; gap: 8px; text-align: left; pointer-events: none;
+  font-family: 'Golos Text', system-ui, sans-serif; color: #1C1A1D; font-size: 14px; line-height: 1.3; font-weight: 400; }
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .g-fakty { background: rgba(255,255,255,.72); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+}
+.g-fakty li { position: relative; padding-left: 14px; }
+.g-fakty li::before { content: ""; position: absolute; left: 0; top: .5em; width: 6px; height: 6px; border-radius: 50%; background: #C4142C; }
+.g-fakty b { font-weight: 800; color: #1C1A1D; }
+/* Телефон и планшет (вариант с аркой): внизу фото, правее центра. */
+.g-fakty-h2 { right: 8px; bottom: 28px; width: min(67%, 270px); font-size: 12px; line-height: 1.25; gap: 4px; padding: 9px 11px; }
+.g-fakty-h2 li { padding-left: 12px; }
+/* Карточка с оффером в теме наезжает на низ фото на 64 px; с плашкой — на 20. */
+[data-h2] [data-h2-card] { margin-top: -20px !important; }
+@media (min-width: 560px) { .g-fakty-h2 { right: calc(50% - 300px); } }
+/* Широкий экран: правее Виолы, на уровне руки. */
+.g-fakty-stage { right: max(24px, 3vw); bottom: 14%; width: 270px; }
+.g-about-list { margin: 4px 0 4px; }
+.g-about-name { font-family: 'Prata', 'Times New Roman', Georgia, serif; font-size: 26px; line-height: 1.2; margin-bottom: 18px !important; }
 [data-h2-def].g-offer { margin: 0 !important; font-size: 23px !important; line-height: 1.35 !important; font-weight: 600 !important;
   color: #1C1A1D !important; text-wrap: pretty; }
 [data-h2-def].g-offer b { color: #B01027 !important; font-weight: 800 !important; }
@@ -1125,10 +1139,13 @@ JS = r"""
     if (lastFocus) try { lastFocus.focus(); } catch (e) {}
   }
   Array.prototype.forEach.call(document.querySelectorAll('[data-zayavka]'), function (b) {
+    /* Форму открывают только кнопки в карточках тарифов (с data-tarif).
+       Остальные «Оставить заявку» ведут к выбору тарифа (правка 19.10). */
     b.addEventListener('click', function (e) {
       if (b.tagName === 'A') e.preventDefault();
       goal('knopka_zayavki', { blok: b.getAttribute('data-zayavka') });
-      open(b.getAttribute('data-tarif'), b.getAttribute('data-zayavka'));
+      if (b.getAttribute('data-tarif')) open(b.getAttribute('data-tarif'), b.getAttribute('data-zayavka'));
+      else document.getElementById('tarify').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
   Array.prototype.forEach.call(modal.querySelectorAll('[data-g-close]'), function (b) { b.addEventListener('click', close); });
@@ -1196,7 +1213,7 @@ def page():
     import json
     hero = hero_from_build()
     body = "".join([
-        sec_goals(), sec_nedeli(), sec_tarify(), sec_vklyucheno(), sec_istorii(), sec_o_viole(),
+        sec_goals(), sec_nedeli(), sec_tarify(), sec_istorii(), sec_o_viole(),
         sec_text(h2("Оплата", "из другой страны"), '<div class="g-box"><p>%s</p></div>' % OPLATA,
                  "Оплата из другой страны"),
         sec_dlya_kogo(),
