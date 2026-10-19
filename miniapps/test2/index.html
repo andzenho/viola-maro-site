@@ -1521,7 +1521,7 @@ function istochnik_() {
   const p = startParam_();
   let s = "";
   if (p.indexOf("src_") === 0) s = p.slice(4);
-  else if (p.indexOf("anketa") === 0 || p === "zayavka" || p === "rezultat" || p === "programma") s = p;
+  else if (p.indexOf("anketa") === 0 || p === "zayavka" || p === "rezultat" || p === "programma" || p === "reset") s = p;
   else { try { s = new URLSearchParams(location.search).get("src") || ""; } catch (e) {} }
   return String(s).replace(/[^\w\-]/g, "").slice(0, 40);
 }
@@ -1740,9 +1740,20 @@ function boot() {
   const ava = document.getElementById("brand-ava");
   if (ava) ava.src = IMG.avatar;
 
+  const sp = startParam_();
+
+  /* Сброс для проверок команды (правка 19.10). Ссылка t2_reset в боте снимает
+     с человека метки и присылает кнопку с startapp=reset: тест забывает
+     прохождение на этом устройстве и начинается с первого экрана.
+     Обычным людям эта кнопка не приходит. */
+  if (sp === "reset") {
+    try { localStorage.removeItem(STATE_KEY); localStorage.removeItem(BUFFER_KEY); } catch (e) {}
+    intro();
+    return;
+  }
+
   flush();   // всё, что не ушло в прошлый раз, отправляем при каждом открытии
 
-  const sp = startParam_();
   /* Прежние кнопки бота «Мой результат» и «Посмотреть программу»
      (startapp=rezultat, programma, zayavka, anketa_*) ведут на экран
      «Ваш результат готов», а если теста ещё не было — к его началу. */
