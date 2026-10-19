@@ -609,6 +609,10 @@ def sec_faq():
 
 def form_html():
     return """
+<div class="g-bar" id="g-bar" hidden>
+  <p class="g-bar-t">Цена по заявке действует ещё <b id="g-bar-t">48:00:00</b></p>
+  <button type="button" class="g-bar-btn" data-zayavka="Панель с таймером">Оставить заявку</button>
+</div>
 <div class="g-modal" id="zayavka" role="dialog" aria-modal="true" aria-labelledby="zayavka-h" hidden>
   <div class="g-modal-box">
     <button type="button" class="g-x" data-g-close aria-label="Закрыть">✕</button>
@@ -807,6 +811,21 @@ body { padding-bottom: 0 !important; background: #fff; }
 .g-faq-i[open] summary::after { transform: rotate(-135deg); top: 10px; }
 .g-faq-i p { margin-top: 10px !important; color: var(--soft); }
 
+/* панель с таймером, закреплена внизу экрана */
+.g-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--barhat); color: #fff;
+  box-shadow: 0 -12px 30px -14px rgba(28,26,29,.55); }
+.g-bar[hidden] { display: none; }
+.g-bar-t { flex: 1 1 auto; font-size: 14.5px; line-height: 1.25; font-weight: 600; }
+.g-bar-t b { display: block; font-family: var(--bebas); font-weight: 700; font-size: 30px; line-height: 1; letter-spacing: .04em; margin-top: 2px; }
+.g-bar-btn { flex: none; min-height: 52px; padding: 0 18px; border: 0; border-radius: 14px; background: #fff; color: var(--red);
+  font: 800 14.5px/1.2 'Golos Text', system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+  box-shadow: 0 10px 20px -10px rgba(0,0,0,.5); }
+.g-bar-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+body.g-has-bar { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
+body.g-has-bar .cookie-bar { bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
+body.g-lock .g-bar { display: none; }
+
 /* форма */
 .g-modal { position: fixed; inset: 0; z-index: 100; background: rgba(28,26,29,.6); display: flex; align-items: flex-end; justify-content: center; }
 .g-modal[hidden] { display: none; }
@@ -849,6 +868,10 @@ body.g-lock { overflow: hidden; }
   .g-tarify { grid-template-columns: 1fr 1fr; align-items: start; }
   .g-about { grid-template-columns: 420px 1fr; gap: 56px; }
   .g-modal { align-items: center; }
+  .g-bar { justify-content: center; gap: 28px; padding: 12px 24px; }
+  .g-bar-t { flex: 0 1 auto; font-size: 17px; }
+  .g-bar-t b { display: inline; font-size: 32px; margin: 0 0 0 8px; vertical-align: -4px; }
+  .g-bar-btn { padding: 0 30px; }
   .g-modal-box { border-radius: 24px; max-height: 92vh; padding: 32px 30px 30px; }
 }
 @media (prefers-reduced-motion: reduce) { .g-btn, .g-faq-i summary::after { transition: none; } }
@@ -948,13 +971,22 @@ JS = r"""
       });
     });
   }
+  /* Панель с таймером закреплена внизу экрана всё время, пока идёт цена
+     по заявке (просьба Ильи 19.10). Время вышло — панель уходит. */
+  var bar = document.getElementById('g-bar'), barV = document.getElementById('g-bar-t');
+  function showBar(on) {
+    bar.hidden = !on;
+    document.body.classList.toggle('g-has-bar', on);
+  }
   function tick() {
     if (!st) return;
     var left = st.deadline - Date.now();
-    if (left <= 0) { timerP.hidden = true; if (!expired) setPrices(true); return true; }
+    if (left <= 0) { timerP.hidden = true; showBar(false); if (!expired) setPrices(true); return true; }
     var s = Math.floor(left / 1000);
-    timerV.textContent = two(Math.floor(s / 3600)) + ':' + two(Math.floor(s %% 3600 / 60)) + ':' + two(s %% 60);
+    var t = two(Math.floor(s / 3600)) + ':' + two(Math.floor(s %% 3600 / 60)) + ':' + two(s %% 60);
+    timerV.textContent = t; barV.textContent = t;
     timerP.hidden = false;
+    if (bar.hidden) showBar(true);
   }
   if (storage && st) {
     if (!tick()) { var iv = setInterval(function () { if (tick()) clearInterval(iv); }, 1000); }
