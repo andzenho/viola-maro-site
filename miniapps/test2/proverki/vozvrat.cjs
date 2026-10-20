@@ -200,6 +200,35 @@ async function waitText(page, re, ms) {
     await ctx.close();
   }
 
+  // 10а. Тест заново по ссылке new_baza: пройденный начинается сначала, источник «baza»
+  {
+    const { ctx, page, log, errors } = await open(browser, { inTg: true, sp: 'new_baza', state: st, passed: true });
+    const t = await waitText(page, /Какой вы эмпат|результат готов/i);
+    check('10а new_baza, тест пройден: первый экран, а не «готов»', /Начать/.test(t) && !/результат готов/i.test(t), t.slice(0, 50));
+    check('10а статус не спрашивали, ничего не дослано', log.status.length === 0 && log.saves.length === 0, { status: log.status.length, saves: log.saves.length });
+    await page.locator('#start').click();
+    for (let i = 0; i < 36; i++) await page.locator('.ans').nth((i + 1) % 4).click();
+    await page.locator('.ans').first().click();
+    await page.locator('#skip').click();
+    await page.locator('.ans').nth(1).click();
+    const t2 = await waitText(page, /результат готов/i);
+    const p = log.saves[0] || {};
+    check('10а новое прохождение записано с источником baza и новым pid', /результат готов/i.test(t2) && log.saves.length === 1 && p.istochnik === 'baza' && p.pid !== saved.pid, [p.istochnik, p.pid !== saved.pid]);
+    check('10а ошибок нет', errors.length === 0, errors);
+    await ctx.close();
+  }
+
+  // 10б. new_baza, тест начат и не закончен: продолжается с того же вопроса
+  {
+    const mid = JSON.stringify(Object.assign({}, saved, { stage: 'q', idx: 12, answers: saved.answers.slice(0, 12), res: null, age: '', t: Date.now() }));
+    const { ctx, page, errors } = await open(browser, { inTg: true, sp: 'new_baza', state: mid });
+    const t = await waitText(page, /13 из 36|Какой вы эмпат/);
+    const counter = await page.evaluate(() => document.getElementById('counter').textContent);
+    check('10б new_baza, тест не закончен: продолжение с 13-го вопроса', counter === '13 из 36', counter);
+    check('10б ошибок нет', errors.length === 0, errors);
+    await ctx.close();
+  }
+
   // 11–14. Обычный браузер
   const browserCases = [
     { n: '11 браузер ?src=insta', o: { query: '?src=insta' }, link: 'https://t.me/viola_maro_bot/test2?startapp=src_insta' },
