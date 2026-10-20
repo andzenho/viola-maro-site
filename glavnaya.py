@@ -43,7 +43,7 @@ ASSETS = os.path.join(OUT, "assets")
 LEAD_ENDPOINT = ("https://script.google.com/macros/s/AKfycbxzJaSclK7FTBSK0X7cAIJcscvwt9qyAGSsYGCrF"
                  "HehtTvYPPEzTloDjCgsDj7v77n9jQ/exec")
 FORM_SECRET = "PxlGXL9bQSjc0dHcLoiCZJZWtNdfv9D8yY9SHBuJ"   # SITE_SECRET в скрипте
-VIOLA_TG = "https://t.me/violamarohelper"                    # второй аккаунт Виолы
+VIOLA_TG = "https://t.me/violamaroteam"                      # аккаунт команды, Даша (правка 21.10)
 # Номер счётчика Яндекс Метрики. 0 — счётчика нет, цели никуда не уходят.
 METRIKA_ID = 0
 
@@ -162,12 +162,12 @@ TARIFY = [
 ]
 RASSROCHKA = ("Рассрочка на 3, 6 или 12 месяцев без процентов, первый платёж через месяц. "
               "Рассрочка банка доступна гражданам стран СНГ по паспорту, 18+")
-POD_KNOPKOY = ("После заявки я лично напишу вам в Telegram в течение 15 минут. "
-               "Если заявка придёт ночью, напишу утром")
+POD_KNOPKOY = ("После заявки Даша из команды Виолы напишет вам в Telegram в течение 15 минут. "
+               "Если заявка придёт ночью, напишет утром")
 # Подпись под кнопкой в тарифах (правка 19.10). Первая фраза — только пока
 # идёт таймер: после него закреплять уже нечего.
 POD_TARIFY = ('<span data-po-zayavke>Оставьте заявку, пока идёт таймер, и цена закрепится за вами. </span>'
-              "Я лично напишу вам в Telegram в течение 15 минут. Если заявка придёт ночью, напишу утром")
+              "Даша из команды Виолы напишет вам в Telegram в течение 15 минут. Если заявка придёт ночью, напишет утром")
 # Подарки в карточках тарифов (правка 19.10, заменяет прежние): видны,
 # пока идёт таймер; после него блок скрывается. Первая строка абзаца
 # красным жирным, остальное обычным, названия подарков жирным.
@@ -333,9 +333,9 @@ FAQ = [
 ]
 
 SPASIBO = [
-    "Спасибо, я получила вашу заявку и напишу вам в Telegram в течение 15 минут, "
+    "Спасибо, заявка у нас. Даша из команды Виолы напишет вам в Telegram в течение 15 минут, "
     "если ночью, то утром",
-    "Чтобы не ждать, можете написать мне сами",
+    "Чтобы не ждать, можете написать ей сами",
 ]
 
 
@@ -771,8 +771,8 @@ def form_html():
     <div class="g-done" id="zayavka-done" hidden>
       <p class="g-done-t">%(s1)s</p>
       <p>%(s2)s</p>
-      <p class="g-done-sign">Виола</p>
-      <a class="g-btn g-btn-red" id="napisat-viole" href="%(tg)s" target="_blank" rel="noopener">Написать мне в Telegram</a>
+      <p class="g-done-sign">Команда Виолы</p>
+      <a class="g-btn g-btn-red" id="napisat-viole" href="%(tg)s" target="_blank" rel="noopener">Написать Даше в Telegram</a>
     </div>
   </div>
 </div>""" % {"pod": POD_KNOPKOY, "s1": SPASIBO[0], "s2": SPASIBO[1], "tg": VIOLA_TG,
@@ -1439,8 +1439,8 @@ JS = r"""
       try { doneBox.querySelector('a').focus(); } catch (err) {}
     }, function () {
       sendBtn.disabled = false; sendBtn.textContent = 'Оставить заявку';
-      errP.innerHTML = 'Не получилось отправить заявку. Попробуйте ещё раз или напишите мне: '
-        + '<a href="%(viola)s" target="_blank" rel="noopener">@violamarohelper</a>';
+      errP.innerHTML = 'Не получилось отправить заявку. Попробуйте ещё раз или напишите нам в Telegram '
+        + '<a href="%(viola)s" target="_blank" rel="noopener">@violamaroteam</a>';
       errP.hidden = false;
     });
   });
