@@ -38,9 +38,8 @@ OFFER_TEXT = ("Шестинедельная программа, на котор�
               "своей эмпатией, чтобы перестать спасать всех, уступать и терпеть тех, кто вами "
               "пользуется, и начать себя любить, ценить и уважать")
 OFFER_META = "Старт 1 ноября · 6 недель · лекции в записи, доступ навсегда"
-ACCOUNTS = ('Пишем только с этих аккаунтов: <a href="https://t.me/violamarohelper" target="_blank" '
-            'rel="noopener">@violamarohelper</a> (Виола) и <a href="https://t.me/violamaroteam" '
-            'target="_blank" rel="noopener">@violamaroteam</a> (команда)')
+ACCOUNTS = ('Пишем только с аккаунта команды Виолы <a href="https://t.me/violamaroteam" '
+            'target="_blank" rel="noopener">@violamaroteam</a>')
 CHEK = "Оплата и чек от ИП Нижевясова А. С."
 FORM_H = "Выберите тариф и оставьте контакты, на них придут доступы"
 
