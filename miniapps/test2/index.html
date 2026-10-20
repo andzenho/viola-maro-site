@@ -1557,6 +1557,7 @@ function istochnik_() {
   let s = "";
   if (p.indexOf("src_") === 0) s = p.slice(4);
   else if (p.indexOf("anketa") === 0 || p === "zayavka" || p === "rezultat" || p === "programma" || p === "reset") s = p;
+  else if (p.indexOf("new_") === 0) s = p.slice(4);   // new_baza: тест заново, источник «baza»
   else { try { s = new URLSearchParams(location.search).get("src") || ""; } catch (e) {} }
   return String(s).replace(/[^\w\-]/g, "").slice(0, 40);
 }
@@ -1839,7 +1840,19 @@ function boot() {
      (startapp=rezultat, programma, zayavka, anketa_*) ведут на экран
      «Ваш результат готов», а если теста ещё не было — к его началу. */
   const fromBot = sp === "rezultat" || sp === "programma" || sp === "zayavka" || sp.indexOf("anketa") === 0;
-  const s = loadState();
+  let s = loadState();
+
+  /* Пройти тест заново (правка 20.10). Ссылка startapp=new_<метка>, например
+     new_baza из рассылки по базе: кто тест уже прошёл, начинает с первого
+     экрана, а не видит «Ваш результат готов». Начатое и не законченное
+     продолжается с того же места: иначе повторное открытие той же кнопки
+     стирало бы ответы. Метка идёт в «Источник» без new_. */
+  if (sp.indexOf("new_") === 0 && s &&
+      (s.res || ((s.answers || []).length === ALL.length && s.age))) {
+    clearState();
+    intro();
+    return;
+  }
 
   if (s) {
     (s.answers || []).forEach(v => answers.push(v));
