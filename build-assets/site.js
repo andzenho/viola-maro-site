@@ -18,8 +18,8 @@
 
      Адреса оплаты практикума задаются в build.py (словарь PAY) и приходят
        в разметке окна, в data-pay-config: у каждой страницы свои ссылки
-       и суммы. После формы человек сам выбирает способ: российской картой
-       (GetPlatinum, там же рассрочка от банка) или зарубежной (Lava).
+       и суммы. После формы окно ведёт на GetPlatinum (там же рассрочка
+       от банка). Зарубежной оплаты нет.
 
      PAY_URLS — запасной путь для страниц без такого шага: одна ссылка,
        переход сразу после того, как согласия записаны. */
@@ -157,22 +157,11 @@
   /* Возвращает false, если для нажатой кнопки нет адресов оплаты. */
   function showPayStep(notSaved) {
     var plan = PAY && PAY.plans ? PAY.plans[currentPay] : null;
-    if (!payStep || !plan || !plan.ru || !PAY.intl) return false;
+    if (!payStep || !plan || !plan.ru) return false;
 
     setText('pay-plan', currentPlan);
     setText('pay-ru-price', plan.rub.replace(/ /g, '\u00a0') + '\u00a0₽');
-    setText('pay-intl-usd', '$' + plan.usd);
-    setText('pay-intl-eur', '€' + plan.eur);
     document.getElementById('pay-ru').href = plan.ru;
-    document.getElementById('pay-intl').href = PAY.intl;
-
-    /* У зарубежной оплаты одна страница на оба тарифа: подсказываем,
-       какой выбрать, чтобы человек не оплатил чужой. */
-    var hint = document.getElementById('pay-intl-hint');
-    if (hint) {
-      hint.hidden = !plan.name;
-      setText('pay-intl-plan', plan.name || '');
-    }
     var warn = document.getElementById('pay-warn');
     if (warn) warn.hidden = !notSaved;
 

@@ -57,10 +57,10 @@ PLASHKA = [
 
 TIMER_HOURS = 48
 PRICES = {
-    # тариф: (цена по заявке, обычная цена, в месяц по заявке, в месяц обычная,
-    #         валюта по заявке, валюта обычная)
-    "С Виолой": ("29 900", "39 900", "2 492", "3 325", "$360 / €320", "$480 / €430"),
-    "Самостоятельный": ("14 900", "19 900", "1 242", "1 659", "$180 / €160", "$240 / €215"),
+    # тариф: (цена по заявке, обычная цена, в месяц по заявке, в месяц обычная).
+    # Только рубли: зарубежной оплаты нет с 21.10.2026.
+    "С Виолой": ("29 900", "39 900", "2 492", "3 325"),
+    "Самостоятельный": ("14 900", "19 900", "1 242", "1 659"),
 }
 
 # ───────────────────────────────────────────────────────────── тексты ──
@@ -255,8 +255,7 @@ CITATY = [
 ]
 CITATY_VIDNY = False
 
-OPLATA = ("Оплатить можно из любой страны картой любого банка, в рублях, долларах или евро. "
-          "Для карт других стран есть отдельные способы оплаты, менеджер пришлёт нужную ссылку. "
+OPLATA = ("Оплатить можно из любой страны картой любого банка. "
           "Деньги принимает ИП Нижевясова А. С., официальный организатор моих программ. "
           "Вопросы по оплате в службу заботы "
           '<a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>')
@@ -385,14 +384,13 @@ def podarki_html():
 
 
 def price_html(name):
-    zay, base, mz, mb, vz, vb = PRICES[name]
+    zay, base, mz, mb = PRICES[name]
     return """
         <div class="g-cena" data-g-cena="%(n)s">
           <p class="g-cena-old"><s data-po-zayavke>%(base)s&nbsp;₽</s></p>
           <p class="g-cena-new"><span data-g-sum>%(zay)s</span>&nbsp;₽ <span class="g-po" data-po-zayavke>по заявке</span></p>
           <p class="g-cena-mes">или от <span data-g-mes="%(n)s">%(mz)s</span>&nbsp;₽ в месяц</p>
-          <p class="g-cena-val"><s data-po-zayavke>%(vb)s</s> <span data-g-val>%(vz)s</span></p>
-        </div>""" % {"n": name, "base": base, "zay": zay, "mz": mz, "vb": vb, "vz": vz}
+        </div>""" % {"n": name, "base": base, "zay": zay, "mz": mz}
 
 
 HERO_SRC = None   # разметка прежнего первого экрана из сборки build.py
@@ -935,8 +933,6 @@ body { padding-bottom: 0 !important; background: #fff; }
   font-family: 'Golos Text', system-ui, sans-serif; font-size: 13px; line-height: 1.1; font-weight: 800; letter-spacing: .06em;
   text-transform: uppercase; vertical-align: 10px; }
 .g-cena-mes { margin-top: 6px !important; font-weight: 700; font-size: 17px; }
-.g-cena-val { margin-top: 2px !important; font-size: 16px; color: rgba(255,255,255,.7); }
-.g-cena-val s { margin-right: 6px; }
 .g-tarif .g-btn { margin-top: 16px; max-width: none; }
 .gl .g-rass { margin-top: 16px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 640px; margin-left: auto; margin-right: auto; }
 .gl .g-pod { margin-top: 14px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 520px; margin-left: auto; margin-right: auto; }
@@ -1275,7 +1271,6 @@ JS = r"""
       var p = PRICES[name], box = document.querySelector('[data-g-cena="' + name + '"]');
       if (box) {
         box.querySelector('[data-g-sum]').textContent = isExpired ? p[1] : p[0];
-        box.querySelector('[data-g-val]').textContent = isExpired ? p[5] : p[4];
       }
       Array.prototype.forEach.call(document.querySelectorAll('[data-g-mes="' + name + '"]'), function (el) {
         el.textContent = isExpired ? p[3] : p[2];

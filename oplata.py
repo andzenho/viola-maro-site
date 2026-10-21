@@ -9,7 +9,7 @@
 На странице только оффер и форма: выбор тарифа плитками, имя, телефон,
 Telegram, согласия как были. Кнопка пишет контакты в таблицу (тот же приёмник
 и та же запись, что у прежней формы сайта: лист «Заявки на продукт») и
-открывает прежнее окно «Способ оплаты»: российская карта или зарубежная,
+открывает окно оплаты со ссылкой на GetPlatinum (зарубежной оплаты нет),
 ссылки и суммы из словаря PAY в build.py. Цена на плитке берётся оттуда же,
 поэтому сумма на странице всегда та, что спишет платёжная страница.
 
@@ -88,9 +88,7 @@ PAGES = [
         "desc": "Бронь места в программе «Прикладная эмпатия». Старт 1 ноября.",
         "sub": "Бронь места", "sub2": "",
         "bron": [
-            "Бронь %s, с зарубежной карты $%s или €%s" % (
-                rub(build.PAY["bron"]["plans"]["bron"]["rub"]),
-                build.PAY["bron"]["plans"]["bron"]["usd"], build.PAY["bron"]["plans"]["bron"]["eur"]),
+            "Бронь %s" % rub(build.PAY["bron"]["plans"]["bron"]["rub"]),
             "Засчитывается в стоимость участия, остаток вносится до %s" % build.BOOKING_DEADLINE,
             "Если не доплатите до старта, бронь переносится на следующий поток или другой продукт Виолы",
         ],
@@ -140,8 +138,7 @@ def tile_html(p, i, t):
     plan = build.PAY[p["pay"]]["plans"][key]
     price = ""
     if p["pay"] != "bron":
-        price = ('<span class="op-t-price">%s</span><span class="op-t-val">$%s / €%s</span>'
-                 % (rub(plan["rub"]), plan["usd"], plan["eur"]))
+        price = '<span class="op-t-price">%s</span>' % rub(plan["rub"])
     return """
         <label class="op-tile">
           <input type="radio" name="tarif" value="%(name)s" data-pay="%(key)s"%(chk)s>
@@ -254,7 +251,6 @@ body { background: #FAF9F8 !important; padding-bottom: 0 !important; }
 .op-t-mark { flex: none; padding: 3px 10px; border-radius: 999px; background: #FCE9EA; color: #A30F23; font-weight: 800; font-size: 13px; }
 .op-t-line { color: #55505A; font-size: 16px; line-height: 1.45; }
 .op-t-price { margin-top: 6px; font-family: 'Bebas Neue', 'Arial Narrow', Impact, sans-serif; font-size: 34px; line-height: 1; color: #C4142C; }
-.op-t-val { color: #55505A; font-size: 15px; }
 .op-t-small { margin-top: 4px; color: #55505A; font-size: 14.5px; }
 .op-under { margin-top: 14px !important; color: #55505A; font-size: 15.5px; line-height: 1.5; }
 .op-hp { position: absolute; left: -9999px; }

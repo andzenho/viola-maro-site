@@ -575,8 +575,7 @@
     border-radius: 999px; transition: width .5s ease-out;
   }
 
-  /* Цена над кнопкой. Крупная рублёвая, под ней мельче валютная: обе видны
-     сразу, но глаз не мечется между двумя одинаковыми цифрами. */
+  /* Цена над кнопкой, только в рублях. */
   .price-block {
     display: flex; flex-direction: column; gap: .25rem; align-items: center;
     text-align: center; margin: .4rem 0;
@@ -594,7 +593,6 @@
     font-weight: 700; font-size: 3rem; line-height: 1;
     letter-spacing: -.03em; color: var(--ink);
   }
-  .price-alt { font-size: 1rem; color: var(--ink); }
   .price-note { margin: .35rem 0 0; font-size: .88rem; color: var(--ink-mute); line-height: 1.45; }
 
   .cta-note {
@@ -1221,17 +1219,11 @@
    мы не стали — он работает, и ломать живой тест ради единообразия незачем.
    payUrl — рублями, страница GetCourse: там же принимается оферта и там же
    деньги, поэтому в лид-форме оферту не просим. Там же и рассрочка.
-   payUrlUsd — в долларах, Lava, для зарубежных карт. Пусто — эта половина
-   уводит в отдел заботы, и на экране об этом сказано прямо: обещать
-   автоматическую оплату, которой нет, значит терять человека уже после
-   того, как он решил заплатить.
-   Аудитория делится пополам, поэтому оба способа на экране равны: одинаковые
-   карточки, одинаковые кнопки, ни одного визуального намёка, что рублями
-   «правильнее». */
+   Способ оплаты один (21.10.2026): зарубежной оплаты через Lava больше нет,
+   и на экране не пишем, что это только для российских карт. */
 const CONFIG = {
   sheetUrl: "https://script.google.com/macros/s/AKfycbxzJaSclK7FTBSK0X7cAIJcscvwt9qyAGSsYGCrFHehtTvYPPEzTloDjCgsDj7v77n9jQ/exec",
   payUrl: "https://anny-nizh.getplatinum.ru/payment/VyfTEMo",
-  payUrlUsd: "https://app.lava.top/products/b307a68e-b477-4396-add9-c340b3445088",
   teamChat: "https://t.me/m/LEHK_cjeNGU1",
   publicChannel: "https://t.me/violamaro1",
   /* Закрытый канал предзаписи на «Прикладную эмпатию» — тот же, что на тесте
@@ -1256,15 +1248,6 @@ const CONFIG = {
   /* Цена поднята с 3 000 до 4 000 ₽ 09.09 в 00:00 МСК решением продюсера,
      ровно по сроку — до этой минуты на витрине держалась старая цена. */
   price: "4 000 ₽",
-  /* Ровно та сумма, что стоит в карточке товара на Lava. Расходиться нельзя:
-     человек видит здесь одну цену, а на оплате другую — и уходит.
-     По курсу ЦБ на 26.08.2026 (1 $ = 84,4635 ₽) это 3 970 ₽, то есть на 0,8 %
-     дешевле рублёвой половины. Меняете цену в Lava — меняйте и здесь. */
-  priceUsd: "47 $",
-  /* Тот же товар на Lava, вторая валюта для зарубежной карты. Курс тот же,
-     что у практикума: 17 900 ₽ = $209 / €179. Меняете цену в Lava —
-     меняйте обе строки здесь. */
-  priceEur: "40 €",
   /* Цена до скидки. Печатается зачёркнутой над основной. Пусто — строки нет.
      ⚠️ Ставится только если эта сумма настоящая: зачёркнутая цена, по которой
      никто не платил, — это ст. 5 ФЗ «О рекламе» и Omnibus в ЕС. Решение
@@ -2563,7 +2546,7 @@ function offerSobytie(r) {
         ${OFFER.meaning.map(x => `<p>${x}</p>`).join("")}
       </div>
       <button class="go big cta-top" id="pay-top"><span>${OFFER.ctaTop}</span><span aria-hidden="true">→</span></button>
-      <p class="under-cta">${CONFIG.price} или ${CONFIG.priceUsd} / ${CONFIG.priceEur}</p>
+      <p class="under-cta">${CONFIG.price}</p>
       <div class="why">
         <div class="why-h">${OFFER.whyHead}</div>
         ${OFFER.why.map(i => `<div class="why-item"><b>${i.q}</b><p>${i.a}</p></div>`).join("")}
@@ -2652,7 +2635,6 @@ function offerSobytie(r) {
         <div class="price-block">
           ${CONFIG.priceOld ? `<div class="price-old">${CONFIG.priceOld}</div>` : ""}
           <div class="price-main">${CONFIG.price}</div>
-          <div class="price-alt">или ${CONFIG.priceUsd} / ${CONFIG.priceEur}, если платите зарубежной картой</div>
           <p class="price-note">Для России и стран СНГ на странице оплаты можно оформить рассрочку.</p>
         </div>
         <!-- Стрелка привязана неразрывным пробелом: на узком экране она уезжала одна на строку. -->
@@ -3086,7 +3068,7 @@ function leadSobytie(r) {
       </div>
       <div class="foot">
         <button class="go big" id="send">Дальше, к оплате&nbsp;<span aria-hidden="true">→</span></button>
-        <p class="cta-note" id="hint">Дальше выберете, чем платить. Рублями или в долларах, оба способа рабочие.</p>
+        <p class="cta-note" id="hint">Дальше откроется оплата.</p>
         <button class="ghost" id="back-offer">← Назад</button>
       </div>
     </div>`);
@@ -3143,35 +3125,20 @@ function leadSobytie(r) {
   runStrip(n);
 }
 
-/* Экран выбора способа оплаты.
-   Аудитория делится примерно пополам на тех, кто платит российской картой,
-   и тех, у кого её нет. Поэтому способы равны: одинаковые карточки,
-   одинаковые кнопки, одинаковый вес. Любая подсказка «вот этот основной»
-   половине людей говорит, что они здесь второй сорт. */
+/* Экран оплаты: один способ, страница GetPlatinum. */
 function payway(r) {
   stage = "payway";
-  const usdLive = !!CONFIG.payUrlUsd;
 
   const n = el(`
     <div class="card">
       ${stripHtml()}
       <div class="step">Терапевтический онлайн-уикенд «Неудобные»</div>
-      <h2>Чем вам удобнее заплатить</h2>
-      <p class="lede">Оба способа открывают доступ одинаково. Выбирайте тот, которым платить проще.</p>
+      <h2>Остался один шаг</h2>
       <div class="ways">
         <div class="way">
           <div class="way-sum">${CONFIG.price}</div>
-          <div class="way-what">Российской картой</div>
           <p class="way-note">На странице оплаты можно оформить рассрочку.</p>
-          <button class="go big" id="pay-rub">Оплатить рублями&nbsp;<span aria-hidden="true">→</span></button>
-        </div>
-        <div class="way">
-          <div class="way-sum">${CONFIG.priceUsd} / ${CONFIG.priceEur}</div>
-          <div class="way-what">Зарубежной картой</div>
-          <p class="way-note">${usdLive
-            ? "Оплата через Lava, карты любой страны."
-            : "Отдел заботы пришлёт ссылку на оплату, напишите ему."}</p>
-          <button class="go big" id="pay-usd">Оплатить в долларах&nbsp;<span aria-hidden="true">→</span></button>
+          <button class="go big" id="pay-rub">Оплатить&nbsp;<span aria-hidden="true">→</span></button>
         </div>
       </div>
       <p class="cta-note" id="pw-hint">Оплата откроется в отдельном окне, там же условия участия.</p>
@@ -3197,7 +3164,7 @@ function payway(r) {
     /* Гасим на пару секунд, чтобы двойное нажатие не отправило способ дважды
        и не открыло два окна. Дальше кнопки снова живые. */
     buttons.forEach(x => { x.disabled = true; });
-    btn.textContent = (way === "usd" && !usdLive) ? "Открываю чат…" : "Открываю оплату…";
+    btn.textContent = "Открываю оплату…";
     /* Способ дописывается в уже сохранённую заявку, а не создаёт вторую
        строку: иначе один человек выглядел бы в таблице как две заявки. */
     sendWay(way);
@@ -3213,19 +3180,16 @@ function payway(r) {
   window.addEventListener("focus", wake);
 
   n.querySelector("#pay-rub").addEventListener("click", e => go("rub", e.currentTarget));
-  n.querySelector("#pay-usd").addEventListener("click", e => go("usd", e.currentTarget));
   n.querySelector("#back-lead").addEventListener("click", () => leadSobytie(r));
   linksThroughTelegram_(n);
   render(n);
   runStrip(n);
 }
 
-/* Уводим на оплату. Способов два: рублями и в долларах. Если адреса под
-   способ нет — в чат с командой, чтобы кнопка не вела в никуда.
-   Ссылки телеграмовские или обычные, различаем по адресу. */
+/* Уводим на оплату. Если адреса нет — в чат с командой, чтобы кнопка
+   не вела в никуда. Ссылки телеграмовские или обычные, различаем по адресу. */
 function openPay(way) {
-  const url = (way === "usd" ? CONFIG.payUrlUsd : CONFIG.payUrl)
-    || CONFIG.careChat || CONFIG.teamChat;
+  const url = CONFIG.payUrl || CONFIG.careChat || CONFIG.teamChat;
   if (!url) return;
   const tg = window.Telegram && window.Telegram.WebApp;
   if (tg) {
