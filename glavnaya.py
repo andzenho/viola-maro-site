@@ -751,8 +751,11 @@ def form_html():
       <label class="g-f">Имя
         <input type="text" name="name" autocomplete="given-name" required>
       </label>
-      <label class="g-f">Telegram или телефон
-        <input type="text" name="contact" autocomplete="tel" inputmode="text" placeholder="@ник или +7…" required>
+      <label class="g-f">Номер телефона
+        <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="+7 900 000-00-00" required>
+      </label>
+      <label class="g-f">Telegram
+        <input type="text" name="telegram" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="@username" required>
       </label>
       <label class="g-f">Опишите свой запрос к Виоле. Что хотите решить? <span class="g-opt">по желанию</span>
         <textarea name="situation" rows="3"></textarea>
@@ -1390,9 +1393,12 @@ JS = r"""
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var f = form.elements;
-    var name = f.name.value.trim(), contact = f.contact.value.trim();
+    var name = f.name.value.trim(), phone = f.phone.value.trim();
+    /* Telegram: ник с @ или без, ссылка t.me/ник тоже подходит. */
+    var tg = f.telegram.value.trim().replace(/^(https?:\/\/)?(t\.me|telegram\.me)\//i, '').replace(/^@+/, '');
     if (!name) return bad('Напишите, как вас зовут.', f.name);
-    if (contact.replace(/[^0-9A-Za-zА-Яа-я]/g, '').length < 3) return bad('Оставьте Telegram или телефон, чтобы я могла вам написать.', f.contact);
+    if (phone.replace(/\D/g, '').length < 7) return bad('Напишите номер телефона.', f.phone);
+    if (!/^[A-Za-z0-9_]{4,32}$/.test(tg)) return bad('Напишите ник в Telegram латиницей, например @anna.', f.telegram);
     if (!f.accept_pd.checked) { f.accept_pd.closest('.g-cb').classList.add('g-bad'); return bad('Отметьте согласие на обработку персональных данных.', f.accept_pd); }
 
     /* Скрытые поля: uid, конец таймера, цена, подарки, тариф. */
@@ -1403,11 +1409,9 @@ JS = r"""
     f.gifts.value = ok ? 'да' : 'нет';
     f.plan.value = curTarif;
 
-    /* Одно поле на контакт: цифры без букв — телефон, иначе Telegram. */
-    var isPhone = /^[+\d\s()\-]{7,}$/.test(contact);
     var payload = {
       secret: SECRET, website: f.website.value, form: 'заявка',
-      name: name, phone: isPhone ? contact : '', telegram: isPhone ? '' : contact,
+      name: name, phone: phone, telegram: '@' + tg,
       readiness: 'Заявка с главной, без оплаты', plan: f.plan.value,
       situation: f.situation.value.trim(),
       uid: f.uid.value, deadline: f.deadline.value,
