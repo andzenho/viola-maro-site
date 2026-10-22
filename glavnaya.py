@@ -57,10 +57,11 @@ PLASHKA = [
 
 TIMER_HOURS = 48
 PRICES = {
-    # тариф: (цена по заявке, обычная цена, в месяц по заявке, в месяц обычная).
+    # тариф: (цена, зачёркнутая цена пока идёт таймер, в месяц).
+    # С 22.10 цена после таймера та же, что по заявке: реальная цена программы.
     # Только рубли: зарубежной оплаты нет с 21.10.2026.
-    "С Виолой": ("29 900", "39 900", "2 492", "3 325"),
-    "Самостоятельный": ("14 900", "19 900", "1 242", "1 659"),
+    "С Виолой": ("29 900", "39 900", "2 492"),
+    "Самостоятельный": ("14 900", "19 900", "1 242"),
 }
 
 # ───────────────────────────────────────────────────────────── тексты ──
@@ -384,7 +385,7 @@ def podarki_html():
 
 
 def price_html(name):
-    zay, base, mz, mb = PRICES[name]
+    zay, base, mz = PRICES[name]
     return """
         <div class="g-cena" data-g-cena="%(n)s">
           <p class="g-cena-old"><s data-po-zayavke>%(base)s&nbsp;₽</s></p>
@@ -1267,15 +1268,8 @@ JS = r"""
     expired = isExpired;
     var root = document.querySelector('.gl');
     if (isExpired) root.setAttribute('data-istek', ''); else root.removeAttribute('data-istek');
-    Object.keys(PRICES).forEach(function (name) {
-      var p = PRICES[name], box = document.querySelector('[data-g-cena="' + name + '"]');
-      if (box) {
-        box.querySelector('[data-g-sum]').textContent = isExpired ? p[1] : p[0];
-      }
-      Array.prototype.forEach.call(document.querySelectorAll('[data-g-mes="' + name + '"]'), function (el) {
-        el.textContent = isExpired ? p[3] : p[2];
-      });
-    });
+    /* Суммы после таймера не меняются: 29 900 / 14 900 и есть реальные цены.
+       Уходят только зачёркнутая цена, «по заявке» и подарки (data-po-zayavke). */
   }
   /* ── панель внизу экрана (правка 19.10) ──
      Пока идёт таймер: «Скидка и подарки сгорят через ч : мин : сек»
