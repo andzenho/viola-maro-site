@@ -754,7 +754,7 @@ def form_html():
       <label class="g-f">Номер телефона
         <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="+7 900 000-00-00" required>
       </label>
-      <label class="g-f">Telegram
+      <label class="g-f">Telegram <span class="g-opt">в формате @username</span>
         <input type="text" name="telegram" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="@username" required>
       </label>
       <label class="g-f">Опишите свой запрос к Виоле. Что хотите решить? <span class="g-opt">по желанию</span>
