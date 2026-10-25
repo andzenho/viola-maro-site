@@ -1412,7 +1412,7 @@ JS = r"""
     var payload = {
       secret: SECRET, website: f.website.value, form: 'заявка',
       name: name, phone: phone, telegram: '@' + tg,
-      readiness: 'Заявка с главной, без оплаты', plan: f.plan.value,
+      readiness: 'Заявка с сайта, без оплаты', plan: f.plan.value,
       situation: f.situation.value.trim(),
       uid: f.uid.value, deadline: f.deadline.value,
       price: f.price.value, gifts: f.gifts.value, blok: curBlok,

@@ -16,6 +16,7 @@ Sheet.prototype = {
     const self = this; nr = nr || 1; nc = nc || 1;
     return {
       getValues() { const out = []; for (let i = 0; i < nr; i++) { const row = self.rows[r - 1 + i] || []; const o = []; for (let j = 0; j < nc; j++) o.push(row[c - 1 + j] === undefined ? '' : row[c - 1 + j]); out.push(o); } return out; },
+      getDisplayValues() { return this.getValues().map(r => r.map(x => String(x))); },
       setValues(v) { for (let i = 0; i < nr; i++) { self.rows[r - 1 + i] = self.rows[r - 1 + i] || []; for (let j = 0; j < nc; j++) self.rows[r - 1 + i][c - 1 + j] = v[i][j]; } },
       setValue(v) { self.rows[r - 1] = self.rows[r - 1] || []; self.rows[r - 1][c - 1] = v; }
     };
@@ -100,6 +101,12 @@ ok(row('Тест 2.0', 1)['Кнопка анкеты'] === 'да, в блоке 
 ok(status(777, 'empat2').anketa === '1', 'статус: анкета есть');
 ok(fetched.length === 1 && fetched[0].message === 'empat2_anketa_api' && fetched[0].empat2_anketa === '1', 'SaleBot получил событие анкеты');
 
+// та же анкета досылается из памяти телефона: второй строки нет, бот молчит
+const rowsBefore = sheets['Предзапись с теста 2.0'].rows.length, fetchedBefore0 = fetched.length;
+r = get(Object.assign({}, base, { type: 't2_lead', name: 'Мария', contact: '+7 900 000-00-00', change: 'Отказывать', tried: 'Книги',
+  ready: 9, konsultaciya: 'da', leader: '', rank: 'donor', sphere: 'telo', age: '45–54', accept_pd: 'да', accept_ads: '', consent_ts: '2026-10-03T10:00:00Z', doc_version_consent: '2026-08-10' }));
+ok(r.ok && r.duplicate === true && sheets['Предзапись с теста 2.0'].rows.length === rowsBefore && fetched.length === fetchedBefore0, 'повтор той же анкеты не пишется и бота не дёргает');
+
 // анкета с кнопки бота: результата в браузере нет, pid новый
 r = get({ type: 't2_lead', form: 'test2', test: 'empat2', pid: 'pNEW', userId: 777, name: 'Мария', contact: '@maria', ready: 4, konsultaciya: 'net', rank: '', sphere: '', age: '' });
 a = row('Предзапись с теста 2.0', 2);
@@ -164,7 +171,7 @@ r = post(siteLead({ uid: '888', accept_pd: false }));
 ok(r.ok === false, 'без согласия на ПД заявка с главной отклоняется');
 
 r = JSON.parse(ctx.doGet({ parameter: {} }).text);
-ok(r.версия === '2026-10-22 zayavka-tel-tg', 'версия приёмника: ' + r.версия);
+ok(r.версия === '2026-10-25 bez-dublej', 'версия приёмника: ' + r.версия);
 
 console.log(fails ? '\nПРОВАЛОВ: ' + fails : '\nВсе проверки пройдены');
 process.exit(fails ? 1 : 0);

@@ -20,7 +20,7 @@
 // Версия для интеграции мини-аппов. SaleBot-callback по-прежнему выключен,
 // пока в свойствах скрипта явно не выставлено SALEBOT_ENABLED=1.
 // У теста 2.0 свой выключатель: SALEBOT_T2_ENABLED=1.
-var ВЕРСИЯ = '2026-10-22 zayavka-tel-tg';
+var ВЕРСИЯ = '2026-10-25 bez-dublej';
 
 /* ═══ ИМЕНА ВКЛАДОК — ЕДИНСТВЕННОЕ МЕСТО, ГДЕ ОНИ ЗАДАЮТСЯ ═══════════
    Должны совпадать с именами вкладок в таблице ДОСЛОВНО. Разойдутся хоть
@@ -650,9 +650,37 @@ function saveT2Event_(d) {
   return json_({ ok: true, версия: ВЕРСИЯ, лист: найдено.sheet.getName() });
 }
 
+/** Есть ли уже эта анкета в листе: то же «ID прохождения» и «Время акцепта».
+    Колонки по месту в T2_LEAD_HEADERS: шапку в таблице могли переименовать. */
+function анкетаТ2УжеЕсть_(sheet, d) {
+  var pid = String(d.pid || ''), ts = String(d.consent_ts || '');
+  if (!pid || !ts) return false;
+  var n = sheet.getLastRow() - 1;
+  if (n < 1) return false;
+  var cTs = T2_LEAD_HEADERS.indexOf('Время акцепта') + 1;
+  var cPid = T2_LEAD_HEADERS.indexOf('ID прохождения') + 1;
+  var tsv = sheet.getRange(2, cTs, n, 1).getDisplayValues();
+  var pidv = sheet.getRange(2, cPid, n, 1).getDisplayValues();
+  for (var i = n - 1; i >= 0; i--) {
+    if (String(pidv[i][0]) === pid && String(tsv[i][0]) === ts) return true;
+  }
+  return false;
+}
+
 /** Анкета предзаписи из теста 2.0. */
 function saveT2Lead_(d) {
   var sheet = getSheet2_(ЛИСТЫ.анкеты2, T2_LEAD_HEADERS);
+
+  /* Мини-приложение держит анкету в памяти телефона, пока не прочтёт ответ
+     приёмника, и досылает её при каждом открытии. В части клиентов Телеграма
+     ответ не читается, и одна анкета приходила по пять раз, а то и через
+     две недели: в листе Дарьи это выглядело как новая заявка (правка 25.10).
+     Та же анкета (то же прохождение и то же время согласия) второй раз
+     не пишется и бота не дёргает; ответ «ok», чтобы телефон её отпустил. */
+  if (анкетаТ2УжеЕсть_(sheet, d)) {
+    return json_({ ok: true, версия: ВЕРСИЯ, лист: sheet.getName(), duplicate: true });
+  }
+
   var найдено = строкаТ2_(d.pid, d.userId);
 
   /* Анкету открывают и кнопкой из напоминания бота — на другом устройстве

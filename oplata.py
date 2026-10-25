@@ -295,7 +295,11 @@ JS = r"""
   var ENDPOINT = %(endpoint)s, SECRET = %(secret)s, DOCS = %(docs)s;
   var form = document.getElementById('op-form'), err = document.getElementById('op-err');
   var btn = document.getElementById('op-submit'), label = btn.textContent;
-  var isBron = form.getAttribute('data-pay-page') === 'bron';
+  var page = form.getAttribute('data-pay-page'), isBron = page === 'bron';
+  /* Что видит отдел продаж в «Готовности» и «Тарифе» (правка 25.10): заявки
+     со страниц оплаты лежат в одном листе с заявками со страницы заявки,
+     и без пометки не понять, кто пошёл платить и как. */
+  var KAK = { pay: 'оплата целиком', rassrochka: 'внутренняя рассрочка', bron: 'бронь места' };
 
   function attribution() {
     var out = {}, saved = {};
@@ -330,11 +334,11 @@ JS = r"""
       return bad(miss.indexOf('accept_offer') !== -1 ? 'Без принятия оферты оплата невозможна.'
                                                      : 'Без согласия на обработку данных оплата невозможна.', f[miss[0]]);
     }
-    var plan = isBron ? 'Бронь места, тариф «' + t.value + '»' : t.value;
+    var plan = isBron ? 'Бронь места, тариф «' + t.value + '»' : t.value + ' — ' + KAK[page];
     var payKey = t.getAttribute('data-pay');
     var payload = {
       secret: SECRET, website: f.website.value, name: name, phone: phone, telegram: tg,
-      plan: plan, form: 'оплата', readiness: '',
+      plan: plan, form: 'оплата', readiness: 'Перешла к оплате: ' + KAK[page],
       accept_offer: true, accept_pd: true, accept_ads: !!f.accept_ads.checked,
       consent_ts: new Date().toISOString(), page: location.href, ua: navigator.userAgent
     };
