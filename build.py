@@ -126,15 +126,19 @@ TILDA_OUT = ""
 # наполнении; сам адрес /pre остаётся редиректом на заявку.
 MODE = "pay"
 
-# ── Оплата: один способ, GetPlatinum ────────────────────────────────────
+# ── Оплата: два способа на каждой странице ──────────────────────────────
 #
 # Денежных страниц три: полная оплата (/), внутренняя рассрочка
-# (/rassrochka) и бронь (/bron). После формы окно ведёт на GetPlatinum:
+# (/rassrochka) и бронь (/bron). На каждой после формы человек выбирает,
+# чем платит: российской картой или зарубежной.
 #
 #   ru   — GetPlatinum, своя ссылка на каждый тариф. На странице полной
 #          оплаты там же оформляется рассрочка от банка.
+#   intl — Stripe, в евро, тоже своя ссылка на каждый тариф. Пустая
+#          строка — у тарифа нет зарубежной оплаты, в окне одна кнопка.
 #
-# Зарубежной оплаты (Lava) на сайтах нет с 21.10.2026, суммы только в рублях.
+# Зарубежную оплату убирали 21.10.2026 (тогда это была Lava) и вернули
+# 25.10.2026 уже через Stripe. У брони ссылки Stripe нет.
 #
 # Суммы стоят здесь же и уходят в окно оплаты вместе со ссылками: цена
 # на кнопке и цена на платёжной странице не должны расходиться. Перед
@@ -143,39 +147,44 @@ MODE = "pay"
 # ссылки GetPlatinum ещё на прежние 39 900 / 19 900 (и 19 950 / 9 950
 # в рассрочке). Их нужно заменить ссылками на новые суммы.
 _GP = "https://anny-nizh.getplatinum.ru/payment/"
+_STRIPE = "https://buy.stripe.com/"
 PAY = {
     "pay": {
         "plans": {
             "basic": {"name": "Самостоятельный", "ru": _GP + "JQqAJkS",
-                      "rub": "14 900"},
+                      "intl": _STRIPE + "aFa5kE7C69AX1bBbvo9Ve01",
+                      "rub": "14 900", "eur": "160"},
             "full": {"name": "С Виолой", "ru": _GP + "ppgQJJ7",
-                     "rub": "29 900"},
+                     "intl": _STRIPE + "8x228s1dI4gD6vV8jc9Ve02",
+                     "rub": "29 900", "eur": "320"},
         },
     },
     # Внутренняя рассрочка 50/50: два равных платежа, на странице один.
     "rassrochka": {
         "plans": {
             "basic": {"name": "Самостоятельный", "ru": _GP + "aQT8pYy",
-                      "rub": "7 450"},
+                      "intl": _STRIPE + "fZu4gA6y24gDcUj1UO9Ve03",
+                      "rub": "7 450", "eur": "80"},
             "full": {"name": "С Виолой", "ru": _GP + "Imsdgni",
-                     "rub": "14 950"},
+                     "intl": _STRIPE + "bJeaEYg8C14r1bBczs9Ve04",
+                     "rub": "14 950", "eur": "160"},
         },
     },
     "bron": {
         "plans": {
-            "bron": {"name": "", "ru": _GP + "ASs2MgT",
-                     "rub": "5 000"},
+            "bron": {"name": "", "ru": _GP + "ASs2MgT", "intl": "",
+                     "rub": "5 000", "eur": ""},
         },
     },
 }
 
-# Что сказано под ценой. Пустая строка — без подписи.
+# Что сказано под ценой у каждого способа. Пустая строка — без подписи.
 PAY_NOTES = {
-    "pay": "Здесь&nbsp;же можно оформить рассрочку от&nbsp;банка.",
-    "rassrochka": "",
-    "bron": "",
+    "pay": ("Здесь&nbsp;же можно оформить рассрочку от&nbsp;банка.", ""),
+    "rassrochka": ("", ""),
+    "bron": ("", ""),
 }
-# Строка под названием тарифа на шаге оплаты.
+# Строка под названием тарифа на шаге оплаты, общая для обоих способов.
 PAY_LEAD = {
     "pay": "",
     "rassrochka": "Сейчас вы&nbsp;вносите один платёж из&nbsp;двух равных.",
@@ -245,6 +254,7 @@ CHANNEL_URL = "https://t.me/+iIqJoSn2UBU3Yzky"
 # кнопки никуда не ведут и сборка говорит об этом вслух: страница про
 # деньги не должна тихо выйти с мёртвыми кнопками.
 NEUD_PAY_RUB = ""    # оплата в рублях (в ней же рассрочка)
+NEUD_PAY_INTL = ""   # оплата с зарубежной карты
 
 # 27 сентября в 00:00 МСК цена растёт с 17 900 / 34 900 ₽
 # до 19 900 / 39 900 ₽. Таймер относится только к цене; подарки
@@ -1313,10 +1323,12 @@ section[aria-label="Зачем мне это"] [style*="height: 2px"] { display:
 }
 #lead-modal label span span[style*="text-transform: uppercase"] { color: #5F687E !important; font-size: 14.5px !important; font-weight: 600 !important; }
 
-/* Шаг оплаты: одна плашка с красной кнопкой. Сумма крупно,
+/* Выбор способа оплаты: две плашки одного веса. Российская карта —
+   закатная с красной кнопкой, зарубежная — голубая с синей. Сумма крупно,
    тем же высоким шрифтом, что и цифры на странице. */
 [data-pay-option] { border: 0 !important; padding: 18px 18px 20px !important; gap: 14px !important; }
 [data-pay-option="ru"] { background: var(--panel) !important; }
+[data-pay-option="intl"] { background: var(--spot) !important; }
 [data-pay-option] > div > span:first-child { color: #2B3550 !important; font-size: 16.5px !important; }
 [data-pay-price] {
   font-family: 'Bebas Neue', 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -2591,6 +2603,7 @@ def rassrochka_tariffs(tpl):
                 + m.group(1)
                 + '<span %s>%s&nbsp;₽</span>' % (m.group(2), h["rub"].replace(" ", "&nbsp;"))
                 + m.group(3)
+                + '<div %s>или €%s зарубежной картой</div>' % (m.group(4), h["eur"])
                 + '<div %s>Полная цена тарифа&nbsp;— %s&nbsp;₽, она делится '
                   'на&nbsp;два равных платежа.</div>' % (note, w["rub"].replace(" ", "&nbsp;")))
 
@@ -2671,21 +2684,31 @@ PAY_BTN_MAIN = ('display: flex; align-items: center; justify-content: center; wi
                 'box-shadow: 0 16px 34px -12px rgba(43,33,28,.55), inset 0 1px 0 rgba(255,255,255,.14); '
                 'font-weight: 700; font-size: 19px; padding: 19px 24px; border-radius: 999px; '
                 'transition: transform .2s ease, filter .2s ease;')
+PAY_BTN_QUIET = ('display: flex; align-items: center; justify-content: center; width: 100%; '
+                 'cursor: pointer; font-family: inherit; box-sizing: border-box; text-align: center; '
+                 'text-decoration: none; '
+                 'background: linear-gradient(180deg, #F7EBD8 0%, #EDD9B8 100%); color: #3B2E28; '
+                 'border: 1.5px solid #C9A87F; '
+                 'box-shadow: 0 8px 20px -12px rgba(120,90,50,.45), inset 0 1px 0 rgba(255,255,255,.7); '
+                 'font-weight: 700; font-size: 19px; padding: 19px 24px; border-radius: 999px; '
+                 'transition: transform .2s ease, filter .2s ease;')
 
 
 def pay_step_html():
-    """Второй шаг окна: переход к оплате на GetPlatinum.
+    """Второй шаг окна: человек выбирает, чем платит.
 
-    Появляется после того, как контакты и согласия записаны. Сумму и адрес
-    подставляет скрипт из data-pay-config: кнопка тарифа одна и та же,
-    а тарифов два.
+    Появляется после того, как контакты и согласия записаны. Две кнопки
+    одного веса: российской картой (GetPlatinum) и зарубежной (Stripe, евро).
+    Суммы и адреса подставляет скрипт из data-pay-config: кнопка тарифа
+    одна и та же, а тарифов два. Если у тарифа нет ссылки Stripe (бронь),
+    скрипт прячет зарубежную плашку.
     """
     cfg = PAY[MODE]
     for key, plan in cfg["plans"].items():
-        if not plan["ru"]:
+        if not plan["ru"] or bool(plan["intl"]) != bool(plan["eur"]):
             raise ValueError("оплата %s/%s: нет ссылки" % (MODE, key))
     config = html_mod.escape(json.dumps(cfg, ensure_ascii=False), quote=True)
-    ru_note = PAY_NOTES[MODE]
+    ru_note, intl_note = PAY_NOTES[MODE]
 
     label = 'style="font-size: 16px; font-weight: 700; line-height: 1.3; color: #5C5149;"'
     price = ('style="font-weight: 700; font-size: 34px; line-height: 1.05; '
@@ -2696,14 +2719,24 @@ def pay_step_html():
            'border: 1px solid #E4DACD; border-radius: 16px; padding: 18px;"')
     hover = 'style-hover="transform: translateY(-2px); filter: brightness(1.06);"'
 
-    ru = ('<div data-pay-option="ru" %s>' % box
-          + '<div style="display: flex; flex-direction: column; gap: 4px;">'
-            '<span %s>К оплате</span>' % label
-          + '<span id="pay-ru-price" data-pay-price="" %s></span></div>' % price
-          + ('<p %s>%s</p>' % (note, ru_note) if ru_note else "")
-          + '<a id="pay-ru" href="%s" rel="noopener" style="%s" %s>Оплатить</a>'
-            % (TG, PAY_BTN_MAIN, hover)
-          + "</div>")
+    def option(kind, title, price_id, btn_id, btn_style, btn_text, lines, inner=""):
+        return ('<div data-pay-option="%s" %s>' % (kind, box)
+                + '<div style="display: flex; flex-direction: column; gap: 4px;">'
+                  '<span %s>%s</span>' % (label, title)
+                + '<span id="%s" data-pay-price="" %s>%s</span></div>' % (price_id, price, inner)
+                + "".join(lines)
+                + '<a id="%s" href="%s" rel="noopener" style="%s" %s>%s</a>'
+                  % (btn_id, TG, btn_style, hover, btn_text)
+                + "</div>")
+
+    ru = option("ru", "Если карта российская", "pay-ru-price", "pay-ru",
+                PAY_BTN_MAIN, "Российской картой",
+                ['<p %s>%s</p>' % (note, ru_note)] if ru_note else [])
+    intl = option("intl", "Если карта другой страны", "pay-intl-price", "pay-intl",
+                  PAY_BTN_QUIET, "Зарубежной картой",
+                  ['<p %s>%s</p>' % (note, intl_note)] if intl_note else [])
+    if not any(pl["intl"] for pl in cfg["plans"].values()):
+        intl = ""
 
     after = ("После оплаты брони вам напишут из&nbsp;команды Виолы."
              if MODE == "bron" else
@@ -2715,11 +2748,11 @@ def pay_step_html():
           'border: 1px solid #E4DACD; border-radius: 18px; '
           'box-shadow: 0 1px 2px rgba(60,48,40,.04), 0 24px 52px -30px rgba(60,48,40,.4); '
           'padding: clamp(22px, 3.4vw, 40px); display: flex; flex-direction: column; gap: 18px;">'
-        + '<div style="%s">Оплата</div>' % EYEBROW
+        + '<div style="%s">Способ оплаты</div>' % EYEBROW
         + '<h2 id="pay-title" tabindex="-1" style="margin: 0; font-family: \'Golos Text\', '
           'system-ui, sans-serif; font-weight: 700; letter-spacing: -.025em; '
           'font-size: clamp(27px, 3.4vw, 38px); line-height: 1.1; color: #2E2521; '
-          'text-wrap: balance; outline: none;">Остался один шаг</h2>'
+          'text-wrap: balance; outline: none;">Как вам удобнее оплатить?</h2>'
         + '<div style="display: inline-flex; align-self: flex-start; align-items: center; gap: 10px; '
           'background: linear-gradient(180deg, #F7EBD8 0%, #EDD9B8 100%); border: 1.5px solid #C9A87F; '
           'border-radius: 999px; padding: 9px 18px;">'
@@ -2732,7 +2765,7 @@ def pay_step_html():
           'Не&nbsp;удалось сохранить ваши контакты. Оплатить можно и&nbsp;так, а&nbsp;после оплаты '
           'напишите нам в&nbsp;Telegram: <a href="%s" target="_blank" rel="noopener" '
           'style="color: inherit; font-weight: 600;">%s</a>.</p>' % (TG, TG_NAME)
-        + ru
+        + ru + intl
         + care_note()
         + '<p %s>Оплата и&nbsp;чек&nbsp;— от&nbsp;ИП Нижевясова А.&nbsp;С., '
           'продюсера программ Виолы Маро.</p>' % small
@@ -3067,7 +3100,8 @@ def build_landing():
     IS_PRE = MODE == "predzapis"
     # Страницы, где принимаются деньги: после формы идёт выбор способа оплаты.
     HAS_PAY_STEP = MODE in PAY
-    PAY_NEXT = "На&nbsp;следующем шаге откроется оплата."
+    PAY_NEXT = ("На&nbsp;следующем шаге выберете, как платить: "
+                "российской картой или зарубежной.")
 
     for old, new in () if IS_ZAYAVKA else (
         ("Запись на поток",
@@ -3206,8 +3240,8 @@ def build_landing():
             'width: 20px; height: 20px; margin: 3px 0 0; accent-color: #4A392F; cursor: pointer;">'
             '<span style="display: flex; flex-direction: column; gap: 2px; font-size: 16.5px; '
             'line-height: 1.45; color: #3B2E28;"><b style="font-weight: 700;">%s&nbsp;— %s&nbsp;₽</b>'
-            '</span></label>'
-            % (pl["name"], key, pl["name"], pl["rub"].replace(" ", "&nbsp;"))
+            '<span style="font-size: 15px; color: #7D7167;">€%s</span></span></label>'
+            % (pl["name"], key, pl["name"], pl["rub"].replace(" ", "&nbsp;"), pl["eur"])
             for key, pl in PAY["pay"]["plans"].items())
         tarif_block = ('<div data-tarif-pick="" style="display: flex; flex-direction: column; gap: 12px;">'
                        '<span style="font-size: 13px; font-weight: 600; letter-spacing: .16em; '
@@ -3292,8 +3326,8 @@ def build_landing():
         plans = {"openBasicPay": ("Самостоятельный — внутренняя рассрочка", "basic"),
                  "openFullPay": ("С Виолой — внутренняя рассрочка", "full")}
 
-    # Зарубежной оплаты нет (21.10.2026): цены тарифов только в рублях,
-    # строки «$240 €215» из шаблона убираем на всех страницах.
+    # Строки «$240 €215» из шаблона стоят на старых ценах: убираем их,
+    # евро на нужные суммы ставят oplata.py и rassrochka_tariffs из PAY.
     tpl = re.sub(r'<div style="[^"]*">\s*\$\d+[^<]*</div>', "", tpl)
 
     if IS_PRE:
