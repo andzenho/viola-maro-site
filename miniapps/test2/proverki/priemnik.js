@@ -2,7 +2,7 @@
 const fs = require('fs'), vm = require('vm');
 const code = fs.readFileSync(process.argv[2], 'utf8');
 
-function Sheet(name) { this.name = name; this.rows = []; this.cols = 26; }
+function Sheet(name) { this.name = name; this.rows = []; this.cols = 26; this.bg = {}; }
 Sheet.prototype = {
   getName() { return this.name; },
   getLastRow() { return this.rows.length; },
@@ -17,6 +17,7 @@ Sheet.prototype = {
     return {
       getValues() { const out = []; for (let i = 0; i < nr; i++) { const row = self.rows[r - 1 + i] || []; const o = []; for (let j = 0; j < nc; j++) o.push(row[c - 1 + j] === undefined ? '' : row[c - 1 + j]); out.push(o); } return out; },
       getDisplayValues() { return this.getValues().map(r => r.map(x => String(x))); },
+      setBackground(c) { for (let i = 0; i < nr; i++) self.bg[r - 1 + i] = c; },
       setValues(v) { for (let i = 0; i < nr; i++) { self.rows[r - 1 + i] = self.rows[r - 1 + i] || []; for (let j = 0; j < nc; j++) self.rows[r - 1 + i][c - 1 + j] = v[i][j]; } },
       setValue(v) { self.rows[r - 1] = self.rows[r - 1] || []; self.rows[r - 1][c - 1] = v; }
     };
@@ -105,7 +106,9 @@ ok(fetched.length === 1 && fetched[0].message === 'empat2_anketa_api' && fetched
 const rowsBefore = sheets['Предзапись с теста 2.0'].rows.length, fetchedBefore0 = fetched.length;
 r = get(Object.assign({}, base, { type: 't2_lead', name: 'Мария', contact: '+7 900 000-00-00', change: 'Отказывать', tried: 'Книги',
   ready: 9, konsultaciya: 'da', leader: '', rank: 'donor', sphere: 'telo', age: '45–54', accept_pd: 'да', accept_ads: '', consent_ts: '2026-10-03T10:00:00Z', doc_version_consent: '2026-08-10' }));
-ok(r.ok && r.duplicate === true && sheets['Предзапись с теста 2.0'].rows.length === rowsBefore && fetched.length === fetchedBefore0, 'повтор той же анкеты не пишется и бота не дёргает');
+const sh2 = sheets['Предзапись с теста 2.0'];
+ok(r.ok && r.duplicate === true && sh2.rows.length === rowsBefore + 1 && sh2.bg[rowsBefore] === '#FFF2CC' && !sh2.bg[rowsBefore - 1] && fetched.length === fetchedBefore0, 'повтор той же анкеты записан, покрашен, бот молчит');
+sh2.rows.splice(rowsBefore, 1); delete sh2.bg[rowsBefore];
 
 // анкета с кнопки бота: результата в браузере нет, pid новый
 r = get({ type: 't2_lead', form: 'test2', test: 'empat2', pid: 'pNEW', userId: 777, name: 'Мария', contact: '@maria', ready: 4, konsultaciya: 'net', rank: '', sphere: '', age: '' });
@@ -171,7 +174,7 @@ r = post(siteLead({ uid: '888', accept_pd: false }));
 ok(r.ok === false, 'без согласия на ПД заявка с главной отклоняется');
 
 r = JSON.parse(ctx.doGet({ parameter: {} }).text);
-ok(r.версия === '2026-10-25 bez-dublej', 'версия приёмника: ' + r.версия);
+ok(r.версия === '2026-10-25 povtor-cvetom', 'версия приёмника: ' + r.версия);
 
 console.log(fails ? '\nПРОВАЛОВ: ' + fails : '\nВсе проверки пройдены');
 process.exit(fails ? 1 : 0);
