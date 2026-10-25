@@ -1031,7 +1031,7 @@ function siteLeadToT2_(d, uid) {
   if (d.gifts) строки.push('Подарки: ' + d.gifts);
   sheet.appendRow([
     new Date(),
-    'заявка с сайта',
+    'заявка на /zayavka',
     какТекст_(d.name || ''),
     какТекст_(d.phone || d.telegram || ''),
     uid,
