@@ -116,7 +116,7 @@ CNAME = ""
 TILDA_OUT = ""
 
 # Два сайта из одного шаблона. "pay" — продажа с тарифами и оплатой,
-# "pre" — служебный редирект со старого адреса /pre на /zayavka
+# "pre" — служебный редирект со старых адресов /pre и /predzapis на /zayavka/
 # вместо платежа. Девять экранов из одиннадцати у них общие, поэтому
 # копией файлов это делать нельзя: правки разъедутся на первой же неделе.
 # "rassrochka" — та же продажа, но по внутренней рассрочке: на странице
@@ -4080,7 +4080,9 @@ def build_tilda(src_dir, out_dir):
 # ─────────────────────────────────────────────────────────────────── main ──
 
 def build_pre_redirect():
-    target = "https://violamaro.ru/zayavka"
+    # Тот же редирект стоит на /pre и /predzapis (с 25.10). Слеш в конце:
+    # без него GitHub Pages делает ещё один переход.
+    target = "https://violamaro.ru/zayavka/"
     html = '''<!doctype html>
 <html lang="ru">
 <head>
@@ -4146,7 +4148,7 @@ def main():
     print("Сборка сайта → %s  (режим: %s)" % (os.path.relpath(OUT, ROOT), MODE))
     if MODE == "pre":
         build_pre_redirect()
-        print("Готово. /pre перенаправляет на /zayavka с параметрами адреса")
+        print("Готово. %s перенаправляет на /zayavka/ с параметрами адреса" % (BASE or "/pre"))
         return
     if BASE:
         print("  подпуть: %s" % BASE)

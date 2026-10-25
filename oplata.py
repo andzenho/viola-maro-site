@@ -296,6 +296,7 @@ JS = r"""
   var form = document.getElementById('op-form'), err = document.getElementById('op-err');
   var btn = document.getElementById('op-submit'), label = btn.textContent;
   var page = form.getAttribute('data-pay-page'), isBron = page === 'bron';
+  var SENT_KEY = 'viola_oplata_sent', REPEAT_MS = 2 * 3600e3, sending = false;
   /* Что видит отдел продаж в «Готовности» и «Тарифе» (правка 25.10): заявки
      со страниц оплаты лежат в одном листе с заявками со страницы заявки,
      и без пометки не понять, кто пошёл платить и как. */
@@ -345,13 +346,28 @@ JS = r"""
     var a = attribution(); Object.keys(a).forEach(function (k) { payload[k] = a[k]; });
     Object.keys(DOCS).forEach(function (k) { payload[k] = DOCS[k]; });
 
-    btn.disabled = true; btn.textContent = 'Отправляем…'; err.hidden = true;
     function go(notSaved) {
+      sending = false;
       btn.disabled = false; btn.textContent = label;
       if (!(window.violaPay && window.violaPay(plan, payKey, notSaved, btn))) {
         bad('Не нашли страницу оплаты для этого тарифа. Напишите нам в Telegram: '
           + '<a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>');
       }
+    }
+    /* Повторное нажатие (правка 25.10). Человек возвращается со страницы
+       оплаты и жмёт снова, и в таблице выходило по пять одинаковых строк.
+       Те же имя, контакты и тариф в течение двух часов второй раз не пишем,
+       сразу открываем оплату. Другой тариф — новая строка. */
+    var sig = [name, phone, tg, plan].join('|').toLowerCase();
+    var was = null;
+    try { was = JSON.parse(localStorage.getItem(SENT_KEY) || 'null'); } catch (e2) {}
+    if (was && was.sig === sig && Date.now() - was.t < REPEAT_MS) { go(false); return; }
+    if (sending) return;   // второе нажатие, пока первое ещё уходит
+    sending = true;
+    btn.disabled = true; btn.textContent = 'Отправляем…'; err.hidden = true;
+    function saved() {
+      try { localStorage.setItem(SENT_KEY, JSON.stringify({ sig: sig, t: Date.now() })); } catch (e3) {}
+      go(false);
     }
     if (!ENDPOINT || !window.fetch) { go(false); return; }
     /* Как у прежней формы сайта: text/plain без предварительного запроса,
@@ -360,7 +376,7 @@ JS = r"""
       body: JSON.stringify(payload), redirect: 'manual', keepalive: true })
       .then(function (res) { if (res.type !== 'opaqueredirect' && !res.ok) throw new Error('HTTP ' + res.status); });
     var slow = new Promise(function (r) { setTimeout(r, 1500); });
-    Promise.race([req, slow]).then(function () { go(false); }, function () { go(true); });
+    Promise.race([req, slow]).then(saved, function () { go(true); });
   });
 })();
 """
