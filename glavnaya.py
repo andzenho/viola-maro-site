@@ -140,26 +140,62 @@ NEDELI_POD = ("Каждую неделю лекция в записи с тай�
               "ситуация происходит. Чат потока, доступ навсегда")
 
 # Карточки тарифов (правка Ильи 19.10): подзаголовок крупно и что входит.
+# Третий тариф «Глубокая работа» (планёрка 26.10): три групповые встречи
+# с Виолой, 10 мест, цену на сайте не показываем: её называет менеджер
+# после заявки и собеседования ("sobes"), подарков и таймера в карточке нет.
+# "mest": (занято, всего) даёт строку с полосой, число даёт просто «N мест».
 TARIFY = [
+    {"name": "Глубокая работа", "badge": "", "mest": 10, "prem": True, "sobes": True,
+     "text": "Вся программа, мои ответы на ваши вопросы и три живые встречи со мной в группе",
+     "items": [
+         "Всё, что входит в тариф «С Виолой»",
+         "<b>Три групповые встречи со мной по видеосвязи, раз\u00a0в две недели</b>",
+         "Перед каждой встречей вы присылаете свой запрос: что сейчас происходит и куда хотите "
+         "прийти. На встрече я разбираю присланные запросы",
+     ]},
     {"name": "С Виолой", "badge": "Рекомендуем", "mest": (23, 50),   # занято, всего
      "text": "Вся программа и мои ответы на ваши вопросы",
      "items": [
          "6 моих лекций в записи с таймкодами",
          "Прикладные техники на каждую неделю, задания и PDF-конспекты",
-         "<b>Я отвечаю в формате аудио на ваши вопросы в чате потока</b>",
+         "<b>Отвечаю голосом на ваши вопросы в чате потока, до двух вопросов в неделю</b>",
+         "База моих ответов на реальные ситуации участниц прошлых потоков: что ответить мужу, "
+         "маме, начальнику",
          "<b>Мой большой мастер-класс в финале с разбором вопросов участниц</b>",
          "Чат потока",
          "Мои аудиомедитации",
          "Доступ ко всем материалам навсегда",
+         "Диагностическая карта в начале и в конце программы",
+         "<b>Именной сертификат о прохождении программы</b>",
      ]},
     {"name": "Самостоятельный", "badge": "", "mest": "",
      "text": "Вся программа в вашем темпе",
      "items": [
          "6 моих лекций в записи с таймкодами",
          "Прикладные техники на каждую неделю, задания и PDF-конспекты",
+         "База моих ответов на реальные ситуации участниц прошлых потоков: что ответить мужу, "
+         "маме, начальнику",
          "Мои аудиомедитации",
          "Доступ ко всем материалам навсегда",
      ]},
+]
+# Тарифы без цены на сайте: в заявку уходит цена «после собеседования».
+BEZ_CENY = [t["name"] for t in TARIFY if t.get("sobes")]
+SOBES = {
+    "h": "Стоимость после собеседования",
+    "t": "Оставьте заявку. Даша из моей команды свяжется с вами, расскажет о формате "
+         "и назовёт стоимость",
+}
+
+# Блок «Как вы увидите результат» между неделями и тарифами (планёрка 26.10):
+# диагностическая карта и сертификат только на «С Виолой» и «Глубокой работе».
+REZULTAT = [
+    "На тарифах «С Виолой» и «Глубокая работа» в начале программы вы заполняете "
+    "диагностическую карту и видите, где вам сейчас тяжелее всего: в отношениях, с родными, "
+    "в теле, в деле или в деньгах",
+    "В конце заполняете её снова, видите, что изменилось за 6 недель, и получаете "
+    "рекомендации, куда двигаться дальше",
+    "После итоговой карты и отзыва вы получаете именной сертификат",
 ]
 RASSROCHKA = ("Рассрочка на 3, 6 или 12 месяцев без процентов, первый платёж через месяц. "
               "Рассрочка банка доступна гражданам стран СНГ по паспорту, 18+")
@@ -309,12 +345,24 @@ FAQ = [
      "Вы останетесь такой же доброй. Просто перестанете отдавать себя тем, кто этого не ценит. "
      "Что отвечать на «ты изменилась» и «ты думаешь только о себе», разбираем отдельно, "
      "на третьей неделе"),
+    # Три ответа ниже из правок планёрки 26.10: база ответов, лимит вопросов,
+    # третий тариф и сертификат.
     ("Я не умею формулировать вопросы и стесняюсь писать",
-     "Пишите общими словами, всю историю рассказывать не нужно. Я вижу, что стоит "
-     "за вопросом, и отвечаю на то, что там на самом деле"),
-    ("Чем «С Виолой» отличается от «Самостоятельного»?",
-     "Программа в обоих тарифах одна. На тарифе «С Виолой» вы пишете вопрос в чат потока, "
-     "и я отвечаю вам голосом. Поэтому мест в нём 50"),
+     "Сначала загляните в базу моих ответов на реальные ситуации участниц прошлых потоков, "
+     "скорее всего, ваша ситуация там уже есть. Если нет, напишите один вопрос по теме недели, "
+     "коротко, в несколько предложений. Как задать вопрос так, чтобы ответ вам помог, мы покажем "
+     "в чате в первый день"),
+    ("Чем отличаются тарифы?",
+     "Программа во всех тарифах одна. На «Самостоятельном» вы проходите её сами, а ответы "
+     "на частые вопросы находите в базе моих ответов участницам прошлых потоков. На «С Виолой» "
+     "пишете вопросы в чат потока, до двух в неделю, я отвечаю голосом, а в конце вы получаете "
+     "сертификат. Поэтому мест на «С Виолой» 50. На «Глубокой работе» к этому добавляются три "
+     "живые встречи со мной в группе, раз\u00a0в две недели, где я разбираю ваши запросы"),
+    ("Что за сертификат и как его получить?",
+     "Это именной сертификат о прохождении программы на тарифах «С Виолой» и «Глубокая работа». "
+     "Чтобы его получить, в начале и в конце программы вы заполняете диагностическую карту "
+     "и оставляете отзыв. Сертификат подтверждает, что вы прошли программу, права работать "
+     "психологом он не даёт"),
     ("Я живу за границей и боюсь платить онлайн",
      "Оплатить можно из любой страны. После заявки я лично пишу вам, оплату проводит "
      "менеджер @violamaroteam, после оплаты приходит чек. Если вам пишет кто-то другой "
@@ -322,7 +370,7 @@ FAQ = [
     ("Я не успею к старту или пропущу неделю",
      "Все лекции в записи и остаются у вас навсегда. Можно начать позже и идти в своём темпе"),
     # Два вопроса с прежнего лендинга (source/Лендинг ПЭ 4.0.dc.html), без длинного тире.
-    ("У меня Telegram открывается только с VPN. Я смогу участвовать?",
+    ("У меня Telegram открывается\u00a0только с VPN. Я смогу участвовать?",
      "Да. Ни одна часть программы не требует быть на связи в конкретную минуту: лекции "
      "в записи, вопросы вы пишете в чат, когда вам удобно"),
     ("А если во время работы станет тяжело?",
@@ -343,13 +391,18 @@ SPASIBO = [
 
 def typograf(s):
     """Неразрывный пробел после коротких слов и чисел: предлог не остаётся
-    в конце строки. Только в тексте, не в тегах."""
+    в конце строки. Только в тексте, не в тегах. С 26.10 ещё правила:
+    короткое слово перед тегом выделения («и <b>мастер-класс») и знак валюты
+    после тега («<span>1 242</span> ₽») не отрываются,
+    слова с частицей через дефис («что-то», «кое-где») не переносятся по дефису."""
     def fix(text):
         prev = None
         while prev != text:
             prev = text
             text = re.sub(r"(^|[\s«(>])([А-Яа-яЁёA-Za-z]{1,2}|\d+)[ ](?=\S)", "\\1\\2 ", text)
-        return text
+        return re.sub(r"(?<![\w-])(\w+-(?:то|либо|нибудь)|кое-\w+)(?![\w-])", r'<span class="g-nw">\1</span>', text)
+    s = re.sub(r"(^|[\s«(>])([А-Яа-яЁёA-Za-z]{1,2}|\d+) (?=<(?:b|i|em|strong|span)[\s>])", "\\1\\2\u00a0", s)
+    s = re.sub(r"(</(?:b|span)>) (?=[₽€])", "\\1\u00a0", s)
     parts = re.split(r"(<[^>]+>)", s)
     return "".join(p if p.startswith("<") else fix(p) for p in parts)
 
@@ -379,7 +432,8 @@ def timer_html(cls):
 def podarki_html():
     """Блок подарков внутри карточки тарифа, над ценой. Скрыт после таймера
     (data-po-zayavke); без localStorage виден, но без таймера."""
-    ps = "".join('<p class="g-gift-p"><b class="g-gift-red">%s</b> %s</p>' % x for x in PODARKI)
+    ps = "".join('<p class="g-gift-p"><b class="g-gift-red">%s</b> %s</p>' % (nbsp_tail(a), nbsp_tail(b))
+                 for a, b in PODARKI)
     return ('<div class="g-gift" data-po-zayavke>'
             '<p class="g-gift-h">%s</p>%s%s</div>' % (PODARKI_H, ps, timer_html("g-gift-t")))
 
@@ -591,10 +645,69 @@ def sec_nedeli():
                  btn("Оставить заявку", "Как проходит программа"))
 
 
+def nbsp_tail(s, dlina=24):
+    """Последние два слова через неразрывный пробел, чтобы одно слово не
+    оставалось на строке (правка 26.10: висячих слов нет). Теги не трогаем.
+    Не склеиваем, если неразрывный хвост вместе с пробелами typograf() выйдет
+    длиннее dlina знаков или склеится вся строка: длинный хвост сам выталкивает
+    предыдущее слово на отдельную строку."""
+    parts = re.split(r"(<[^>]+>)", s)
+    for i in range(len(parts) - 1, -1, -1):
+        p = parts[i]
+        if p.startswith("<") or not p.strip():
+            continue
+        j = p.rstrip().rfind(" ")
+        if j <= 0:
+            return s
+        parts[i] = p[:j] + "\u00a0" + p[j + 1:]
+        res = "".join(parts)
+        plain = re.sub(r"<[^>]+>", "", typograf(res)).strip()
+        tail = plain.rsplit(" ", 1)[-1] if " " in plain else ""
+        if not tail or len(tail) > dlina:
+            return s
+        return res
+    return s
+
+
+def sobes_html():
+    """Вместо цены у тарифа без цены на сайте (правка 26.10): цену называет
+    менеджер после заявки и собеседования."""
+    return """
+        <div class="g-cena g-cena-sob">
+          <p class="g-cena-sob-h">%s</p>
+          <p class="g-cena-mes">%s</p>
+        </div>""" % (nbsp_tail(SOBES["h"]), nbsp_tail(SOBES["t"]))
+
+
+def mest_html(mest):
+    """(занято, всего): строка «Занято X из Y мест» с полосой; число: «N мест»."""
+    if not mest:
+        return ""
+    if isinstance(mest, int):
+        return '<p class="g-mest">%d мест</p>' % mest
+    return ('<p class="g-mest">Занято %d из %d мест</p>'
+            '<span class="g-mest-bar" aria-hidden="true"><i style="width:%d%%"></i></span>'
+            % (mest[0], mest[1], round(100 * mest[0] / mest[1])))
+
+
+def sec_rezultat():
+    """Диагностическая карта и сертификат (планёрка 26.10), перед тарифами."""
+    return """
+<section class="g-sec" id="rezultat" data-blok="Как вы увидите результат">
+  <div class="g-in g-narrow">
+    %s
+    <div class="g-box">%s</div>
+  </div>
+</section>""" % (h2("Как вы увидите", "результат"),
+                 "".join("<p%s>%s</p>" % (' class="g-p2"' if i else "", nbsp_tail(t))
+                         for i, t in enumerate(REZULTAT)))
+
+
 def sec_tarify():
     cards = []
     for t in TARIFY:
         top = bool(t["badge"])
+        sobes = bool(t.get("sobes"))
         cards.append("""
     <article class="g-tarif%(cls)s">
       <div class="g-tarif-head">
@@ -608,16 +721,13 @@ def sec_tarify():
       %(gift)s
       %(price)s
       %(btn)s
-    </article>""" % {"cls": " g-tarif-top" if top else "",
+    </article>""" % {"cls": " g-tarif-top" if top else (" g-tarif-prem" if t.get("prem") else ""),
                      "badge": ('<span class="g-badge">%s</span>' % t["badge"]) if top else "",
-                     "name": t["name"], "text": t["text"],
-                     "items": "".join("<li>%s</li>" % x for x in t["items"]),
-                     "mest": ('<p class="g-mest">Занято %d из %d мест</p>'
-                              '<span class="g-mest-bar" aria-hidden="true"><i style="width:%d%%"></i></span>'
-                              % (t["mest"][0], t["mest"][1], round(100 * t["mest"][0] / t["mest"][1])))
-                             if t["mest"] else "",
-                     "gift": podarki_html(),
-                     "price": price_html(t["name"]),
+                     "name": t["name"], "text": nbsp_tail(t["text"]),
+                     "items": "".join("<li>%s</li>" % nbsp_tail(x) for x in t["items"]),
+                     "mest": mest_html(t["mest"]),
+                     "gift": "" if sobes else podarki_html(),
+                     "price": sobes_html() if sobes else price_html(t["name"]),
                      "btn": btn("Оставить заявку", "Тарифы: " + t["name"], t["name"], "g-btn g-btn-red")})
     return """
 <section class="g-sec g-red" id="tarify" data-blok="Тарифы">
@@ -714,7 +824,7 @@ def sec_faq():
       <details class="g-faq-i">
         <summary>%s</summary>
         <p>%s</p>
-      </details>""" % qa for qa in FAQ)
+      </details>""" % (nbsp_tail(q), nbsp_tail(a)) for q, a in FAQ)
     return """
 <section class="g-sec" id="voprosy" data-blok="Вопросы">
   <div class="g-in g-narrow">
@@ -1097,6 +1207,16 @@ body.g-lock { overflow: hidden; }
 .g-tarif-l { margin: 22px 6px 14px !important; }
 .g-tarif-list li { font-size: 17px; line-height: 1.45; }
 .g-cena { margin-top: 24px; padding: 20px 18px 18px; }
+/* «Глубокая работа» (26.10): тёмная шапка, вместо цены «после собеседования». */
+.g-tarif-prem .g-tarif-head { background: var(--ink); color: #fff; box-shadow: 0 16px 30px -18px rgba(28,26,29,.7); }
+.g-tarif-prem .g-tarif-h { color: #fff; }
+.g-cena-sob-h { font-family: var(--bebas); font-size: 34px; line-height: 1.05; color: #fff; margin: 0 !important; }
+.g-cena-sob .g-cena-mes { margin-top: 10px !important; font-weight: 400; line-height: 1.45; }
+/* Без висячих слов в тарифах, блоке результата и вопросах (26.10): браузер
+   сам перестраивает последние строки абзаца, где умеет. */
+.g-tarif-list li, .g-cena-sob .g-cena-mes, #rezultat p, .g-faq-i p { text-wrap: pretty; }
+.g-tarif-t, .g-faq-i summary, .g-gift .g-gift-red, .g-cena-sob-h { text-wrap: balance; }
+.g-nw { white-space: nowrap; }
 .gl .g-rass, .gl .g-pod { line-height: 1.6; margin-top: 20px !important; }
 /* истории: заголовок карточки обычным шрифтом, отзыв без жирного */
 .g-stories { gap: 22px; }
@@ -1161,6 +1281,10 @@ body.g-lock { overflow: hidden; }
   [data-hero-stage] { min-height: max(clamp(600px, 94vh, 960px), var(--g-hero-min, 0px)); height: auto !important; }
   .g-stories, .g-checks-2 { grid-template-columns: 1fr 1fr; display: grid; }
   .g-tarify { grid-template-columns: 1fr 1fr; align-items: start; }
+  /* Три тарифа (26.10): «Глубокая работа» на всю ширину сверху, два тарифа
+     под ней. Три в ряд не делаем: карточки узкие, в подарках висят слова,
+     а в короткой карточке «Глубокой работы» остаётся пустое место. */
+  .g-tarif-prem { grid-column: 1 / -1; }
   .g-about { grid-template-columns: 420px 1fr; gap: 56px; }
   .g-modal { align-items: center; }
   .g-bar { justify-content: center; gap: 32px; padding: 8px 24px; }
@@ -1193,7 +1317,7 @@ JS = r"""
 (function () {
   'use strict';
   var ENDPOINT = %(endpoint)s, SECRET = %(secret)s, METRIKA = %(metrika)s;
-  var PLASHKA = %(plashka)s, PRICES = %(prices)s, HOURS = %(hours)s;
+  var PLASHKA = %(plashka)s, PRICES = %(prices)s, HOURS = %(hours)s, BEZ_CENY = %(bezceny)s;
   var KEY = 'viola_pe_zayavka';
   var DOC_VERSION_CONSENT = '2026-08-10';
 
@@ -1404,12 +1528,14 @@ JS = r"""
     if (!/^[A-Za-z0-9_]{4,32}$/.test(tg)) return bad('Напишите ник в Telegram латиницей, например @anna.', f.telegram);
     if (!f.accept_pd.checked) { f.accept_pd.closest('.g-cb').classList.add('g-bad'); return bad('Отметьте согласие на обработку персональных данных.', f.accept_pd); }
 
-    /* Скрытые поля: uid, конец таймера, цена, подарки, тариф. */
-    var ok = inTime();
+    /* Скрытые поля: uid, конец таймера, цена, подарки, тариф. У тарифа без
+       цены на сайте («Глубокая работа», 26.10) цена «после собеседования»,
+       подарков в его карточке нет. */
+    var ok = inTime(), bezCeny = BEZ_CENY.indexOf(curTarif) >= 0;
     f.uid.value = uid;
     f.deadline.value = st ? new Date(st.deadline).toISOString() : '';
-    f.price.value = ok ? 'по заявке' : 'полная';
-    f.gifts.value = ok ? 'да' : 'нет';
+    f.price.value = bezCeny ? 'после собеседования' : (ok ? 'по заявке' : 'полная');
+    f.gifts.value = (ok && !bezCeny) ? 'да' : 'нет';
     f.plan.value = curTarif;
 
     var payload = {
@@ -1465,7 +1591,7 @@ def page():
     import json
     hero = hero_from_build()
     body = "".join([
-        sec_goals(), sec_nedeli(), sec_tarify(), sec_istorii(), sec_o_viole(),
+        sec_goals(), sec_nedeli(), sec_rezultat(), sec_tarify(), sec_istorii(), sec_o_viole(),
         sec_text(h2("Оплата", "из другой страны"), '<div class="g-box"><p>%s</p></div>' % OPLATA,
                  "Оплата из другой страны"),
         sec_dlya_kogo(),
@@ -1484,6 +1610,7 @@ def page():
         "endpoint": json.dumps(LEAD_ENDPOINT), "secret": json.dumps(FORM_SECRET),
         "metrika": int(METRIKA_ID), "plashka": json.dumps(PLASHKA, ensure_ascii=False),
         "prices": json.dumps(PRICES, ensure_ascii=False), "hours": TIMER_HOURS, "viola": VIOLA_TG,
+        "bezceny": json.dumps(BEZ_CENY, ensure_ascii=False),
         "pb": json.dumps(PANEL["btn"], ensure_ascii=False), "pa": json.dumps(PANEL["posle_btn"], ensure_ascii=False),
     }
     out = (head
