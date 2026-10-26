@@ -169,11 +169,20 @@ TARIFY = [
          "маме, начальнику",
          "Мои аудиомедитации",
          "Доступ ко всем материалам навсегда",
+     ],
+     # Чего здесь нет по сравнению с «С Виолой» (просьба Ильи 26.10): серым, с крестиком.
+     "net": [
+         "Мои ответы голосом на ваши вопросы",
+         '<span class="g-nw">Мастер-класс</span> в финале',
+         "Чат потока",
+         "Диагностическая карта в начале и в конце",
+         "Именной сертификат",
      ]},
     {"name": "Глубокая работа", "badge": "", "mest": 10, "prem": True, "sobes": True,
      "text": "Вся программа, мои ответы на ваши вопросы и три живые встречи со мной в группе",
      "items": [
          "Всё, что входит в тариф «С Виолой»",
+         "<b>Мой персональный голосовой разбор вашей диагностической карты в начале программы</b>",
          "<b>Три групповые встречи со мной по видеосвязи, раз\u00a0в две недели</b>",
          "Перед каждой встречей вы присылаете свой запрос: что сейчас происходит и куда хотите "
          "прийти. На встрече я разбираю присланные запросы",
@@ -197,6 +206,18 @@ REZULTAT = [
     "рекомендации, куда двигаться дальше",
     "После итоговой карты и отзыва вы получаете именной сертификат",
 ]
+# Визуализация блока (просьба Ильи 26.10): подписи шагов, колесо карты
+# и сертификат. Значения колеса условные, под ним подпись «Пример карты».
+REZULTAT_H = ["Карта в начале", "Карта в конце", "Именной сертификат"]
+KOLESO = {
+    "sfery": ["Отношения", "Родные", "Тело", "Дело", "Деньги"],
+    "do": [3, 4, 2, 5, 3],
+    "posle": [7, 7, 6, 8, 7],
+    "legenda": ("В начале", "Через 6 недель"),
+    "podpis": "Пример карты",
+}
+SERT = {"h": "Сертификат", "imya": "Ваше имя",
+        "t": "о прохождении программы «Прикладная эмпатия»", "podpis": "Виола Маро"}
 RASSROCHKA = ("Рассрочка на 3, 6 или 12 месяцев без процентов, первый платёж через месяц. "
               "Рассрочка банка доступна гражданам стран СНГ по паспорту, 18+")
 POD_KNOPKOY = ("После заявки Даша из команды Виолы напишет вам в Telegram в течение 15 минут. "
@@ -356,8 +377,9 @@ FAQ = [
      "Программа во всех тарифах одна. На «Самостоятельном» вы проходите её сами, а ответы "
      "на частые вопросы находите в базе моих ответов участницам прошлых потоков. На «С Виолой» "
      "пишете вопросы в чат потока, до двух в неделю, я отвечаю голосом, а в конце вы получаете "
-     "сертификат. Поэтому мест на «С Виолой» 50. На «Глубокой работе» к этому добавляются три "
-     "живые встречи со мной в группе, раз\u00a0в две недели, где я разбираю ваши запросы"),
+     "сертификат. Поэтому мест на «С Виолой» 50. На «Глубокой работе» к этому добавляются мой "
+     "персональный голосовой разбор вашей диагностической карты в начале и три живые встречи "
+     "со мной в группе, раз\u00a0в две недели, где я разбираю ваши запросы"),
     ("Что за сертификат и как его получить?",
      "Это именной сертификат о прохождении программы на тарифах «С Виолой» и «Глубокая работа». "
      "Чтобы его получить, в начале и в конце программы вы заполняете диагностическую карту "
@@ -690,17 +712,66 @@ def mest_html(mest):
             % (mest[0], mest[1], round(100 * mest[0] / mest[1])))
 
 
+def koleso_svg():
+    """Колесо диагностической карты (26.10): пять сфер из текста блока, серым
+    пунктиром «в начале», красным «через 6 недель». Координаты целые: check()
+    ищет «2.0» во всей разметке, и в дробных координатах оно бы нашлось."""
+    import math
+    cx, cy, r = 200, 158, 106
+    n = len(KOLESO["sfery"])
+    ang = [math.radians(-90 + 360 * i / n) for i in range(n)]
+
+    def pt(i, v):
+        return (round(cx + r * v / 10 * math.cos(ang[i])), round(cy + r * v / 10 * math.sin(ang[i])))
+
+    def poly(vals):
+        return " ".join("%d,%d" % pt(i, v) for i, v in enumerate(vals))
+
+    setka = "".join('<polygon class="g-kol-set" points="%s"/>' % poly([k] * n) for k in (2, 4, 6, 8, 10))
+    osi = "".join('<line class="g-kol-os" x1="%d" y1="%d" x2="%d" y2="%d"/>' % ((cx, cy) + pt(i, 10))
+                  for i in range(n))
+    podpisi = []
+    for i, sfera in enumerate(KOLESO["sfery"]):
+        x, y = pt(i, 11.5)
+        c, s_ = math.cos(ang[i]), math.sin(ang[i])
+        anchor = "start" if c > .3 else ("end" if c < -.3 else "middle")
+        dy = -6 if s_ < -.9 else (16 if s_ > .3 else 6)
+        podpisi.append('<text x="%d" y="%d" text-anchor="%s">%s</text>' % (x, y + dy, anchor, sfera))
+    tochki = "".join('<circle class="g-kol-t" cx="%d" cy="%d" r="5"/>' % pt(i, v)
+                     for i, v in enumerate(KOLESO["posle"]))
+    return ('<svg class="g-kol" viewBox="0 0 400 300" role="img" aria-labelledby="kol-t">'
+            '<title id="kol-t">Пример диагностической карты: в начале программы и через 6 недель</title>'
+            '%s%s<polygon class="g-kol-posle" points="%s"/>%s<polygon class="g-kol-do" points="%s"/>%s</svg>'
+            % (setka, osi, poly(KOLESO["posle"]), tochki, poly(KOLESO["do"]), "".join(podpisi)))
+
+
+def sert_html():
+    """Сертификат схемой, как он будет выглядеть, без настоящего макета."""
+    return ('<div class="g-sert" aria-hidden="true"><p class="g-sert-h">%(h)s</p>'
+            '<p class="g-sert-imya">%(imya)s</p><p class="g-sert-t">%(t)s</p>'
+            '<p class="g-sert-p">%(podpis)s</p></div>' % SERT)
+
+
 def sec_rezultat():
-    """Диагностическая карта и сертификат (планёрка 26.10), перед тарифами."""
+    """Диагностическая карта и сертификат (планёрка 26.10), перед тарифами:
+    колесо карты слева, три шага справа (на телефоне друг под другом)."""
+    shagi = "".join(
+        '<li><span class="g-num">%d</span><div><p class="g-rez-h">%s</p><p>%s</p>%s</div></li>'
+        % (i + 1, REZULTAT_H[i], nbsp_tail(t), sert_html() if i == len(REZULTAT) - 1 else "")
+        for i, t in enumerate(REZULTAT))
     return """
 <section class="g-sec" id="rezultat" data-blok="Как вы увидите результат">
   <div class="g-in g-narrow">
     %s
-    <div class="g-box">%s</div>
+    <div class="g-rez">
+      <figure class="g-kol-fig">%s
+        <figcaption class="g-kol-leg"><span class="g-kol-l g-kol-l-do">%s</span><span class="g-kol-l">%s</span><span class="g-kol-pr">%s</span></figcaption>
+      </figure>
+      <ol class="g-rez-shagi">%s</ol>
+    </div>
   </div>
-</section>""" % (h2("Как вы увидите", "результат"),
-                 "".join("<p%s>%s</p>" % (' class="g-p2"' if i else "", nbsp_tail(t))
-                         for i, t in enumerate(REZULTAT)))
+</section>""" % (h2("Как вы увидите", "результат"), koleso_svg(), KOLESO["legenda"][0], KOLESO["legenda"][1],
+                 KOLESO["podpis"], shagi)
 
 
 def sec_tarify():
@@ -717,7 +788,8 @@ def sec_tarify():
       </div>
       <p class="g-tarif-t">%(text)s</p>
       <p class="g-tarif-l">Что входит:</p>
-      <ul class="g-checks g-checks-sm g-tarif-list">%(items)s</ul>
+      <ul class="g-checks g-checks-sm g-tarif-list%(scls)s">%(items)s</ul>
+      %(net)s
       %(gift)s
       %(price)s
       %(btn)s
@@ -725,6 +797,10 @@ def sec_tarify():
                      "badge": ('<span class="g-badge">%s</span>' % t["badge"]) if top else "",
                      "name": t["name"], "text": nbsp_tail(t["text"]),
                      "items": "".join("<li>%s</li>" % nbsp_tail(x) for x in t["items"]),
+                     "scls": " g-s-net" if t.get("net") else "",
+                     "net": ('<p class="g-tarif-l g-tarif-l-net">Не входит:</p>'
+                             '<ul class="g-checks g-checks-sm g-tarif-list g-tarif-net">%s</ul>'
+                             % "".join("<li>%s</li>" % nbsp_tail(x) for x in t["net"])) if t.get("net") else "",
                      "mest": mest_html(t["mest"]),
                      "gift": "" if sobes else podarki_html(),
                      "price": sobes_html() if sobes else price_html(t["name"]),
@@ -1216,7 +1292,42 @@ body.g-lock { overflow: hidden; }
    сам перестраивает последние строки абзаца, где умеет. */
 .g-tarif-list li, .g-cena-sob .g-cena-mes, #rezultat p, .g-faq-i p { text-wrap: pretty; }
 .g-tarif-t, .g-faq-i summary, .g-gift .g-gift-red, .g-cena-sob-h { text-wrap: balance; }
-.g-nw { white-space: nowrap; }
+.g-nw, .g-checks li span.g-nw { display: inline; white-space: nowrap; margin: 0; font-size: inherit; color: inherit; }
+/* «Не входит» в карточке «Самостоятельный» (26.10): серым, с крестиком. */
+.gl .g-tarif-l-net { color: var(--soft); margin-top: 26px !important; }
+.g-tarif-net li { color: #77717C; }
+.g-tarif-net li::before { background: var(--grey); box-shadow: inset 0 0 0 1px var(--line); }
+.g-tarif-net li::after { left: 6px; top: calc(.12em + 6px); width: 12px; height: 12px; border: 0; transform: none;
+  background: linear-gradient(45deg, transparent 43%, #9A949E 43%, #9A949E 57%, transparent 57%),
+              linear-gradient(-45deg, transparent 43%, #9A949E 43%, #9A949E 57%, transparent 57%); }
+/* «Как вы увидите результат» (26.10): колесо карты и три шага. */
+.g-rez { display: grid; gap: 30px; }
+.g-kol-fig { margin: 0; background: var(--grey); border-radius: 24px; padding: 18px 12px 20px; }
+.g-kol { display: block; width: 100%; height: auto; max-width: 420px; margin: 0 auto; overflow: visible;
+  font-family: 'Golos Text', system-ui, sans-serif; }
+.g-kol text { font-size: 17px; font-weight: 600; fill: var(--ink); }
+.g-kol-set, .g-kol-os { fill: none; stroke: #DCD5CC; stroke-width: 1; }
+.g-kol-posle { fill: rgba(196,20,44,.16); stroke: var(--red); stroke-width: 2.5; stroke-linejoin: round; }
+.g-kol-do { fill: rgba(28,26,29,.06); stroke: #77717C; stroke-width: 2; stroke-dasharray: 6 5; stroke-linejoin: round; }
+.g-kol-t { fill: var(--red); }
+.g-kol-leg { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 20px; margin-top: 8px; font-size: 15px; }
+.g-kol-l { display: inline-flex; align-items: center; gap: 8px; }
+.g-kol-l::before { content: ""; width: 24px; border-top: 3px solid var(--red); }
+.g-kol-l-do::before { border-top: 2px dashed #77717C; }
+.g-kol-pr { flex-basis: 100%; text-align: center; font-size: 13px; color: var(--soft); }
+.g-rez-shagi { display: grid; gap: 24px; }
+.g-rez-shagi li { display: flex; gap: 16px; align-items: flex-start; }
+.g-rez-shagi .g-num { margin-top: 0; }
+.gl .g-rez-h { font-weight: 800; font-size: 19px; line-height: 1.3; margin: 8px 0 6px !important; }
+.g-rez-shagi p { line-height: 1.55; }
+.g-sert { margin-top: 16px !important; max-width: 290px; padding: 16px 18px 14px; text-align: center; background: #fff;
+  border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 7px rgba(196,20,44,.35), 0 16px 30px -20px rgba(28,26,29,.5); }
+.gl .g-sert-h { font-family: var(--bebas); font-size: 26px; letter-spacing: .08em; line-height: 1; color: var(--red); }
+.gl .g-sert-imya { font-family: 'Prata', 'Times New Roman', Georgia, serif; font-size: 20px; margin: 8px 0 4px !important; }
+.gl .g-sert-t { font-size: 12.5px; line-height: 1.35; color: var(--soft); }
+.gl .g-sert-p { display: inline-block; margin-top: 10px !important; padding-top: 6px; border-top: 1px solid var(--line);
+  font-family: 'Prata', 'Times New Roman', Georgia, serif; font-size: 13px; color: var(--red-d); }
 .gl .g-rass, .gl .g-pod { line-height: 1.6; margin-top: 20px !important; }
 /* истории: заголовок карточки обычным шрифтом, отзыв без жирного */
 .g-stories { gap: 22px; }
@@ -1309,6 +1420,8 @@ body.g-lock { overflow: hidden; }
   .g-tarif .g-gift { margin-top: auto; }
   .g-tarif .g-gift + .g-cena { margin-top: 24px; }
   .gl[data-istek] .g-tarif .g-cena { margin-top: auto; }
+  .g-tarif-list.g-s-net { margin-bottom: 0 !important; }
+  .g-rez { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
   .g-faq-i { padding: 24px 28px; }
 }
 """
