@@ -1279,7 +1279,8 @@ JS = r"""
   /* ── панель внизу экрана (правка 19.10) ──
      Пока идёт таймер: «Скидка и подарки сгорят через ч : мин : сек»
      и «Закрепить цену». Таймер вышел (или его нет без localStorage):
-     «Старт 1 ноября…» и «Оставить заявку». Кнопка открывает форму заявки.
+     «Старт 1 ноября…» и «Оставить заявку». Кнопка ведёт к выбору тарифа,
+     как и все кнопки вне карточек тарифов (правка 26.10).
      Видна, когда кнопка первого экрана ушла вверх; прячется, пока на экране
      блок тарифов и пока открыта форма. */
   var bar = document.getElementById('g-bar');
@@ -1311,7 +1312,7 @@ JS = r"""
   })();
   document.getElementById('bar-btn').addEventListener('click', function () {
     goal('knopka_paneli');
-    open('', 'Панель внизу');
+    document.getElementById('tarify').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
   barMode(!!(storage && st && st.deadline > Date.now()));
 
