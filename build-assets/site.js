@@ -18,8 +18,8 @@
 
      Адреса оплаты практикума задаются в build.py (словарь PAY) и приходят
        в разметке окна, в data-pay-config: у каждой страницы свои ссылки
-       и суммы. После формы окно ведёт на GetPlatinum (там же рассрочка
-       от банка). Зарубежной оплаты нет.
+       и суммы. После формы человек сам выбирает способ: российской картой
+       (GetPlatinum, там же рассрочка от банка) или зарубежной (Stripe, евро).
 
      PAY_URLS — запасной путь для страниц без такого шага: одна ссылка,
        переход сразу после того, как согласия записаны. */
@@ -162,6 +162,17 @@
     setText('pay-plan', currentPlan);
     setText('pay-ru-price', plan.rub.replace(/ /g, '\u00a0') + '\u00a0₽');
     document.getElementById('pay-ru').href = plan.ru;
+
+    /* Зарубежная оплата (Stripe, евро) — своя ссылка на каждый тариф.
+       Нет ссылки (бронь) — плашку прячем. */
+    var intl = document.querySelector('[data-pay-option="intl"]');
+    if (intl) {
+      intl.style.display = plan.intl ? '' : 'none';
+      if (plan.intl) {
+        setText('pay-intl-price', '€' + plan.eur);
+        document.getElementById('pay-intl').href = plan.intl;
+      }
+    }
     var warn = document.getElementById('pay-warn');
     if (warn) warn.hidden = !notSaved;
 

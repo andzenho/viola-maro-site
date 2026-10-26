@@ -660,7 +660,7 @@ section[aria-label="Первый экран"] { background: var(--noch) !importa
 #lead-modal h2 { font-family: var(--prata) !important; font-weight: 400 !important; text-transform: none; letter-spacing: 0 !important; color: #1C1A1D; }
 #lead-modal h2::first-line { color: inherit; }
 [data-pay-option] { box-shadow: var(--ten); }
-[data-pay-option="ru"] { background: #FFFFFF !important; }
+[data-pay-option="ru"], [data-pay-option="intl"] { background: #FFFFFF !important; }
 [data-pay-price] { font-family: var(--prata); font-weight: 400 !important; font-size: 40px !important; line-height: 1.1 !important; color: var(--vino) !important; }
 #pay-step [data-btn] { letter-spacing: .06em !important; font-size: clamp(14.5px, 4vw, 16px) !important; }
 

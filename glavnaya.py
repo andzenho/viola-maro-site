@@ -57,11 +57,11 @@ PLASHKA = [
 
 TIMER_HOURS = 48
 PRICES = {
-    # тариф: (цена, зачёркнутая цена пока идёт таймер, в месяц).
+    # тариф: (цена, зачёркнутая цена пока идёт таймер, в месяц, в евро).
     # С 22.10 цена после таймера та же, что по заявке: реальная цена программы.
-    # Только рубли: зарубежной оплаты нет с 21.10.2026.
-    "С Виолой": ("29 900", "39 900", "2 492"),
-    "Самостоятельный": ("14 900", "19 900", "1 242"),
+    # Евро — оплата зарубежной картой через Stripe (с 25.10.2026), ссылки в PAY в build.py.
+    "С Виолой": ("29 900", "39 900", "2 492", "€320"),
+    "Самостоятельный": ("14 900", "19 900", "1 242", "€160"),
 }
 
 # ───────────────────────────────────────────────────────────── тексты ──
@@ -256,7 +256,7 @@ CITATY = [
 ]
 CITATY_VIDNY = False
 
-OPLATA = ("Оплатить можно из любой страны картой любого банка. "
+OPLATA = ("Оплатить можно из любой страны: российской картой в рублях или зарубежной картой в евро. "
           "Деньги принимает ИП Нижевясова А. С., официальный организатор моих программ. "
           "Вопросы по оплате в службу заботы "
           '<a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>')
@@ -385,13 +385,14 @@ def podarki_html():
 
 
 def price_html(name):
-    zay, base, mz = PRICES[name]
+    zay, base, mz, eur = PRICES[name]
     return """
         <div class="g-cena" data-g-cena="%(n)s">
           <p class="g-cena-old"><s data-po-zayavke>%(base)s&nbsp;₽</s></p>
           <p class="g-cena-new"><span data-g-sum>%(zay)s</span>&nbsp;₽ <span class="g-po" data-po-zayavke>по заявке</span></p>
           <p class="g-cena-mes">или от <span data-g-mes="%(n)s">%(mz)s</span>&nbsp;₽ в месяц</p>
-        </div>""" % {"n": name, "base": base, "zay": zay, "mz": mz}
+          <p class="g-cena-val">%(eur)s зарубежной картой</p>
+        </div>""" % {"n": name, "base": base, "zay": zay, "mz": mz, "eur": eur}
 
 
 HERO_SRC = None   # разметка прежнего первого экрана из сборки build.py
@@ -937,6 +938,7 @@ body { padding-bottom: 0 !important; background: #fff; }
   font-family: 'Golos Text', system-ui, sans-serif; font-size: 13px; line-height: 1.1; font-weight: 800; letter-spacing: .06em;
   text-transform: uppercase; vertical-align: 10px; }
 .g-cena-mes { margin-top: 6px !important; font-weight: 700; font-size: 17px; }
+.g-cena-val { margin-top: 2px !important; font-size: 16px; color: rgba(255,255,255,.7); }
 .g-tarif .g-btn { margin-top: 16px; max-width: none; }
 .gl .g-rass { margin-top: 16px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 640px; margin-left: auto; margin-right: auto; }
 .gl .g-pod { margin-top: 14px !important; text-align: center; font-size: 16px; opacity: .95; max-width: 520px; margin-left: auto; margin-right: auto; }
