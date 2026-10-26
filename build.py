@@ -138,7 +138,7 @@ MODE = "pay"
 #          строка — у тарифа нет зарубежной оплаты, в окне одна кнопка.
 #
 # Зарубежную оплату убирали 21.10.2026 (тогда это была Lava) и вернули
-# 25.10.2026 уже через Stripe. У брони ссылки Stripe нет.
+# 25.10.2026 уже через Stripe (бронь — с 26.10.2026).
 #
 # Суммы стоят здесь же и уходят в окно оплаты вместе со ссылками: цена
 # на кнопке и цена на платёжной странице не должны расходиться. Перед
@@ -172,8 +172,9 @@ PAY = {
     },
     "bron": {
         "plans": {
-            "bron": {"name": "", "ru": _GP + "ASs2MgT", "intl": "",
-                     "rub": "5 000", "eur": ""},
+            "bron": {"name": "", "ru": _GP + "ASs2MgT",
+                     "intl": _STRIPE + "6oUdRaaOiaF18E3bvo9Ve08",
+                     "rub": "5 000", "eur": "55"},
         },
     },
 }
@@ -2556,6 +2557,7 @@ def booking_screens():
       <div style="flex: 0 0 auto; display: flex; flex-direction: column; gap: 4px;">
         <span style="font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #E9C98F;">Размер брони</span>
         <span style="font-size: clamp(40px, 6vw, 60px); font-weight: 700; letter-spacing: -.03em; line-height: 1; color: #F6F0E8;">%(amount)s</span>
+        <span style="font-size: 17px; line-height: 1.4; color: #DCD1C4;">или €%(eur)s зарубежной картой</span>
       </div>
       <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 10px; font-size: 17.5px; line-height: 1.55; color: #DCD1C4;">
         <p style="margin: 0;"><b style="color: #F6F0E8; font-weight: 700;">Засчитывается в&nbsp;стоимость участия.</b> Это не&nbsp;доплата сверху: остаток вы&nbsp;вносите за&nbsp;вычетом брони.</p>
@@ -2572,7 +2574,8 @@ def booking_screens():
 </div>
 ''' % {"eyebrow": EYEBROW, "rows": rows, "cta": CTA_BOOK,
        "amount": BOOKING_AMOUNT, "deadline": BOOKING_DEADLINE,
-       "carry": BOOKING_CARRY}
+       "carry": BOOKING_CARRY,
+       "eur": PAY["bron"]["plans"]["bron"]["eur"]}
 
 
 def rassrochka_tariffs(tpl):
@@ -2700,7 +2703,7 @@ def pay_step_html():
     Появляется после того, как контакты и согласия записаны. Две кнопки
     одного веса: российской картой (GetPlatinum) и зарубежной (Stripe, евро).
     Суммы и адреса подставляет скрипт из data-pay-config: кнопка тарифа
-    одна и та же, а тарифов два. Если у тарифа нет ссылки Stripe (бронь),
+    одна и та же, а тарифов два. Если у тарифа нет ссылки Stripe,
     скрипт прячет зарубежную плашку.
     """
     cfg = PAY[MODE]
@@ -3169,9 +3172,11 @@ def build_landing():
             ("Оставьте контакты&nbsp;— на&nbsp;них придут доступы",
              "Оставьте контакты&nbsp;— пришлём доступы"),
             (PAY_NEXT,
-             "На&nbsp;следующем шаге внесёте бронь %s. Бронь засчитывается в&nbsp;стоимость "
+             "На&nbsp;следующем шаге выберете, как внести бронь: российской картой "
+             "(%s) или зарубежной (€%s). Бронь засчитывается в&nbsp;стоимость "
              "участия, остаток вносится до&nbsp;%s."
-             % (BOOKING_AMOUNT.replace(" ", "&nbsp;"), BOOKING_DEADLINE)),
+             % (BOOKING_AMOUNT.replace(" ", "&nbsp;"), PAY["bron"]["plans"]["bron"]["eur"],
+                BOOKING_DEADLINE)),
             ("Перейти к оплате", "Внести бронь"),
         ):
             if old not in form:
