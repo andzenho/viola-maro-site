@@ -164,7 +164,7 @@
     document.getElementById('pay-ru').href = plan.ru;
 
     /* Зарубежная оплата (Stripe, евро) — своя ссылка на каждый тариф.
-       Нет ссылки (бронь) — плашку прячем. */
+       Нет ссылки — плашку прячем. */
     var intl = document.querySelector('[data-pay-option="intl"]');
     if (intl) {
       intl.style.display = plan.intl ? '' : 'none';
