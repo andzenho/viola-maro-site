@@ -1414,7 +1414,7 @@ JS = r"""
     var payload = {
       secret: SECRET, website: f.website.value, form: 'заявка',
       name: name, phone: phone, telegram: '@' + tg,
-      readiness: 'Заявка с главной, без оплаты', plan: f.plan.value,
+      readiness: 'Заявка на /zayavka, без оплаты', plan: f.plan.value,
       situation: f.situation.value.trim(),
       uid: f.uid.value, deadline: f.deadline.value,
       price: f.price.value, gifts: f.gifts.value, blok: curBlok,
@@ -1427,11 +1427,23 @@ JS = r"""
       ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src'].forEach(function (k) { payload[k] = q.get(k) || ''; });
     } catch (err) {}
 
+    /* Повтор (правка 25.10): та же заявка (имя, контакты, тариф) в течение
+       двух часов второй строкой в таблицу не идёт, сразу «Спасибо». И второе
+       нажатие, пока первое ещё отправляется, ничего не шлёт. */
+    function thanks() {
+      form.hidden = true; doneBox.hidden = false;
+      try { doneBox.querySelector('a').focus(); } catch (err) {}
+    }
+    var sig = [name, phone, '@' + tg, curTarif].join('|').toLowerCase(), was = null;
+    try { was = JSON.parse(localStorage.getItem('viola_zayavka_sent') || 'null'); } catch (err) {}
+    if (was && was.sig === sig && Date.now() - was.t < 2 * 3600e3) { thanks(); return; }
+    if (sendBtn.disabled) return;
+
     sendBtn.disabled = true; sendBtn.textContent = 'Отправляю…'; errP.hidden = true;
     send(payload, function () {
       goal('zayavka_otpravlena', { blok: curBlok, tarif: curTarif });
-      form.hidden = true; doneBox.hidden = false;
-      try { doneBox.querySelector('a').focus(); } catch (err) {}
+      try { localStorage.setItem('viola_zayavka_sent', JSON.stringify({ sig: sig, t: Date.now() })); } catch (err) {}
+      thanks();
     }, function () {
       sendBtn.disabled = false; sendBtn.textContent = 'Оставить заявку';
       errP.innerHTML = 'Не получилось отправить заявку. Попробуйте ещё раз или напишите нам в Telegram '
