@@ -55,7 +55,7 @@ var ЛИСТЫ = {
   сайтЦена: 'Сайт: цена по заявке',
   /* Анкета для интервью (кастдевов), violamaro.ru/intervyu/ (30.10).
      Вкладку скрипт заведёт сам. Колонку «Статус» ведёт команда руками. */
-  ксдв: 'КСДВ'
+  ксдв: 'Кастдев'
 };
 /* ════════════════════════════════════════════════════════════════════ */
 
@@ -292,7 +292,7 @@ function route_(d) {
     /* Главная: заход с uid. Не заявка, но с тем же секретом сайта. */
     if (d.form === 'визит') { return saveSiteVisit_(d); }
 
-    /* Анкета для интервью (кастдевов): свой лист «КСДВ». */
+    /* Анкета для интервью (кастдевов): свой лист «Кастдев». */
     if (d.form === 'ксдв') { return saveKsdv_(d); }
 
     if (SITE_SHEETS[d.form]) { return saveSite_(d); }
@@ -1108,7 +1108,7 @@ function num_(v) {
   return (v === undefined || v === null || v === '') ? '' : v;
 }
 
-/** Анкета для интервью (miniapps/intervyu): одна строка в лист «КСДВ». */
+/** Анкета для интервью (miniapps/intervyu): одна строка в лист «Кастдев». */
 function saveKsdv_(d) {
   if (SITE_SECRET && d.secret !== SITE_SECRET) return json_({ ok: false, error: 'forbidden' });
   if (d.website) return json_({ ok: true, версия: ВЕРСИЯ });

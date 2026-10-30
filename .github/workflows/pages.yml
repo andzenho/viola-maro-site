@@ -90,7 +90,7 @@ jobs:
           mkdir -p site/anketa
           cp miniapps/anketa/index.html site/anketa/index.html
 
-      # Анкета для интервью (кастдевов): ответы в таблицу заявок, лист «КСДВ».
+      # Анкета для интервью (кастдевов): ответы в таблицу заявок, лист «Кастдев».
       - name: Добавить анкету для интервью
         run: |
           mkdir -p site/intervyu
