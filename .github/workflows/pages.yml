@@ -90,6 +90,12 @@ jobs:
           mkdir -p site/anketa
           cp miniapps/anketa/index.html site/anketa/index.html
 
+      # Анкета для интервью (кастдевов): своя страница, свой приёмник и таблица.
+      - name: Добавить анкету для интервью
+        run: |
+          mkdir -p site/intervyu
+          cp miniapps/intervyu/index.html site/intervyu/index.html
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
