@@ -20,7 +20,7 @@
 // Версия для интеграции мини-аппов. SaleBot-callback по-прежнему выключен,
 // пока в свойствах скрипта явно не выставлено SALEBOT_ENABLED=1.
 // У теста 2.0 свой выключатель: SALEBOT_T2_ENABLED=1.
-var ВЕРСИЯ = '2026-10-25 povtor-cvetom';
+var ВЕРСИЯ = '2026-10-30 ksdv';
 
 /* ═══ ИМЕНА ВКЛАДОК — ЕДИНСТВЕННОЕ МЕСТО, ГДЕ ОНИ ЗАДАЮТСЯ ═══════════
    Должны совпадать с именами вкладок в таблице ДОСЛОВНО. Разойдутся хоть
@@ -52,7 +52,10 @@ var ЛИСТЫ = {
   /* Главная violamaro.ru (правка 19.10): заход по ссылке из бота или теста
      с ?uid=<ID в Телеграме> и срок цены по заявке (48 часов от первого
      захода). Вкладку скрипт заведёт сам. */
-  сайтЦена: 'Сайт: цена по заявке'
+  сайтЦена: 'Сайт: цена по заявке',
+  /* Анкета для интервью (кастдевов), violamaro.ru/intervyu/ (30.10).
+     Вкладку скрипт заведёт сам. Колонку «Статус» ведёт команда руками. */
+  ксдв: 'КСДВ'
 };
 /* ════════════════════════════════════════════════════════════════════ */
 
@@ -223,6 +226,13 @@ var SITE_FIELDS = [
   ['gifts',               'Подарки']
 ];
 
+var KSDV_HEADERS = [
+  'Дата', 'Ник в Телеграме', 'ID в Телеграме',
+  'Имя', 'Возраст', 'Где смотрит', 'Как давно смотрит', 'Что забирает силы',
+  'Где сейчас (минус, ноль, единица)', 'Что проходила у Виолы', 'Готова вложить', 'Интервью',
+  'Согласие на ПД', 'Время акцепта', 'Ред. согласия', 'Статус'
+];
+
 var SITE_VISIT_HEADERS = ['Дата', 'ID в Телеграме', 'Первый заход', 'Цена по заявке до', 'Страница'];
 
 function doPost(e) {
@@ -281,6 +291,9 @@ function route_(d) {
 
     /* Главная: заход с uid. Не заявка, но с тем же секретом сайта. */
     if (d.form === 'визит') { return saveSiteVisit_(d); }
+
+    /* Анкета для интервью (кастдевов): свой лист «КСДВ». */
+    if (d.form === 'ксдв') { return saveKsdv_(d); }
 
     if (SITE_SHEETS[d.form]) { return saveSite_(d); }
 
@@ -1093,6 +1106,28 @@ function какТекст_(v) {
 function num_(v) {
   if (v === 0) return 0;
   return (v === undefined || v === null || v === '') ? '' : v;
+}
+
+/** Анкета для интервью (miniapps/intervyu): одна строка в лист «КСДВ». */
+function saveKsdv_(d) {
+  if (SITE_SECRET && d.secret !== SITE_SECRET) return json_({ ok: false, error: 'forbidden' });
+  if (d.website) return json_({ ok: true, версия: ВЕРСИЯ });
+  var ник = String(d.nick == null ? '' : d.nick).trim();
+  if (!ник) return json_({ ok: false, error: 'нет ника в Телеграме' });
+  if (d.accept_pd !== true) return json_({ ok: false, error: 'нет согласия на обработку данных' });
+  var a = d.answers || {};
+  function ячейка(v) {
+    if (v === undefined || v === null) return '';
+    if (Object.prototype.toString.call(v) === '[object Array]') return какТекст_(v.join(', '));
+    return какТекст_(String(v));
+  }
+  var строка = [new Date(), какТекст_(ник), какТекст_(d.tg_id || '')];
+  for (var i = 1; i <= 9; i++) строка.push(ячейка(a['q' + i]));
+  строка.push('да', d.consent_ts || '', d.doc_version_consent || '');
+  var sheet = getSheet2_(ЛИСТЫ.ксдв, KSDV_HEADERS);
+  sheet.appendRow(строка);
+  SpreadsheetApp.flush();
+  return json_({ ok: true, версия: ВЕРСИЯ, лист: sheet.getName() });
 }
 
 function getSheet2_(name, headers) {
