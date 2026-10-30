@@ -207,7 +207,7 @@ PAY_LEAD = {
 # Заполняется перед выпуском. Пустые значения роняют сборку намеренно:
 # страница про деньги не должна выйти с недописанными цифрами.
 BOOKING_AMOUNT = "5 000 ₽"
-BOOKING_DEADLINE = "1 ноября"         # день старта потока
+BOOKING_DEADLINE = "7 декабря"         # день старта потока
 # Ссылки на оплату брони и её сумма в валюте — в словаре PAY ниже.
 
 # Формулировка про судьбу брони при неоплате остатка.
@@ -616,7 +616,7 @@ section[aria-label="Первый экран"] { background: #FBF6EC !important; 
   border-radius: 16px !important;
   padding: 14px 18px !important;
 }
-/* «Старт 1 ноября» — синей меткой. */
+/* «Старт 7 декабря» — синей меткой. */
 [data-hero-card] > div:last-child > div > div {
   background: #1F4C97 !important;
   border: 0 !important;
@@ -3402,7 +3402,7 @@ def build_landing():
             ("от 19&nbsp;900&nbsp;₽",
              "от&nbsp;%s&nbsp;₽"
              % PAY["rassrochka"]["plans"]["basic"]["rub"].replace(" ", "&nbsp;")),
-            ('color: #7D7167;">старт 1&nbsp;ноября</span>',
+            ('color: #7D7167;">старт 7&nbsp;декабря</span>',
              'color: #7D7167;">один платёж из&nbsp;двух</span>'),
             ("В «С Виолой» <b>50&nbsp;мест</b>. Оплатить можно сразу или частями&nbsp;— "
              "<b>рассрочка до&nbsp;12&nbsp;месяцев</b> для&nbsp;СНГ.",
@@ -3572,7 +3572,7 @@ def build_landing():
     page = head(
         "Прикладная эмпатия 2.0 — 6-недельный практикум Виолы Маро",
         "Шесть недель, шесть сфер жизни и 18 техник для людей с повышенной чувствительностью. "
-        "Практикум психолога Виолы Маро. Старт 1 ноября.",
+        "Практикум психолога Виолы Маро. Старт 7 декабря.",
         "/assets/site.css", extra)
     page += body
     page += '\n<script src="/assets/site.js"></script>\n</body>\n</html>\n'
