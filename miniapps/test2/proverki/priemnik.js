@@ -173,8 +173,28 @@ ok(row('Тест 2.0', 1)['Анкета'] === 'да (сайт)', 'в прохо�
 r = post(siteLead({ uid: '888', accept_pd: false }));
 ok(r.ok === false, 'без согласия на ПД заявка с главной отклоняется');
 
+console.log('— анкета для интервью /intervyu/ (30.10) —');
+const ksdv = extra => Object.assign({ form: 'ксдв', secret: SECRET, website: '', nick: '@anna_m', tg_id: '',
+  answers: { q1: 'Анна', q2: '42', q3: ['YouTube', 'Telegram'], q4: 'Больше года', q5: ['Деньги', 'Дети'],
+    q6: 'Мне тяжело, сил почти не осталось', q7: '-', q8: 'До 10 000 ₽', q9: 'Да' },
+  accept_pd: true, consent_ts: '2026-10-30T10:00:00Z', doc_version_consent: '2026-08-10', page: 'https://violamaro.ru/intervyu/' }, extra);
+r = post(ksdv());
+let k = row('Кастдев', 1);
+ok(r.ok && r.лист === 'Кастдев' && k['Ник в Телеграме'] === "'@anna_m" && k['Имя'] === 'Анна' && k['Где смотрит'] === 'YouTube, Telegram'
+  && k['Что забирает силы'] === 'Деньги, Дети' && k['Интервью'] === 'Да' && k['Согласие на ПД'] === 'да' && k['Статус'] === '',
+  'анкета для интервью: строка в «Кастдев», колонки на местах, «Статус» пустой');
+ok(sheets['Кастдев'].rows[0].length === 16 && sheets['Кастдев'].rows[1].length === 15, 'в «Кастдев» 16 колонок, «Статус» команда ведёт руками');
+r = post(ksdv({ secret: 'нет' }));
+ok(r.ok === false && sheets['Кастдев'].rows.length === 2, 'анкета без секрета отклонена');
+r = post(ksdv({ accept_pd: false }));
+ok(r.ok === false && sheets['Кастдев'].rows.length === 2, 'анкета без согласия на ПД отклонена');
+r = post(ksdv({ nick: ' ' }));
+ok(r.ok === false && sheets['Кастдев'].rows.length === 2, 'анкета без ника отклонена');
+r = post(ksdv({ website: 'spam' }));
+ok(r.ok && sheets['Кастдев'].rows.length === 2, 'бот (заполнил скрытое поле) не пишется');
+
 r = JSON.parse(ctx.doGet({ parameter: {} }).text);
-ok(r.версия === '2026-10-25 povtor-cvetom', 'версия приёмника: ' + r.версия);
+ok(r.версия === '2026-10-30 kastdev', 'версия приёмника: ' + r.версия);
 
 console.log(fails ? '\nПРОВАЛОВ: ' + fails : '\nВсе проверки пройдены');
 process.exit(fails ? 1 : 0);
