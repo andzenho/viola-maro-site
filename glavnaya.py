@@ -145,7 +145,7 @@ NEDELI_POD = ("Каждую неделю лекция в записи с тай�
 # после заявки и собеседования ("sobes"), подарков и таймера в карточке нет.
 # "mest": (занято, всего) даёт строку с полосой, число даёт просто «N мест».
 TARIFY = [
-    {"name": "С Виолой", "badge": "Рекомендуем", "mest": (23, 50),   # занято, всего
+    {"name": "С Виолой", "badge": "Рекомендуем", "mest": (50, 50),   # занято, всего (31.10: все места заняты)
      "text": "Вся программа и мои ответы на ваши вопросы",
      "items": [
          "6 моих лекций в записи с таймкодами",
@@ -1099,6 +1099,8 @@ body { padding-bottom: 0 !important; background: #fff; }
 
 /* 3. тарифы: шапка-плашка, как «Основная группа» и «Личная работа» */
 .g-tarify { display: grid; gap: 26px; }
+/* На телефоне «Самостоятельный» первым: места на «С Виолой» заняты (31.10). */
+.g-tarify > .g-tarif:nth-child(2) { order: -1; }
 .g-tarify > *, .g-stories > *, .g-weeks > * { min-width: 0; }
 .g-tarif { position: relative; background: #fff; color: var(--ink); border-radius: 26px; padding: 14px 14px 22px; box-shadow: 0 30px 50px -30px rgba(0,0,0,.5); }
 .g-tarif-head { position: relative; border-radius: 18px; padding: 22px 16px 20px; text-align: center; background: #F6F5F3; box-shadow: inset 0 0 0 1px #E6E1DA; }
@@ -1390,6 +1392,7 @@ body.g-lock { overflow: hidden; }
   [data-hero-stage] { min-height: max(clamp(600px, 94vh, 960px), var(--g-hero-min, 0px)); height: auto !important; }
   .g-stories, .g-checks-2 { grid-template-columns: 1fr 1fr; display: grid; }
   .g-tarify { grid-template-columns: 1fr 1fr; align-items: start; }
+  .g-tarify > .g-tarif:nth-child(2) { order: 0; }
   /* Три тарифа (26.10): «Глубокая работа» третьей, на всю ширину под двумя
      другими. Три в ряд не делаем: карточки узкие, в подарках висят слова,
      а в короткой карточке «Глубокой работы» остаётся пустое место. */
