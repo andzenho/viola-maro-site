@@ -329,9 +329,11 @@
 
 /* ——— настройки ——— */
 const CONFIG = {
-  /* Тот же приёмник, что у заявок сайта (integrations/google-sheets,
-     LEAD_ENDPOINT и FORM_SECRET в glavnaya.py). Ответы идут на лист «Кастдев». */
-  sheetUrl: "https://script.google.com/macros/s/AKfycbxzJaSclK7FTBSK0X7cAIJcscvwt9qyAGSsYGCrFHehtTvYPPEzTloDjCgsDj7v77n9jQ/exec",
+  /* Скрипт таблицы заявок (integrations/google-sheets), отдельное
+     развёртывание версии 2026-10-30 kastdev: оно знает форму «ксдв» и пишет
+     на лист «Кастдев». Заявки сайта и тест 2.0 шлют в другое развёртывание
+     того же скрипта (LEAD_ENDPOINT в glavnaya.py), его анкета не трогает. */
+  sheetUrl: "https://script.google.com/macros/s/AKfycbznc7zwFhyc7t5FCkmm1gFIi2FH4ZcIeUeXQlCStxsVZ2npUFa4K_JipDzbCACG2WjSAQ/exec",
   secret: "PxlGXL9bQSjc0dHcLoiCZJZWtNdfv9D8yY9SHBuJ",
   docs: {
     consent: "https://violamaro.ru/consent/",
