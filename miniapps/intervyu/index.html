@@ -152,21 +152,6 @@
     display: flex; flex-direction: column; gap: 1.3rem;
   }
 
-  /* Первый экран как на /zayavka/: красный блок во всю ширину, антиква,
-     без кнопки: «Начать анкету» стоит ниже, после сообщения и бонусов. */
-  .cover { display: flex; flex-direction: column; gap: 1rem; }
-  .lead { margin: -.8rem -.9rem 0; }
-  .lead-red {
-    background: var(--sky); color: #FFFFFF; text-align: center;
-    padding: 2.4rem .9rem;
-    display: flex; flex-direction: column; align-items: center; gap: 1rem;
-  }
-  .lead-red h1 {
-    font-family: "Prata", Georgia, serif; font-weight: 400; text-transform: uppercase;
-    font-size: clamp(2.6rem, 13vw, 3.6rem); line-height: 1.05; letter-spacing: .01em; color: #FFFFFF;
-  }
-  .lead-red p { font-size: 1.05rem; line-height: 1.4; max-width: 20rem; }
-
   /* Небо с афиши: экран «Спасибо». */
   .hero {
     position: relative; overflow: hidden;
@@ -190,15 +175,6 @@
     font-family: var(--display); font-weight: 700; text-transform: uppercase;
     font-size: 2.3rem; line-height: 1; letter-spacing: .02em; color: var(--accent);
   }
-  /* Подпись над подарками: красная метка с обводкой, как «Для каждого участника» на заявке. */
-  .copy > h3 {
-    align-self: flex-start;
-    border: 2px solid var(--accent); border-radius: 12px;
-    padding: .45rem .8rem;
-    color: var(--accent); font-size: .82rem; font-weight: 700; line-height: 1.35;
-    letter-spacing: .08em; text-transform: uppercase;
-  }
-
   .tag {
     display: inline-block; align-self: flex-start;
     background: var(--accent-soft); color: var(--accent-text);
@@ -218,28 +194,9 @@
   }
   .who { font-size: .92rem; font-weight: 700; color: var(--deep); margin-bottom: -.4rem; }
 
-  /* Три бонуса: значок в круге и текст. */
-  .gifts { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .6rem; }
-  .gifts li {
-    display: grid; grid-template-columns: 2.9rem 1fr; gap: .8rem; align-items: start;
-    background: var(--surface-2);
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    padding: .9rem 1rem .95rem .85rem;
-  }
-  .gifts li > span {
-    width: 2.9rem; height: 2.9rem; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--accent-soft); font-size: 1.45rem; line-height: 1;
-  }
-  .gifts b { font-weight: 700; }
-  .deadline {
-    background: var(--deep-soft); color: var(--ink);
-    border-radius: 14px; padding: .8rem 1rem; font-weight: 600;
-  }
-
   /* — вопросы — */
   .head { display: flex; flex-direction: column; gap: .45rem; }
+  .head .msg { margin: .55rem 0 .1rem; }
   .eyebrow { font-size: .92rem; font-weight: 700; color: var(--ink-mute); }
   .qs { display: flex; flex-direction: column; gap: 1.9rem; }
   .q { display: flex; flex-direction: column; gap: .6rem; scroll-margin: 5rem 0; }
@@ -392,22 +349,12 @@ const CONFIG = {
   docVersionConsent: "2026-08-10"
 };
 
-/* ——— текст в начале анкеты ———
-   Согласовано с Ильёй 30.10. Не обещаем созвон с самой Виолой:
-   звонит команда. Бонусы только тем, кто согласился на интервью. */
-const COVER = {
-  title: "Анкета",
-  words: [
-    "Хочу лучше узнать вас: что сейчас откликается и о чём вам важно слышать от меня. Заполните, пожалуйста, анкету, это пара минут.",
-    "С частью из вас свяжется моя команда, чтобы расспросить подробнее."
-  ],
-  giftsHead: "Тем, кто согласится на интервью с моей командой:",
-  gifts: [
-    ["🎧", "<b>моя аудиопрактика</b> на тему, которая для вас сейчас самая острая"],
-    ["🎥", "<b>запись второй лекции</b> «Прикладной эмпатии»"]
-  ],
-  deadline: ""
-};
+/* ——— сообщение Виолы над первым вопросом ———
+   Первого экрана нет (правка 02.11): анкета открывается сразу на шаге 1,
+   а это сообщение стоит под его заголовком. О подарках не пишем. */
+const HELLO = [
+  "Ваши ответы я читаю сама. Из анкет выбираем 15 человек, с ними моя команда созвонится на 30 минут в Zoom. А я сама решу, что вам дать: ответ на ваш вопрос, технику под вашу ситуацию или материал, чтобы пойти глубже. Команда подготовит это лично под вас, до двух дней."
+];
 
 /* ——— вопросы ———
    Два шага. n — номер вопроса и колонка в таблице (1–12, порядок на экране — порядок в массиве).
@@ -466,12 +413,12 @@ const BLOCKS = [
 ];
 const NICK = { label: "Оставьте свой номер телефона или Telegram, и команда с вами свяжется", hint: "Например, +7 900 123-45-67 или @anna" };
 
-/* Экран «спасибо» зависит от ответа на вопрос 9: бонусы только тем,
-   кто согласился на интервью. */
+/* Экран «спасибо» зависит от ответа на вопрос 9 и от того, оставил человек
+   телефон или Telegram. */
 const DONE = {
   title: "Спасибо! Ваша анкета у нас.",
   yes: [
-    "Сейчас откроется чат с Артёмом из моей команды. Напишите ему, он договорится с вами о времени созвона и пришлёт бонусы.",
+    "Я прочитаю вашу анкету. Если вы среди 15 человек, команда напишет вам и договорится о времени созвона.",
     "<a class=\"go\" href=\"https://t.me/artempakwork\" target=\"_blank\" rel=\"noopener\">Написать Артёму</a>"
   ],
   phone: [
@@ -495,7 +442,7 @@ const SCALE10 = {
    продолжил с того же шага. Хранится 30 дней. */
 const STATE_KEY = "viola-anketa-intervyu";
 const TTL = 30 * 24 * 3600e3;
-let stage = "cover";       // cover | form | done
+let stage = "form";        // form | done
 let step = 0;              // 0–1
 const A = {};              // ответы: A[1] … A[9]
 const OTHER = {};          // что написано рядом с «Другое» (здесь не используется)
@@ -563,7 +510,6 @@ function render(node) {
 function paintTop() {
   const on = stage === "form";
   topEl.classList.toggle("quiet", !on);
-  topEl.hidden = stage === "cover";
   counter.textContent = on ? "Шаг " + (step + 1) + " из " + BLOCKS.length : "";
   barFill.style.width = on ? Math.round((step + 1) / BLOCKS.length * 100) + "%" : "0";
 }
@@ -612,44 +558,6 @@ function linksThroughTelegram_(node) {
     }
     if (tg.openLink) { e.preventDefault(); tg.openLink(href); }
   }));
-}
-
-/* ——— первый экран ——— */
-function cover() {
-  stage = "cover";
-  paintTop();
-  const started = Object.keys(A).length > 0;
-  const n = el(`
-    <div class="cover">
-    <section class="lead">
-      <div class="lead-red">
-        <h1>${COVER.title}</h1>
-        <p>Пара минут ваших ответов, чтобы я лучше вас понимала</p>
-      </div>
-    </section>
-    <div class="card">
-      <div class="msg">
-        <img class="ava" alt="" width="36" height="36" src="${AVATAR}">
-        <div class="bubble">
-          <div class="who">Виола Маро</div>
-          ${COVER.words.map(p => `<p>${p}</p>`).join("")}
-        </div>
-      </div>
-      <div class="copy">
-        <h3>${COVER.giftsHead}</h3>
-        <ul class="gifts">
-          ${COVER.gifts.map(g => `<li><span aria-hidden="true">${g[0]}</span><p>${g[1]}</p></li>`).join("")}
-        </ul>
-        ${COVER.deadline ? `<p class="deadline">${COVER.deadline}</p>` : ""}
-      </div>
-      <div class="foot">
-        <button class="go" id="start">${started ? "Продолжить анкету" : "Начать анкету"}&nbsp;<span aria-hidden="true">→</span></button>
-        <p class="fine center">Ответы сохраняются на этом устройстве: анкету можно закрыть и продолжить позже.</p>
-      </div>
-    </div>
-    </div>`);
-  n.querySelector("#start").addEventListener("click", () => { stage = "form"; saveState(); formScreen(); });
-  render(n);
 }
 
 /* ——— вопрос ——— */
@@ -726,6 +634,15 @@ function formScreen() {
     <div class="card">
       <div class="head">
         <h2>${b.title}</h2>
+        ${step === 0 ? `
+        <div class="msg">
+          <img class="ava" alt="" width="36" height="36" src="${AVATAR}">
+          <div class="bubble">
+            <div class="who">Виола Маро</div>
+            ${HELLO.map(p => `<p>${p}</p>`).join("")}
+          </div>
+        </div>
+        <p class="fine">Ответы сохраняются на этом устройстве: анкету можно закрыть и продолжить позже.</p>` : ""}
         ${step === 0 ? `<p class="fine">Вопросы со звёздочкой <span style="color: var(--accent-text); font-weight: 800;">*</span> обязательные.</p>` : ""}
       </div>
       <div class="qs">
@@ -747,7 +664,7 @@ function formScreen() {
       <div class="foot">
         <button class="go" id="next">${last ? "Отправить анкету" : "Дальше"}&nbsp;<span aria-hidden="true">→</span></button>
         <p class="fine center" id="hint" role="status"></p>
-        <button class="ghost" id="back">← Назад</button>
+        ${step > 0 ? `<button class="ghost" id="back">← Назад</button>` : ""}
       </div>
     </div>`);
 
@@ -892,10 +809,8 @@ function formScreen() {
         : "Не получилось отправить. Проверьте интернет и нажмите ещё раз. Ваши ответы сохранены.");
     });
   });
-  n.querySelector("#back").addEventListener("click", () => {
-    if (step > 0) { step--; saveState(); formScreen(); return; }
-    cover();
-  });
+  const back = n.querySelector("#back");
+  if (back) back.addEventListener("click", () => { step--; saveState(); formScreen(); });
   render(n);
   /* Ник из Телеграма мог приехать позже, чем отрисовался шаг. */
   if (last) takeTg_();
@@ -974,9 +889,6 @@ function done() {
   n.querySelectorAll(`a[href^="${ARTEM}"]`).forEach(a => a.setAttribute("href", artemUrl_()));
   render(n);
   linksThroughTelegram_(n);
-  /* Согласившихся на интервью сразу ведём в личку Артёма (решение Ильи 02.11). */
-  /* Кто оставил телефон, тому пишет команда: Telegram у него может не быть. */
-  if (A[9] === "Да" && !isPhone_(nick)) setTimeout(openArtem_, 2500);
 }
 const ARTEM = "https://t.me/artempakwork";
 /* В чате с Артёмом уже набрано сообщение, человеку остаётся нажать «Отправить»
@@ -984,12 +896,6 @@ const ARTEM = "https://t.me/artempakwork";
    t.me передаёт его в приложение, см. core.telegram.org/api/links */
 const ARTEM_TEXT = "Здравствуйте, Артём! Пишу после анкеты Виолы. Когда вам удобно созвониться в Zoom?";
 function artemUrl_() { return ARTEM + "?text=" + encodeURIComponent(ARTEM_TEXT); }
-function openArtem_() {
-  const url = artemUrl_();
-  const tg = tgApp();
-  if (inTg_() && tg.openTelegramLink) tg.openTelegramLink(url);
-  else location.href = url;
-}
 
 /* ——— запуск ——— */
 const AVATAR = "data:image/jpeg;base64,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";
@@ -1007,10 +913,9 @@ function boot() {
     step = Math.max(0, Math.min(Number(s.step) || 0, BLOCKS.length - 1));
   }
   takeTg_();
-  if (sent) { done(); return; }
-  /* Вернулась к начатой анкете — сразу тот шаг, на котором остановилась. */
-  if (s && s.stage === "form") { formScreen(); return; }
-  cover();
+  if (sent || (s && s.stage === "done")) { done(); return; }
+  /* Первого экрана нет: сразу вопросы, с того шага, где остановилась. */
+  formScreen();
 }
 boot();
 </script>
