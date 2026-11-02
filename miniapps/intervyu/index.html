@@ -153,7 +153,7 @@
   }
 
   /* Первый экран как на /zayavka/: красный блок во всю ширину, антиква,
-     белая кнопка. Края кнопки совпадают с краями карточки ниже. */
+     без кнопки: «Начать анкету» стоит ниже, после сообщения и бонусов. */
   .cover { display: flex; flex-direction: column; gap: 1rem; }
   .lead { margin: -.8rem -.9rem 0; }
   .lead-red {
@@ -166,12 +166,6 @@
     font-size: clamp(2.6rem, 13vw, 3.6rem); line-height: 1.05; letter-spacing: .01em; color: #FFFFFF;
   }
   .lead-red p { font-size: 1.05rem; line-height: 1.4; max-width: 20rem; }
-  .lead-go {
-    appearance: none; border: 0; cursor: pointer; width: 100%; min-height: 3.9rem; margin-top: .4rem;
-    font: inherit; font-weight: 700; font-size: .95rem; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--accent-text); background: #FFFFFF; border-radius: 16px; padding: 1.1rem;
-    box-shadow: 0 18px 30px -18px rgba(60, 0, 10, .7);
-  }
 
   /* Небо с афиши: экран «Спасибо». */
   .hero {
@@ -628,7 +622,6 @@ function cover() {
       <div class="lead-red">
         <h1>${COVER.title}</h1>
         <p>Пара минут ваших ответов, чтобы я лучше вас понимала</p>
-        <button class="lead-go" id="start2">${started ? "Продолжить анкету" : "Начать анкету"}</button>
       </div>
     </section>
     <div class="card">
@@ -652,7 +645,7 @@ function cover() {
       </div>
     </div>
     </div>`);
-  ["#start", "#start2"].forEach(id => n.querySelector(id).addEventListener("click", () => { stage = "form"; saveState(); formScreen(); }));
+  n.querySelector("#start").addEventListener("click", () => { stage = "form"; saveState(); formScreen(); });
   render(n);
 }
 
