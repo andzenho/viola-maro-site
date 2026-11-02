@@ -59,6 +59,8 @@
     src: url(https://violamaro.ru/assets/fonts/GolosText-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212; }
   @font-face { font-family: "Bebas Neue"; font-weight: 700; font-display: swap;
     src: url(https://violamaro.ru/assets/fonts/BebasNeue-Bold.ttf) format("truetype"); }
+  @font-face { font-family: "Prata"; font-display: swap;
+    src: url(https://violamaro.ru/assets/fonts/Prata-cyrillic.woff2) format("woff2"); }
   /* Оформление как у страницы заявки /zayavka/ (тема «бархат», 02.11):
      красный бархат под заголовки, белые карточки на светло-сером, заголовки
      Bebas Neue прописными, текст Golos Text, выбранный ответ красный.
@@ -127,6 +129,7 @@
   .bar { height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
   .bar i { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--cta); transition: width .3s ease; }
   .top.quiet .bar { display: none; }
+  .top[hidden] { display: none; }
 
   h1, h2, h3 { margin: 0; font-weight: 700; letter-spacing: -.015em; text-wrap: balance; }
   h1 { font-size: 1.85rem; line-height: 1.14; font-weight: 800; letter-spacing: -.025em; }
@@ -149,7 +152,34 @@
     display: flex; flex-direction: column; gap: 1.3rem;
   }
 
-  /* Небо с афиши: заголовок анкеты и экран «Спасибо». */
+  /* Первый экран как на /zayavka/: красный блок во всю ширину, антиква,
+     белая кнопка, Виола на белой дуге. */
+  .cover { display: flex; flex-direction: column; gap: 1rem; }
+  .lead { margin: -.8rem -.9rem 0; background: var(--surface); overflow: hidden; }
+  .lead-red {
+    background: var(--sky); color: #FFFFFF; text-align: center;
+    padding: 2.4rem 1.2rem 7.5rem;
+    display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  }
+  .lead-red h1 {
+    font-family: "Prata", Georgia, serif; font-weight: 400; text-transform: uppercase;
+    font-size: clamp(2.6rem, 13vw, 3.6rem); line-height: 1.05; letter-spacing: .01em; color: #FFFFFF;
+  }
+  .lead-red p { font-size: 1.05rem; line-height: 1.4; max-width: 20rem; }
+  .lead-go {
+    appearance: none; border: 0; cursor: pointer; width: 100%; max-width: 22rem; min-height: 3.9rem; margin-top: .4rem;
+    font: inherit; font-weight: 700; font-size: .95rem; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent-text); background: #FFFFFF; border-radius: 16px; padding: 1.1rem;
+    box-shadow: 0 18px 30px -18px rgba(60, 0, 10, .7);
+  }
+  .lead-photo { position: relative; margin-top: -6rem; text-align: center; }
+  .lead-photo::before {
+    content: ""; position: absolute; left: -30%; right: -30%; top: 2.2rem; bottom: -60rem;
+    background: var(--surface); border-radius: 50% 50% 0 0 / 7rem 7rem 0 0;
+  }
+  .lead-photo img { position: relative; display: block; margin: 0 auto; width: min(82%, 21rem); height: auto; }
+
+  /* Небо с афиши: экран «Спасибо». */
   .hero {
     position: relative; overflow: hidden;
     margin: -.35rem -.2rem 0;
@@ -540,6 +570,7 @@ function render(node) {
 function paintTop() {
   const on = stage === "form";
   topEl.classList.toggle("quiet", !on);
+  topEl.hidden = stage === "cover";
   counter.textContent = on ? "Шаг " + (step + 1) + " из " + BLOCKS.length : "";
   barFill.style.width = on ? Math.round((step + 1) / BLOCKS.length * 100) + "%" : "0";
 }
@@ -596,8 +627,16 @@ function cover() {
   paintTop();
   const started = Object.keys(A).length > 0;
   const n = el(`
+    <div class="cover">
+    <section class="lead">
+      <div class="lead-red">
+        <h1>${COVER.title}</h1>
+        <p>Пара минут ваших ответов, чтобы я лучше вас понимала</p>
+        <button class="lead-go" id="start2">${started ? "Продолжить анкету" : "Начать анкету"}</button>
+      </div>
+      <div class="lead-photo"><img alt="Виола Маро" src="https://violamaro.ru/assets/img/viola.webp"></div>
+    </section>
     <div class="card">
-      <div class="hero"><h1>${COVER.title}</h1></div>
       <div class="msg">
         <img class="ava" alt="" width="36" height="36" src="${AVATAR}">
         <div class="bubble">
@@ -616,8 +655,9 @@ function cover() {
         <button class="go" id="start">${started ? "Продолжить анкету" : "Начать анкету"}&nbsp;<span aria-hidden="true">→</span></button>
         <p class="fine center">Ответы сохраняются на этом устройстве: анкету можно закрыть и продолжить позже.</p>
       </div>
+    </div>
     </div>`);
-  n.querySelector("#start").addEventListener("click", () => { stage = "form"; saveState(); formScreen(); });
+  ["#start", "#start2"].forEach(id => n.querySelector(id).addEventListener("click", () => { stage = "form"; saveState(); formScreen(); }));
   render(n);
 }
 
