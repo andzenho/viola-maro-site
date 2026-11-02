@@ -912,16 +912,28 @@ function done() {
         ${(A[9] === "Да" ? DONE.yes : DONE.no).map(p => `<p>${p}</p>`).join("")}
       </div>
     </div>`);
+  n.querySelectorAll(`a[href^="${ARTEM}"]`).forEach(a => a.setAttribute("href", artemUrl_()));
   render(n);
   linksThroughTelegram_(n);
   /* Согласившихся на интервью сразу ведём в личку Артёма (решение Ильи 02.11). */
   if (A[9] === "Да") setTimeout(openArtem_, 2500);
 }
 const ARTEM = "https://t.me/artempakwork";
+/* В чате с Артёмом уже набрано сообщение, человеку остаётся нажать «Отправить»
+   (решение Ильи 02.11). Параметр ?text= подставляет черновик в поле ввода,
+   t.me передаёт его в приложение, см. core.telegram.org/api/links */
+function artemText_() {
+  const name = String(A[1] || "").replace(/\s+/g, " ").trim().slice(0, 40);
+  return "Здравствуйте, Артём! " +
+    (name ? "Меня зовут " + name + ", пишу" : "Пишу") +
+    " после анкеты Виолы. Когда вам удобно созвониться в Zoom?";
+}
+function artemUrl_() { return ARTEM + "?text=" + encodeURIComponent(artemText_()); }
 function openArtem_() {
+  const url = artemUrl_();
   const tg = tgApp();
-  if (inTg_() && tg.openTelegramLink) tg.openTelegramLink(ARTEM);
-  else location.href = ARTEM;
+  if (inTg_() && tg.openTelegramLink) tg.openTelegramLink(url);
+  else location.href = url;
 }
 
 /* ——— запуск ——— */
