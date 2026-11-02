@@ -464,7 +464,7 @@ const BLOCKS = [
       opts: ["Да", "Нет"] }
   ] }
 ];
-const NICK = { label: "Ваш ник в Телеграме, чтобы с вами связаться", hint: "Например, @anna" };
+const NICK = { label: "Оставьте свой номер телефона или Telegram, и команда с вами свяжется", hint: "Например, +7 900 123-45-67 или @anna" };
 
 /* Экран «спасибо» зависит от ответа на вопрос 9: бонусы только тем,
    кто согласился на интервью. */
@@ -473,6 +473,9 @@ const DONE = {
   yes: [
     "Сейчас откроется чат с Артёмом из моей команды. Напишите ему, он договорится с вами о времени созвона и пришлёт бонусы.",
     "<a class=\"go\" href=\"https://t.me/artempakwork\" target=\"_blank\" rel=\"noopener\">Написать Артёму</a>"
+  ],
+  phone: [
+    "Команда свяжется с вами по номеру, который вы оставили."
   ],
   no: [
     "Ваши ответы помогут мне говорить о том, что вам сейчас важно. Если передумаете и захотите на интервью, напишите в службу заботы <a href=\"https://t.me/violamaroteam\" target=\"_blank\" rel=\"noopener\">@violamaroteam</a>."
@@ -855,12 +858,15 @@ function formScreen() {
       if (mark) mark.classList.add("err");
       if (!bad) bad = box;
     });
-    if (last && String(nick || "").trim().length < 2) {
+    const contactBad = last && !contactOk_(nick);
+    if (contactBad) {
       fNick.classList.add("err");
       if (!bad) bad = n.querySelector('[data-q="nick"]');
     }
     if (bad) {
-      warn("Остался вопрос без ответа. Он выделен красным.");
+      warn(contactBad && bad.getAttribute("data-q") === "nick"
+        ? "Напишите номер телефона или ник в Telegram латиницей, иначе команда не сможет с вами связаться."
+        : "Остался вопрос без ответа. Он выделен красным.");
       if (bad.scrollIntoView) bad.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
@@ -943,6 +949,17 @@ function sendForm(website) {
   });
 }
 
+/* Контакт похож на телефон: начинается с цифры, плюса или скобки. */
+function isPhone_(v) { return /^[\d+(]/.test(String(v || "").trim()); }
+
+/* Телефон: не меньше 7 цифр. Telegram: ник латиницей или ссылка t.me.
+   Имя вместо контакта («Татьяна») не принимаем: связаться по нему нельзя. */
+function contactOk_(v) {
+  const s = String(v || "").trim();
+  if (isPhone_(s)) return s.replace(/\D/g, "").length >= 7;
+  return /^(https?:\/\/)?t\.me\/[A-Za-z0-9_]{4,}\/?$/.test(s) || /^@?[A-Za-z][A-Za-z0-9_]{3,}$/.test(s);
+}
+
 /* ——— спасибо ——— */
 function done() {
   stage = "done";
@@ -951,14 +968,15 @@ function done() {
     <div class="card">
       <div class="hero"><h2>${DONE.title}</h2></div>
       <div class="copy">
-        ${(A[9] === "Да" ? DONE.yes : DONE.no).map(p => `<p>${p}</p>`).join("")}
+        ${(A[9] !== "Да" ? DONE.no : isPhone_(nick) ? DONE.phone : DONE.yes).map(p => `<p>${p}</p>`).join("")}
       </div>
     </div>`);
   n.querySelectorAll(`a[href^="${ARTEM}"]`).forEach(a => a.setAttribute("href", artemUrl_()));
   render(n);
   linksThroughTelegram_(n);
   /* Согласившихся на интервью сразу ведём в личку Артёма (решение Ильи 02.11). */
-  if (A[9] === "Да") setTimeout(openArtem_, 2500);
+  /* Кто оставил телефон, тому пишет команда: Telegram у него может не быть. */
+  if (A[9] === "Да" && !isPhone_(nick)) setTimeout(openArtem_, 2500);
 }
 const ARTEM = "https://t.me/artempakwork";
 /* В чате с Артёмом уже набрано сообщение, человеку остаётся нажать «Отправить»
