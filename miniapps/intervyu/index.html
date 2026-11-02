@@ -922,13 +922,8 @@ const ARTEM = "https://t.me/artempakwork";
 /* В чате с Артёмом уже набрано сообщение, человеку остаётся нажать «Отправить»
    (решение Ильи 02.11). Параметр ?text= подставляет черновик в поле ввода,
    t.me передаёт его в приложение, см. core.telegram.org/api/links */
-function artemText_() {
-  const name = String(A[1] || "").replace(/\s+/g, " ").trim().slice(0, 40);
-  return "Здравствуйте, Артём! " +
-    (name ? "Меня зовут " + name + ", пишу" : "Пишу") +
-    " после анкеты Виолы. Когда вам удобно созвониться в Zoom?";
-}
-function artemUrl_() { return ARTEM + "?text=" + encodeURIComponent(artemText_()); }
+const ARTEM_TEXT = "Здравствуйте, Артём! Пишу после анкеты Виолы. Когда вам удобно созвониться в Zoom?";
+function artemUrl_() { return ARTEM + "?text=" + encodeURIComponent(ARTEM_TEXT); }
 function openArtem_() {
   const url = artemUrl_();
   const tg = tgApp();
