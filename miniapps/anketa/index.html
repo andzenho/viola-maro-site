@@ -329,11 +329,11 @@
 
 /* ——— настройки ——— */
 const CONFIG = {
-  /* Адрес веб-приложения Apps Script при таблице «Анкета участниц Прикладной
-     эмпатии» (код: integrations/anketa-pe/Code.gs). Это отдельная таблица
-     и отдельный скрипт, с таблицей заявок они не связаны.
-     Пока пусто, анкета не делает вид, что ушла: она говорит об этом прямо. */
-  sheetUrl: "",
+  /* Приёмник: скрипт таблицы «Заявки | Виола Маро», развёртывание анкеты для
+     интервью (integrations/google-sheets). Ответы идут в лист «Кастдев». */
+  sheetUrl: "https://script.google.com/macros/s/AKfycbznc7zwFhyc7t5FCkmm1gFIi2FH4ZcIeUeXQlCStxsVZ2npUFa4K_JipDzbCACG2WjSAQ/exec",
+  /* Та же строка, что на остальных формах сайта. */
+  secret: "PxlGXL9bQSjc0dHcLoiCZJZWtNdfv9D8yY9SHBuJ",
   docs: {
     consent: "https://violamaro.ru/consent/",
     privacy: "https://violamaro.ru/privacy/"
@@ -932,7 +932,8 @@ function payload_(website) {
   const answers = {};
   BLOCKS.forEach(b => b.qs.forEach(q => { answers["q" + q.n] = answer_(q); }));
   return {
-    type: "pe_anketa",
+    form: "анкета",
+    secret: CONFIG.secret,
     website: website || "",
     nick: String(nick || "").trim(),
     tg_id: tgId || "",
