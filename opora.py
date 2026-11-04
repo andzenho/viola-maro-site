@@ -75,6 +75,7 @@ def mest(n):
 TITLE = "Опора: закрытый клуб психолога Виолы Маро"
 
 # 1. Первый экран (правки Артёма 04.11.2026, форма как у менторства Пырикова).
+HERO_NAD = "закрытый клуб"                # мелко над словом ОПОРА
 HERO_NAZVANIE = "ОПОРА"
 # Две плашки сверху, как «Старт: / 14 апреля» у Пырикова: подпись и дата жирным.
 PLASHKA_START = "Старт:"                 # дата — PERVAYA_VSTRECHA
@@ -88,7 +89,7 @@ POD_ZAKRYT = "Набор закрыт, следующий откроется %(s
 
 # 1.1. Блок «ОПОРА –»: светлая панель наезжает на низ фото. Слева
 # определение, справа задачи с галочками.
-HERO_H = ("ОПОРА – это закрытый клуб в Телеграме для чувствительных людей, которые вместе учатся "
+HERO_H = ("ОПОРА – это закрытое пространство в Телеграме для чувствительных людей, которые вместе учатся "
           "ценить себя и жить свою жизнь, а не только жизнь других")
 HERO_AKCENT = "ценить себя и жить свою жизнь, а не только жизнь других"   # жирным, --wine
 DESCRIPTION = HERO_H
@@ -545,11 +546,11 @@ def sec_hero():
 <section class="op-hero" data-blok="Первый экран">
   <div class="op-hero-l">
     %(plashki)s
-    <p class="op-hero-offer"><span class="op-hero-offer-nazv">%(nazv)s –</span> %(offer)s</p>
+    <p class="op-hero-offer"><span class="op-hero-offer-nazv">%(nazv)s –</span> <span class="op-eto">%(eto)s</span>%(offer)s</p>
     %(cta_pk)s
   </div>
   <div class="op-hero-r">
-    <div class="op-slovo"><p class="op-nazvanie">%(slovo)s</p></div>
+    <div class="op-slovo"><p class="op-nad">%(nad)s</p><p class="op-nazvanie">%(slovo)s</p></div>
     <div class="op-hero-foto">
       %(fon)s
       %(cta_tel)s
@@ -570,9 +571,9 @@ def sec_hero():
     </div>
     <span class="op-strelka" aria-hidden="true"></span>
   </div>
-</section>""" % {"plashki": plashki, "nazv": nazv, "offer": akcent("op-hero-akcent"),
+</section>""" % {"plashki": plashki, "nazv": nazv, "eto": akcent("op-hero-akcent").split(" ", 1)[0], "offer": " " + akcent("op-hero-akcent").split(" ", 1)[1],
                  "cta_pk": cta % "op-cta-pk", "cta_tel": cta % "op-cta-tel",
-                 "slovo": HERO_NAZVANIE,
+                 "slovo": HERO_NAZVANIE, "nad": HERO_NAD,
                  "fon": fon("hero", "Виола Маро на диване у изумрудной стены", lazy=False, sizes="125vw"),
                  "h": akcent("op-akcent-slova"), "celi": celi, "zh": ZADACHI_H, "metka": ZADACHI_METKA}
 

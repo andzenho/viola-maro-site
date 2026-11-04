@@ -226,7 +226,7 @@ body.op {
 /* Телефон: первый экран ровно на высоту экрана, фото — фон от «ОПОРА»
    до низа экрана, Виола от макушки до туфель целиком. */
 .op-main {
-  --foto-top: 124px;
+  --foto-top: 146px;
   --foto-h: calc(100vh - var(--foto-top));
   --kn: 59%;          /* кнопка чуть ниже колен Виолы: 59 % высоты фото */
   /* блок «ОПОРА –» начинается сразу под кнопкой и строкой мест: наезжает на всё,
@@ -252,6 +252,7 @@ body.op {
   font-size: 15px;
   line-height: 1.3;
 }
+.op-pl { text-align: center; }
 .op-pl span { display: block; }
 .op-pl b { display: block; font-weight: 700; font-size: 16px; }
 .op-pl-tochka {
@@ -266,7 +267,8 @@ body.op {
   box-shadow: 0 0 10px 2px rgba(232, 200, 202, .7);
 }
 
-/* ОПОРА над Виолой. */
+/* «закрытый клуб» мелко, под ним ОПОРА над Виолой. */
+.op-nad { font-size: 15px; line-height: 1.3; letter-spacing: .14em; color: var(--text); margin-bottom: 4px; }
 .op-slovo { position: relative; z-index: 2; margin-top: 0; width: max-content; max-width: none; margin: 0 auto; }
 .op-nazvanie {
   font-family: var(--prata);
@@ -285,8 +287,7 @@ body.op {
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 90%, transparent 100%);
           mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 90%, transparent 100%);
 }
-/* лицо Виолы чуть правее центра кадра: сдвигаем кадр, чтобы она стояла по центру */
-.op-hero-foto > .op-fon img { object-position: 74% 0; }
+.op-hero-foto > .op-fon img { object-position: calc(50% - var(--foto-h) * .057) 0; }  /* голова Виолы на 600 из 1024: ставим её по центру */
 
 /* Кнопка по центру на уровне груди, поверх фото. */
 .op-hero-cta { position: absolute; z-index: 4; left: 16px; right: 16px; top: var(--kn); }
@@ -717,6 +718,8 @@ body.op {
   /* «ОПОРА –» в оффере скрыто от глаз: крупное ОПОРА стоит прямо над ним */
   .op-hero-offer-nazv { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .op-hero-akcent { font-weight: 700; color: var(--rose); }
+  .op-eto { text-transform: capitalize; }   /* «Это» с большой буквы, в тексте «это» */
+  .op-nad { font-size: 17px; margin-bottom: 6px; }
   .op-cta-pk { grid-area: cta; display: block; position: static; inset: auto; width: auto; margin: 34px 0 0; }
   .op-cta-pk .op-btn-hero { width: auto; min-width: 340px; }
   .op-cta-pk .op-mest { margin-top: 14px; text-shadow: none; }
