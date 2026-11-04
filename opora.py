@@ -74,29 +74,30 @@ def mest(n):
 
 TITLE = "Опора: закрытый клуб психолога Виолы Маро"
 
-# 1. Первый экран (переписан Артёмом 04.11.2026, форма первых двух экранов
-# как у менторства Пырикова). Название крупно Prata, остальное заголовка
-# обычным текстом: делится по первому « – ».
-HERO_NAD = "Психолог Виола Маро"
-HERO_H = ("ОПОРА – закрытый клуб в Телеграме для чувствительных людей, которые вместе учатся "
-          "лучше понимать себя и жить свою жизнь, а не только жизнь других")
-DESCRIPTION = HERO_H
-HERO_PLASHKI = [
-    "Каждый месяц одна сфера жизни",
-    "2 встречи с Виолой в месяц",
-    "Отменить можно в любой момент",
-]
+# 1. Первый экран (правки Артёма 04.11.2026, форма как у менторства Пырикова).
+HERO_NAZVANIE = "ОПОРА"
+HERO_PODPIS = "клуб Виолы Маро"          # под названием справа, с наездом на буквы
+PLASHKA_START = "Старт %s"               # PERVAYA_VSTRECHA, слева от головы
+PLASHKA_NABOR = "Набор до %s"            # NABOR_DO, справа от головы, пока набор открыт
 BTN_KLUB = "Вступить в клуб"
 BTN_LIST = "Встать в лист ожидания"
-POD_OTKRYT = "Набор открыт до %(do)s, осталось %(n)d %(mest)s из %(vsego)d"
+POD_OTKRYT = "Осталось %(n)d %(mest)s из %(vsego)d"
 POD_ZAKRYT = "Набор закрыт, следующий откроется %(sled)s, и участницы из листа ожидания узнают о нём первыми"
 
-# 1.1. Под первым экраном: светлая панель с галочками, наезжает на фото.
-CELI = [
+# 1.1. Блок «ОПОРА –»: светлая панель наезжает на низ фото. Слева
+# определение и чашка с плашкой, справа задачи с галочками.
+HERO_H = ("ОПОРА – это закрытый клуб в Телеграме для чувствительных людей, которые вместе учатся "
+          "ценить себя и жить свою жизнь, а не только жизнь других")
+HERO_AKCENT = "ценить себя и жить свою жизнь, а не только жизнь других"   # жирным, --wine
+DESCRIPTION = HERO_H
+PLASHKA_VSTRECHA = "Первая встреча %s"   # PERVAYA_VSTRECHA
+ZADACHI_H = "ЗАДАЧИ КЛУБА"
+ZADACHI_METKA = "ДЛЯ КАЖДОЙ УЧАСТНИЦЫ:"
+CELI = [   # часть до первой запятой выводится жирным
     "Понять, почему вы так остро чувствуете людей, и перестать считать себя странной",
-    "Научиться отказывать близким и коллегам без чувства вины и долгих оправданий",
-    "Перестать впитывать чужую тревогу и за 10–15 минут возвращать себе силы после тяжёлого разговора",
-    "Замечать, когда на вас давят жалостью или виной, и отвечать спокойно, без крика и без молчания",
+    "Научиться отказывать без чувства вины и замечать, когда вашей добротой пользуются",
+    "Перестать прокручивать разговоры в голове и за 10–15 минут возвращать себе силы после тяжёлого общения",
+    "Оставаться собой рядом с мужем и близкими, а не растворяться в них",
     "Каждый месяц разбирать одну сферу жизни, где уходят силы, и не оставаться с этим одной",
 ]
 
@@ -501,41 +502,95 @@ def cards(items, cls="op-cards-4"):
         for h, t in items))
 
 
+def zhirno(x):
+    """Пункт задач: часть до первой запятой жирным. Где запятой нет,
+    жирным часть до первого « и »."""
+    if "," in x:
+        head, tail = x.split(",", 1)
+        return "<b>%s,</b>%s" % (head, nbsp_tail(tail))
+    head, tail = x.split(" и ", 1)
+    return "<b>%s</b> и %s" % (head, nbsp_tail(tail))
+
+
+def sloi():
+    """Три слоя первого экрана есть, только когда лежат все три файла:
+    фон без человека (телефон и компьютер) и вырезка Виолы. Вырезку
+    экспортировать на том же холсте, что и фон: она ложится поверх него 1 в 1."""
+    return all(find_src(n) for n in ("hero-fon-desktop", "hero-fon-mobile", "viola-vyrezka"))
+
+
 def sec_hero():
-    """Первый экран по форме менторства Пырикова: плашки сверху, название
-    крупно, заголовок, кнопка, ниже Виола по центру. Весь текст лежит
-    на бархатном фоне; верх фото растворяется в нём под кнопкой."""
-    knopka = btn(BTN_KLUB, "#stoimost") if otkryt() else list_btn()
-    plashki = "".join('<li class="op-bilet"><span>%s</span></li>' % p for p in HERO_PLASHKI)
+    """Первые два экрана по форме менторства Пырикова (egorpyrikov.ru/
+    mentorstvo2025), правки Артёма 04.11.2026.
+
+    Первый экран: слово ОПОРА на всю ширину, под ним справа подпись «клуб
+    Виолы Маро», Виола у стены, по бокам от её головы две плашки, кнопка
+    по центру на уровне груди, под ней строка мест. Когда есть файлы слоёв
+    (sloi()), Виола-вырезка стоит поверх слова: голова перекрывает низ букв.
+    Пока их нет, слово стоит над головой на растворённой стене.
+
+    Второй экран: светлая панель наезжает на низ фото. Слева «ОПОРА –»
+    с определением, чашка и плашка первой встречи, справа задачи."""
+    on = otkryt()
+    knopka = btn(BTN_KLUB, "#stoimost", " op-btn-hero") if on else btn(BTN_LIST, ssylka("list"), " op-btn-hero")
+    plashki = '<p class="op-plashka op-plashka-l">%s</p>' % (PLASHKA_START % PERVAYA_VSTRECHA)
+    if on:
+        plashki += '<p class="op-plashka op-plashka-r">%s</p>' % (PLASHKA_NABOR % NABOR_DO)
+    slovo = ('<div class="op-slovo"><p class="op-nazvanie">%s</p>'
+             '<p class="op-podpis">%s</p></div>' % (HERO_NAZVANIE, HERO_PODPIS))
+    cta = '<div class="op-hero-cta">%s<p class="op-mest">%s</p></div>' % (knopka, stroka_mest())
+    if sloi():
+        fon_html = fon("hero-fon", "", lazy=False)
+        made = webp("viola-vyrezka", (720, 1280, 1536))
+        u, w, h = made[-1]
+        vyrezka = ('<img class="op-vyrezka" src="%s" srcset="%s" sizes="(max-width: 759px) 100vw, 1280px" '
+                   'alt="Виола Маро" width="%d" height="%d" decoding="async" fetchpriority="high">'
+                   % (u, srcset(made), w, h))
+        scena = """
+  <div class="op-hero-foto op-sloi">
+    %s
+    %s
+    %s
+    %s
+    %s
+  </div>""" % (fon_html, slovo, vyrezka, plashki, cta)
+    else:
+        scena = """
+  %s
+  <div class="op-hero-foto">
+    %s
+    %s
+    %s
+  </div>""" % (slovo, fon("hero", "Виола Маро у изумрудной стены", lazy=False), plashki, cta)
+
     nazv, ostalnoe = HERO_H.split(" – ", 1)
+    ostalnoe = esc(ostalnoe).replace(esc(HERO_AKCENT), "<b class=\"op-akcent-slova\">%s</b>" % esc(HERO_AKCENT), 1)
+    celi = "".join("<li>%s</li>" % zhirno(x) for x in CELI)
     return """
-<section class="op-hero" data-blok="Первый экран">
-  <div class="op-hero-in">
-    <ul class="op-plashki">%(plashki)s</ul>
-    <p class="op-nad">%(nad)s</p>
-    <h1 class="op-hero-h"><span class="op-nazvanie">%(nazv)s –</span> <span class="op-offer">%(h)s</span></h1>
-    <div class="op-hero-cta">%(btn)s
-      <p class="op-mest">%(mest)s</p>
-    </div>
-  </div>
-  %(fon)s
-</section>""" % {"fon": fon("hero", "Виола Маро у изумрудной стены", lazy=False), "nad": HERO_NAD,
-                 "nazv": nazv, "h": nbsp_tail(ostalnoe), "plashki": plashki, "btn": knopka,
-                 "mest": stroka_mest()}
-
-
-def sec_celi():
-    """Второй экран: светлая панель с квадратными галочками, как «Цели
-    менторства» у Пырикова. Заголовка у списка в тексте нет."""
-    items = "".join("<li>%s</li>" % nbsp_tail(x) for x in CELI)
-    return """
-<section class="op-celi" data-blok="Под первым экраном">
+<section class="op-hero" data-blok="Первый экран">%(scena)s
+</section>
+<section class="op-celi" data-blok="Блок «ОПОРА –»">
   <div class="op-in">
     <div class="op-celi-panel">
-      <ul class="op-kvadraty">%s</ul>
+      <div class="op-celi-l">
+        <h1 class="op-celi-h"><span class="op-h2 op-celi-nazv">%(nazv)s –</span> <span class="op-offer">%(h)s</span></h1>
+        <div class="op-celi-vstrecha">
+          %(chashka)s
+          <p class="op-plashka-zoloto">%(vstrecha)s</p>
+        </div>
+      </div>
+      <div class="op-celi-r">
+        <h2 class="op-h2 op-zadachi-h">%(zh)s</h2>
+        <p class="op-metka">%(metka)s</p>
+        <ul class="op-kvadraty">%(celi)s</ul>
+      </div>
     </div>
+    <span class="op-strelka" aria-hidden="true"></span>
   </div>
-</section>""" % items
+</section>""" % {"scena": scena, "nazv": nazv, "h": ostalnoe, "celi": celi,
+                 "chashka": predmet("o-chashka", "Чашка чая"),
+                 "vstrecha": PLASHKA_VSTRECHA % PERVAYA_VSTRECHA,
+                 "zh": ZADACHI_H, "metka": ZADACHI_METKA}
 
 
 def sec_otzyvy():
@@ -775,7 +830,7 @@ def podval():
 def page():
     hero = sec_hero()
     body = "".join([
-        sec_celi(), sec_otzyvy(), sec_dlya_kogo(), sec_izmenitsya(), sec_chto(), sec_mesyac(), sec_tri(),
+        sec_otzyvy(), sec_dlya_kogo(), sec_izmenitsya(), sec_chto(), sec_mesyac(), sec_tri(),
         sec_vhodit(), sec_udobno(), sec_viola(), sec_risk(), sec_tarify(), sec_voprosy(), sec_final(),
     ])
     body = typograf(hero + body)
@@ -867,6 +922,7 @@ def sverka(text):
             continue
         t = (t.replace("[дата]", NABOR_DO if "открыт до" in t else SLED_NABOR or "[дата]")
               .replace("[17 ноября]", PERVAYA_VSTRECHA)
+              .replace("[12 ноября]", NABOR_DO)
               .replace("[N] мест из [50]", "%d %s из %d" % (MEST_OSTALOS, mest(MEST_OSTALOS), MEST_VSEGO))
               .replace("[N] мест", "%d %s" % (MEST_OSTALOS, mest(MEST_OSTALOS))))
         if not on and elem.startswith("Под кнопкой") and not SLED_NABOR:

@@ -213,83 +213,169 @@ body.op {
 }
 
 /* ──────────────────────────────────────────────────────── первый экран ── */
-/* Форма как у менторства Пырикова (правка 04.11.2026): плашки-билеты сверху,
-   название крупно по центру, заголовок обычным текстом, кнопка, ниже Виола
-   по центру. Весь текст лежит на бархатном фоне; верх фото (стена над
-   головой) растворяется в нём под кнопкой, поэтому контраст не зависит
-   от снимка. */
+/* Форма первых двух экранов как у менторства Пырикова (правки Артёма
+   04.11.2026). Первый экран: ОПОРА на всю ширину, под ним справа подпись
+   «клуб Виолы Маро» с наездом на буквы, Виола у стены, по бокам от головы
+   две плашки, кнопка по центру на уровне груди, под ней строка мест.
+   Когда лежат файлы слоёв (.op-sloi): фон без человека → слово → вырезка
+   Виолы, голова перекрывает низ букв. Пока их нет — одно фото, слово над
+   головой на растворённой стене.
+   --fw и --fh — ширина и высота фото (2 : 3 на телефоне, 3 : 2 на компьютере);
+   от них считается положение головы (30–48 % высоты) и груди (≈ 60 %). */
 
-.op-hero { position: relative; display: flex; flex-direction: column; background: var(--barhat); overflow: hidden; text-align: center; }
-.op-hero-in { position: relative; z-index: 1; width: 100%; max-width: 980px; margin: 0 auto; padding: 28px 20px 0; }
+.op-main { --fw: 100vw; --fh: calc(var(--fw) * 1.5); --nahlest: calc(var(--fh) * .14); }
+.op-hero { position: relative; background: var(--barhat); text-align: center; padding-top: 28px; }
 .op-fon { display: block; }
 .op-fon img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .op-fon-ph { background: var(--panel); }
-.op-hero > .op-fon {
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  margin-top: -96px;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 82%, transparent 100%);
-          mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 82%, transparent 100%);
-}
 
-.op-plashki { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 0 30px; }
-.op-plashki li {
-  --v: 7px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.3;
-  outline: 1px dashed rgba(123, 25, 33, .45);
-  outline-offset: -5px;
-}
-.op-nad {
-  font-size: 13px;
-  line-height: 1.5;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--text);
-}
-.op-hero-h { margin: 14px 0 0; font-weight: 400; }
+.op-slovo { position: relative; z-index: 1; width: max-content; max-width: 100%; margin: 0 auto; }
 .op-nazvanie {
-  display: block;
   font-family: var(--prata);
-  font-size: 62px;
-  line-height: 1;
-  letter-spacing: .08em;
+  font-size: 22.5vw;
+  line-height: .9;
+  letter-spacing: .03em;
+  text-indent: .03em;
   color: var(--rose);
-  margin-bottom: 18px;
   white-space: nowrap;
 }
-/* Заголовок после названия обычным текстом, чтобы читался сразу. */
-.op-offer {
-  display: block;
-  max-width: 34em;
-  margin: 0 auto;
-  font-family: var(--golos);
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 1.42;
-  color: var(--text);
-  text-wrap: balance;
+/* Подпись под словом справа, с наездом на буквы, как «Егора Пырикова».
+   Шрифт заголовков, не рукописный (Артём: «без рукописных шрифтов»). */
+.op-podpis {
+  position: relative;
+  z-index: 3;
+  margin: -.55em 0 0 auto;
+  width: max-content;
+  padding-right: 2%;
+  font-family: var(--prata);
+  font-size: 6.4vw;
+  line-height: 1.1;
+  color: var(--rose);
+  text-shadow: 0 0 14px var(--barhat), 0 0 4px var(--barhat);
 }
-.op-hero-cta { margin-top: 28px; }
-.op-hero-cta .op-btn { width: 100%; }
 
-/* Второй экран: светлая панель с квадратными галочками наезжает на низ
-   фото, как «Цели менторства» у Пырикова. */
-.op-celi { position: relative; z-index: 2; background: var(--barhat); margin-top: -96px; padding: 0 0 72px; }
+.op-hero-foto { position: relative; isolation: isolate; width: var(--fw); margin: 0 auto; }
+.op-hero-foto > .op-fon {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  margin-top: calc(14px - var(--fh) * .3);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 80%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 80%, transparent 100%);
+}
+/* Слои: фон и вырезка на одном холсте, слово между ними. */
+.op-sloi > .op-fon { margin-top: 0; }
+/* слово без своего z-index: буквы под вырезкой (1 < 2), подпись над ней (3) */
+.op-sloi .op-slovo { position: absolute; z-index: auto; left: 0; right: 0; top: calc(var(--fh) * .19); }
+.op-sloi .op-nazvanie { position: relative; z-index: 1; }
+.op-vyrezka { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.op-sloi .op-podpis { z-index: 3; }
+
+/* Плашки по бокам от головы. */
+.op-plashka {
+  position: absolute;
+  z-index: 3;
+  top: calc(var(--fh) * .38);
+  max-width: 30%;
+  padding: 7px 12px;
+  background: var(--panel);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.op-plashka-l { left: 12px; }
+.op-plashka-r { right: 12px; }
+
+/* Кнопка по центру на уровне груди, поверх фото. */
+.op-hero-cta { position: absolute; z-index: 4; left: 16px; right: 16px; top: calc(var(--fh) * .6); }
+.op-btn-hero {
+  width: 100%;
+  min-height: 64px;
+  font-size: 17px;
+  box-shadow: 0 0 0 1px var(--gold), 0 0 34px rgba(232, 200, 202, .28), 0 10px 30px rgba(0, 0, 0, .45);
+  border: 0;
+}
+.op-hero-cta .op-mest { position: relative; }
+/* мягкое затемнение без краёв под строкой мест (ТЗ: затемнение под текстом на пёстром фото) */
+.op-hero-cta .op-mest::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -18px -12%;
+  background: radial-gradient(closest-side, rgba(20, 28, 21, .92) 55%, rgba(20, 28, 21, 0));
+}
+.op-btn-hero:hover { box-shadow: 0 0 0 1px var(--gold), 0 0 44px rgba(232, 200, 202, .4), 0 10px 30px rgba(0, 0, 0, .45); }
+.op-hero-cta .op-mest {
+  margin-top: 12px;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+  /* строка лежит на фото без плашки: тёмный ореол под буквами держит контраст */
+  text-shadow: 0 0 2px var(--barhat), 0 0 6px var(--barhat), 0 0 12px var(--barhat), 0 0 22px var(--barhat), 0 0 34px rgba(20, 28, 21, .9);
+}
+
+/* ─────────────────────────────────────────────── блок «ОПОРА –» ── */
+/* Светлая панель наезжает на низ фото: слева определение, чашка
+   и плашка первой встречи, справа задачи с квадратными галочками. */
+
+.op-celi {
+  position: relative;
+  z-index: 2;
+  margin-top: calc(var(--nahlest) * -1);
+  padding: 0 0 64px;
+  /* бархат только ниже фото: верх панели лежит на растворённом низе снимка */
+  background: linear-gradient(var(--barhat), var(--barhat)) 0 var(--nahlest) / 100% 100% no-repeat;
+}
 .op-celi-panel {
-  max-width: 980px;
+  display: grid;
+  gap: 36px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 34px 24px 36px;
+  padding: 34px 22px 36px;
   background: var(--svetlyy);
   color: var(--izumrud);
-  border-radius: 10px;
+  border-radius: 12px;
   outline: 1px solid var(--gold);
   outline-offset: -8px;
 }
+.op-celi-h { font-weight: 400; }
+.op-celi .op-h2 { color: var(--izumrud); font-size: clamp(30px, 7.4vw, 44px); }
+.op-celi-nazv { display: block; margin-bottom: 14px; }
+.op-offer {
+  display: block;
+  font-family: var(--golos);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.45;
+  color: var(--izumrud);
+  text-wrap: pretty;
+}
+.op-akcent-slova { font-weight: 700; color: var(--wine); }
+.op-celi-vstrecha { display: flex; align-items: center; gap: 18px; margin-top: 26px; }
+.op-celi-vstrecha .op-predmet { width: 120px; flex: none; }
+.op-plashka-zoloto {
+  padding: 10px 16px;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--wine);
+}
+.op-zadachi-h { margin-bottom: 14px; }
+.op-metka {
+  display: inline-block;
+  margin-bottom: 24px;
+  padding: 7px 14px;
+  border: 1.5px solid var(--wine);
+  color: var(--wine);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
 .op-kvadraty li { position: relative; padding-left: 42px; text-wrap: pretty; }
 .op-kvadraty li + li { margin-top: 18px; }
+.op-kvadraty b { font-weight: 700; }
 .op-kvadraty li::before {
   content: "";
   position: absolute;
@@ -308,6 +394,29 @@ body.op {
   top: calc(.1em + 5px);
   width: 6px;
   height: 12px;
+  border: solid var(--wine-text);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+/* Стрелка вниз под панелью, как у Пырикова. */
+.op-strelka {
+  position: relative;
+  display: block;
+  width: 52px;
+  height: 52px;
+  margin: -26px auto 0;
+  border-radius: 50%;
+  background: var(--wine);
+  border: 1px solid var(--gold);
+}
+.op-strelka::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  width: 12px;
+  height: 12px;
+  margin: -8px 0 0 -6px;
   border: solid var(--wine-text);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
@@ -561,28 +670,29 @@ body.op {
   .op-shag-pr .op-predmet { grid-column: 3; margin-top: 0; width: 170px; }
   .op-num { font-size: 52px; }
 
-  /* Первый экран: Виола по центру под кнопкой, края фото растворяются. */
-  .op-hero-in { padding-top: 40px; }
-  .op-hero > .op-fon {
-    width: min(100%, 1280px);
+  /* Первый экран: фото 3 : 2 по центру. */
+  .op-main { --fw: min(100vw, 1280px); --fh: calc(var(--fw) * 2 / 3); --nahlest: calc(var(--fh) * .3 - 40px); }
+  .op-hero { padding-top: 36px; }
+  .op-nazvanie { font-size: min(17vw, 210px); }
+  .op-podpis { font-size: min(3.4vw, 42px); padding-right: 4%; }
+  .op-hero-foto > .op-fon {
     aspect-ratio: 3 / 2;
-    margin: -210px auto 0;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 82%, transparent 100%), linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+    margin-top: calc(10px - var(--fh) * .3);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
     -webkit-mask-composite: source-in;
-            mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 82%, transparent 100%), linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
             mask-composite: intersect;
   }
-  .op-plashki { gap: 12px; margin-bottom: 36px; }
-  .op-plashki li { font-size: 15px; padding: 11px 22px; }
-  .op-nazvanie { font-size: 120px; margin-bottom: 22px; }
-  .op-offer { font-size: 24px; }
-  .op-hero-cta .op-btn { width: auto; min-width: 340px; }
-  .op-celi { margin-top: -200px; padding-bottom: 104px; }
-  .op-celi-panel { padding: 48px 56px 52px; }
-  .op-kvadraty { columns: 2; column-gap: 48px; }
-  .op-kvadraty li { break-inside: avoid; }
-  .op-kvadraty li + li { margin-top: 0; }
-  .op-kvadraty li { margin-bottom: 22px; }
+  .op-sloi > .op-fon { margin-top: 0; }
+  .op-sloi .op-slovo { top: calc(var(--fh) * .13); }
+  .op-plashka { top: calc(var(--fh) * .36); font-size: 15px; padding: 10px 18px; max-width: none; }
+  .op-plashka-l { left: auto; right: 64%; }
+  .op-plashka-r { right: auto; left: 64%; }
+  .op-hero-cta { left: 50%; right: auto; width: 340px; margin-left: -170px; top: calc(var(--fh) * .58); }
+  .op-celi { padding-bottom: 96px; }
+  .op-celi-panel { grid-template-columns: 1fr 1fr; gap: 56px; padding: 52px 56px 56px; }
+  .op-offer { font-size: 21px; }
+  .op-celi-vstrecha .op-predmet { width: 150px; }
 
   /* Последний экран: Виола по центру под текстом. */
   .op-final > .op-fon { aspect-ratio: 3 / 2; margin-top: 8px; }
