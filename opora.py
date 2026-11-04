@@ -75,7 +75,7 @@ def mest(n):
 TITLE = "Опора: закрытый клуб психолога Виолы Маро"
 
 # 1. Первый экран (правки Артёма 04.11.2026, форма как у менторства Пырикова).
-HERO_NAD = "закрытый клуб"                # мелко над словом ОПОРА
+HERO_NAD = "закрытый клуб Виолы Маро"                # мелко над словом ОПОРА
 HERO_NAZVANIE = "ОПОРА"
 # Две плашки сверху, как «Старт: / 14 апреля» у Пырикова: подпись и дата жирным.
 PLASHKA_START = "Старт:"                 # дата — PERVAYA_VSTRECHA
@@ -85,6 +85,7 @@ PLASHKA_SLED = ("Следующий набор:", "Набор:", "закрыт")
 BTN_KLUB = "Вступить в клуб"
 BTN_LIST = "Встать в лист ожидания"
 POD_OTKRYT = "Осталось %(n)d %(mest)s из %(vsego)d"
+POD_POLNYY = "В наборе %(vsego)d %(mest)s"   # пока не продано ни одного места (MEST_OSTALOS == MEST_VSEGO)
 POD_ZAKRYT = "Набор закрыт, следующий откроется %(sled)s, и участницы из листа ожидания узнают о нём первыми"
 
 # 1.1. Блок «ОПОРА –»: светлая панель наезжает на низ фото. Слева
@@ -327,6 +328,7 @@ FINAL_H = "Первая встреча клуба %s, тема «Своя опо
 FINAL_TEXT = "Начните с одного месяца, технику на 10–15 минут вы получите в день вступления"
 FINAL_BTN = {"1m": "1 месяц за %s", "3m": "3 месяца за %s"}
 FINAL_POD = "Осталось %(n)d %(mest)s, отменить подписку можно в любой момент"
+FINAL_POD_POLNYY = "В наборе %(n)d %(mest)s, отменить подписку можно в любой момент"
 
 # 15. Подвал: документы по тексту клуба, «Договор оферты» ведёт на OFERTA.
 PODVAL_DOCS = [
@@ -471,6 +473,8 @@ def btn(label, href, cls=""):
 
 def stroka_mest():
     if otkryt():
+        if MEST_OSTALOS == MEST_VSEGO:      # до первой продажи «Осталось 50 из 50» звучит пусто
+            return POD_POLNYY % {"vsego": MEST_VSEGO, "mest": mest(MEST_VSEGO)}
         return POD_OTKRYT % {"do": NABOR_DO, "n": MEST_OSTALOS, "mest": mest(MEST_OSTALOS), "vsego": MEST_VSEGO}
     return stroka_zakryt()
 
@@ -778,7 +782,7 @@ def sec_final():
     if otkryt():
         knopki = (btn(FINAL_BTN["1m"] % CENY["1m"], ssylka("1m"))
                   + btn(FINAL_BTN["3m"] % CENY["3m"], ssylka("3m")))
-        pod = FINAL_POD % {"n": MEST_OSTALOS, "mest": mest(MEST_OSTALOS)}
+        pod = (FINAL_POD_POLNYY if MEST_OSTALOS == MEST_VSEGO else FINAL_POD) % {"n": MEST_OSTALOS, "mest": mest(MEST_OSTALOS)}
     else:
         knopki, pod = list_btn(), stroka_zakryt()
     return """
@@ -903,13 +907,19 @@ def sverka(text):
             continue
         if "когда набор закрыт" in elem and on:
             continue
+        polnyy = MEST_OSTALOS == MEST_VSEGO
+        if "до первой продажи" in elem and not (on and polnyy):
+            continue
+        if "после первой продажи" in elem and not (on and not polnyy):
+            continue
         if ("пока набор открыт" in elem or elem in ("Кнопка", "Кнопки", "Под кнопками")) and not on:
             continue
         t = (t.replace("[дата]", NABOR_DO if "открыт до" in t else SLED_NABOR or "[дата]")
               .replace("[17 ноября]", PERVAYA_VSTRECHA)
               .replace("[12 ноября]", NABOR_DO)
               .replace("[N] мест из [50]", "%d %s из %d" % (MEST_OSTALOS, mest(MEST_OSTALOS), MEST_VSEGO))
-              .replace("[N] мест", "%d %s" % (MEST_OSTALOS, mest(MEST_OSTALOS))))
+              .replace("[N] мест", "%d %s" % (MEST_OSTALOS, mest(MEST_OSTALOS)))
+              .replace("[50] мест", "%d %s" % (MEST_VSEGO, mest(MEST_VSEGO))))
         if not on and elem.startswith("Под кнопкой") and not SLED_NABOR:
             t = "Набор закрыт"
         if not on and elem.startswith("Плашка сверху, когда") and not SLED_NABOR:
