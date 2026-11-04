@@ -70,8 +70,7 @@ def mest(n):
 
 
 # ──────────────────────────────────────────────────────────── тексты ──
-# Слово в слово из opora-teksty.md. Слово, которое в заголовке пишется
-# каллиграфией, задаётся вторым элементом пары: текст заголовка не меняется.
+# Слово в слово из opora-teksty.md.
 
 TITLE = "Опора: закрытый клуб психолога Виолы Маро"
 
@@ -116,7 +115,7 @@ OTZYVY = [
 ]
 
 # 3. Для кого
-DLYA_KOGO_H = ("Клуб для вас, если вы", "для вас")
+DLYA_KOGO_H = "Клуб для вас, если вы"
 DLYA_KOGO = [
     "всем помогаете, а когда плохо вам, рядом никого",
     "уступаете и терпите, а потом весь вечер прокручиваете разговор в голове",
@@ -128,7 +127,7 @@ DLYA_KOGO_POD = ("У вас сильная эмпатия, а пользоват
                  "по одной сфере жизни в месяц")
 
 # 4. Что изменится
-IZMENITSYA_H = ("Что изменится", "изменится")
+IZMENITSYA_H = "Что изменится"
 IZMENITSYA = [
     ("Отказывать без вины",
      "Вы отказываете близким и коллегам коротко и спокойно, без долгих оправданий, и потом "
@@ -145,14 +144,14 @@ IZMENITSYA = [
 IZMENITSYA_POD = "Как это происходит, показываю ниже"
 
 # 5. Что такое «Опора»
-CHTO_H = ("Что такое «Опора»", "«Опора»")
+CHTO_H = "Что такое «Опора»"
 VIDEO_PODPIS = "Фрагмент моей встречи, 8 минут"
 CHTO_TEXT = ("Закрытый клуб в Телеграме, где каждый месяц я разбираю с участницами одну сферу "
              "жизни и даю техники на ситуации, которые с вами уже происходят")
 SFERY = ["Своя опора", "Муж и отношения", "Деньги", "Мама", "Дети", "Работа"]
 
 # 6. Как проходит месяц в клубе
-MESYAC_H = ("Как проходит месяц в клубе", "")
+MESYAC_H = "Как проходит месяц в клубе"
 SHAGI = [
     ("Встреча по теме месяца",
      "Я объясняю, почему в этой сфере у вас уходят силы, и даю технику на конкретные ситуации. "
@@ -182,7 +181,7 @@ RABOTAET = [
 ]
 
 # 7. Первые три месяца
-TRI_H = ("Что изменится за первые три месяца", "три месяца")
+TRI_H = "Что изменится за первые три месяца"
 TRI_POD = "Темы я выбрала по тому, о чём мне чаще всего пишут"
 TRI = [
     ("Своя опора",
@@ -200,7 +199,7 @@ TRI_NIZ = ("Дальше каждый месяц новая сфера, а за�
            "в клубе")
 
 # 8. Что входит
-VHODIT_H = ("Что входит в подписку", "")
+VHODIT_H = "Что входит в подписку"
 VHODIT = [
     "Две встречи со мной в месяц, по теме месяца и кинотерапия, и если не успеваете вживую, "
     "смотрите запись",
@@ -216,7 +215,7 @@ PODARKI = [
 ]
 
 # 9. Почему это удобно
-UDOBNO_H = ("Почему это удобно", "удобно")
+UDOBNO_H = "Почему это удобно"
 UDOBNO = [
     ("Всё в Телеграме",
      "Клуб открывается там же, где вы переписываетесь с близкими, ничего устанавливать не нужно"),
@@ -230,7 +229,7 @@ UDOBNO = [
 ]
 
 # 10. Кто ведёт клуб
-VIOLA_H = ("Меня зовут Виола Маро", "Виола Маро")
+VIOLA_H = "Меня зовут Виола Маро"
 VIOLA = [
     "Я психолог и психотерапевт, 25 лет веду частную практику в Италии на русском и итальянском",
     "Окончила факультет психологии СПбГУ и римский университет Sapienza",
@@ -242,7 +241,7 @@ VIOLA = [
 VIOLA_POD = "Я объясняю, почему вы так устроены, и показываю, что с этим делать"
 
 # 11. Почему вы ничем не рискуете
-RISK_H = ("Почему вы ничем не рискуете", "")
+RISK_H = "Почему вы ничем не рискуете"
 RISK = [
     ("Можно начать с одного месяца",
      "Если клуб вам не подойдёт, отмените подписку в боте, и следующего списания не будет"),
@@ -254,7 +253,7 @@ RISK = [
 ]
 
 # 12. Тарифы
-TARIFY_H = ("Сколько стоит", "")
+TARIFY_H = "Сколько стоит"
 TARIFY = [
     {"id": "1m", "name": "1 месяц",
      "text": "Подписка продлевается раз в месяц автоматически, отменить можно в любой момент",
@@ -270,7 +269,7 @@ TARIFY_POD = ("Оплатить можно из любой страны, рос�
 CENY_TEKSTY = {"1m": "4 990 ₽", "3m": "11 990 ₽"}
 
 # 13. Вопросы
-VOPROSY_H = ("Вопросы", "")
+VOPROSY_H = "Вопросы"
 VOPROSY = [
     ("Как проходят встречи?",
      "Две встречи в месяц идут в прямом эфире в Телеграме. Если не успеваете вживую, запись "
@@ -444,16 +443,10 @@ def predmet(name, alt, cls=""):
 
 # ───────────────────────────────────────────────────────────── вёрстка ──
 
-def h2(pair, cls=""):
-    """Заголовок экрана: Prata прописными, одно-два слова каллиграфией."""
-    text, slovo = pair if isinstance(pair, tuple) else (pair, "")
-    t = esc(text)
-    if slovo:
-        s = esc(slovo)
-        t = t.replace(s, '<span class="op-script">%s</span>' % s, 1)
-    # у заглавной «О» в Marck Script широкий хвост: подтягиваем к ней остальное слово
-    t = re.sub(r'(<span class="op-script">(?:«)?)О', r'\1<span class="op-bukva">О</span>', t)
-    return '<h2 class="op-h2%s">%s</h2>' % (cls, t)
+def h2(text, cls=""):
+    """Заголовок экрана: Prata прописными. Каллиграфию в заголовках
+    Артём убрал 04.11.2026 («плохие шрифты»), хотя её просило ТЗ."""
+    return '<h2 class="op-h2%s">%s</h2>' % (cls, esc(text))
 
 
 def ssylka(key):
@@ -486,10 +479,14 @@ def list_btn():
 
 
 def sec(blok, inner, cls="", sid=""):
+    """Экран страницы. Светлые экраны лежат листом с аркой сверху, как
+    розовые блоки референса, поэтому у них лишняя обёртка."""
+    if "op-svetlyy" in cls:
+        inner = '\n  <div class="op-arka">\n  <div class="op-in">%s\n  </div>\n  </div>' % inner
+    else:
+        inner = '\n  <div class="op-in">%s\n  </div>' % inner
     return """
-<section class="op-sec %s"%s data-blok="%s">
-  <div class="op-in">%s
-  </div>
+<section class="op-sec %s"%s data-blok="%s">%s
 </section>""" % (cls, (' id="%s"' % sid) if sid else "", blok, inner)
 
 
@@ -501,7 +498,7 @@ def cards(items, cls="op-cards-4"):
 
 def sec_hero():
     knopka = btn(BTN_KLUB, "#stoimost") if otkryt() else list_btn()
-    plashki = "".join("<li><span>%s</span></li>" % p for p in HERO_PLASHKI)
+    plashki = "".join('<li class="op-bilet"><span>%s</span></li>' % p for p in HERO_PLASHKI)
     return """
 <section class="op-hero" data-blok="Первый экран">
   %(fon)s
@@ -521,8 +518,7 @@ def sec_hero():
     </div>
   </div>
 </section>""" % {"fon": fon("hero", "Виола Маро", lazy=False), "nad": HERO_NAD,
-                 # у заглавной «О» в Marck Script широкий хвост: подтягиваем «пора» к ней
-                 "nazv": '<span class="op-bukva">%s</span>%s' % (HERO_NAZVANIE[0], HERO_NAZVANIE[1:]),
+                 "nazv": HERO_NAZVANIE,
                  "h": nbsp_tail(HERO_H), "pod": nbsp_tail(HERO_POD), "plashki": plashki, "btn": knopka,
                  "mest": stroka_mest(), "melko": nbsp_tail(HERO_MELKO)}
 
@@ -688,6 +684,7 @@ def sec_tarify():
         eur = CENY_EUR.get(t["id"], "")
         kartochki.append("""
       <article class="op-tarif">
+        <span class="op-tarif-dyrka" aria-hidden="true"></span>
         <h3 class="op-tarif-h">%(name)s</h3>
         <p class="op-cena">%(cena)s</p>%(eur)s
         <p class="op-tarif-t">%(text)s</p>%(btn)s
@@ -731,7 +728,6 @@ def sec_final():
         knopki, pod = list_btn(), stroka_zakryt()
     return """
 <section class="op-final" data-blok="Последний экран">
-  %(fon)s
   <div class="op-in">
     <div class="op-final-card">
       <h2 class="op-h2">%(h)s</h2>
@@ -740,7 +736,8 @@ def sec_final():
       <p class="op-mest">%(pod)s</p>
     </div>
   </div>
-</section>""" % {"fon": fon("final", "", lazy=True), "h": nbsp_tail(FINAL_H % PERVAYA_VSTRECHA),
+  %(fon)s
+</section>""" % {"fon": fon("final", "Виола Маро на диване у изумрудной стены", lazy=True), "h": nbsp_tail(FINAL_H % PERVAYA_VSTRECHA),
                  "t": nbsp_tail(FINAL_TEXT), "knopki": knopki, "pod": pod}
 
 
@@ -893,7 +890,7 @@ def main():
         shutil.rmtree(DEST)
     os.makedirs(os.path.join(DEST, "fonts"))
     shutil.copy2(os.path.join(SRC, "opora.css"), os.path.join(DEST, "opora.css"))
-    for f in os.listdir(os.path.join(SRC, "fonts")):
+    for f in (os.listdir(os.path.join(SRC, "fonts")) if os.path.isdir(os.path.join(SRC, "fonts")) else []):
         if f.endswith(".woff2"):
             shutil.copy2(os.path.join(SRC, "fonts", f), os.path.join(DEST, "fonts", f))
     text = page()
