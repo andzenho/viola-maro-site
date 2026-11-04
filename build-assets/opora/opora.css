@@ -213,80 +213,104 @@ body.op {
 }
 
 /* ──────────────────────────────────────────────────────── первый экран ── */
-/* Телефон: надзаголовок, «Опора» и заголовок на бархатном фоне в верхней
-   трети, под ними Виола у той же стены (верх фото растворяется в фоне),
-   ниже подзаголовок, билеты и кнопка. Компьютер: Виола справа на всю высоту,
-   её левый край растворяется в фоне, текст слева на стене. Текст никогда
-   не лежит на непрозрачной части фото: контраст не зависит от снимка. */
+/* Форма как у менторства Пырикова (правка 04.11.2026): плашки-билеты сверху,
+   название крупно по центру, заголовок обычным текстом, кнопка, ниже Виола
+   по центру. Весь текст лежит на бархатном фоне; верх фото (стена над
+   головой) растворяется в нём под кнопкой, поэтому контраст не зависит
+   от снимка. */
 
-.op-hero { position: relative; background: var(--barhat); overflow: hidden; }
+.op-hero { position: relative; display: flex; flex-direction: column; background: var(--barhat); overflow: hidden; text-align: center; }
+.op-hero-in { position: relative; z-index: 1; width: 100%; max-width: 980px; margin: 0 auto; padding: 28px 20px 0; }
 .op-fon { display: block; }
 .op-fon img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .op-fon-ph { background: var(--panel); }
 .op-hero > .op-fon {
+  width: 100%;
   aspect-ratio: 2 / 3;
-  margin-top: -64px;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22%);
-          mask-image: linear-gradient(to bottom, transparent 0, #000 22%);
+  margin-top: -96px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 82%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 82%, transparent 100%);
 }
-.op-hero-in { display: contents; }
-.op-hero-top { position: relative; z-index: 1; padding: 36px 20px 0; text-align: center; }
-.op-hero-bot { position: relative; padding: 32px 20px 56px; text-align: center; }
-.op-hero { display: flex; flex-direction: column; }
-.op-hero-top { order: 1; }
-.op-hero > .op-fon { order: 2; }
-.op-hero-bot { order: 3; }
 
+.op-plashki { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 0 30px; }
+.op-plashki li {
+  --v: 7px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  outline: 1px dashed rgba(123, 25, 33, .45);
+  outline-offset: -5px;
+}
 .op-nad {
   font-size: 13px;
   line-height: 1.5;
-  letter-spacing: .18em;
+  letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--text);
-  text-wrap: balance;
 }
+.op-hero-h { margin: 14px 0 0; font-weight: 400; }
 .op-nazvanie {
+  display: block;
   font-family: var(--prata);
-  font-size: 66px;
+  font-size: 62px;
   line-height: 1;
-  letter-spacing: .12em;
-  text-transform: uppercase;
+  letter-spacing: .08em;
   color: var(--rose);
-  margin: 16px 0 18px;
-  text-indent: .12em;   /* разрядка оставляет хвост справа: по центру уравниваем слева */
+  margin-bottom: 18px;
+  white-space: nowrap;
 }
-/* Оффер обычным текстом, чтобы читался сразу (правка 04.11.2026). */
-.op-hero-h {
+/* Заголовок после названия обычным текстом, чтобы читался сразу. */
+.op-offer {
+  display: block;
+  max-width: 34em;
+  margin: 0 auto;
   font-family: var(--golos);
   font-weight: 500;
-  font-size: 21px;
-  line-height: 1.4;
+  font-size: 20px;
+  line-height: 1.42;
   color: var(--text);
   text-wrap: balance;
 }
-.op-hero-pod { font-size: 18px; text-wrap: pretty; }
-.op-plashki { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 28px 0 30px; }
-.op-plashki li {
-  display: grid;
-  place-items: center;
-  min-height: 74px;
-  padding: 12px 14px;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.3;
-  text-align: center;
-  text-wrap: balance;
-  outline: 1px dashed rgba(123, 25, 33, .45);
-  outline-offset: -6px;
-}
+.op-hero-cta { margin-top: 28px; }
 .op-hero-cta .op-btn { width: 100%; }
-.op-melko {
-  margin-top: 28px;
-  font-size: 15px;
-  line-height: 1.45;
-  font-style: italic;
-  color: var(--text);
-  text-wrap: balance;
+
+/* Второй экран: светлая панель с квадратными галочками наезжает на низ
+   фото, как «Цели менторства» у Пырикова. */
+.op-celi { position: relative; z-index: 2; background: var(--barhat); margin-top: -96px; padding: 0 0 72px; }
+.op-celi-panel {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 34px 24px 36px;
+  background: var(--svetlyy);
+  color: var(--izumrud);
+  border-radius: 10px;
+  outline: 1px solid var(--gold);
+  outline-offset: -8px;
+}
+.op-kvadraty li { position: relative; padding-left: 42px; text-wrap: pretty; }
+.op-kvadraty li + li { margin-top: 18px; }
+.op-kvadraty li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .1em;
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  background: var(--wine);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+.op-kvadraty li::after {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: calc(.1em + 5px);
+  width: 6px;
+  height: 12px;
+  border: solid var(--wine-text);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 /* ───────────────────────────────────────────────────────────── отзывы ── */
@@ -537,34 +561,31 @@ body.op {
   .op-shag-pr .op-predmet { grid-column: 3; margin-top: 0; width: 170px; }
   .op-num { font-size: 52px; }
 
-  /* Первый экран: Виола справа на всю высоту, текст слева на стене. */
-  .op-hero { display: block; min-height: min(56vw, 860px); }
+  /* Первый экран: Виола по центру под кнопкой, края фото растворяются. */
+  .op-hero-in { padding-top: 40px; }
   .op-hero > .op-fon {
-    position: absolute;
-    top: 0; right: 0; bottom: 0;
-    width: 68%;
-    margin: 0;
-    aspect-ratio: auto;
-    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 30%);
-            mask-image: linear-gradient(to right, transparent 0, #000 30%);
+    width: min(100%, 1280px);
+    aspect-ratio: 3 / 2;
+    margin: -210px auto 0;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 82%, transparent 100%), linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+    -webkit-mask-composite: source-in;
+            mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 82%, transparent 100%), linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+            mask-composite: intersect;
   }
-  .op-hero > .op-fon img { object-position: 70% 30%; }
-  .op-hero-in {
-    display: block;
-    position: relative;
-    z-index: 1;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 64px 40px 72px;
-  }
-  .op-hero-top, .op-hero-bot { max-width: 560px; padding: 0; text-align: left; }
-  .op-hero-bot { padding-top: 26px; }
-  .op-nazvanie { font-size: 104px; margin: 18px 0 22px; text-indent: 0; }
-  .op-hero-h { font-size: 25px; }
+  .op-plashki { gap: 12px; margin-bottom: 36px; }
+  .op-plashki li { font-size: 15px; padding: 11px 22px; }
+  .op-nazvanie { font-size: 120px; margin-bottom: 22px; }
+  .op-offer { font-size: 24px; }
   .op-hero-cta .op-btn { width: auto; min-width: 340px; }
+  .op-celi { margin-top: -200px; padding-bottom: 104px; }
+  .op-celi-panel { padding: 48px 56px 52px; }
+  .op-kvadraty { columns: 2; column-gap: 48px; }
+  .op-kvadraty li { break-inside: avoid; }
+  .op-kvadraty li + li { margin-top: 0; }
+  .op-kvadraty li { margin-bottom: 22px; }
 
   /* Последний экран: Виола по центру под текстом. */
-  .op-final > .op-fon { aspect-ratio: 3 / 2; margin-top: -120px; }
+  .op-final > .op-fon { aspect-ratio: 3 / 2; margin-top: 8px; }
 }
 
 /* ──────────────────────────────────────────────────────── компьютер ── */
@@ -573,9 +594,7 @@ body.op {
   .op-otzyvy { columns: 3; }
   .op-viola { grid-template-columns: 1fr 400px; align-items: center; gap: 72px; }
   .op-viola-foto { max-width: none; order: 0; }
-  .op-hero-in { padding: 88px 64px 96px; }
-  .op-hero-top, .op-hero-bot { max-width: 600px; }
-  .op-final > .op-fon { width: 100%; max-width: 1280px; margin: -150px auto 0; }
+  .op-final > .op-fon { width: 100%; max-width: 1280px; margin: 8px auto 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

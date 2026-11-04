@@ -74,26 +74,31 @@ def mest(n):
 
 TITLE = "Опора: закрытый клуб психолога Виолы Маро"
 
-# 1. Первый экран
-HERO_NAD = "Закрытый клуб психолога Виолы Маро в Телеграме"
-HERO_NAZVANIE = "Опора"
-HERO_H = ("За три месяца вы перестанете жить только для других и вернёте себе силы, "
-          "даже если близкие останутся прежними")
-HERO_POD = ("Каждый месяц я разбираю с вами одну сферу жизни, где сейчас уходят силы, "
-            "будь то муж, деньги, мама или работа. Вы учитесь отказывать без чувства вины "
-            "и возвращаться в себя после тяжёлых разговоров")
-DESCRIPTION = HERO_POD
+# 1. Первый экран (переписан Артёмом 04.11.2026, форма первых двух экранов
+# как у менторства Пырикова). Название крупно Prata, остальное заголовка
+# обычным текстом: делится по первому « – ».
+HERO_NAD = "Психолог Виола Маро"
+HERO_H = ("ОПОРА – закрытый клуб в Телеграме для чувствительных людей, которые вместе учатся "
+          "лучше понимать себя и жить свою жизнь, а не только жизнь других")
+DESCRIPTION = HERO_H
 HERO_PLASHKI = [
-    "2 встречи со мной в месяц",
-    "Техники по 10–15 минут",
-    "Всё в Телеграме и в записи",
+    "Каждый месяц одна сфера жизни",
+    "2 встречи с Виолой в месяц",
     "Отменить можно в любой момент",
 ]
 BTN_KLUB = "Вступить в клуб"
 BTN_LIST = "Встать в лист ожидания"
 POD_OTKRYT = "Набор открыт до %(do)s, осталось %(n)d %(mest)s из %(vsego)d"
 POD_ZAKRYT = "Набор закрыт, следующий откроется %(sled)s, и участницы из листа ожидания узнают о нём первыми"
-HERO_MELKO = "Клуб вырос из моей программы «Прикладная эмпатия», её выбрали больше 100 человек"
+
+# 1.1. Под первым экраном: светлая панель с галочками, наезжает на фото.
+CELI = [
+    "Понять, почему вы так остро чувствуете людей, и перестать считать себя странной",
+    "Научиться отказывать близким и коллегам без чувства вины и долгих оправданий",
+    "Перестать впитывать чужую тревогу и за 10–15 минут возвращать себе силы после тяжёлого разговора",
+    "Замечать, когда на вас давят жалостью или виной, и отвечать спокойно, без крика и без молчания",
+    "Каждый месяц разбирать одну сферу жизни, где уходят силы, и не оставаться с этим одной",
+]
 
 # 2. Отзывы: сфера, возраст, цитата
 OTZYVY_H = "Что пишут участницы моей программы"
@@ -497,30 +502,40 @@ def cards(items, cls="op-cards-4"):
 
 
 def sec_hero():
+    """Первый экран по форме менторства Пырикова: плашки сверху, название
+    крупно, заголовок, кнопка, ниже Виола по центру. Весь текст лежит
+    на бархатном фоне; верх фото растворяется в нём под кнопкой."""
     knopka = btn(BTN_KLUB, "#stoimost") if otkryt() else list_btn()
     plashki = "".join('<li class="op-bilet"><span>%s</span></li>' % p for p in HERO_PLASHKI)
+    nazv, ostalnoe = HERO_H.split(" – ", 1)
     return """
 <section class="op-hero" data-blok="Первый экран">
-  %(fon)s
   <div class="op-hero-in">
-    <div class="op-hero-top">
-      <p class="op-nad">%(nad)s</p>
-      <p class="op-nazvanie">%(nazv)s</p>
-      <h1 class="op-hero-h">%(h)s</h1>
-    </div>
-    <div class="op-hero-bot">
-      <p class="op-hero-pod">%(pod)s</p>
-      <ul class="op-plashki">%(plashki)s</ul>
-      <div class="op-hero-cta">%(btn)s
-        <p class="op-mest">%(mest)s</p>
-      </div>
-      <p class="op-melko">%(melko)s</p>
+    <ul class="op-plashki">%(plashki)s</ul>
+    <p class="op-nad">%(nad)s</p>
+    <h1 class="op-hero-h"><span class="op-nazvanie">%(nazv)s –</span> <span class="op-offer">%(h)s</span></h1>
+    <div class="op-hero-cta">%(btn)s
+      <p class="op-mest">%(mest)s</p>
     </div>
   </div>
-</section>""" % {"fon": fon("hero", "Виола Маро", lazy=False), "nad": HERO_NAD,
-                 "nazv": HERO_NAZVANIE,
-                 "h": nbsp_tail(HERO_H), "pod": nbsp_tail(HERO_POD), "plashki": plashki, "btn": knopka,
-                 "mest": stroka_mest(), "melko": nbsp_tail(HERO_MELKO)}
+  %(fon)s
+</section>""" % {"fon": fon("hero", "Виола Маро у изумрудной стены", lazy=False), "nad": HERO_NAD,
+                 "nazv": nazv, "h": nbsp_tail(ostalnoe), "plashki": plashki, "btn": knopka,
+                 "mest": stroka_mest()}
+
+
+def sec_celi():
+    """Второй экран: светлая панель с квадратными галочками, как «Цели
+    менторства» у Пырикова. Заголовка у списка в тексте нет."""
+    items = "".join("<li>%s</li>" % nbsp_tail(x) for x in CELI)
+    return """
+<section class="op-celi" data-blok="Под первым экраном">
+  <div class="op-in">
+    <div class="op-celi-panel">
+      <ul class="op-kvadraty">%s</ul>
+    </div>
+  </div>
+</section>""" % items
 
 
 def sec_otzyvy():
@@ -760,7 +775,7 @@ def podval():
 def page():
     hero = sec_hero()
     body = "".join([
-        sec_otzyvy(), sec_dlya_kogo(), sec_izmenitsya(), sec_chto(), sec_mesyac(), sec_tri(),
+        sec_celi(), sec_otzyvy(), sec_dlya_kogo(), sec_izmenitsya(), sec_chto(), sec_mesyac(), sec_tri(),
         sec_vhodit(), sec_udobno(), sec_viola(), sec_risk(), sec_tarify(), sec_voprosy(), sec_final(),
     ])
     body = typograf(hero + body)
