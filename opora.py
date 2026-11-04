@@ -209,22 +209,26 @@ TRI = [
 TRI_NIZ = ("Дальше каждый месяц новая сфера, а записи всех встреч остаются у вас, пока вы "
            "в клубе")
 
-# 8. Что входит: «Каждый месяц вы получаете» (тексты Артёма 04.11.2026), меню
-# номера отеля. Первый пункт отдельно, с крупной «2» и штампом; у остальных
-# предмет слева (build-assets/opora/o-*.png).
-VHODIT_H = "КАЖДЫЙ МЕСЯЦ ВЫ ПОЛУЧАЕТЕ"
-VSTRECHI = ("2", "онлайн-встречи с Виолой",
-            "Глубокий разбор темы месяца и фильм-терапия, на обеих ответы на ваши вопросы",
-            "В открытом доступе Виола таких встреч больше не проводит")
-VHODIT = [   # (предмет, название, описание)
-    ("o-mikrofon", "Подкасты", "Голосовые ответы Виолы раз в неделю на самые частые вопросы участниц"),
-    ("o-proektor", "Видео-лекцию", "Лекция Виолы по теме месяца в записи, с таймкодами"),
-    ("o-tetrad", "Статьи", "Отдельные материалы Виолы по теме месяца, к которым можно вернуться и перечитать"),
-    ("o-chasy", "Техники и практические задания",
+# 8. Что входит: экран «Каждый месяц вы получаете» (ТЗ Артёма 04.11.2026):
+# светлый фон, семь карточек с золотой обводкой, на компьютере 3 + 3 и чат
+# во всю ширину. Стоит сразу после «Опора подходит вам». Подарок «В день
+# вступления» остался на прежнем месте отдельным экраном.
+POLUCHAETE_H = "КАЖДЫЙ МЕСЯЦ ВЫ ПОЛУЧАЕТЕ"
+POLUCHAETE = [   # (название, описание)
+    ("2 онлайн-встречи с Виолой",
+     "Глубокий разбор темы месяца и ответы на ваши вопросы. В открытом доступе Виола таких встреч "
+     "больше не проводит"),
+    ("Подкасты", "Голосовые ответы Виолы раз в неделю на самые частые вопросы участниц"),
+    ("Видео-лекция", "Лекция Виолы по теме месяца в записи, с таймкодами"),
+    ("Статьи", "Отдельные материалы Виолы по теме месяца, к которым можно вернуться и перечитать"),
+    ("Техники и практические задания",
      "3–4 техники на конкретные ситуации, по 10–15 минут, и задания, чтобы попробовать их в своей жизни"),
-    ("o-kino", "Фильм-терапию",
-     "Виола выбирает фильм по теме месяца, вы смотрите его сами, а на встрече она разбирает его вместе с вами"),
+    ("Фильм-терапия",
+     "Виола выбирает фильм по теме месяца, вы смотрите его сами, а на одной из встреч она разбирает "
+     "его вместе с вами"),
+    ("Чат сообщества", "Закрытый чат эмпатов со всего мира, за порядком в нём следит команда Виолы"),
 ]
+POLUCHAETE_POD = "Всё это лежит только в закрытом клубе, в открытом доступе этого нет"
 PODARKI_H = "В день вступления вас уже ждут"
 PODARKI = [
     "Техника, которая за 10–15 минут помогает вернуть себе силы после тяжёлого разговора",
@@ -689,39 +693,34 @@ def sec_tri():
     <p class="op-niz">%s</p>""" % (h2(TRI_H), TRI_POD, items, nbsp_tail(TRI_NIZ)))
 
 
+def sec_poluchaete():
+    """«Каждый месяц вы получаете»: семь карточек, первая с крупным
+    бордовым названием, последняя (чат) во всю ширину на компьютере."""
+    items = "".join('<li class="op-pk%s"><h3>%s</h3><p>%s</p></li>'
+                    % (" op-pk-1" if i == 0 else (" op-pk-shir" if i == len(POLUCHAETE) - 1 else ""),
+                       re.sub(r"(\w+-\w+)", r'<span class="g-nw">\1</span>', t), nbsp_tail(d))
+                    for i, (t, d) in enumerate(POLUCHAETE))   # «онлайн-встречи» не рвётся по дефису
+    return """
+<section class="op-sec op-sv" data-blok="Каждый месяц вы получаете">
+  <div class="op-in">
+    <h2 class="op-h2 op-pk-h">%s</h2>
+    <ul class="op-pk-cards">%s</ul>
+    <p class="op-pk-pod">%s</p>
+  </div>
+</section>""" % (POLUCHAETE_H, items, nbsp_tail(POLUCHAETE_POD))
+
+
 def sec_vhodit():
-    """«Каждый месяц вы получаете» меню номера: бумага с золотыми уголками
-    (fon-menu, рамка тянется через border-image), первый пункт крупно,
-    остальные строками меню с предметами. Ниже подарок «В день вступления»."""
-    made = webp("fon-menu", (1254,))
-    menu = (' style="--menu: url(%s)"' % made[-1][0]) if made else ""
-    if not made:
-        WARN.append("нет build-assets/opora/fon-menu.jpg: меню без бумаги с уголками")
-    n, t, d, shtamp = VSTRECHI
-    punkty = "".join("""
-        <li class="op-menu-p">%s<div><h3 class="op-menu-t">%s</h3><p>%s</p></div></li>"""
-                     % (img(k, "", (240,), "96px", "op-menu-img") if find_src(k) else "", tt, nbsp_tail(dd))
-                     for k, tt, dd in VHODIT)
+    """Подарок «В день вступления вас уже ждут» отдельным экраном."""
     podarki = "".join("<li>%s</li>" % nbsp_tail(x) for x in PODARKI)
-    return sec("Что входит", """
-    <div class="op-menu"%s>
-      <h2 class="op-menu-h">%s</h2>
-      <div class="op-menu-glav">
-        <p class="op-menu-2"><span class="op-menu-n">%s</span> <span class="op-menu-t">%s</span></p>
-        <p class="op-menu-d">%s</p>
-        <p class="op-shtamp">%s</p>
-      </div>
-      <ul class="op-menu-list">%s
-      </ul>
-    </div>
+    return sec("В день вступления", """
     <div class="op-podarok">
       <div class="op-podarok-t">
         <p class="op-podarok-h">%s</p>
         <ul class="op-podarok-list">%s</ul>
       </div>
       %s
-    </div>""" % (menu, VHODIT_H, n, t, nbsp_tail(d), shtamp, punkty, PODARKI_H, podarki,
-                 predmet("o-chashka", "Чашка чая")), "op-barhat", fon="barhat")
+    </div>""" % (PODARKI_H, podarki, predmet("o-chashka", "Чашка чая")), "op-barhat op-narrow", fon="derevo")
 
 
 def sec_udobno():
@@ -861,7 +860,7 @@ def podval():
 def page():
     hero = sec_hero()
     body = "".join([
-        sec_dlya_kogo(), sec_otzyvy(), sec_izmenitsya(), sec_chto(), sec_mesyac(), sec_tri(),
+        sec_dlya_kogo(), sec_poluchaete(), sec_otzyvy(), sec_izmenitsya(), sec_chto(), sec_mesyac(), sec_tri(),
         sec_vhodit(), sec_udobno(), sec_viola(), sec_risk(), sec_tarify(), sec_voprosy(), sec_final(),
     ])
     body = typograf(hero + body)

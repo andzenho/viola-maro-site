@@ -855,78 +855,36 @@ body.op {
    и в коридоре в худшем месте ниже 4,5 : 1, --text там от 6,3 : 1. */
 .op-sfon:not(.op-sfon-bumaga) :is(.op-niz, .op-oplata, .op-lead) { color: var(--text); }
 
-/* ──────────────────────────── «Каждый месяц вы получаете»: меню номера ── */
-/* Бумага с золотыми уголками натянута через border-image: уголки не
-   растягиваются, тянутся только линии между ними. */
+/* ─────────────────────────────────────── «Каждый месяц вы получаете» ── */
+/* ТЗ 04.11.2026: фон --svetlyy, текст --izumrud, заголовок Prata --wine;
+   семь карточек с тонкой обводкой --gold, на компьютере 3 + 3 и седьмая
+   во всю ширину, на телефоне один столбец. */
 
-.op-menu {
-  max-width: 1000px;
-  margin: 0 auto;
-  border: 26px solid #EFE5D2;
-  border-image: var(--menu) 230 fill / 26px stretch;
-  margin: 0 -8px;
-  background: #EFE5D2;
-  color: var(--izumrud);
-  padding: 14px 4px 12px;
+.op-sv { background: var(--svetlyy); color: var(--izumrud); }
+.op-sv + .op-svetlyy { background: var(--svetlyy); }   /* углы арки «Отзывов» под светлым экраном */
+.op-pk-h { color: var(--wine); text-align: center; }
+.op-pk-cards { display: grid; gap: 14px; }
+.op-pk {
+  padding: 24px 24px 26px;
+  background: #fff;
+  border: 1px solid var(--gold);
+  border-radius: 10px;
 }
-.op-menu-h {
-  font-family: var(--prata);
-  font-weight: 400;
-  font-size: clamp(24px, 6vw, 40px);
-  line-height: 1.2;
-  letter-spacing: .05em;
-  color: var(--wine);
+.op-pk h3 { font-family: var(--golos); font-weight: 700; font-size: 19px; line-height: 1.3; color: var(--izumrud); margin-bottom: 8px; text-wrap: balance; }
+.op-pk p { font-size: 17px; line-height: 1.5; text-wrap: pretty; }
+.op-pk-1 h3 { font-size: 24px; color: var(--wine); }
+.op-pk-pod {
+  max-width: 720px;
+  margin: 32px auto 0;
   text-align: center;
-  text-wrap: balance;
-  padding-bottom: 22px;
-  border-bottom: 1px solid rgba(184, 147, 92, .7);
-  margin-bottom: 26px;
-}
-.op-menu-glav { text-align: center; padding-bottom: 26px; border-bottom: 1px solid rgba(184, 147, 92, .7); margin-bottom: 26px; }
-.op-menu-2 { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
-.op-menu-n { font-family: var(--golos); font-weight: 700; font-size: 72px; line-height: 1; color: var(--wine); }
-.op-menu-t {
-  font-family: var(--prata);
-  font-weight: 400;
-  font-size: 21px;
-  line-height: 1.25;
-  letter-spacing: .05em;
-  text-transform: uppercase;
   color: var(--wine);
+  font-weight: 600;
+  font-size: 19px;
+  line-height: 1.45;
   text-wrap: balance;
 }
-.op-menu-glav .op-menu-t { font-size: clamp(22px, 5.6vw, 30px); text-align: center; }
-.op-menu-d { max-width: 560px; margin: 14px auto 0; font-size: 18px; text-wrap: pretty; }
-.op-shtamp {
-  display: inline-block;
-  margin-top: 18px;
-  padding: 8px 16px;
-  border: 2px solid var(--wine);
-  border-radius: 6px;
-  outline: 1px solid var(--wine);
-  outline-offset: 3px;
-  color: var(--wine);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  line-height: 1.4;
-  transform: rotate(-2deg);
-  text-wrap: balance;
-}
-.op-menu-list { display: grid; gap: 22px; }
-.op-menu-p { display: grid; grid-template-columns: 60px 1fr; gap: 12px; align-items: center; }
-.op-menu-p > div { min-width: 0; }
-.op-menu-img { width: 60px; height: 60px; object-fit: contain; }
-.op-menu-p .op-menu-t { font-size: 16px; letter-spacing: .03em; margin-bottom: 4px; }
-.op-menu-p p { font-size: 17px; line-height: 1.45; text-wrap: pretty; }
-.op-menu + .op-podarok { margin-top: 32px; }
 
-@media (min-width: 760px) {
-  .op-menu { border-width: 70px; border-image: var(--menu) 230 fill / 70px stretch; padding: 8px 16px 12px; margin: 0 auto; }
-  .op-menu-p .op-menu-t { font-size: 18px; letter-spacing: .05em; }
-  .op-menu-list { grid-template-columns: 1fr 1fr; gap: 30px 40px; }
-  .op-menu-p { grid-template-columns: 96px 1fr; gap: 18px; }
-  .op-menu-img { width: 96px; height: 96px; }
-  .op-menu-n { font-size: 92px; }
+@media (min-width: 1024px) {
+  .op-pk-cards { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .op-pk-shir { grid-column: 1 / -1; }
 }
