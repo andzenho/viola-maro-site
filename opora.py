@@ -451,8 +451,6 @@ def h2(pair, cls=""):
     if slovo:
         s = esc(slovo)
         t = t.replace(s, '<span class="op-script">%s</span>' % s, 1)
-    # у заглавной «О» в Marck Script широкий хвост: подтягиваем к ней остальное слово
-    t = re.sub(r'(<span class="op-script">(?:«)?)О', r'\1<span class="op-bukva">О</span>', t)
     return '<h2 class="op-h2%s">%s</h2>' % (cls, t)
 
 
@@ -525,8 +523,7 @@ def sec_hero():
     </div>
   </div>
 </section>""" % {"fon": fon("hero", "Виола Маро", lazy=False), "nad": HERO_NAD,
-                 # у заглавной «О» в Marck Script широкий хвост: подтягиваем «пора» к ней
-                 "nazv": '<span class="op-bukva">%s</span>%s' % (HERO_NAZVANIE[0], HERO_NAZVANIE[1:]),
+                 "nazv": HERO_NAZVANIE,
                  "h": nbsp_tail(HERO_H), "pod": nbsp_tail(HERO_POD), "plashki": plashki, "btn": knopka,
                  "mest": stroka_mest(), "melko": nbsp_tail(HERO_MELKO)}
 

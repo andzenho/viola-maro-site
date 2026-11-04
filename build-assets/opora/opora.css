@@ -26,7 +26,7 @@
   --svetlyy: #F3E6E3;     /* светлые блоки и кремовые карточки, текст на них --izumrud */
 
   --prata: 'Prata', Georgia, serif;
-  --script: 'Marck Script', 'Prata', cursive;
+  --script: 'Great Vibes', 'Prata', cursive;
   --golos: 'Golos Text', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   /* Рваный край бумаги: наклейки с фото и предметами. */
@@ -34,11 +34,11 @@
 }
 
 @font-face {
-  font-family: 'Marck Script';
+  font-family: 'Great Vibes';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(/opora/fonts/MarckScript.woff2) format('woff2');
+  src: url(/opora/fonts/GreatVibes.woff2) format('woff2');
 }
 
 /* ───────────────────────────────────────────────────────────── основа ── */
@@ -96,11 +96,11 @@ body.op {
   font-family: var(--script);
   text-transform: none;
   letter-spacing: 0;
-  font-size: 1.3em;
+  font-size: 1.32em;
   line-height: .9;
+  word-spacing: .06em;
   white-space: nowrap;
 }
-.op-bukva { margin-right: -.14em; }
 .op-svetlyy .op-h2 { color: var(--izumrud); }
 .op-svetlyy .op-script { color: var(--wine); }
 
@@ -266,7 +266,7 @@ body.op {
   font-size: 96px;
   line-height: 1;
   color: var(--rose);
-  margin: 4px 0 6px;
+  margin: 18px 0 4px;
 }
 .op-hero-h {
   font-family: var(--prata);
@@ -474,11 +474,8 @@ body.op {
   padding: 22px 56px 22px 24px;
   cursor: pointer;
   list-style: none;
-  font-family: var(--prata);
-  font-size: 18px;
-  letter-spacing: .03em;
-  text-transform: uppercase;
-  line-height: 1.35;
+  font-weight: 600;
+  line-height: 1.4;
   text-wrap: balance;
 }
 .op-faq-i summary::-webkit-details-marker { display: none; }
@@ -576,7 +573,7 @@ body.op {
   }
   .op-hero-top, .op-hero-bot { max-width: 560px; padding: 0; text-align: left; }
   .op-hero-bot { padding-top: 26px; }
-  .op-nazvanie { font-size: 128px; margin: 0 0 6px -6px; }
+  .op-nazvanie { font-size: 128px; margin: 22px 0 6px -4px; }
   .op-hero-h { font-size: 27px; }
   .op-hero-cta .op-btn { width: auto; min-width: 340px; }
 
