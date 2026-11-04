@@ -209,15 +209,21 @@ TRI = [
 TRI_NIZ = ("Дальше каждый месяц новая сфера, а записи всех встреч остаются у вас, пока вы "
            "в клубе")
 
-# 8. Что входит
-VHODIT_H = "Что входит в подписку"
-VHODIT = [
-    "Две встречи со мной в месяц, по теме месяца и кинотерапия, и если не успеваете вживую, "
-    "смотрите запись",
-    "Техники по 10–15 минут на ситуации с близкими и на работе",
-    "Мои голосовые ответы раз в неделю на самые частые вопросы участниц",
-    "Закрытый чат участниц, где за порядком следит моя команда",
-    "Записи прошлых встреч, пока вы в клубе",
+# 8. Что входит: «Каждый месяц вы получаете» (тексты Артёма 04.11.2026), меню
+# номера отеля. Первый пункт отдельно, с крупной «2» и штампом; у остальных
+# предмет слева (build-assets/opora/o-*.png).
+VHODIT_H = "КАЖДЫЙ МЕСЯЦ ВЫ ПОЛУЧАЕТЕ"
+VSTRECHI = ("2", "онлайн-встречи с Виолой",
+            "Глубокий разбор темы месяца и фильм-терапия, на обеих ответы на ваши вопросы",
+            "В открытом доступе Виола таких встреч больше не проводит")
+VHODIT = [   # (предмет, название, описание)
+    ("o-mikrofon", "Подкасты", "Голосовые ответы Виолы раз в неделю на самые частые вопросы участниц"),
+    ("o-proektor", "Видео-лекцию", "Лекция Виолы по теме месяца в записи, с таймкодами"),
+    ("o-tetrad", "Статьи", "Отдельные материалы Виолы по теме месяца, к которым можно вернуться и перечитать"),
+    ("o-chasy", "Техники и практические задания",
+     "3–4 техники на конкретные ситуации, по 10–15 минут, и задания, чтобы попробовать их в своей жизни"),
+    ("o-kino", "Фильм-терапию",
+     "Виола выбирает фильм по теме месяца, вы смотрите его сами, а на встрече она разбирает его вместе с вами"),
 ]
 PODARKI_H = "В день вступления вас уже ждут"
 PODARKI = [
@@ -684,19 +690,38 @@ def sec_tri():
 
 
 def sec_vhodit():
-    items = "".join("<li>%s</li>" % nbsp_tail(x) for x in VHODIT)
+    """«Каждый месяц вы получаете» меню номера: бумага с золотыми уголками
+    (fon-menu, рамка тянется через border-image), первый пункт крупно,
+    остальные строками меню с предметами. Ниже подарок «В день вступления»."""
+    made = webp("fon-menu", (1254,))
+    menu = (' style="--menu: url(%s)"' % made[-1][0]) if made else ""
+    if not made:
+        WARN.append("нет build-assets/opora/fon-menu.jpg: меню без бумаги с уголками")
+    n, t, d, shtamp = VSTRECHI
+    punkty = "".join("""
+        <li class="op-menu-p">%s<div><h3 class="op-menu-t">%s</h3><p>%s</p></div></li>"""
+                     % (img(k, "", (240,), "96px", "op-menu-img") if find_src(k) else "", tt, nbsp_tail(dd))
+                     for k, tt, dd in VHODIT)
     podarki = "".join("<li>%s</li>" % nbsp_tail(x) for x in PODARKI)
     return sec("Что входит", """
-    %s
-    <ul class="op-galki">%s</ul>
+    <div class="op-menu"%s>
+      <h2 class="op-menu-h">%s</h2>
+      <div class="op-menu-glav">
+        <p class="op-menu-2"><span class="op-menu-n">%s</span> <span class="op-menu-t">%s</span></p>
+        <p class="op-menu-d">%s</p>
+        <p class="op-shtamp">%s</p>
+      </div>
+      <ul class="op-menu-list">%s
+      </ul>
+    </div>
     <div class="op-podarok">
       <div class="op-podarok-t">
         <p class="op-podarok-h">%s</p>
         <ul class="op-podarok-list">%s</ul>
       </div>
       %s
-    </div>""" % (h2(VHODIT_H), items, PODARKI_H, podarki, predmet("o-chashka", "Чашка чая")),
-               "op-barhat op-narrow", fon="derevo")
+    </div>""" % (menu, VHODIT_H, n, t, nbsp_tail(d), shtamp, punkty, PODARKI_H, podarki,
+                 predmet("o-chashka", "Чашка чая")), "op-barhat", fon="barhat")
 
 
 def sec_udobno():
