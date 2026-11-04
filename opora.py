@@ -486,10 +486,14 @@ def list_btn():
 
 
 def sec(blok, inner, cls="", sid=""):
+    """Экран страницы. Светлые экраны лежат листом с аркой сверху, как
+    розовые блоки референса, поэтому у них лишняя обёртка."""
+    if "op-svetlyy" in cls:
+        inner = '\n  <div class="op-arka">\n  <div class="op-in">%s\n  </div>\n  </div>' % inner
+    else:
+        inner = '\n  <div class="op-in">%s\n  </div>' % inner
     return """
-<section class="op-sec %s"%s data-blok="%s">
-  <div class="op-in">%s
-  </div>
+<section class="op-sec %s"%s data-blok="%s">%s
 </section>""" % (cls, (' id="%s"' % sid) if sid else "", blok, inner)
 
 
@@ -501,7 +505,7 @@ def cards(items, cls="op-cards-4"):
 
 def sec_hero():
     knopka = btn(BTN_KLUB, "#stoimost") if otkryt() else list_btn()
-    plashki = "".join("<li><span>%s</span></li>" % p for p in HERO_PLASHKI)
+    plashki = "".join('<li class="op-bilet"><span>%s</span></li>' % p for p in HERO_PLASHKI)
     return """
 <section class="op-hero" data-blok="Первый экран">
   %(fon)s
@@ -688,6 +692,7 @@ def sec_tarify():
         eur = CENY_EUR.get(t["id"], "")
         kartochki.append("""
       <article class="op-tarif">
+        <span class="op-tarif-dyrka" aria-hidden="true"></span>
         <h3 class="op-tarif-h">%(name)s</h3>
         <p class="op-cena">%(cena)s</p>%(eur)s
         <p class="op-tarif-t">%(text)s</p>%(btn)s
@@ -731,7 +736,6 @@ def sec_final():
         knopki, pod = list_btn(), stroka_zakryt()
     return """
 <section class="op-final" data-blok="Последний экран">
-  %(fon)s
   <div class="op-in">
     <div class="op-final-card">
       <h2 class="op-h2">%(h)s</h2>
@@ -740,7 +744,8 @@ def sec_final():
       <p class="op-mest">%(pod)s</p>
     </div>
   </div>
-</section>""" % {"fon": fon("final", "", lazy=True), "h": nbsp_tail(FINAL_H % PERVAYA_VSTRECHA),
+  %(fon)s
+</section>""" % {"fon": fon("final", "Виола Маро на диване у изумрудной стены", lazy=True), "h": nbsp_tail(FINAL_H % PERVAYA_VSTRECHA),
                  "t": nbsp_tail(FINAL_TEXT), "knopki": knopki, "pod": pod}
 
 
