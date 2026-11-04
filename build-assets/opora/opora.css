@@ -325,8 +325,8 @@ body.op {
 }
 
 /* ─────────────────────────────────────────────── блок «ОПОРА –» ── */
-/* Светлая панель наезжает на низ фото: слева определение, чашка
-   и плашка первой встречи, справа задачи с квадратными галочками. */
+/* Светлая панель наезжает на низ фото: слева определение,
+   справа задачи с квадратными галочками. */
 
 .op-celi {
   position: relative;
@@ -361,15 +361,6 @@ body.op {
   text-wrap: pretty;
 }
 .op-akcent-slova { font-weight: 700; color: var(--wine); }
-.op-celi-vstrecha { display: flex; align-items: center; gap: 18px; margin-top: 26px; }
-.op-celi-vstrecha .op-predmet { width: 120px; flex: none; }
-.op-plashka-zoloto {
-  padding: 10px 16px;
-  border: 1px solid var(--gold);
-  border-radius: 8px;
-  font-weight: 600;
-  color: var(--wine);
-}
 .op-zadachi-h { margin-bottom: 14px; }
 .op-metka {
   display: inline-block;
@@ -701,7 +692,6 @@ body.op {
   .op-celi { padding-bottom: 96px; }
   .op-celi-panel { grid-template-columns: 1fr 1fr; gap: 56px; padding: 52px 56px 56px; }
   .op-offer { font-size: 21px; }
-  .op-celi-vstrecha .op-predmet { width: 150px; }
 
   /* Последний экран: Виола по центру под текстом. */
   .op-final > .op-fon { aspect-ratio: 3 / 2; margin-top: 8px; }

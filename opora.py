@@ -86,12 +86,11 @@ POD_OTKRYT = "Осталось %(n)d %(mest)s из %(vsego)d"
 POD_ZAKRYT = "Набор закрыт, следующий откроется %(sled)s, и участницы из листа ожидания узнают о нём первыми"
 
 # 1.1. Блок «ОПОРА –»: светлая панель наезжает на низ фото. Слева
-# определение и чашка с плашкой, справа задачи с галочками.
+# определение, справа задачи с галочками.
 HERO_H = ("ОПОРА – это закрытый клуб в Телеграме для чувствительных людей, которые вместе учатся "
           "ценить себя и жить свою жизнь, а не только жизнь других")
 HERO_AKCENT = "ценить себя и жить свою жизнь, а не только жизнь других"   # жирным, --wine
 DESCRIPTION = HERO_H
-PLASHKA_VSTRECHA = "Первая встреча %s"   # PERVAYA_VSTRECHA
 ZADACHI_H = "ЗАДАЧИ КЛУБА"
 ZADACHI_METKA = "ДЛЯ КАЖДОЙ УЧАСТНИЦЫ:"
 CELI = [   # часть до первой запятой выводится жирным
@@ -531,7 +530,7 @@ def sec_hero():
     Пока их нет, слово стоит над головой на растворённой стене.
 
     Второй экран: светлая панель наезжает на низ фото. Слева «ОПОРА –»
-    с определением, чашка и плашка первой встречи, справа задачи."""
+    с определением, справа задачи."""
     on = otkryt()
     knopka = btn(BTN_KLUB, "#stoimost", " op-btn-hero") if on else btn(BTN_LIST, ssylka("list"), " op-btn-hero")
     pl = [(PLASHKA_START, PERVAYA_VSTRECHA)] + ([(PLASHKA_NABOR, NABOR_DO)] if on else [])
@@ -576,10 +575,6 @@ def sec_hero():
     <div class="op-celi-panel">
       <div class="op-celi-l">
         <h1 class="op-celi-h"><span class="op-h2 op-celi-nazv">%(nazv)s –</span> <span class="op-offer">%(h)s</span></h1>
-        <div class="op-celi-vstrecha">
-          %(chashka)s
-          <p class="op-plashka-zoloto">%(vstrecha)s</p>
-        </div>
       </div>
       <div class="op-celi-r">
         <h2 class="op-h2 op-zadachi-h">%(zh)s</h2>
@@ -590,8 +585,6 @@ def sec_hero():
     <span class="op-strelka" aria-hidden="true"></span>
   </div>
 </section>""" % {"scena": scena, "nazv": nazv, "h": ostalnoe, "celi": celi,
-                 "chashka": predmet("o-chashka", "Чашка чая"),
-                 "vstrecha": PLASHKA_VSTRECHA % PERVAYA_VSTRECHA,
                  "zh": ZADACHI_H, "metka": ZADACHI_METKA}
 
 
