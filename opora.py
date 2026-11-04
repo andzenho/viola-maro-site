@@ -79,7 +79,9 @@ HERO_NAZVANIE = "ОПОРА"
 HERO_PODPIS = "клуб Виолы Маро"          # под названием справа, с наездом на буквы
 # Две плашки сверху, как «Старт: / 14 апреля» у Пырикова: подпись и дата жирным.
 PLASHKA_START = "Старт:"                 # дата — PERVAYA_VSTRECHA
-PLASHKA_NABOR = "Набор до:"              # дата — NABOR_DO, только пока набор открыт
+PLASHKA_NABOR = "Набор до:"              # дата — NABOR_DO, пока набор открыт
+# Набор закрыт: вторая плашка «Следующий набор: <SLED_NABOR>», без даты «Набор: закрыт».
+PLASHKA_SLED = ("Следующий набор:", "Набор:", "закрыт")
 BTN_KLUB = "Вступить в клуб"
 BTN_LIST = "Встать в лист ожидания"
 POD_OTKRYT = "Осталось %(n)d %(mest)s из %(vsego)d"
@@ -526,7 +528,11 @@ def sec_hero():
     стоит в оффере слева на первом экране)."""
     on = otkryt()
     knopka = btn(BTN_KLUB, "#stoimost", " op-btn-hero") if on else btn(BTN_LIST, ssylka("list"), " op-btn-hero")
-    pl = [(PLASHKA_START, PERVAYA_VSTRECHA)] + ([(PLASHKA_NABOR, NABOR_DO)] if on else [])
+    if on:
+        vtoraya = (PLASHKA_NABOR, NABOR_DO)
+    else:
+        vtoraya = (PLASHKA_SLED[0], SLED_NABOR) if SLED_NABOR else (PLASHKA_SLED[1], PLASHKA_SLED[2])
+    pl = [(PLASHKA_START, PERVAYA_VSTRECHA), vtoraya]
     plashki = '<span class="op-pl-tochka" aria-hidden="true"></span>'.join(
         '<p class="op-pl"><span>%s</span> <b>%s</b></p>' % x for x in pl)
     plashki = '<div class="op-plashki-verh">%s</div>' % plashki
@@ -906,6 +912,8 @@ def sverka(text):
               .replace("[N] мест", "%d %s" % (MEST_OSTALOS, mest(MEST_OSTALOS))))
         if not on and elem.startswith("Под кнопкой") and not SLED_NABOR:
             t = "Набор закрыт"
+        if not on and elem.startswith("Плашка сверху, когда") and not SLED_NABOR:
+            t = "Набор: закрыт"
         kuski = t.split(" · ")
         if re.match(r"^[^,]+, \d+–\d+ года$", t):          # метка сферы и возраст отзыва
             kuski = t.split(", ")
