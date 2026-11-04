@@ -415,7 +415,7 @@ def img(name, alt, widths, sizes, cls="", lazy=True):
             % (cls, u, srcset(made), sizes, esc(alt), w, h, ' loading="lazy"' if lazy else ""))
 
 
-def fon(prefix, alt, lazy):
+def fon(prefix, alt, lazy, sizes="100vw"):
     """Фото на всю ширину: телефонный кадр до 759 px, широкий дальше.
     Есть только один из двух кадров, значит он стоит на обоих экранах."""
     d = webp(prefix + "-desktop", (1280, 1920, 2400))
@@ -432,9 +432,9 @@ def fon(prefix, alt, lazy):
     main = d or m
     u, w, h = main[-1]
     src_m = ('<source media="(max-width: 759px)" srcset="%s" sizes="100vw">' % srcset(m)) if (m and d) else ""
-    return ('<picture class="op-fon">%s<img src="%s" srcset="%s" sizes="100vw" alt="%s" width="%d" height="%d"%s'
+    return ('<picture class="op-fon">%s<img src="%s" srcset="%s" sizes="%s" alt="%s" width="%d" height="%d"%s'
             ' decoding="async"%s></picture>'
-            % (src_m, u, srcset(main), esc(alt), w, h, ' loading="lazy"' if lazy else "",
+            % (src_m, u, srcset(main), sizes, esc(alt), w, h, ' loading="lazy"' if lazy else "",
                "" if lazy else ' fetchpriority="high"'))
 
 
@@ -574,7 +574,7 @@ def sec_hero():
 </section>""" % {"plashki": plashki, "nazv": nazv, "offer": akcent("op-hero-akcent"),
                  "cta_pk": cta % "op-cta-pk", "cta_tel": cta % "op-cta-tel",
                  "slovo": HERO_NAZVANIE, "podpis": HERO_PODPIS,
-                 "fon": fon("hero", "Виола Маро на диване у изумрудной стены", lazy=False),
+                 "fon": fon("hero", "Виола Маро на диване у изумрудной стены", lazy=False, sizes="125vw"),
                  "h": akcent("op-akcent-slova"), "celi": celi, "zh": ZADACHI_H, "metka": ZADACHI_METKA}
 
 
