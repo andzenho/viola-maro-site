@@ -76,7 +76,6 @@ TITLE = "Опора: закрытый клуб психолога Виолы М�
 
 # 1. Первый экран (правки Артёма 04.11.2026, форма как у менторства Пырикова).
 HERO_NAZVANIE = "ОПОРА"
-HERO_PODPIS = "клуб Виолы Маро"          # под названием справа, с наездом на буквы
 # Две плашки сверху, как «Старт: / 14 апреля» у Пырикова: подпись и дата жирным.
 PLASHKA_START = "Старт:"                 # дата — PERVAYA_VSTRECHA
 PLASHKA_NABOR = "Набор до:"              # дата — NABOR_DO, пока набор открыт
@@ -518,7 +517,7 @@ def sec_hero():
     """Первые два экрана по форме менторства Пырикова (egorpyrikov.ru/
     mentorstvo2025), правки Артёма 04.11.2026. Фото готовое, без вырезки.
 
-    Телефон: плашки «Старт:» и «Набор до:», слово ОПОРА над Виолой, под ним
+    Телефон: плашки «Набор до:» и «Старт:», слово ОПОРА над Виолой, под ним
     подпись «клуб Виолы Маро», Виола по центру, кнопка у неё на груди,
     под ней строка мест. Компьютер: Виола справа, над ней ОПОРА; слева
     плашки, оффер («ОПОРА – это закрытый клуб…») и кнопка.
@@ -532,7 +531,7 @@ def sec_hero():
         vtoraya = (PLASHKA_NABOR, NABOR_DO)
     else:
         vtoraya = (PLASHKA_SLED[0], SLED_NABOR) if SLED_NABOR else (PLASHKA_SLED[1], PLASHKA_SLED[2])
-    pl = [(PLASHKA_START, PERVAYA_VSTRECHA), vtoraya]
+    pl = [vtoraya, (PLASHKA_START, PERVAYA_VSTRECHA)]   # слева направо по времени: набор, потом старт
     plashki = '<span class="op-pl-tochka" aria-hidden="true"></span>'.join(
         '<p class="op-pl"><span>%s</span> <b>%s</b></p>' % x for x in pl)
     plashki = '<div class="op-plashki-verh">%s</div>' % plashki
@@ -550,7 +549,7 @@ def sec_hero():
     %(cta_pk)s
   </div>
   <div class="op-hero-r">
-    <div class="op-slovo"><p class="op-nazvanie">%(slovo)s</p><p class="op-podpis">%(podpis)s</p></div>
+    <div class="op-slovo"><p class="op-nazvanie">%(slovo)s</p></div>
     <div class="op-hero-foto">
       %(fon)s
       %(cta_tel)s
@@ -573,7 +572,7 @@ def sec_hero():
   </div>
 </section>""" % {"plashki": plashki, "nazv": nazv, "offer": akcent("op-hero-akcent"),
                  "cta_pk": cta % "op-cta-pk", "cta_tel": cta % "op-cta-tel",
-                 "slovo": HERO_NAZVANIE, "podpis": HERO_PODPIS,
+                 "slovo": HERO_NAZVANIE,
                  "fon": fon("hero", "Виола Маро на диване у изумрудной стены", lazy=False, sizes="125vw"),
                  "h": akcent("op-akcent-slova"), "celi": celi, "zh": ZADACHI_H, "metka": ZADACHI_METKA}
 

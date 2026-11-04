@@ -226,7 +226,7 @@ body.op {
 /* Телефон: первый экран ровно на высоту экрана, фото — фон от «ОПОРА»
    до низа экрана, Виола от макушки до туфель целиком. */
 .op-main {
-  --foto-top: 150px;
+  --foto-top: 124px;
   --foto-h: calc(100vh - var(--foto-top));
   --kn: 59%;          /* кнопка чуть ниже колен Виолы: 59 % высоты фото */
   /* блок «ОПОРА –» начинается сразу под кнопкой и строкой мест: наезжает на всё,
@@ -266,7 +266,7 @@ body.op {
   box-shadow: 0 0 10px 2px rgba(232, 200, 202, .7);
 }
 
-/* ОПОРА над Виолой, подпись под словом справа с наездом на буквы. */
+/* ОПОРА над Виолой. */
 .op-slovo { position: relative; z-index: 2; margin-top: 0; width: max-content; max-width: none; margin: 0 auto; }
 .op-nazvanie {
   font-family: var(--prata);
@@ -276,18 +276,6 @@ body.op {
   text-indent: .03em;
   color: var(--rose);
   white-space: nowrap;
-}
-/* Шрифт заголовков, не рукописный (Артём: «без рукописных шрифтов»). */
-.op-podpis {
-  position: relative;
-  margin: .15em 0 0 auto;
-  width: max-content;
-  padding-right: 2%;
-  font-family: var(--prata);
-  font-size: 6.4vw;
-  line-height: 1.1;
-  color: var(--rose);
-  text-shadow: 0 0 14px var(--barhat), 0 0 4px var(--barhat);
 }
 
 .op-hero-foto { position: absolute; z-index: 0; left: 0; right: 0; top: var(--foto-top); bottom: 0; margin: 0; }
@@ -683,7 +671,6 @@ body.op {
   .op-pl b { font-size: 19px; }
   .op-pl-tochka { width: 14px; height: 14px; margin: 0 -7px; }
   .op-nazvanie { font-size: min(22.5vw, 150px); }
-  .op-podpis { font-size: min(6.4vw, 38px); }
   .op-hero-cta { left: 50%; right: auto; width: 340px; margin-left: -170px; }
   .op-celi { padding-bottom: 96px; }
   .op-celi-panel { grid-template-columns: 1fr 1fr; gap: 56px; padding: 52px 56px 56px; }
@@ -704,8 +691,8 @@ body.op {
     grid-template-columns: minmax(0, 600px);
     grid-template-rows: minmax(40px, 1fr) auto auto auto auto calc(var(--nahlest) + 44px);
     grid-template-areas: "." "pl" "slovo" "offer" "cta" ".";
-    /* высота по пропорциям широкого кадра (2,5 : 1), но не ниже текста */
-    min-height: max(600px, 40vw);
+    /* высота по пропорциям широкого кадра (2 : 1), но не ниже текста */
+    min-height: max(600px, 50vw);
     /* та же линия, что у .op-in ниже: колонка 1160 px и поле 40 px */
     padding: 0 calc(max(0px, (100% - 1160px) / 2) + 40px);
     text-align: left;
@@ -715,11 +702,10 @@ body.op {
   .op-plashki-verh { grid-area: pl; justify-content: flex-start; padding: 0; margin: 0 0 30px; }
   .op-slovo { grid-area: slovo; margin: 0; }
   .op-nazvanie { font-size: 112px; text-indent: 0; margin-left: -.04em; }
-  .op-podpis { font-size: 30px; margin-top: .1em; padding-right: 0; }
   .op-hero-offer {
     grid-area: offer;
     display: block;
-    margin-top: 24px;
+    margin-top: 18px;
     max-width: 470px;
     font-family: var(--golos);
     font-size: 22px;
