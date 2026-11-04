@@ -599,23 +599,16 @@ def sec_otzyvy():
 
 
 def sec_dlya_kogo():
-    items = "".join('<li><span class="op-nomer" aria-hidden="true">%02d</span><p>%s<b>%s</b></p></li>'
-                    % (i + 1, a, nbsp_tail(b)) for i, (a, b) in enumerate(DLYA_KOGO))
+    """«Опора подходит вам, если вы» (правка 04.11.2026): кремовые карточки
+    с номером шрифтом заголовков, боль жирным бордовым; на компьютере две
+    колонки. Вывод под карточками крупно по центру. Фон — дубовые панели."""
+    items = "".join('<li class="op-dk-card"><span class="op-dk-num" aria-hidden="true">%02d</span>'
+                    '<p>%s<b>%s</b></p></li>' % (i + 1, a, nbsp_tail(b)) for i, (a, b) in enumerate(DLYA_KOGO))
     zag = DLYA_KOGO_H.replace("ОПОРА", '<span class="op-h2-akc">ОПОРА</span>', 1)
-    made = webp("dlya-kogo", (600, 776))
-    foto = ""
-    if made:
-        u, w, h = made[-1]
-        foto = ('<div class="op-dk-foto" aria-hidden="true"><img src="%s" srcset="%s" sizes="420px" alt="" '
-                'width="%d" height="%d" loading="lazy" decoding="async"></div>' % (u, srcset(made), w, h))
     return sec("Для кого", """
-    <div class="op-dk">
-      <div class="op-dk-t">
-        <h2 class="op-h2">%s</h2>
-        <ol class="op-nomera">%s</ol>
-        <p class="op-akcent">%s</p>
-      </div>%s
-    </div>""" % (zag, items, nbsp_tail(DLYA_KOGO_POD), foto))
+    <h2 class="op-h2 op-dk-h">%s</h2>
+    <ol class="op-dk-cards">%s</ol>
+    <p class="op-dk-itog">%s</p>""" % (zag, items, nbsp_tail(DLYA_KOGO_POD)), fon="derevo")
 
 
 def fon_style(name):
@@ -843,7 +836,7 @@ def podval():
 def page():
     hero = sec_hero()
     body = "".join([
-        sec_otzyvy(), sec_dlya_kogo(), sec_izmenitsya(), sec_chto(), sec_mesyac(), sec_tri(),
+        sec_dlya_kogo(), sec_otzyvy(), sec_izmenitsya(), sec_chto(), sec_mesyac(), sec_tri(),
         sec_vhodit(), sec_udobno(), sec_viola(), sec_risk(), sec_tarify(), sec_voprosy(), sec_final(),
     ])
     body = typograf(hero + body)
