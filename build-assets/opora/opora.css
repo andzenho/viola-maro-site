@@ -58,7 +58,9 @@ body.op {
 
 .op-in { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
 .op-sec { padding: 72px 0; }
-.op-narrow .op-in { max-width: 840px; }
+/* Узкие экраны: колонка та же, что у всех (левый край заголовков не прыгает),
+   узкий только текст внутри. */
+.op-narrow .op-in > * { max-width: 820px; }
 .op-barhat { background: var(--barhat); }
 
 /* Светлый лист с аркой сверху. Оба светлых экрана стоят после тёмных
@@ -213,66 +215,24 @@ body.op {
 }
 
 /* ──────────────────────────────────────────────────────── первый экран ── */
-/* Форма первых двух экранов как у менторства Пырикова (правки Артёма
-   04.11.2026). Первый экран: ОПОРА на всю ширину, под ним справа подпись
-   «клуб Виолы Маро» с наездом на буквы, Виола у стены, по бокам от головы
-   две плашки, кнопка по центру на уровне груди, под ней строка мест.
-   Когда лежат файлы слоёв (.op-sloi): фон без человека → слово → вырезка
-   Виолы, голова перекрывает низ букв. Пока их нет — одно фото, слово над
-   головой на растворённой стене.
-   --fw и --fh — ширина и высота фото (2 : 3 на телефоне, 3 : 2 на компьютере);
-   от них считается положение головы (30–48 % высоты) и груди (≈ 60 %). */
+/* Форма как у менторства Пырикова (правки Артёма 04.11.2026), готовое фото
+   Виолы на диване, без вырезки. Телефон: плашки, ОПОРА над Виолой, подпись
+   «клуб Виолы Маро», Виола по центру, кнопка у неё на груди. Компьютер:
+   Виола справа с ОПОРА над ней, слева плашки, оффер и кнопка.
+   --fw и --fh — ширина и высота фото; голова начинается на 16–19 % высоты,
+   грудь около 44 %. Верх фото (стена) растворяется в бархатном фоне,
+   поэтому ОПОРА и подпись лежат на однотонном тёмном. */
 
-.op-main { --fw: 100vw; --fh: calc(var(--fw) * 1.5); --nahlest: calc(var(--fh) * .14); }
-.op-hero { position: relative; background: var(--barhat); text-align: center; padding-top: 28px; }
+.op-main { --fw: 100vw; --fh: calc(var(--fw) * 1.5); --golova: .133; --grud: .4; --nahlest: calc(var(--fh) * .6 - 124px); }
+.op-hero { position: relative; display: flex; flex-direction: column; background: var(--barhat); padding-top: 24px; text-align: center; }
+.op-hero-l, .op-hero-r { position: relative; }
+.op-hero-offer, .op-cta-pk { display: none; }
 .op-fon { display: block; }
 .op-fon img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .op-fon-ph { background: var(--panel); }
 
-.op-slovo { position: relative; z-index: 1; width: max-content; max-width: 100%; margin: 0 auto; }
-.op-nazvanie {
-  font-family: var(--prata);
-  font-size: 22.5vw;
-  line-height: .9;
-  letter-spacing: .03em;
-  text-indent: .03em;
-  color: var(--rose);
-  white-space: nowrap;
-}
-/* Подпись под словом справа, с наездом на буквы, как «Егора Пырикова».
-   Шрифт заголовков, не рукописный (Артём: «без рукописных шрифтов»). */
-.op-podpis {
-  position: relative;
-  z-index: 3;
-  margin: -.55em 0 0 auto;
-  width: max-content;
-  padding-right: 2%;
-  font-family: var(--prata);
-  font-size: 6.4vw;
-  line-height: 1.1;
-  color: var(--rose);
-  text-shadow: 0 0 14px var(--barhat), 0 0 4px var(--barhat);
-}
-
-.op-hero-foto { position: relative; isolation: isolate; width: var(--fw); margin: 0 auto; }
-.op-hero-foto > .op-fon {
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  margin-top: calc(14px - var(--fh) * .3);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 80%, transparent 100%);
-          mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 80%, transparent 100%);
-}
-/* Слои: фон и вырезка на одном холсте, слово между ними. */
-.op-sloi > .op-fon { margin-top: 0; }
-/* слово без своего z-index: буквы под вырезкой (1 < 2), подпись над ней (3) */
-.op-sloi .op-slovo { position: absolute; z-index: auto; left: 0; right: 0; top: calc(var(--fh) * .19); }
-.op-sloi .op-nazvanie { position: relative; z-index: 1; }
-.op-vyrezka { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.op-sloi .op-podpis { z-index: 3; }
-
-/* Две плашки сверху, как «Старт: / Длительность:» у Пырикова: тёмные
-   скруглённые карточки вплотную, между ними светящаяся точка. */
-.op-plashki-verh { position: relative; z-index: 3; display: flex; justify-content: center; align-items: center; margin: 0 auto 18px; padding: 0 16px; }
+/* Две плашки сверху: тёмные карточки вплотную, между ними светящаяся точка. */
+.op-plashki-verh { position: relative; z-index: 3; display: flex; justify-content: center; align-items: center; margin: 0 auto 14px; padding: 0 16px; }
 .op-pl {
   min-width: 132px;
   padding: 10px 18px 11px;
@@ -296,32 +256,65 @@ body.op {
   box-shadow: 0 0 10px 2px rgba(232, 200, 202, .7);
 }
 
-/* Кнопка по центру на уровне груди, поверх фото. */
-.op-hero-cta { position: absolute; z-index: 4; left: 16px; right: 16px; top: calc(var(--fh) * .6); }
+/* ОПОРА над Виолой, подпись под словом справа с наездом на буквы. */
+.op-slovo { position: relative; z-index: 2; width: max-content; max-width: none; margin: 0 auto; }
+.op-nazvanie {
+  font-family: var(--prata);
+  font-size: 22.5vw;
+  line-height: .9;
+  letter-spacing: .03em;
+  text-indent: .03em;
+  color: var(--rose);
+  white-space: nowrap;
+}
+/* Шрифт заголовков, не рукописный (Артём: «без рукописных шрифтов»). */
+.op-podpis {
+  position: relative;
+  margin: -.5em 0 0 auto;
+  width: max-content;
+  padding-right: 2%;
+  font-family: var(--prata);
+  font-size: 6.4vw;
+  line-height: 1.1;
+  color: var(--rose);
+  text-shadow: 0 0 14px var(--barhat), 0 0 4px var(--barhat);
+}
+
+.op-hero-foto { position: relative; width: var(--fw); margin: 0 auto; }
+.op-hero-foto > .op-fon {
+  width: 100%;
+  aspect-ratio: 1024 / 1536;
+  margin-top: calc(10px - var(--fh) * var(--golova));
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 85%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0, #000 11%, #000 82%, transparent 100%);
+}
+
+/* Кнопка по центру на уровне груди, поверх фото. Отступ фото схлопывается
+   с обёрткой, поэтому её верх совпадает с верхом фото. */
+.op-hero-cta { position: absolute; z-index: 4; left: 16px; right: 16px; top: calc(var(--fh) * var(--grud)); }
 .op-btn-hero {
   width: 100%;
   min-height: 64px;
   font-size: 17px;
-  box-shadow: 0 0 0 1px var(--gold), 0 0 34px rgba(232, 200, 202, .28), 0 10px 30px rgba(0, 0, 0, .45);
   border: 0;
+  box-shadow: 0 0 0 1px var(--gold), 0 0 34px rgba(232, 200, 202, .28), 0 10px 30px rgba(0, 0, 0, .45);
 }
-.op-hero-cta .op-mest { position: relative; }
-/* мягкое затемнение без краёв под строкой мест (ТЗ: затемнение под текстом на пёстром фото) */
-.op-hero-cta .op-mest::before {
+.op-btn-hero:hover { box-shadow: 0 0 0 1px var(--gold), 0 0 44px rgba(232, 200, 202, .4), 0 10px 30px rgba(0, 0, 0, .45); }
+.op-hero-cta .op-mest {
+  position: relative;
+  margin-top: 12px;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+  text-shadow: 0 0 2px var(--barhat), 0 0 8px var(--barhat), 0 0 18px var(--barhat);
+}
+/* мягкое затемнение без краёв под строкой мест на фото (ТЗ: затемнение под текстом на пёстром фото) */
+.op-cta-tel .op-mest::before {
   content: "";
   position: absolute;
   z-index: -1;
   inset: -18px -12%;
   background: radial-gradient(closest-side, rgba(20, 28, 21, .92) 55%, rgba(20, 28, 21, 0));
-}
-.op-btn-hero:hover { box-shadow: 0 0 0 1px var(--gold), 0 0 44px rgba(232, 200, 202, .4), 0 10px 30px rgba(0, 0, 0, .45); }
-.op-hero-cta .op-mest {
-  margin-top: 12px;
-  color: var(--text);
-  font-size: 16px;
-  font-weight: 500;
-  /* строка лежит на фото без плашки: тёмный ореол под буквами держит контраст */
-  text-shadow: 0 0 2px var(--barhat), 0 0 6px var(--barhat), 0 0 12px var(--barhat), 0 0 22px var(--barhat), 0 0 34px rgba(20, 28, 21, .9);
 }
 
 /* ─────────────────────────────────────────────── блок «ОПОРА –» ── */
@@ -669,26 +662,16 @@ body.op {
   .op-shag-pr .op-predmet { grid-column: 3; margin-top: 0; width: 170px; }
   .op-num { font-size: 52px; }
 
-  /* Первый экран: фото 3 : 2 по центру. */
-  .op-main { --fw: min(100vw, 1280px); --fh: calc(var(--fw) * 2 / 3); --nahlest: calc(var(--fh) * .3 - 40px); }
-  .op-hero { padding-top: 36px; }
-  .op-nazvanie { font-size: min(17vw, 210px); }
-  .op-podpis { font-size: min(3.4vw, 42px); padding-right: 4%; }
-  .op-hero-foto > .op-fon {
-    aspect-ratio: 3 / 2;
-    margin-top: calc(10px - var(--fh) * .3);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
-    -webkit-mask-composite: source-in;
-            mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 78%, transparent 100%), linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
-            mask-composite: intersect;
-  }
-  .op-sloi > .op-fon { margin-top: 0; }
-  .op-sloi .op-slovo { top: calc(var(--fh) * .13); }
-  .op-plashki-verh { margin-bottom: 22px; }
+  /* Первый экран на планшете: как на телефоне, фото не шире 560 px. */
+  .op-main { --fw: min(100vw, 560px); }
+  .op-hero { padding-top: 32px; }
+  .op-plashki-verh { margin-bottom: 18px; }
   .op-pl { min-width: 190px; padding: 12px 26px 13px; font-size: 17px; border-radius: 16px; }
   .op-pl b { font-size: 19px; }
   .op-pl-tochka { width: 14px; height: 14px; margin: 0 -7px; }
-  .op-hero-cta { left: 50%; right: auto; width: 340px; margin-left: -170px; top: calc(var(--fh) * .58); }
+  .op-nazvanie { font-size: min(22.5vw, 150px); }
+  .op-podpis { font-size: min(6.4vw, 38px); }
+  .op-hero-cta { left: 50%; right: auto; width: 340px; margin-left: -170px; }
   .op-celi { padding-bottom: 96px; }
   .op-celi-panel { grid-template-columns: 1fr 1fr; gap: 56px; padding: 52px 56px 56px; }
   .op-offer { font-size: 21px; }
@@ -700,6 +683,72 @@ body.op {
 /* ──────────────────────────────────────────────────────── компьютер ── */
 
 @media (min-width: 1024px) {
+  /* Первый экран: слева плашки, ОПОРА с подписью, оффер и кнопка; справа
+     Виола. Колонки собраны сеткой из элементов обеих половин. */
+  .op-main { --nahlest: 130px; }
+  .op-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 600px);
+    grid-template-rows: minmax(40px, 1fr) auto auto auto auto calc(var(--nahlest) + 44px);
+    grid-template-areas: "." "pl" "slovo" "offer" "cta" ".";
+    min-height: 760px;
+    /* та же линия, что у .op-in ниже: колонка 1160 px и поле 40 px */
+    padding: 0 calc(max(0px, (100% - 1160px) / 2) + 40px);
+    text-align: left;
+    overflow: hidden;
+  }
+  .op-hero-l, .op-hero-r { display: contents; }
+  .op-plashki-verh { grid-area: pl; justify-content: flex-start; padding: 0; margin: 0 0 30px; }
+  .op-slovo { grid-area: slovo; margin: 0; }
+  .op-nazvanie { font-size: 128px; text-indent: 0; margin-left: -.04em; }
+  .op-podpis { font-size: 34px; margin-top: -.35em; padding-right: 0; }
+  .op-hero-offer {
+    grid-area: offer;
+    display: block;
+    margin-top: 26px;
+    max-width: 560px;
+    font-family: var(--golos);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.42;
+    color: var(--text);
+    text-wrap: pretty;
+  }
+  /* «ОПОРА –» в оффере скрыто от глаз: крупное ОПОРА стоит прямо над ним */
+  .op-hero-offer-nazv { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .op-hero-akcent { font-weight: 700; color: var(--rose); }
+  .op-cta-pk { grid-area: cta; display: block; position: static; inset: auto; width: auto; margin: 34px 0 0; }
+  .op-cta-pk .op-btn-hero { width: auto; min-width: 340px; }
+  .op-cta-pk .op-mest { margin-top: 14px; text-shadow: none; }
+  .op-cta-tel { display: none; }
+  /* Фото целиком — фон справа на всю высоту экрана, левый край и низ
+     растворяются в бархате. */
+  .op-hero-foto {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    bottom: 0;
+    right: max(0px, (100% - 1240px) / 2);
+    width: auto;
+    margin: 0;
+    aspect-ratio: 1024 / 1536;
+  }
+  .op-hero-foto > .op-fon {
+    height: 100%;
+    aspect-ratio: auto;
+    margin-top: 0;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 22%, #000 92%, transparent 100%);
+    -webkit-mask-composite: source-in;
+            mask-image: linear-gradient(to bottom, #000 0, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 22%, #000 92%, transparent 100%);
+            mask-composite: intersect;
+  }
+  .op-plashki-verh, .op-slovo, .op-hero-offer, .op-cta-pk { position: relative; z-index: 1; top: auto; }
+  /* Панель на компьютере: определение уже в оффере слева, остаются задачи. */
+  .op-celi-l { display: none; }
+  .op-celi-panel { grid-template-columns: 1fr; }
+  .op-kvadraty { columns: 2; column-gap: 56px; }
+  .op-kvadraty li { break-inside: avoid; margin-bottom: 20px; }
+  .op-kvadraty li + li { margin-top: 0; }
   .op-otzyvy { columns: 3; }
   .op-viola { grid-template-columns: 1fr 400px; align-items: center; gap: 72px; }
   .op-viola-foto { max-width: none; order: 0; }

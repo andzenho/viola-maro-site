@@ -512,63 +512,44 @@ def zhirno(x):
     return "<b>%s</b> и %s" % (head, nbsp_tail(tail))
 
 
-def sloi():
-    """Три слоя первого экрана есть, только когда лежат все три файла:
-    фон без человека (телефон и компьютер) и вырезка Виолы. Вырезку
-    экспортировать на том же холсте, что и фон: она ложится поверх него 1 в 1."""
-    return all(find_src(n) for n in ("hero-fon-desktop", "hero-fon-mobile", "viola-vyrezka"))
-
-
 def sec_hero():
     """Первые два экрана по форме менторства Пырикова (egorpyrikov.ru/
-    mentorstvo2025), правки Артёма 04.11.2026.
+    mentorstvo2025), правки Артёма 04.11.2026. Фото готовое, без вырезки.
 
-    Первый экран: слово ОПОРА на всю ширину, под ним справа подпись «клуб
-    Виолы Маро», Виола у стены, сверху две плашки (старт и конец набора), кнопка
-    по центру на уровне груди, под ней строка мест. Когда есть файлы слоёв
-    (sloi()), Виола-вырезка стоит поверх слова: голова перекрывает низ букв.
-    Пока их нет, слово стоит над головой на растворённой стене.
+    Телефон: плашки «Старт:» и «Набор до:», слово ОПОРА над Виолой, под ним
+    подпись «клуб Виолы Маро», Виола по центру, кнопка у неё на груди,
+    под ней строка мест. Компьютер: Виола справа, над ней ОПОРА; слева
+    плашки, оффер («ОПОРА – это закрытый клуб…») и кнопка.
 
-    Второй экран: светлая панель наезжает на низ фото. Слева «ОПОРА –»
-    с определением, справа задачи."""
+    Второй экран — светлая панель наезжает на низ фото: на телефоне
+    определение и задачи, на компьютере только задачи (определение уже
+    стоит в оффере слева на первом экране)."""
     on = otkryt()
     knopka = btn(BTN_KLUB, "#stoimost", " op-btn-hero") if on else btn(BTN_LIST, ssylka("list"), " op-btn-hero")
     pl = [(PLASHKA_START, PERVAYA_VSTRECHA)] + ([(PLASHKA_NABOR, NABOR_DO)] if on else [])
     plashki = '<span class="op-pl-tochka" aria-hidden="true"></span>'.join(
         '<p class="op-pl"><span>%s</span> <b>%s</b></p>' % x for x in pl)
     plashki = '<div class="op-plashki-verh">%s</div>' % plashki
-    slovo = ('<div class="op-slovo"><p class="op-nazvanie">%s</p>'
-             '<p class="op-podpis">%s</p></div>' % (HERO_NAZVANIE, HERO_PODPIS))
-    cta = '<div class="op-hero-cta">%s<p class="op-mest">%s</p></div>' % (knopka, stroka_mest())
-    if sloi():
-        fon_html = fon("hero-fon", "", lazy=False)
-        made = webp("viola-vyrezka", (720, 1280, 1536))
-        u, w, h = made[-1]
-        vyrezka = ('<img class="op-vyrezka" src="%s" srcset="%s" sizes="(max-width: 759px) 100vw, 1280px" '
-                   'alt="Виола Маро" width="%d" height="%d" decoding="async" fetchpriority="high">'
-                   % (u, srcset(made), w, h))
-        scena = """
-  %s
-  <div class="op-hero-foto op-sloi">
-    %s
-    %s
-    %s
-    %s
-  </div>""" % (plashki, fon_html, slovo, vyrezka, cta)
-    else:
-        scena = """
-  %s
-  %s
-  <div class="op-hero-foto">
-    %s
-    %s
-  </div>""" % (plashki, slovo, fon("hero", "Виола Маро у изумрудной стены", lazy=False), cta)
+    cta = '<div class="op-hero-cta %%s">%s<p class="op-mest">%s</p></div>' % (knopka, stroka_mest())
 
     nazv, ostalnoe = HERO_H.split(" – ", 1)
-    ostalnoe = esc(ostalnoe).replace(esc(HERO_AKCENT), "<b class=\"op-akcent-slova\">%s</b>" % esc(HERO_AKCENT), 1)
+    akcent = lambda cls: esc(ostalnoe).replace(
+        esc(HERO_AKCENT), '<b class="%s">%s</b>' % (cls, esc(HERO_AKCENT)), 1)
     celi = "".join("<li>%s</li>" % zhirno(x) for x in CELI)
     return """
-<section class="op-hero" data-blok="Первый экран">%(scena)s
+<section class="op-hero" data-blok="Первый экран">
+  <div class="op-hero-l">
+    %(plashki)s
+    <p class="op-hero-offer"><span class="op-hero-offer-nazv">%(nazv)s –</span> %(offer)s</p>
+    %(cta_pk)s
+  </div>
+  <div class="op-hero-r">
+    <div class="op-slovo"><p class="op-nazvanie">%(slovo)s</p><p class="op-podpis">%(podpis)s</p></div>
+    <div class="op-hero-foto">
+      %(fon)s
+      %(cta_tel)s
+    </div>
+  </div>
 </section>
 <section class="op-celi" data-blok="Блок «ОПОРА –»">
   <div class="op-in">
@@ -584,8 +565,11 @@ def sec_hero():
     </div>
     <span class="op-strelka" aria-hidden="true"></span>
   </div>
-</section>""" % {"scena": scena, "nazv": nazv, "h": ostalnoe, "celi": celi,
-                 "zh": ZADACHI_H, "metka": ZADACHI_METKA}
+</section>""" % {"plashki": plashki, "nazv": nazv, "offer": akcent("op-hero-akcent"),
+                 "cta_pk": cta % "op-cta-pk", "cta_tel": cta % "op-cta-tel",
+                 "slovo": HERO_NAZVANIE, "podpis": HERO_PODPIS,
+                 "fon": fon("hero", "Виола Маро на диване у изумрудной стены", lazy=False),
+                 "h": akcent("op-akcent-slova"), "celi": celi, "zh": ZADACHI_H, "metka": ZADACHI_METKA}
 
 
 def sec_otzyvy():
