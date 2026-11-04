@@ -28,6 +28,7 @@ python3 build.py --mode predzapis       # анкета предзаписи
 python3 build.py --theme more           # любая из страниц в новом оформлении
 python3 build.py --mode zayavka         # страница заявки
 python3 build.py --mode neudobnye      # событие «Неудобные»
+python3 opora.py --noindex               # клуб «Опора», /opora/ (после build.py и glavnaya.py)
 ```
 
 ### Оплата: три страницы, два способа
