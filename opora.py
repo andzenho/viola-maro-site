@@ -123,16 +123,18 @@ OTZYVY = [
      "кажется, начну жить»"),
 ]
 
-# 3. Для кого
-DLYA_KOGO_H = "Клуб для вас, если вы"
-DLYA_KOGO = [
-    "всем помогаете, а когда плохо вам, рядом никого",
-    "уступаете и терпите, а потом весь вечер прокручиваете разговор в голове",
-    "видите, что вами пользуются, и всё равно остаётесь",
-    "принимаете близко к сердцу каждое слово и каждый взгляд",
-    "после плохих новостей и чужих жалоб чувствуете себя выжатой",
+# 3. Для кого (правка Артёма 04.11.2026, форма как «Менторство подходит для:»
+# у Пырикова): номера 01–06, жирным выделена боль, справа на компьютере Виола.
+DLYA_KOGO_H = "ОПОРА ПОДХОДИТ ВАМ, ЕСЛИ ВЫ"
+DLYA_KOGO = [   # (обычным, жирным)
+    ("Живёте для других и всем помогаете, ", "а когда плохо вам, рядом никого"),
+    ("Уступаете и терпите, ", "а потом весь вечер прокручиваете разговор в голове"),
+    ("Видите, что вашей добротой пользуются, ", "и всё равно остаётесь"),
+    ("Принимаете всё близко к сердцу ", "и после чужих жалоб и плохих новостей чувствуете себя выжатой"),
+    ("Всё понимаете в теории, читали книги и ходили к психологу, ", "а в жизни снова уступаете"),
+    ("Прошли «Прикладную эмпатию» и хотите, ", "чтобы техники стали привычкой, а не остались в записях"),
 ]
-DLYA_KOGO_POD = ("У вас сильная эмпатия, а пользоваться ей вас никто не учил. В клубе я учу этому, "
+DLYA_KOGO_POD = ("У вас сильная эмпатия, а пользоваться ей вас никто не учил. В клубе я учу этому "
                  "по одной сфере жизни в месяц")
 
 # 4. Что изменится
@@ -490,7 +492,7 @@ def list_btn():
     return btn(BTN_LIST, ssylka("list"))
 
 
-def sec(blok, inner, cls="", sid=""):
+def sec(blok, inner, cls="", sid="", fon=None):
     """Экран страницы. Светлые экраны лежат листом с аркой сверху, как
     розовые блоки референса, поэтому у них лишняя обёртка."""
     if "op-svetlyy" in cls:
@@ -498,8 +500,9 @@ def sec(blok, inner, cls="", sid=""):
     else:
         inner = '\n  <div class="op-in">%s\n  </div>' % inner
     return """
-<section class="op-sec %s"%s data-blok="%s">%s
-</section>""" % (cls, (' id="%s"' % sid) if sid else "", blok, inner)
+<section class="op-sec %s"%s data-blok="%s"%s>%s
+</section>""" % (cls + ((" op-sfon op-sfon-" + fon) if fon else ""), (' id="%s"' % sid) if sid else "", blok,
+                 fon_style("fon-" + fon) if fon else "", inner)
 
 
 def cards(items, cls="op-cards-4"):
@@ -592,22 +595,43 @@ def sec_otzyvy():
     %s
     <p class="op-lead">%s</p>
     <div class="op-otzyvy">%s
-    </div>""" % (h2(OTZYVY_H), nbsp_tail(OTZYVY_POD), items), "op-svetlyy", "otzyvy")
+    </div>""" % (h2(OTZYVY_H), nbsp_tail(OTZYVY_POD), items), "op-svetlyy", "otzyvy", "bumaga")
 
 
 def sec_dlya_kogo():
-    items = "".join("<li>%s</li>" % nbsp_tail(x) for x in DLYA_KOGO)
+    items = "".join('<li><span class="op-nomer" aria-hidden="true">%02d</span><p>%s<b>%s</b></p></li>'
+                    % (i + 1, a, nbsp_tail(b)) for i, (a, b) in enumerate(DLYA_KOGO))
+    zag = DLYA_KOGO_H.replace("ОПОРА", '<span class="op-h2-akc">ОПОРА</span>', 1)
+    made = webp("dlya-kogo", (600, 776))
+    foto = ""
+    if made:
+        u, w, h = made[-1]
+        foto = ('<div class="op-dk-foto" aria-hidden="true"><img src="%s" srcset="%s" sizes="420px" alt="" '
+                'width="%d" height="%d" loading="lazy" decoding="async"></div>' % (u, srcset(made), w, h))
     return sec("Для кого", """
-    %s
-    <ul class="op-romby">%s</ul>
-    <p class="op-akcent">%s</p>""" % (h2(DLYA_KOGO_H), items, nbsp_tail(DLYA_KOGO_POD)), "op-narrow")
+    <div class="op-dk">
+      <div class="op-dk-t">
+        <h2 class="op-h2">%s</h2>
+        <ol class="op-nomera">%s</ol>
+        <p class="op-akcent">%s</p>
+      </div>%s
+    </div>""" % (zag, items, nbsp_tail(DLYA_KOGO_POD), foto))
+
+
+def fon_style(name):
+    """Фон экрана картинкой из build-assets/opora/<name>: в CSS переменная --fon."""
+    made = webp(name, (1600,))
+    if not made:
+        WARN.append("нет картинки build-assets/opora/%s.jpg: экран без фона-картинки" % name)
+        return ""
+    return ' style="--fon: url(%s)"' % made[-1][0]
 
 
 def sec_izmenitsya():
     return sec("Что изменится", """
     %s
     %s
-    <p class="op-niz">%s</p>""" % (h2(IZMENITSYA_H), cards(IZMENITSYA), IZMENITSYA_POD), "op-barhat")
+    <p class="op-niz">%s</p>""" % (h2(IZMENITSYA_H), cards(IZMENITSYA), IZMENITSYA_POD), "op-barhat", fon="barhat")
 
 
 def video_html():
@@ -650,7 +674,7 @@ def sec_mesyac():
     <ol class="op-shagi">%s
     </ol>
     <h3 class="op-h2 op-h2-sm">%s</h3>
-    %s""" % (h2(MESYAC_H), "".join(shagi), RABOTAET_H, cards(RABOTAET)), "op-barhat")
+    %s""" % (h2(MESYAC_H), "".join(shagi), RABOTAET_H, cards(RABOTAET)), "op-barhat", fon="derevo")
 
 
 def sec_tri():
@@ -679,11 +703,11 @@ def sec_vhodit():
       </div>
       %s
     </div>""" % (h2(VHODIT_H), items, PODARKI_H, podarki, predmet("o-chashka", "Чашка чая")),
-               "op-barhat op-narrow")
+               "op-barhat op-narrow", fon="derevo")
 
 
 def sec_udobno():
-    return sec("Почему это удобно", "\n    %s\n    %s" % (h2(UDOBNO_H), cards(UDOBNO)))
+    return sec("Почему это удобно", "\n    %s\n    %s" % (h2(UDOBNO_H), cards(UDOBNO)), fon="barhat")
 
 
 def sec_viola():
@@ -762,7 +786,7 @@ def sec_tarify():
     <div class="op-tarify">%s
     </div>%s
     <p class="op-oplata">%s</p>""" % (h2(TARIFY_H, " op-center"), "".join(kartochki), niz, nbsp_tail(TARIFY_POD)),
-               "op-barhat", "stoimost")
+               "op-barhat", "stoimost", "koridor")
 
 
 def sec_voprosy():
@@ -775,7 +799,7 @@ def sec_voprosy():
     <div class="op-voprosy-head">%s%s</div>
     <div class="op-faq">%s
     </div>""" % (h2(VOPROSY_H), predmet("o-pismo", "Письмо с сургучной печатью", "op-pismo"), items),
-               "op-svetlyy op-narrow", "voprosy")
+               "op-svetlyy op-narrow", "voprosy", "bumaga")
 
 
 def sec_final():
@@ -796,7 +820,7 @@ def sec_final():
     </div>
   </div>
   %(fon)s
-</section>""" % {"fon": fon("final", "Виола Маро на диване у изумрудной стены", lazy=True), "h": nbsp_tail(FINAL_H % PERVAYA_VSTRECHA),
+</section>""" % {"fon": fon("final", "", lazy=True), "h": nbsp_tail(FINAL_H % PERVAYA_VSTRECHA),
                  "t": nbsp_tail(FINAL_TEXT), "knopki": knopki, "pod": pod}
 
 
