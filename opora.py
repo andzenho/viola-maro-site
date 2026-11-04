@@ -77,8 +77,9 @@ TITLE = "Опора: закрытый клуб психолога Виолы М�
 # 1. Первый экран (правки Артёма 04.11.2026, форма как у менторства Пырикова).
 HERO_NAZVANIE = "ОПОРА"
 HERO_PODPIS = "клуб Виолы Маро"          # под названием справа, с наездом на буквы
-PLASHKA_START = "Старт %s"               # PERVAYA_VSTRECHA, слева от головы
-PLASHKA_NABOR = "Набор до %s"            # NABOR_DO, справа от головы, пока набор открыт
+# Две плашки сверху, как «Старт: / 14 апреля» у Пырикова: подпись и дата жирным.
+PLASHKA_START = "Старт:"                 # дата — PERVAYA_VSTRECHA
+PLASHKA_NABOR = "Набор до:"              # дата — NABOR_DO, только пока набор открыт
 BTN_KLUB = "Вступить в клуб"
 BTN_LIST = "Встать в лист ожидания"
 POD_OTKRYT = "Осталось %(n)d %(mest)s из %(vsego)d"
@@ -524,7 +525,7 @@ def sec_hero():
     mentorstvo2025), правки Артёма 04.11.2026.
 
     Первый экран: слово ОПОРА на всю ширину, под ним справа подпись «клуб
-    Виолы Маро», Виола у стены, по бокам от её головы две плашки, кнопка
+    Виолы Маро», Виола у стены, сверху две плашки (старт и конец набора), кнопка
     по центру на уровне груди, под ней строка мест. Когда есть файлы слоёв
     (sloi()), Виола-вырезка стоит поверх слова: голова перекрывает низ букв.
     Пока их нет, слово стоит над головой на растворённой стене.
@@ -533,9 +534,10 @@ def sec_hero():
     с определением, чашка и плашка первой встречи, справа задачи."""
     on = otkryt()
     knopka = btn(BTN_KLUB, "#stoimost", " op-btn-hero") if on else btn(BTN_LIST, ssylka("list"), " op-btn-hero")
-    plashki = '<p class="op-plashka op-plashka-l">%s</p>' % (PLASHKA_START % PERVAYA_VSTRECHA)
-    if on:
-        plashki += '<p class="op-plashka op-plashka-r">%s</p>' % (PLASHKA_NABOR % NABOR_DO)
+    pl = [(PLASHKA_START, PERVAYA_VSTRECHA)] + ([(PLASHKA_NABOR, NABOR_DO)] if on else [])
+    plashki = '<span class="op-pl-tochka" aria-hidden="true"></span>'.join(
+        '<p class="op-pl"><span>%s</span> <b>%s</b></p>' % x for x in pl)
+    plashki = '<div class="op-plashki-verh">%s</div>' % plashki
     slovo = ('<div class="op-slovo"><p class="op-nazvanie">%s</p>'
              '<p class="op-podpis">%s</p></div>' % (HERO_NAZVANIE, HERO_PODPIS))
     cta = '<div class="op-hero-cta">%s<p class="op-mest">%s</p></div>' % (knopka, stroka_mest())
@@ -547,21 +549,21 @@ def sec_hero():
                    'alt="Виола Маро" width="%d" height="%d" decoding="async" fetchpriority="high">'
                    % (u, srcset(made), w, h))
         scena = """
+  %s
   <div class="op-hero-foto op-sloi">
     %s
     %s
     %s
     %s
-    %s
-  </div>""" % (fon_html, slovo, vyrezka, plashki, cta)
+  </div>""" % (plashki, fon_html, slovo, vyrezka, cta)
     else:
         scena = """
+  %s
   %s
   <div class="op-hero-foto">
     %s
     %s
-    %s
-  </div>""" % (slovo, fon("hero", "Виола Маро у изумрудной стены", lazy=False), plashki, cta)
+  </div>""" % (plashki, slovo, fon("hero", "Виола Маро у изумрудной стены", lazy=False), cta)
 
     nazv, ostalnoe = HERO_H.split(" – ", 1)
     ostalnoe = esc(ostalnoe).replace(esc(HERO_AKCENT), "<b class=\"op-akcent-slova\">%s</b>" % esc(HERO_AKCENT), 1)

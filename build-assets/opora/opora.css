@@ -270,23 +270,31 @@ body.op {
 .op-vyrezka { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .op-sloi .op-podpis { z-index: 3; }
 
-/* Плашки по бокам от головы. */
-.op-plashka {
-  position: absolute;
-  z-index: 3;
-  top: calc(var(--fh) * .38);
-  max-width: 30%;
-  padding: 7px 12px;
+/* Две плашки сверху, как «Старт: / Длительность:» у Пырикова: тёмные
+   скруглённые карточки вплотную, между ними светящаяся точка. */
+.op-plashki-verh { position: relative; z-index: 3; display: flex; justify-content: center; align-items: center; margin: 0 auto 18px; padding: 0 16px; }
+.op-pl {
+  min-width: 132px;
+  padding: 10px 18px 11px;
   background: var(--panel);
-  border: 1px solid var(--gold);
-  border-radius: 8px;
+  border-radius: 14px;
   color: var(--text);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 15px;
   line-height: 1.3;
 }
-.op-plashka-l { left: 12px; }
-.op-plashka-r { right: 12px; }
+.op-pl span { display: block; }
+.op-pl b { display: block; font-weight: 700; font-size: 16px; }
+.op-pl-tochka {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin: 0 -6px;
+  border-radius: 50%;
+  background: var(--rose);
+  box-shadow: 0 0 10px 2px rgba(232, 200, 202, .7);
+}
 
 /* Кнопка по центру на уровне груди, поверх фото. */
 .op-hero-cta { position: absolute; z-index: 4; left: 16px; right: 16px; top: calc(var(--fh) * .6); }
@@ -685,9 +693,10 @@ body.op {
   }
   .op-sloi > .op-fon { margin-top: 0; }
   .op-sloi .op-slovo { top: calc(var(--fh) * .13); }
-  .op-plashka { top: calc(var(--fh) * .36); font-size: 15px; padding: 10px 18px; max-width: none; }
-  .op-plashka-l { left: auto; right: 64%; }
-  .op-plashka-r { right: auto; left: 64%; }
+  .op-plashki-verh { margin-bottom: 22px; }
+  .op-pl { min-width: 190px; padding: 12px 26px 13px; font-size: 17px; border-radius: 16px; }
+  .op-pl b { font-size: 19px; }
+  .op-pl-tochka { width: 14px; height: 14px; margin: 0 -7px; }
   .op-hero-cta { left: 50%; right: auto; width: 340px; margin-left: -170px; top: calc(var(--fh) * .58); }
   .op-celi { padding-bottom: 96px; }
   .op-celi-panel { grid-template-columns: 1fr 1fr; gap: 56px; padding: 52px 56px 56px; }
