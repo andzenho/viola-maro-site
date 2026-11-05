@@ -45,6 +45,8 @@ CENY_EUR = {"1m": "", "3m": ""}            # пусто, значит евро �
 SSYLKI = {"1m": "", "3m": "", "list": ""}  # куда ведут кнопки
 OFERTA = ""                  # оферта клуба, пока её нет
 VIDEO = ""                   # видео на 8 минут, пусто, значит блок без видео
+VIDEO_M1 = "video/m1-fragment.mp4"   # фрагмент встречи в первой карточке «Каждый месяц вы получаете»,
+                                     # обложка рядом: video/m1-poster.jpg; пусто, значит без видео
 # ═══════════════════════════════════════════════════════════════════════
 
 OUT = os.path.join(build.ROOT, "site")
@@ -58,6 +60,15 @@ WARN = []
 def otkryt():
     """Набор открыт, только если он открыт в конфиге и места остались."""
     return NABOR_OTKRYT and MEST_OSTALOS > 0
+
+
+def minut(n):
+    """«минут» по числу: 1 минута, 2 минуты, 10 минут."""
+    if n % 10 == 1 and n % 100 != 11:
+        return "минута"
+    if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14:
+        return "минуты"
+    return "минут"
 
 
 def mest(n):
@@ -239,6 +250,10 @@ POLUCHAETE = [   # только заголовки карточек, без оп
     "Фильм-терапия",
     "Чат сообщества",
 ]
+# Видео в первой карточке (ТЗ Артёма 05.11.2026). [N] минут считается по файлу.
+VIDEO_M1_NAD = "Посмотрите, как проходит встреча в клубе"
+VIDEO_M1_TEMA = ("Фрагмент встречи с Виолой: почему вас тянет к людям, которых надо спасать, "
+                 "и один вопрос, который вас остановит")
 POLUCHAETE_POD = "Всё это лежит только в закрытом клубе, в открытом доступе этого нет"
 POLUCHAETE_IKONKI = ["o-klyuchi", "o-mikrofon", "o-proektor", "o-tetrad", "o-chasy", "o-kino", "o-pismo"]
 PODARKI_H = "В день вступления вас уже ждут"
@@ -736,6 +751,65 @@ def bloknot_style():
     return ' style="%s"' % "; ".join(var)
 
 
+def mp4_sekundy(path):
+    """Длительность mp4 по заголовку mvhd, без ffprobe (его нет в сборке на GitHub)."""
+    import struct
+    with open(path, "rb") as f:
+        data = f.read(4 << 20)
+        i = data.find(b"mvhd")
+        if i < 0:   # moov в конце файла
+            f.seek(max(0, os.path.getsize(path) - (4 << 20)))
+            data = f.read()
+            i = data.find(b"mvhd")
+    if i < 0:
+        raise SystemExit("опора: в %s не найдена длительность (mvhd)" % path)
+    ver = data[i + 4]
+    if ver == 1:
+        scale, dur = struct.unpack(">IQ", data[i + 24:i + 36])
+    else:
+        scale, dur = struct.unpack(">II", data[i + 16:i + 24])
+    return dur / scale
+
+
+def video_m1_dlit():
+    n = max(1, round(mp4_sekundy(os.path.join(SRC, VIDEO_M1)) / 60))
+    return "(%d %s)" % (n, minut(n))
+
+
+def video_m1():
+    """Фрагмент встречи в первой карточке блокнота: подпись и видео со своего
+    сайта в тёмной вставке. --text и --rose читаются только на тёмном
+    (на кремовой карточке контраст около 1,2 : 1), поэтому вставка --izumrud."""
+    vid = os.path.join(SRC, VIDEO_M1)
+    poster = os.path.join(os.path.dirname(vid), "m1-poster.jpg")
+    for f in (vid, poster):
+        if not os.path.isfile(f):
+            raise SystemExit("опора: нет файла %s" % os.path.relpath(f, build.ROOT))
+    os.makedirs(os.path.join(DEST, os.path.dirname(VIDEO_M1)), exist_ok=True)
+    shutil.copy2(vid, os.path.join(DEST, VIDEO_M1))
+    poster_rel = os.path.join(os.path.dirname(VIDEO_M1), "m1-poster.jpg")
+    shutil.copy2(poster, os.path.join(DEST, poster_rel))
+    return """
+        <div class="op-bl-video">
+          <p class="op-bl-video-nad">%s</p>
+          <p class="op-bl-video-tema">%s</p>
+          <p class="op-bl-video-dlit">%s</p>
+          <div class="op-bl-video-ramka">
+            <video controls playsinline preload="none" poster="/opora/%s?v=%s" src="/opora/%s?v=%s"></video>
+            <button class="op-play" type="button" aria-label="Смотреть фрагмент встречи" hidden></button>
+          </div>
+        </div>""" % (VIDEO_M1_NAD, nbsp_tail(VIDEO_M1_TEMA), video_m1_dlit(),
+                     poster_rel, file_hash(poster), VIDEO_M1, file_hash(vid))
+
+
+# Круглая кнопка play поверх обложки: без JS её нет, работают обычные controls.
+PLAY_JS = ("document.querySelectorAll('.op-bl-video-ramka').forEach(function(r){"
+           "var v=r.querySelector('video'),b=r.querySelector('.op-play');if(!v||!b)return;"
+           "b.hidden=false;b.addEventListener('click',function(){v.play();});"
+           "v.addEventListener('play',function(){b.hidden=true;});"
+           "v.addEventListener('ended',function(){b.hidden=false;});});")
+
+
 def sec_poluchaete():
     """«Каждый месяц вы получаете» раскрытым блокнотом на кольцах в бордовом
     переплёте (вариант Артёма 05.11.2026, по референсу «Гранд Будапешт»).
@@ -745,13 +819,16 @@ def sec_poluchaete():
     Слева заголовок и первые пункты, справа остальные, итог в самом конце."""
     def punkt(i, t):
         k = "pk-%d" % (i + 1)
+        if i == 0 and VIDEO_M1:   # первая карточка: текст, под ним фрагмент встречи
+            t = re.sub(r"(\w+-\w+)", r'<span class="g-nw">\1</span>', nbsp_tail(t))
+            return '<li class="op-bl-li-video"><h3>%s</h3>%s</li>' % (t, video_m1())
         pic = img(k, "", (320, 490), "(max-width: 899px) 86vw, 150px", "op-bl-foto") if find_src(k) else ""
         # хвост склеиваем только в длинном заголовке: «и практические задания» одним куском не влезает
         t = nbsp_tail(t) if len(t.split()) > 6 else t
         t = re.sub(r"(\w+-\w+)", r'<span class="g-nw">\1</span>', t)   # «онлайн-встречи» не рвётся
         return '<li>%s<h3>%s</h3></li>' % (pic, t)
     pp = [punkt(i, t) for i, t in enumerate(POLUCHAETE)]
-    polov = 3   # слева заголовок и три карточки, справа четыре и итог: страницы ровнее
+    polov = 2   # слева заголовок, карточка с видео и «Подкасты», справа пять и итог: страницы ровнее
     kolca = '<i></i>' * 14
     kolca_tel = ''   # на телефоне кольца в картинке tel-top
     return """
@@ -942,7 +1019,9 @@ def page():
             # не <main>: правила общего site.css вида «main h2 {… !important}» писались
             # для страниц практикума и перекрашивали бы клуб
             + '<div id="main" class="op-main" role="main">' + body + "</div>\n" + podval() + build.COOKIE_HTML
-            + "<script>%s</script>\n</body>\n</html>\n" % build.COOKIE_JS)
+            + "<script>%s</script>\n" % build.COOKIE_JS
+            + ("<script>%s</script>\n" % PLAY_JS if VIDEO_M1 else "")
+            + "</body>\n</html>\n")
 
 
 def check(text):
@@ -1012,6 +1091,10 @@ def sverka(text):
             continue
         if elem == "Видео" and not VIDEO:
             continue
+        if elem == "Видео в карточке" and not VIDEO_M1:
+            continue
+        if elem == "Видео в карточке" and t == "([N] минут)":
+            t = video_m1_dlit()
         if "когда набор закрыт" in elem and on:
             continue
         polnyy = MEST_OSTALOS == MEST_VSEGO
