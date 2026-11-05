@@ -811,21 +811,20 @@ body.op {
 
 .op-dk-h { text-align: center; color: var(--text); font-size: clamp(28px, 7vw, 46px); margin-bottom: 36px; }
 .op-h2-akc { color: var(--rose); }
-.op-dk-cards { display: grid; gap: 14px; max-width: 1080px; margin: 0 auto; }
+.op-dk-cards { display: grid; gap: 18px; max-width: 1120px; margin: 0 auto; }
+/* Карточка: сверху картинка-ситуация, под ней номер и текст (05.11.2026). */
 .op-dk-card {
-  display: grid;
-  grid-template-columns: 52px 1fr;
-  gap: 14px;
-  align-items: center;
-  padding: 22px 22px 22px 18px;
+  display: flex;
+  flex-direction: column;
   background: var(--svetlyy);
   color: var(--izumrud);
   border-radius: 10px;
-  outline: 1px solid var(--gold);
-  outline-offset: -7px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--gold), 0 18px 30px -18px rgba(0, 0, 0, .6);
 }
-/* у Prata единица похожа на «l»: номера жирным Golos */
-.op-dk-num { font-family: var(--golos); font-weight: 700; font-size: 34px; line-height: 1; letter-spacing: -.02em; color: var(--wine); text-align: center; }
+.op-dk-img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; }
+.op-dk-t { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; padding: 20px 20px 22px; }
+.op-dk-num { font-family: var(--golos); font-weight: 700; font-size: 30px; line-height: 1; letter-spacing: -.02em; color: var(--wine); }
 .op-dk-card p { font-size: 18px; line-height: 1.45; text-wrap: pretty; }
 .op-dk-card b { font-weight: 700; color: var(--wine); }
 .op-dk-itog {
@@ -842,10 +841,13 @@ body.op {
 }
 
 @media (min-width: 760px) {
-  .op-dk-cards { grid-template-columns: 1fr 1fr; gap: 18px; }
-  .op-dk-card { padding: 26px 28px 26px 22px; grid-template-columns: 64px 1fr; }
-  .op-dk-num { font-size: 40px; }
+  .op-dk-cards { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .op-dk-img { aspect-ratio: 4 / 3; }
   .op-dk-h { margin-bottom: 44px; }
+}
+@media (min-width: 1024px) {
+  .op-dk-cards { grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .op-dk-card p { font-size: 17px; }
 }
 
 /* ───────────────────────────────────── последний экран: стойка консьержа ── */
@@ -964,13 +966,40 @@ body.op {
 .op-bl[style] .op-bl-str + .op-bl-str { padding-top: 6px; border-top: 1px dashed rgba(123, 25, 33, .3); }
 .op-bl[style] .op-bl-kolca-tel {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   position: absolute;
-  left: -14px;
-  right: -14px;
-  top: -84px;
+  left: 10px;
+  right: 10px;
+  top: -70px;          /* от верхнего края листа (обложка 46px) кольца поднимаются на 24px */
+  z-index: 2;
+  pointer-events: none;
 }
-.op-bl-kolca-tel i { display: block; width: 22px; height: 70px; background: var(--bl-ring-v) center / contain no-repeat; }
+/* Кольцо: латунная петля без фона, нижним концом уходит в дырочку на бумаге. */
+.op-bl-kolca-tel i { position: relative; display: block; width: 14px; height: 60px; }
+.op-bl-kolca-tel b {
+  position: absolute;
+  inset: 0 0 6px;
+  border: 3px solid transparent;
+  border-radius: 7px;
+  background: linear-gradient(to right, #5E4320, #E9CB8C 38%, #F6E2B0 50%, #B8935C 72%, #4E3618) border-box;
+  -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0);
+  filter: drop-shadow(0 2px 1.5px rgba(0, 0, 0, .55));
+}
+/* дырочка в бумаге, в которую входит кольцо */
+.op-bl-kolca-tel i::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 12px;
+  height: 9px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 40%, #1E140E 55%, #4A3424);
+  z-index: -1;
+}
 
 @media (min-width: 900px) {
   .op-bl[style] {
