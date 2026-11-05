@@ -560,7 +560,9 @@ def sec_hero():
     определение и задачи, на компьютере только задачи (определение уже
     стоит в оффере слева на первом экране)."""
     on = otkryt()
-    knopka = btn(BTN_KLUB % CENY["1m"], ssylka("1m"), " op-btn-hero")   # сразу в бот на месяц (Артём 05.11.2026) if on else btn(BTN_LIST, ssylka("list"), " op-btn-hero")
+    # пока набор открыт, сразу в бот на месяц (Артём 05.11.2026)
+    knopka = (btn(BTN_KLUB % CENY["1m"], ssylka("1m"), " op-btn-hero") if on
+              else btn(BTN_LIST, ssylka("list"), " op-btn-hero"))
     if on:
         vtoraya = (PLASHKA_NABOR, NABOR_DO)
     else:
@@ -925,8 +927,10 @@ def podval():
 def page():
     hero = sec_hero()
     body = "".join([
-        sec_dlya_kogo(), sec_poluchaete(), sec_otzyvy(), sec_izmenitsya(), sec_chto(), sec_mesyac(), sec_tri(),
-        sec_vhodit(), sec_udobno(), sec_viola(), sec_risk(), sec_tarify(), sec_voprosy(), sec_final(),
+        sec_dlya_kogo(), sec_poluchaete(), sec_otzyvy(),
+        # 05.11.2026 Артём убрал все блоки после отзывов. Их функции остались, чтобы вернуть:
+        # sec_izmenitsya, sec_chto, sec_mesyac, sec_tri, sec_vhodit, sec_udobno, sec_viola,
+        # sec_risk, sec_tarify, sec_voprosy, sec_final. Тексты в opora-teksty.md, раздел «Убрано со страницы».
     ])
     body = typograf(hero + body)
     # «10–15» и «35–44» не рвутся по короткому тире
