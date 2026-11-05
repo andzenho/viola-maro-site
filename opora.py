@@ -82,7 +82,7 @@ PLASHKA_START = "Старт:"                 # дата — PERVAYA_VSTRECHA
 PLASHKA_NABOR = "Набор до:"              # дата — NABOR_DO, пока набор открыт
 # Набор закрыт: вторая плашка «Следующий набор: <SLED_NABOR>», без даты «Набор: закрыт».
 PLASHKA_SLED = ("Следующий набор:", "Набор:", "закрыт")
-BTN_KLUB = "Вступить в клуб"
+BTN_KLUB = "Подписаться за %s"          # цена из CENY["1m"] (Артём 05.11.2026)
 BTN_LIST = "Встать в лист ожидания"
 POD_OTKRYT = "Осталось %(n)d %(mest)s из %(vsego)d"
 POD_POLNYY = "В первом наборе %(vsego)d %(mest)s"   # пока не продано ни одного места (MEST_OSTALOS == MEST_VSEGO)
@@ -560,7 +560,7 @@ def sec_hero():
     определение и задачи, на компьютере только задачи (определение уже
     стоит в оффере слева на первом экране)."""
     on = otkryt()
-    knopka = btn(BTN_KLUB, "#stoimost", " op-btn-hero") if on else btn(BTN_LIST, ssylka("list"), " op-btn-hero")
+    knopka = btn(BTN_KLUB % CENY["1m"], "#stoimost", " op-btn-hero") if on else btn(BTN_LIST, ssylka("list"), " op-btn-hero")
     if on:
         vtoraya = (PLASHKA_NABOR, NABOR_DO)
     else:
@@ -754,7 +754,7 @@ def sec_poluchaete():
     pp = [punkt(i, t, d) for i, (t, d) in enumerate(POLUCHAETE)]
     polov = 3
     kolca = '<i></i>' * 14
-    kolca_tel = '<i><b></b></i>' * 9
+    kolca_tel = ''   # на телефоне кольца в картинке tel-top
     return """
 <section class="op-sec op-sfon op-sfon-derevo op-blk" data-blok="Каждый месяц вы получаете"%s>
   <div class="op-in">
@@ -1023,6 +1023,7 @@ def sverka(text):
         t = (t.replace("[дата]", NABOR_DO if "открыт до" in t else SLED_NABOR or "[дата]")
               .replace("[17 ноября]", PERVAYA_VSTRECHA)
               .replace("[12 ноября]", NABOR_DO)
+              .replace("[4 990 ₽]", CENY["1m"])
               .replace("[N] мест из [50]", "%d %s из %d" % (MEST_OSTALOS, mest(MEST_OSTALOS), MEST_VSEGO))
               .replace("[N] мест", "%d %s" % (MEST_OSTALOS, mest(MEST_OSTALOS)))
               .replace("[50] мест", "%d %s" % (MEST_VSEGO, mest(MEST_VSEGO))))

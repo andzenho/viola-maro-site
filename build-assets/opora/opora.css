@@ -950,56 +950,24 @@ body.op {
    с кольцами посередине. Без картинок остаётся кремовая страница. */
 
 .op-bl-kolca, .op-bl-kolca-tel { display: none; }
+/* Телефон: блокнот на пружине сверху (картинка Артёма 05.11.2026), разрезан
+   на три части: верх с кольцами и низ с уголками масштабируются целиком,
+   кольца не тянутся; середина листа тянется под текст. */
 .op-bl[style] {
   background: none;
   box-shadow: none;
-  position: relative;
-  margin-top: 40px;
-  border-style: solid;
-  border-width: 46px 26px 46px 26px;
-  border-image: var(--bl-page) 104 111 104 111 fill / 46px 32px 46px 32px stretch;
-  margin-left: -8px;
-  margin-right: -8px;
-  filter: drop-shadow(0 26px 30px rgba(0, 0, 0, .55));
+  margin: 24px -8px 0;
+  filter: drop-shadow(0 22px 26px rgba(0, 0, 0, .55));
 }
-.op-bl[style] .op-bl-str { padding: 0 0 6px; }
-.op-bl[style] .op-bl-str + .op-bl-str { padding-top: 6px; border-top: 1px dashed rgba(123, 25, 33, .3); }
-.op-bl[style] .op-bl-kolca-tel {
-  display: flex;
-  justify-content: space-around;
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  top: -70px;          /* от верхнего края листа (обложка 46px) кольца поднимаются на 24px */
-  z-index: 2;
-  pointer-events: none;
-}
-/* Кольцо: латунная петля без фона, нижним концом уходит в дырочку на бумаге. */
-.op-bl-kolca-tel i { position: relative; display: block; width: 14px; height: 60px; }
-.op-bl-kolca-tel b {
-  position: absolute;
-  inset: 0 0 6px;
-  border: 3px solid transparent;
-  border-radius: 7px;
-  background: linear-gradient(to right, #5E4320, #E9CB8C 38%, #F6E2B0 50%, #B8935C 72%, #4E3618) border-box;
-  -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-          mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0);
-  filter: drop-shadow(0 2px 1.5px rgba(0, 0, 0, .55));
-}
-/* дырочка в бумаге, в которую входит кольцо */
-.op-bl-kolca-tel i::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 12px;
-  height: 9px;
-  margin-left: -6px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at 50% 40%, #1E140E 55%, #4A3424);
-  z-index: -1;
-}
+.op-bl[style]::before,
+.op-bl[style]::after { content: ""; display: block; background-position: 0 0; background-size: 100% 100%; background-repeat: no-repeat; }
+.op-bl[style]::before { aspect-ratio: 947 / 180; background-image: var(--bl-tel-top); }
+.op-bl[style]::after { aspect-ratio: 947 / 107; background-image: var(--bl-tel-bot); }
+.op-bl[style] .op-bl-str { padding: 2px 9% 8px; background: var(--bl-tel-mid) 0 0 / 100% 100% no-repeat; }
+/* части листа заходят друг на друга на 2px: иначе в зазор доли пикселя просвечивает фон */
+.op-bl[style] .op-bl-str, .op-bl[style]::after { margin-top: -2px; }
+.op-bl[style] .op-bl-str + .op-bl-str { border-top: 0; padding-top: 0; }
+.op-bl[style] .op-bl-kolca-tel { display: none; }
 
 @media (min-width: 900px) {
   .op-bl[style] {
@@ -1009,6 +977,8 @@ body.op {
     grid-template-columns: 1fr 102px 1fr;
   }
   .op-bl[style] .op-bl-kolca-tel { display: none; }
+  .op-bl[style]::before, .op-bl[style]::after { display: none; }
+  .op-bl[style] .op-bl-str { background: none; margin-top: 0; }
   .op-bl[style] .op-bl-str { border-style: solid; border-color: transparent; }
   .op-bl[style] .op-bl-str:first-child,
   .op-bl[style] .op-bl-kolca-tel + .op-bl-str {
@@ -1018,6 +988,7 @@ body.op {
   }
   .op-bl[style] .op-bl-str:last-child {
     border-width: 75px 80px 75px 0;
+    border-top-style: solid;
     border-image: var(--bl-r) 104 111 104 0 fill / 75px 80px 75px 0 stretch;
     padding: 10px 14px 0 34px;
   }
