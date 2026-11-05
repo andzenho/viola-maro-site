@@ -856,35 +856,116 @@ body.op {
 .op-sfon:not(.op-sfon-bumaga) :is(.op-niz, .op-oplata, .op-lead) { color: var(--text); }
 
 /* ─────────────────────────────────────── «Каждый месяц вы получаете» ── */
-/* ТЗ 04.11.2026: фон --svetlyy, текст --izumrud, заголовок Prata --wine;
-   семь карточек с тонкой обводкой --gold, на компьютере 3 + 3 и седьмая
-   во всю ширину, на телефоне один столбец. */
+/* Раскрытый блокнот на латунных кольцах в бордовом переплёте на дубовой
+   стене (референс «Гранд Будапешт»). Все пункты одинаковые. На телефоне
+   страницы идут одна под другой, кольца лежат между ними. */
 
-.op-sv { background: var(--svetlyy); color: var(--izumrud); }
-.op-sv + .op-svetlyy { background: var(--svetlyy); }   /* углы арки «Отзывов» под светлым экраном */
-.op-pk-h { color: var(--wine); text-align: center; }
-.op-pk-cards { display: grid; gap: 14px; }
-.op-pk {
-  padding: 24px 24px 26px;
-  background: #fff;
-  border: 1px solid var(--gold);
-  border-radius: 10px;
+.op-bl {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  background: #F1E2C6;   /* тон бумаги блокнота */
+  color: var(--izumrud);
+  border-radius: 8px;
+  box-shadow: 0 0 0 12px var(--wine), 0 0 0 13px rgba(184, 147, 92, .7), 0 34px 60px -18px rgba(0, 0, 0, .75);
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
-.op-pk h3 { font-family: var(--golos); font-weight: 700; font-size: 19px; line-height: 1.3; color: var(--izumrud); margin-bottom: 8px; text-wrap: balance; }
-.op-pk p { font-size: 17px; line-height: 1.5; text-wrap: pretty; }
-.op-pk-1 h3 { font-size: 24px; color: var(--wine); }
-.op-pk-pod {
-  max-width: 720px;
-  margin: 32px auto 0;
-  text-align: center;
+.op-bl-str { padding: 30px 22px; }
+.op-bl-h {
+  font-family: var(--prata);
+  font-weight: 400;
+  font-size: clamp(26px, 6vw, 40px);
+  line-height: 1.15;
+  letter-spacing: .05em;
   color: var(--wine);
-  font-weight: 600;
-  font-size: 19px;
-  line-height: 1.45;
   text-wrap: balance;
+  padding-bottom: 20px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(184, 147, 92, .7);
+}
+.op-bl-list li { display: grid; grid-template-columns: 50px 1fr; gap: 12px; align-items: center; padding: 16px 0; border-bottom: 1px dashed rgba(123, 25, 33, .3); }
+.op-bl-list li:last-child { border-bottom: 0; }
+.op-bl-img { width: 50px; height: 50px; object-fit: contain; }
+.op-bl-list h3 { font-family: var(--golos); font-weight: 700; font-size: 18px; line-height: 1.3; color: var(--wine); margin-bottom: 4px; text-wrap: balance; }
+.op-bl-list p { font-size: 17px; line-height: 1.45; text-wrap: pretty; }
+.op-bl-pod {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--wine);
+  border-radius: 6px;
+  color: var(--wine);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.45;
+  text-align: center;
+  text-wrap: balance;
+  transform: rotate(-1deg);
 }
 
-@media (min-width: 1024px) {
-  .op-pk-cards { grid-template-columns: repeat(3, 1fr); gap: 18px; }
-  .op-pk-shir { grid-column: 1 / -1; }
+/* Блокнот из картинки (build-assets/opora/bloknot/, части в переменных
+   --bl-*). Телефон: один лист в бордовой обложке, сверху ряд колец, как
+   у блокнота на пружине сверху. Компьютер: две страницы и корешок
+   с кольцами посередине. Без картинок остаётся кремовая страница. */
+
+.op-bl-kolca, .op-bl-kolca-tel { display: none; }
+.op-bl[style] {
+  background: none;
+  box-shadow: none;
+  position: relative;
+  margin-top: 40px;
+  border-style: solid;
+  border-width: 46px 26px 46px 26px;
+  border-image: var(--bl-page) 104 111 104 111 fill / 46px 32px 46px 32px stretch;
+  margin-left: -8px;
+  margin-right: -8px;
+  filter: drop-shadow(0 26px 30px rgba(0, 0, 0, .55));
+}
+.op-bl[style] .op-bl-str { padding: 0 0 6px; }
+.op-bl[style] .op-bl-str + .op-bl-str { padding-top: 6px; border-top: 1px dashed rgba(123, 25, 33, .3); }
+.op-bl[style] .op-bl-kolca-tel {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  left: -14px;
+  right: -14px;
+  top: -84px;
+}
+.op-bl-kolca-tel i { display: block; width: 22px; height: 70px; background: var(--bl-ring-v) center / contain no-repeat; }
+
+@media (min-width: 900px) {
+  .op-bl[style] {
+    border: 0;
+    border-image: none;
+    margin: 0 auto;
+    grid-template-columns: 1fr 102px 1fr;
+  }
+  .op-bl[style] .op-bl-kolca-tel { display: none; }
+  .op-bl[style] .op-bl-str { border-style: solid; border-color: transparent; }
+  .op-bl[style] .op-bl-str:first-child,
+  .op-bl[style] .op-bl-kolca-tel + .op-bl-str {
+    border-width: 75px 0 75px 80px;
+    border-image: var(--bl-l) 104 0 104 111 fill / 75px 0 75px 80px stretch;
+    padding: 10px 34px 0 14px;
+  }
+  .op-bl[style] .op-bl-str:last-child {
+    border-width: 75px 80px 75px 0;
+    border-image: var(--bl-r) 104 111 104 0 fill / 75px 80px 75px 0 stretch;
+    padding: 10px 14px 0 34px;
+  }
+  .op-bl[style] .op-bl-kolca {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 50px 0;
+    background:
+      var(--bl-spine-top) top / 100% auto no-repeat,
+      var(--bl-spine-bot) bottom / 100% auto no-repeat,
+      var(--bl-spine-strip) 0 0 / 100% auto repeat-y;
+  }
+  .op-bl[style] .op-bl-kolca i { display: block; width: 100%; height: 32px; background: var(--bl-ring) center / 100% auto no-repeat; box-shadow: none; }
+  .op-bl[style] .op-bl-kolca i::before, .op-bl[style] .op-bl-kolca i::after { display: none; }
+  .op-bl-str { padding: 48px 46px; }
+  .op-bl-img { width: 76px; height: 76px; }
+  .op-bl-list li { grid-template-columns: 76px 1fr; gap: 18px; }
 }

@@ -229,6 +229,7 @@ POLUCHAETE = [   # (название, описание)
     ("Чат сообщества", "Закрытый чат эмпатов со всего мира, за порядком в нём следит команда Виолы"),
 ]
 POLUCHAETE_POD = "Всё это лежит только в закрытом клубе, в открытом доступе этого нет"
+POLUCHAETE_IKONKI = ["o-klyuchi", "o-mikrofon", "o-proektor", "o-tetrad", "o-chasy", "o-kino", "o-pismo"]
 PODARKI_H = "В день вступления вас уже ждут"
 PODARKI = [
     "Техника, которая за 10–15 минут помогает вернуть себе силы после тяжёлого разговора",
@@ -693,21 +694,56 @@ def sec_tri():
     <p class="op-niz">%s</p>""" % (h2(TRI_H), TRI_POD, items, nbsp_tail(TRI_NIZ)))
 
 
+def bloknot_style():
+    """Картинка блокнота разрезана на части в build-assets/opora/bloknot/
+    (страницы, корешок, кольца): блокнот тянется под любой текст, а кольца
+    и золотые уголки не искажаются. Части уходят в CSS переменными."""
+    d = os.path.join(SRC, "bloknot")
+    if not os.path.isdir(d):
+        WARN.append("нет build-assets/opora/bloknot/: блокнот нарисован стилями")
+        return ""
+    out = os.path.join(DEST, "bloknot")
+    os.makedirs(out, exist_ok=True)
+    var = []
+    for f in sorted(os.listdir(d)):
+        if f.endswith(".webp"):
+            shutil.copy2(os.path.join(d, f), os.path.join(out, f))
+            var.append("--bl-%s: url(/opora/bloknot/%s?v=%s)" % (f[:-5], f, file_hash(os.path.join(d, f))))
+    return ' style="%s"' % "; ".join(var)
+
+
 def sec_poluchaete():
-    """«Каждый месяц вы получаете»: семь карточек, первая с крупным
-    бордовым названием, последняя (чат) во всю ширину на компьютере."""
-    items = "".join('<li class="op-pk%s"><h3>%s</h3><p>%s</p></li>'
-                    % (" op-pk-1" if i == 0 else (" op-pk-shir" if i == len(POLUCHAETE) - 1 else ""),
-                       re.sub(r"(\w+-\w+)", r'<span class="g-nw">\1</span>', t), nbsp_tail(d))
-                    for i, (t, d) in enumerate(POLUCHAETE))   # «онлайн-встречи» не рвётся по дефису
+    """«Каждый месяц вы получаете» раскрытым блокнотом на кольцах в бордовом
+    переплёте (вариант Артёма 05.11.2026, по референсу «Гранд Будапешт»).
+    Все семь пунктов оформлены одинаково: предмет, название, описание.
+    Слева заголовок и первые пункты, справа остальные, итог в самом конце."""
+    def punkt(i, t, d):
+        k = POLUCHAETE_IKONKI[i]
+        pic = img(k, "", (160,), "64px", "op-bl-img") if find_src(k) else ""
+        t = re.sub(r"(\w+-\w+)", r'<span class="g-nw">\1</span>', t)   # «онлайн-встречи» не рвётся
+        return '<li>%s<div><h3>%s</h3><p>%s</p></div></li>' % (pic, t, nbsp_tail(d))
+    pp = [punkt(i, t, d) for i, (t, d) in enumerate(POLUCHAETE)]
+    polov = 3
+    kolca = '<i></i>' * 14
+    kolca_tel = '<i></i>' * 8
     return """
-<section class="op-sec op-sv" data-blok="Каждый месяц вы получаете">
+<section class="op-sec op-sfon op-sfon-derevo op-blk" data-blok="Каждый месяц вы получаете"%s>
   <div class="op-in">
-    <h2 class="op-h2 op-pk-h">%s</h2>
-    <ul class="op-pk-cards">%s</ul>
-    <p class="op-pk-pod">%s</p>
+    <div class="op-bl"%s>
+      <div class="op-bl-kolca-tel" aria-hidden="true">%s</div>
+      <div class="op-bl-str">
+        <h2 class="op-bl-h">%s</h2>
+        <ul class="op-bl-list">%s</ul>
+      </div>
+      <div class="op-bl-kolca" aria-hidden="true">%s</div>
+      <div class="op-bl-str">
+        <ul class="op-bl-list">%s</ul>
+        <p class="op-bl-pod">%s</p>
+      </div>
+    </div>
   </div>
-</section>""" % (POLUCHAETE_H, items, nbsp_tail(POLUCHAETE_POD))
+</section>""" % (fon_style("fon-derevo"), bloknot_style(), kolca_tel, POLUCHAETE_H, "".join(pp[:polov]), kolca, "".join(pp[polov:]),
+                 nbsp_tail(POLUCHAETE_POD))
 
 
 def sec_vhodit():
