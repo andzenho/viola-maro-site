@@ -74,56 +74,81 @@ def mest(n):
 
 TITLE = "Опора: закрытый клуб психолога Виолы Маро"
 
-# 1. Первый экран
-HERO_NAD = "Закрытый клуб психолога Виолы Маро в Телеграме"
-HERO_NAZVANIE = "Опора"
-HERO_H = ("За три месяца вы перестанете жить только для других и вернёте себе силы, "
-          "даже если близкие останутся прежними")
-HERO_POD = ("Каждый месяц я разбираю с вами одну сферу жизни, где сейчас уходят силы, "
-            "будь то муж, деньги, мама или работа. Вы учитесь отказывать без чувства вины "
-            "и возвращаться в себя после тяжёлых разговоров")
-DESCRIPTION = HERO_POD
-HERO_PLASHKI = [
-    "2 встречи со мной в месяц",
-    "Техники по 10–15 минут",
-    "Всё в Телеграме и в записи",
-    "Отменить можно в любой момент",
-]
+# 1. Первый экран (правки Артёма 04.11.2026, форма как у менторства Пырикова).
+HERO_NAD = "закрытый клуб Виолы Маро"                # мелко над словом ОПОРА
+HERO_NAZVANIE = "ОПОРА"
+# Две плашки сверху, как «Старт: / 14 апреля» у Пырикова: подпись и дата жирным.
+PLASHKA_START = "Старт:"                 # дата — PERVAYA_VSTRECHA
+PLASHKA_NABOR = "Набор до:"              # дата — NABOR_DO, пока набор открыт
+# Набор закрыт: вторая плашка «Следующий набор: <SLED_NABOR>», без даты «Набор: закрыт».
+PLASHKA_SLED = ("Следующий набор:", "Набор:", "закрыт")
 BTN_KLUB = "Вступить в клуб"
 BTN_LIST = "Встать в лист ожидания"
-POD_OTKRYT = "Набор открыт до %(do)s, осталось %(n)d %(mest)s из %(vsego)d"
+POD_OTKRYT = "Осталось %(n)d %(mest)s из %(vsego)d"
+POD_POLNYY = "В наборе %(vsego)d %(mest)s"   # пока не продано ни одного места (MEST_OSTALOS == MEST_VSEGO)
 POD_ZAKRYT = "Набор закрыт, следующий откроется %(sled)s, и участницы из листа ожидания узнают о нём первыми"
-HERO_MELKO = "Клуб вырос из моей программы «Прикладная эмпатия», её выбрали больше 100 человек"
 
-# 2. Отзывы: сфера, возраст, цитата
-OTZYVY_H = "Что пишут участницы моей программы"
-OTZYVY_POD = "Участницы рассказали это сами, имена остаются между ними и мной"
-OTZYVY = [
-    ("Отношения", "35–44 года",
-     "«Я рассталась с партнёром-нарциссом, на работе меньше болтаю о себе, стало намного лучше. "
-     "Я уже сейчас могу не реагировать, ставить блок на чужие эмоции»"),
-    ("Тревога", "35–44 года",
-     "«Я уже сейчас чувствую множество изменений. Снизился индекс тревоги, спасательства, стала "
-     "больше направлять фокус на свои интересы, желания»"),
-    ("Мама", "45–54 года",
-     "«Я просто в шоке от лекции. Вы заглянули внутрь моей жизни с токсичной матерью»"),
-    ("Уверенность", "45–54 года",
-     "«Я чувствую, что мои мозги встают на место, я становлюсь трезвой, сильной, уверенной»"),
-    ("Жизнь для себя", "55–64 года",
-     "«Такой конкретики и реальных практичных вещей я ни у кого не слышала! Я не жила, а сейчас, "
-     "кажется, начну жить»"),
+# 1.1. Блок «ОПОРА –»: светлая панель наезжает на низ фото. Слева
+# определение, справа задачи с галочками.
+HERO_H = ("ОПОРА – это закрытое пространство в Телеграме для чувствительных людей, которые вместе учатся "
+          "ценить себя и жить свою жизнь, а не только жизнь других")
+HERO_AKCENT = "ценить себя и жить свою жизнь, а не только жизнь других"   # жирным, --wine
+DESCRIPTION = HERO_H
+ZADACHI_H = "ЗАДАЧИ КЛУБА"
+ZADACHI_METKA = "ДЛЯ КАЖДОЙ УЧАСТНИЦЫ:"
+CELI = [   # часть до первой запятой выводится жирным
+    "Понять, почему вы так остро чувствуете людей, и перестать считать себя странной",
+    "Научиться отказывать без чувства вины и замечать, когда вашей добротой пользуются",
+    "Перестать прокручивать разговоры в голове и за 10–15 минут возвращать себе силы после тяжёлого общения",
+    "Оставаться собой рядом с мужем и близкими, а не растворяться в них",
+    "Каждый месяц разбирать одну сферу жизни, где уходят силы, и не оставаться с этим одной",
 ]
 
-# 3. Для кого
-DLYA_KOGO_H = "Клуб для вас, если вы"
-DLYA_KOGO = [
-    "всем помогаете, а когда плохо вам, рядом никого",
-    "уступаете и терпите, а потом весь вечер прокручиваете разговор в голове",
-    "видите, что вами пользуются, и всё равно остаётесь",
-    "принимаете близко к сердцу каждое слово и каждый взгляд",
-    "после плохих новостей и чужих жалоб чувствуете себя выжатой",
+# 2. Отзывы: «Что изменилось у участниц программ» (тексты Артёма 05.11.2026).
+# Слова участниц без внешних кавычек; внутренние, где она цитирует себя,
+# оставлены. Карточка: номер, сфера, крупная фраза, «было» → «стало».
+OTZYVY_H = "ЧТО ИЗМЕНИЛОСЬ У УЧАСТНИЦ ПРОГРАММ"
+OTZYVY_POD = "Их слова без изменений. Имена скрыты"
+OTZYVY = [   # (сфера, фраза, было, стало)
+    ("Своя ценность", "Это я сильная!",
+     "Раньше даже в голову не приходило, что можно сказать себе «Я выбираю себя» или спросить себя "
+     "«А где здесь я?»",
+     "Очень приятно говорить «нет» без объяснения причины, когда действительно хочется и нужно "
+     "сказать «нет»"),
+    ("Отношения", "За 3 месяца я «вернула себя себе»!",
+     "Бывший муж махровый манипулятор…",
+     "…но сейчас общение лучше, чем было в браке. Свекровь ждёт в гости!"),
+    ("После тяжёлых отношений", "Помолодела на 20 лет",
+     "У меня были очень сложные отношения с нарциссом после чего не верила в себя, считала что со мной "
+     "уже ничего хорошего не произойдёт",
+     "Я не боюсь больше жить, я сижу за рулём своей собственной жизни… мне кажется я помолодела "
+     "на 20 лет"),
+    ("Семья", "Живу не их жизнью, а своей",
+     "Раньше мне казалось, что когда я среди людей, мои проблемы решаются благодаря окружению",
+     "Дети, внуки, я теперь живу не их жизнью, а своей! И я вдруг поняла, что я сама себе нужна!"),
+    ("Понять себя", "Я не сумасшедшая",
+     "Я теряла и глушила свою интуицию и свой голос годами и пыталась подстроиться к людям что меня "
+     "окружают",
+     "Я не сумасшедшая, как мне мой собственный муж внушал очень много лет. И да я очень "
+     "чувствительная но это не диагноз и не приговор"),
+    ("Чувствительность", "Как будто я паровоз, который отцепил старые вагоны",
+     "Раньше я стыдилась своей чувствительности. Жизнь была как ад без чёрта",
+     "А теперь я чувствую себя нормальной и буду дальше развивать свою эмпатию и креативность"),
 ]
-DLYA_KOGO_POD = ("У вас сильная эмпатия, а пользоваться ей вас никто не учил. В клубе я учу этому, "
+OTZYVY_METKI = ("было", "стало")
+
+# 3. Для кого (правка Артёма 04.11.2026, форма как «Менторство подходит для:»
+# у Пырикова): номера 01–06, жирным выделена боль, справа на компьютере Виола.
+DLYA_KOGO_H = "ОПОРА ПОДХОДИТ ВАМ, ЕСЛИ ВЫ"
+DLYA_KOGO = [   # (обычным, жирным)
+    ("Живёте для других и всем помогаете, ", "а когда плохо вам, рядом никого"),
+    ("Уступаете и терпите, ", "а потом весь вечер прокручиваете разговор в голове"),
+    ("Видите, что вашей добротой пользуются, ", "и всё равно остаётесь"),
+    ("Принимаете всё близко к сердцу ", "и после чужих жалоб и плохих новостей чувствуете себя выжатой"),
+    ("Всё понимаете в теории, читали книги и ходили к психологу, ", "а в жизни снова уступаете"),
+    ("Прошли «Прикладную эмпатию» и хотите, ", "чтобы техники стали привычкой, а не остались в записях"),
+]
+DLYA_KOGO_POD = ("У вас сильная эмпатия, а пользоваться ей вас никто не учил. В клубе я учу этому "
                  "по одной сфере жизни в месяц")
 
 # 4. Что изменится
@@ -151,7 +176,7 @@ CHTO_TEXT = ("Закрытый клуб в Телеграме, где кажды
 SFERY = ["Своя опора", "Муж и отношения", "Деньги", "Мама", "Дети", "Работа"]
 
 # 6. Как проходит месяц в клубе
-MESYAC_H = "Как проходит месяц в клубе"
+MESYAC_H = "Расписание клуба"   # Артём 05.11.2026, было «Как проходит месяц в клубе»
 SHAGI = [
     ("Встреча по теме месяца",
      "Я объясняю, почему в этой сфере у вас уходят силы, и даю технику на конкретные ситуации. "
@@ -198,16 +223,27 @@ TRI = [
 TRI_NIZ = ("Дальше каждый месяц новая сфера, а записи всех встреч остаются у вас, пока вы "
            "в клубе")
 
-# 8. Что входит
-VHODIT_H = "Что входит в подписку"
-VHODIT = [
-    "Две встречи со мной в месяц, по теме месяца и кинотерапия, и если не успеваете вживую, "
-    "смотрите запись",
-    "Техники по 10–15 минут на ситуации с близкими и на работе",
-    "Мои голосовые ответы раз в неделю на самые частые вопросы участниц",
-    "Закрытый чат участниц, где за порядком следит моя команда",
-    "Записи прошлых встреч, пока вы в клубе",
+# 8. Что входит: экран «Каждый месяц вы получаете» (ТЗ Артёма 04.11.2026):
+# светлый фон, семь карточек с золотой обводкой, на компьютере 3 + 3 и чат
+# во всю ширину. Стоит сразу после «Опора подходит вам». Подарок «В день
+# вступления» остался на прежнем месте отдельным экраном.
+POLUCHAETE_H = "КАЖДЫЙ МЕСЯЦ ВЫ ПОЛУЧАЕТЕ"
+POLUCHAETE = [   # (название, описание)
+    ("2 онлайн-встречи с Виолой",
+     "Глубокий разбор темы месяца и ответы на ваши вопросы. В открытом доступе Виола таких встреч "
+     "больше не проводит"),
+    ("Подкасты", "Голосовые ответы Виолы раз в неделю на самые частые вопросы участниц"),
+    ("Видео-лекция", "Лекция Виолы по теме месяца в записи, с таймкодами"),
+    ("Статьи", "Отдельные материалы Виолы по теме месяца, к которым можно вернуться и перечитать"),
+    ("Техники и практические задания",
+     "3–4 техники на конкретные ситуации, по 10–15 минут, и задания, чтобы попробовать их в своей жизни"),
+    ("Фильм-терапия",
+     "Виола выбирает фильм по теме месяца, вы смотрите его сами, а на одной из встреч она разбирает "
+     "его вместе с вами"),
+    ("Чат сообщества", "Закрытый чат эмпатов со всего мира, за порядком в нём следит команда Виолы"),
 ]
+POLUCHAETE_POD = "Всё это лежит только в закрытом клубе, в открытом доступе этого нет"
+POLUCHAETE_IKONKI = ["o-klyuchi", "o-mikrofon", "o-proektor", "o-tetrad", "o-chasy", "o-kino", "o-pismo"]
 PODARKI_H = "В день вступления вас уже ждут"
 PODARKI = [
     "Техника, которая за 10–15 минут помогает вернуть себе силы после тяжёлого разговора",
@@ -319,6 +355,7 @@ FINAL_H = "Первая встреча клуба %s, тема «Своя опо
 FINAL_TEXT = "Начните с одного месяца, технику на 10–15 минут вы получите в день вступления"
 FINAL_BTN = {"1m": "1 месяц за %s", "3m": "3 месяца за %s"}
 FINAL_POD = "Осталось %(n)d %(mest)s, отменить подписку можно в любой момент"
+FINAL_POD_POLNYY = "В наборе %(n)d %(mest)s, отменить подписку можно в любой момент"
 
 # 15. Подвал: документы по тексту клуба, «Договор оферты» ведёт на OFERTA.
 PODVAL_DOCS = [
@@ -407,7 +444,7 @@ def img(name, alt, widths, sizes, cls="", lazy=True):
             % (cls, u, srcset(made), sizes, esc(alt), w, h, ' loading="lazy"' if lazy else ""))
 
 
-def fon(prefix, alt, lazy):
+def fon(prefix, alt, lazy, sizes="100vw"):
     """Фото на всю ширину: телефонный кадр до 759 px, широкий дальше.
     Есть только один из двух кадров, значит он стоит на обоих экранах."""
     d = webp(prefix + "-desktop", (1280, 1920, 2400))
@@ -424,9 +461,9 @@ def fon(prefix, alt, lazy):
     main = d or m
     u, w, h = main[-1]
     src_m = ('<source media="(max-width: 759px)" srcset="%s" sizes="100vw">' % srcset(m)) if (m and d) else ""
-    return ('<picture class="op-fon">%s<img src="%s" srcset="%s" sizes="100vw" alt="%s" width="%d" height="%d"%s'
+    return ('<picture class="op-fon">%s<img src="%s" srcset="%s" sizes="%s" alt="%s" width="%d" height="%d"%s'
             ' decoding="async"%s></picture>'
-            % (src_m, u, srcset(main), esc(alt), w, h, ' loading="lazy"' if lazy else "",
+            % (src_m, u, srcset(main), sizes, esc(alt), w, h, ' loading="lazy"' if lazy else "",
                "" if lazy else ' fetchpriority="high"'))
 
 
@@ -463,6 +500,8 @@ def btn(label, href, cls=""):
 
 def stroka_mest():
     if otkryt():
+        if MEST_OSTALOS == MEST_VSEGO:      # до первой продажи «Осталось 50 из 50» звучит пусто
+            return POD_POLNYY % {"vsego": MEST_VSEGO, "mest": mest(MEST_VSEGO)}
         return POD_OTKRYT % {"do": NABOR_DO, "n": MEST_OSTALOS, "mest": mest(MEST_OSTALOS), "vsego": MEST_VSEGO}
     return stroka_zakryt()
 
@@ -478,7 +517,7 @@ def list_btn():
     return btn(BTN_LIST, ssylka("list"))
 
 
-def sec(blok, inner, cls="", sid=""):
+def sec(blok, inner, cls="", sid="", fon=None):
     """Экран страницы. Светлые экраны лежат листом с аркой сверху, как
     розовые блоки референса, поэтому у них лишняя обёртка."""
     if "op-svetlyy" in cls:
@@ -486,8 +525,9 @@ def sec(blok, inner, cls="", sid=""):
     else:
         inner = '\n  <div class="op-in">%s\n  </div>' % inner
     return """
-<section class="op-sec %s"%s data-blok="%s">%s
-</section>""" % (cls, (' id="%s"' % sid) if sid else "", blok, inner)
+<section class="op-sec %s"%s data-blok="%s"%s>%s
+</section>""" % (cls + ((" op-sfon op-sfon-" + fon) if fon else ""), (' id="%s"' % sid) if sid else "", blok,
+                 fon_style("fon-" + fon) if fon else "", inner)
 
 
 def cards(items, cls="op-cards-4"):
@@ -496,59 +536,130 @@ def cards(items, cls="op-cards-4"):
         for h, t in items))
 
 
+def zhirno(x):
+    """Пункт задач: часть до первой запятой жирным. Где запятой нет,
+    жирным часть до первого « и »."""
+    if "," in x:
+        head, tail = x.split(",", 1)
+        return "<b>%s,</b>%s" % (head, nbsp_tail(tail))
+    head, tail = x.split(" и ", 1)
+    return "<b>%s</b> и %s" % (head, nbsp_tail(tail))
+
+
 def sec_hero():
-    knopka = btn(BTN_KLUB, "#stoimost") if otkryt() else list_btn()
-    plashki = "".join('<li class="op-bilet"><span>%s</span></li>' % p for p in HERO_PLASHKI)
+    """Первые два экрана по форме менторства Пырикова (egorpyrikov.ru/
+    mentorstvo2025), правки Артёма 04.11.2026. Фото готовое, без вырезки.
+
+    Телефон: плашки «Набор до:» и «Старт:», слово ОПОРА над Виолой, под ним
+    подпись «клуб Виолы Маро», Виола по центру, кнопка у неё на груди,
+    под ней строка мест. Компьютер: Виола справа, над ней ОПОРА; слева
+    плашки, оффер («ОПОРА – это закрытый клуб…») и кнопка.
+
+    Второй экран — светлая панель наезжает на низ фото: на телефоне
+    определение и задачи, на компьютере только задачи (определение уже
+    стоит в оффере слева на первом экране)."""
+    on = otkryt()
+    knopka = btn(BTN_KLUB, "#stoimost", " op-btn-hero") if on else btn(BTN_LIST, ssylka("list"), " op-btn-hero")
+    if on:
+        vtoraya = (PLASHKA_NABOR, NABOR_DO)
+    else:
+        vtoraya = (PLASHKA_SLED[0], SLED_NABOR) if SLED_NABOR else (PLASHKA_SLED[1], PLASHKA_SLED[2])
+    pl = [vtoraya, (PLASHKA_START, PERVAYA_VSTRECHA)]   # слева направо по времени: набор, потом старт
+    plashki = '<span class="op-pl-tochka" aria-hidden="true"></span>'.join(
+        '<p class="op-pl"><span>%s</span> <b>%s</b></p>' % x for x in pl)
+    plashki = '<div class="op-plashki-verh">%s</div>' % plashki
+    cta = '<div class="op-hero-cta %%s">%s<p class="op-mest">%s</p></div>' % (knopka, stroka_mest())
+
+    nazv, ostalnoe = HERO_H.split(" – ", 1)
+    akcent = lambda cls: esc(ostalnoe).replace(
+        esc(HERO_AKCENT), '<b class="%s">%s</b>' % (cls, esc(HERO_AKCENT)), 1)
+    celi = "".join("<li>%s</li>" % zhirno(x) for x in CELI)
     return """
 <section class="op-hero" data-blok="Первый экран">
-  %(fon)s
-  <div class="op-hero-in">
-    <div class="op-hero-top">
-      <p class="op-nad">%(nad)s</p>
-      <p class="op-nazvanie">%(nazv)s</p>
-      <h1 class="op-hero-h">%(h)s</h1>
-    </div>
-    <div class="op-hero-bot">
-      <p class="op-hero-pod">%(pod)s</p>
-      <ul class="op-plashki">%(plashki)s</ul>
-      <div class="op-hero-cta">%(btn)s
-        <p class="op-mest">%(mest)s</p>
-      </div>
-      <p class="op-melko">%(melko)s</p>
+  <div class="op-hero-l">
+    %(plashki)s
+    <p class="op-hero-offer"><span class="op-hero-offer-nazv">%(nazv)s –</span> <span class="op-eto">%(eto)s</span>%(offer)s</p>
+    %(cta_pk)s
+  </div>
+  <div class="op-hero-r">
+    <div class="op-slovo"><p class="op-nad">%(nad)s</p><p class="op-nazvanie">%(slovo)s</p></div>
+    <div class="op-hero-foto">
+      %(fon)s
+      %(cta_tel)s
     </div>
   </div>
-</section>""" % {"fon": fon("hero", "Виола Маро", lazy=False), "nad": HERO_NAD,
-                 "nazv": HERO_NAZVANIE,
-                 "h": nbsp_tail(HERO_H), "pod": nbsp_tail(HERO_POD), "plashki": plashki, "btn": knopka,
-                 "mest": stroka_mest(), "melko": nbsp_tail(HERO_MELKO)}
+</section>
+<section class="op-celi" data-blok="Блок «ОПОРА –»">
+  <div class="op-in">
+    <div class="op-celi-panel">
+      <div class="op-celi-l">
+        <h1 class="op-celi-h"><span class="op-h2 op-celi-nazv">%(nazv)s –</span> <span class="op-offer">%(h)s</span></h1>
+      </div>
+      <div class="op-celi-r">
+        <h2 class="op-h2 op-zadachi-h">%(zh)s</h2>
+        <p class="op-metka">%(metka)s</p>
+        <ul class="op-kvadraty">%(celi)s</ul>
+      </div>
+    </div>
+    <span class="op-strelka" aria-hidden="true"></span>
+  </div>
+</section>""" % {"plashki": plashki, "nazv": nazv, "eto": akcent("op-hero-akcent").split(" ", 1)[0], "offer": " " + akcent("op-hero-akcent").split(" ", 1)[1],
+                 "cta_pk": cta % "op-cta-pk", "cta_tel": cta % "op-cta-tel",
+                 "slovo": HERO_NAZVANIE, "nad": HERO_NAD,
+                 "fon": fon("hero", "Виола Маро на диване у изумрудной стены", lazy=False, sizes="125vw"),
+                 "h": akcent("op-akcent-slova"), "celi": celi, "zh": ZADACHI_H, "metka": ZADACHI_METKA}
 
 
 def sec_otzyvy():
+    """«Что изменилось у участниц программ»: номер, сфера, крупная фраза,
+    внизу «было» на бежевом и «стало» на изумрудном (на компьютере рядом
+    через золотую стрелку). Вариант 2, выбран Артёмом 05.11.2026."""
+    b, st = OTZYVY_METKI
     items = "".join("""
-      <article class="op-otzyv">
-        <p class="op-otzyv-meta"><span class="op-chip">%s</span><span class="op-vozrast">%s</span></p>
-        <p class="op-otzyv-t">%s</p>
-      </article>""" % (s, v, nbsp_tail(t)) for s, v, t in OTZYVY)
+      <article class="op-iz">
+        <p class="op-iz-top"><span class="op-iz-n">%02d</span><span class="op-iz-sf">%s</span></p>
+        <h3 class="op-iz-h">%s</h3>
+        <div class="op-iz-ba">
+          <div class="op-iz-bylo"><small>%s</small>%s</div>
+          <span class="op-iz-ar" aria-hidden="true">→</span>
+          <div class="op-iz-stalo"><small>%s</small>%s</div>
+        </div>
+      </article>""" % (i + 1, sf, nbsp_tail(fr), b, nbsp_tail(by), st, nbsp_tail(sta))
+                    for i, (sf, fr, by, sta) in enumerate(OTZYVY))
     return sec("Отзывы", """
     %s
-    <p class="op-lead">%s</p>
-    <div class="op-otzyvy">%s
-    </div>""" % (h2(OTZYVY_H), nbsp_tail(OTZYVY_POD), items), "op-svetlyy", "otzyvy")
+    <p class="op-lead op-iz-lead">%s</p>
+    <div class="op-iz-cards">%s
+    </div>""" % (h2(OTZYVY_H, " op-center"), OTZYVY_POD, items), "op-svetlyy", "otzyvy", "bumaga")
 
 
 def sec_dlya_kogo():
-    items = "".join("<li>%s</li>" % nbsp_tail(x) for x in DLYA_KOGO)
+    """«Опора подходит вам, если вы» (правка 04.11.2026): кремовые карточки
+    с номером шрифтом заголовков, боль жирным бордовым; на компьютере две
+    колонки. Вывод под карточками крупно по центру. Фон — дубовые панели."""
+    items = "".join('<li class="op-dk-card"><span class="op-dk-num" aria-hidden="true">%02d</span>'
+                    '<p>%s<b>%s</b></p></li>' % (i + 1, a, nbsp_tail(b)) for i, (a, b) in enumerate(DLYA_KOGO))
+    zag = DLYA_KOGO_H.replace("ОПОРА", '<span class="op-h2-akc">ОПОРА</span>', 1)
     return sec("Для кого", """
-    %s
-    <ul class="op-romby">%s</ul>
-    <p class="op-akcent">%s</p>""" % (h2(DLYA_KOGO_H), items, nbsp_tail(DLYA_KOGO_POD)), "op-narrow")
+    <h2 class="op-h2 op-dk-h">%s</h2>
+    <ol class="op-dk-cards">%s</ol>
+    <p class="op-dk-itog">%s</p>""" % (zag, items, nbsp_tail(DLYA_KOGO_POD)), fon="derevo")
+
+
+def fon_style(name):
+    """Фон экрана картинкой из build-assets/opora/<name>: в CSS переменная --fon."""
+    made = webp(name, (1600,))
+    if not made:
+        WARN.append("нет картинки build-assets/opora/%s.jpg: экран без фона-картинки" % name)
+        return ""
+    return ' style="--fon: url(%s)"' % made[-1][0]
 
 
 def sec_izmenitsya():
     return sec("Что изменится", """
     %s
     %s
-    <p class="op-niz">%s</p>""" % (h2(IZMENITSYA_H), cards(IZMENITSYA), IZMENITSYA_POD), "op-barhat")
+    <p class="op-niz">%s</p>""" % (h2(IZMENITSYA_H), cards(IZMENITSYA), IZMENITSYA_POD), "op-barhat", fon="barhat")
 
 
 def video_html():
@@ -591,7 +702,7 @@ def sec_mesyac():
     <ol class="op-shagi">%s
     </ol>
     <h3 class="op-h2 op-h2-sm">%s</h3>
-    %s""" % (h2(MESYAC_H), "".join(shagi), RABOTAET_H, cards(RABOTAET)), "op-barhat")
+    %s""" % (h2(MESYAC_H), "".join(shagi), RABOTAET_H, cards(RABOTAET)), "op-barhat", fon="derevo")
 
 
 def sec_tri():
@@ -607,24 +718,73 @@ def sec_tri():
     <p class="op-niz">%s</p>""" % (h2(TRI_H), TRI_POD, items, nbsp_tail(TRI_NIZ)))
 
 
+def bloknot_style():
+    """Картинка блокнота разрезана на части в build-assets/opora/bloknot/
+    (страницы, корешок, кольца): блокнот тянется под любой текст, а кольца
+    и золотые уголки не искажаются. Части уходят в CSS переменными."""
+    d = os.path.join(SRC, "bloknot")
+    if not os.path.isdir(d):
+        WARN.append("нет build-assets/opora/bloknot/: блокнот нарисован стилями")
+        return ""
+    out = os.path.join(DEST, "bloknot")
+    os.makedirs(out, exist_ok=True)
+    var = []
+    for f in sorted(os.listdir(d)):
+        if f.endswith(".webp"):
+            shutil.copy2(os.path.join(d, f), os.path.join(out, f))
+            var.append("--bl-%s: url(/opora/bloknot/%s?v=%s)" % (f[:-5], f, file_hash(os.path.join(d, f))))
+    return ' style="%s"' % "; ".join(var)
+
+
+def sec_poluchaete():
+    """«Каждый месяц вы получаете» раскрытым блокнотом на кольцах в бордовом
+    переплёте (вариант Артёма 05.11.2026, по референсу «Гранд Будапешт»).
+    Все семь пунктов оформлены одинаково: предмет, название, описание.
+    Слева заголовок и первые пункты, справа остальные, итог в самом конце."""
+    def punkt(i, t, d):
+        k = POLUCHAETE_IKONKI[i]
+        pic = img(k, "", (160,), "64px", "op-bl-img") if find_src(k) else ""
+        t = re.sub(r"(\w+-\w+)", r'<span class="g-nw">\1</span>', t)   # «онлайн-встречи» не рвётся
+        return '<li>%s<div><h3>%s</h3><p>%s</p></div></li>' % (pic, t, nbsp_tail(d))
+    pp = [punkt(i, t, d) for i, (t, d) in enumerate(POLUCHAETE)]
+    polov = 3
+    kolca = '<i></i>' * 14
+    kolca_tel = '<i></i>' * 8
+    return """
+<section class="op-sec op-sfon op-sfon-derevo op-blk" data-blok="Каждый месяц вы получаете"%s>
+  <div class="op-in">
+    <div class="op-bl"%s>
+      <div class="op-bl-kolca-tel" aria-hidden="true">%s</div>
+      <div class="op-bl-str">
+        <h2 class="op-bl-h">%s</h2>
+        <ul class="op-bl-list">%s</ul>
+      </div>
+      <div class="op-bl-kolca" aria-hidden="true">%s</div>
+      <div class="op-bl-str">
+        <ul class="op-bl-list">%s</ul>
+        <p class="op-bl-pod">%s</p>
+      </div>
+    </div>
+  </div>
+</section>""" % (fon_style("fon-derevo"), bloknot_style(), kolca_tel, POLUCHAETE_H, "".join(pp[:polov]), kolca, "".join(pp[polov:]),
+                 nbsp_tail(POLUCHAETE_POD))
+
+
 def sec_vhodit():
-    items = "".join("<li>%s</li>" % nbsp_tail(x) for x in VHODIT)
+    """Подарок «В день вступления вас уже ждут» отдельным экраном."""
     podarki = "".join("<li>%s</li>" % nbsp_tail(x) for x in PODARKI)
-    return sec("Что входит", """
-    %s
-    <ul class="op-galki">%s</ul>
+    return sec("В день вступления", """
     <div class="op-podarok">
       <div class="op-podarok-t">
         <p class="op-podarok-h">%s</p>
         <ul class="op-podarok-list">%s</ul>
       </div>
       %s
-    </div>""" % (h2(VHODIT_H), items, PODARKI_H, podarki, predmet("o-chashka", "Чашка чая")),
-               "op-barhat op-narrow")
+    </div>""" % (PODARKI_H, podarki, predmet("o-chashka", "Чашка чая")), "op-barhat op-narrow", fon="derevo")
 
 
 def sec_udobno():
-    return sec("Почему это удобно", "\n    %s\n    %s" % (h2(UDOBNO_H), cards(UDOBNO)))
+    return sec("Почему это удобно", "\n    %s\n    %s" % (h2(UDOBNO_H), cards(UDOBNO)), fon="barhat")
 
 
 def sec_viola():
@@ -703,7 +863,7 @@ def sec_tarify():
     <div class="op-tarify">%s
     </div>%s
     <p class="op-oplata">%s</p>""" % (h2(TARIFY_H, " op-center"), "".join(kartochki), niz, nbsp_tail(TARIFY_POD)),
-               "op-barhat", "stoimost")
+               "op-barhat", "stoimost", "koridor")
 
 
 def sec_voprosy():
@@ -716,14 +876,14 @@ def sec_voprosy():
     <div class="op-voprosy-head">%s%s</div>
     <div class="op-faq">%s
     </div>""" % (h2(VOPROSY_H), predmet("o-pismo", "Письмо с сургучной печатью", "op-pismo"), items),
-               "op-svetlyy op-narrow", "voprosy")
+               "op-svetlyy op-narrow", "voprosy", "bumaga")
 
 
 def sec_final():
     if otkryt():
         knopki = (btn(FINAL_BTN["1m"] % CENY["1m"], ssylka("1m"))
                   + btn(FINAL_BTN["3m"] % CENY["3m"], ssylka("3m")))
-        pod = FINAL_POD % {"n": MEST_OSTALOS, "mest": mest(MEST_OSTALOS)}
+        pod = (FINAL_POD_POLNYY if MEST_OSTALOS == MEST_VSEGO else FINAL_POD) % {"n": MEST_OSTALOS, "mest": mest(MEST_OSTALOS)}
     else:
         knopki, pod = list_btn(), stroka_zakryt()
     return """
@@ -737,7 +897,7 @@ def sec_final():
     </div>
   </div>
   %(fon)s
-</section>""" % {"fon": fon("final", "Виола Маро на диване у изумрудной стены", lazy=True), "h": nbsp_tail(FINAL_H % PERVAYA_VSTRECHA),
+</section>""" % {"fon": fon("final", "", lazy=True), "h": nbsp_tail(FINAL_H % PERVAYA_VSTRECHA),
                  "t": nbsp_tail(FINAL_TEXT), "knopki": knopki, "pod": pod}
 
 
@@ -760,7 +920,7 @@ def podval():
 def page():
     hero = sec_hero()
     body = "".join([
-        sec_otzyvy(), sec_dlya_kogo(), sec_izmenitsya(), sec_chto(), sec_mesyac(), sec_tri(),
+        sec_dlya_kogo(), sec_poluchaete(), sec_otzyvy(), sec_izmenitsya(), sec_chto(), sec_mesyac(), sec_tri(),
         sec_vhodit(), sec_udobno(), sec_viola(), sec_risk(), sec_tarify(), sec_voprosy(), sec_final(),
     ])
     body = typograf(hero + body)
@@ -848,14 +1008,23 @@ def sverka(text):
             continue
         if "когда набор закрыт" in elem and on:
             continue
+        polnyy = MEST_OSTALOS == MEST_VSEGO
+        if "до первой продажи" in elem and not (on and polnyy):
+            continue
+        if "после первой продажи" in elem and not (on and not polnyy):
+            continue
         if ("пока набор открыт" in elem or elem in ("Кнопка", "Кнопки", "Под кнопками")) and not on:
             continue
         t = (t.replace("[дата]", NABOR_DO if "открыт до" in t else SLED_NABOR or "[дата]")
               .replace("[17 ноября]", PERVAYA_VSTRECHA)
+              .replace("[12 ноября]", NABOR_DO)
               .replace("[N] мест из [50]", "%d %s из %d" % (MEST_OSTALOS, mest(MEST_OSTALOS), MEST_VSEGO))
-              .replace("[N] мест", "%d %s" % (MEST_OSTALOS, mest(MEST_OSTALOS))))
+              .replace("[N] мест", "%d %s" % (MEST_OSTALOS, mest(MEST_OSTALOS)))
+              .replace("[50] мест", "%d %s" % (MEST_VSEGO, mest(MEST_VSEGO))))
         if not on and elem.startswith("Под кнопкой") and not SLED_NABOR:
             t = "Набор закрыт"
+        if not on and elem.startswith("Плашка сверху, когда") and not SLED_NABOR:
+            t = "Набор: закрыт"
         kuski = t.split(" · ")
         if re.match(r"^[^,]+, \d+–\d+ года$", t):          # метка сферы и возраст отзыва
             kuski = t.split(", ")
