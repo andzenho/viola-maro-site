@@ -334,12 +334,20 @@ body.op {
   gap: 36px;
   max-width: 1080px;
   margin: 0 auto;
-  padding: 34px 22px 36px;
+  position: relative;
+  padding: 34px 22px 58px;
   background: var(--svetlyy);
   color: var(--izumrud);
   border-radius: 12px;
-  outline: 1px solid var(--gold);
-  outline-offset: -8px;
+}
+/* Внутренняя золотая рамка кончается над кругом со стрелкой, а не режет его. */
+.op-celi-panel::before {
+  content: "";
+  position: absolute;
+  inset: 8px 8px 36px;
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  pointer-events: none;
 }
 .op-celi-h { font-weight: 400; }
 .op-celi .op-h2 { color: var(--izumrud); font-size: clamp(30px, 7.4vw, 44px); }
@@ -407,13 +415,13 @@ body.op {
   content: "";
   position: absolute;
   left: 50%;
-  top: 44%;
+  top: 50%;
   width: 12px;
   height: 12px;
-  margin: -8px 0 0 -6px;
   border: solid var(--wine-text);
   border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+  /* сдвиг вверх на четверть диагонали: галочка оптически по центру круга */
+  transform: translate(-50%, -75%) rotate(45deg);
 }
 
 /* ───────────────────────────────────────────────────────────── отзывы ── */
@@ -695,7 +703,7 @@ body.op {
   .op-nazvanie { font-size: min(22.5vw, 150px); }
   .op-hero-cta { left: 50%; right: auto; width: 340px; margin-left: -170px; }
   .op-celi { padding-bottom: 96px; }
-  .op-celi-panel { grid-template-columns: 1fr 1fr; gap: 56px; padding: 52px 56px 56px; }
+  .op-celi-panel { grid-template-columns: 1fr 1fr; gap: 56px; padding: 52px 56px 72px; }
   .op-offer { font-size: 21px; }
 
   /* Последний экран: Виола по центру под текстом. */
