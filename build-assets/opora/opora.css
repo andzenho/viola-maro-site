@@ -798,6 +798,10 @@ body.op {
 .op-sfon-barhat { --ten: linear-gradient(rgba(20, 28, 21, .62), rgba(20, 28, 21, .62)); }
 .op-sfon-derevo { --ten: linear-gradient(rgba(20, 28, 21, .9), rgba(20, 28, 21, .9)); background-position: right top !important; }
 .op-sfon-koridor { --ten: linear-gradient(rgba(20, 28, 21, .74), rgba(20, 28, 21, .86)); }
+/* Блокнот сразу под панелью «ОПОРА –» (блок «Для кого» убран 05.11.2026):
+   без двойного отступа, а фон дерева проявляется из бархата панели без шва */
+.op-celi + .op-sec { padding-top: 16px; }
+.op-celi + .op-sfon-derevo { --ten: linear-gradient(#141C15, rgba(20, 28, 21, .9) 220px); }
 /* бумага цвета слоновой кости плиткой на светлом листе с аркой */
 .op-sec.op-sfon-bumaga { background-image: none; }
 .op-sfon-bumaga .op-arka { background: var(--svetlyy) var(--fon) repeat; background-size: 620px auto; }
