@@ -560,7 +560,7 @@ def sec_hero():
     определение и задачи, на компьютере только задачи (определение уже
     стоит в оффере слева на первом экране)."""
     on = otkryt()
-    knopka = btn(BTN_KLUB % CENY["1m"], "#stoimost", " op-btn-hero") if on else btn(BTN_LIST, ssylka("list"), " op-btn-hero")
+    knopka = btn(BTN_KLUB % CENY["1m"], ssylka("1m"), " op-btn-hero")   # сразу в бот на месяц (Артём 05.11.2026) if on else btn(BTN_LIST, ssylka("list"), " op-btn-hero")
     if on:
         vtoraya = (PLASHKA_NABOR, NABOR_DO)
     else:
