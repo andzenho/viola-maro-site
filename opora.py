@@ -47,6 +47,7 @@ OFERTA = ""                  # оферта клуба, пока её нет
 VIDEO = ""                   # видео на 8 минут, пусто, значит блок без видео
 VIDEO_M1 = "video/m1-fragment.mp4"   # фрагмент встречи в первой карточке «Каждый месяц вы получаете»,
                                      # обложка рядом: video/m1-poster.jpg; пусто, значит без видео
+AUDIO_PODCAST = "audio/podcast-primer.mp3"   # фрагмент подкаста в карточке «Подкасты»; пусто, значит без плеера
 # ═══════════════════════════════════════════════════════════════════════
 
 OUT = os.path.join(build.ROOT, "site")
@@ -254,6 +255,7 @@ POLUCHAETE = [   # только заголовки карточек, без оп
 VIDEO_M1_NAD = "Посмотрите, как проходит встреча в клубе"
 VIDEO_M1_TEMA = ("Фрагмент встречи с Виолой: почему вас тянет к людям, которых надо спасать, "
                  "и один вопрос, который вас остановит")
+AUDIO_PODCAST_POD = "Так звучат подкасты в клубе. Нажмите и послушайте фрагмент"
 POLUCHAETE_POD = "Всё это лежит только в закрытом клубе, в открытом доступе этого нет"
 POLUCHAETE_IKONKI = ["o-klyuchi", "o-mikrofon", "o-proektor", "o-tetrad", "o-chasy", "o-kino", "o-pismo"]
 PODARKI_H = "В день вступления вас уже ждут"
@@ -802,6 +804,70 @@ def video_m1():
                      poster_rel, file_hash(poster), VIDEO_M1, file_hash(vid))
 
 
+def mp3_sekundy(path):
+    """Длительность mp3 с постоянным битрейтом: размер после тега ID3 делить
+    на битрейт из заголовка первого кадра (MPEG-1 Layer III)."""
+    with open(path, "rb") as f:
+        data = f.read(1 << 16)
+    off = 0
+    if data[:3] == b"ID3":
+        off = 10 + ((data[6] << 21) | (data[7] << 14) | (data[8] << 7) | data[9])
+    while off < len(data) - 4 and not (data[off] == 0xFF and data[off + 1] & 0xE0 == 0xE0):
+        off += 1
+    kbps = [0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 0][data[off + 2] >> 4]
+    if not kbps:
+        raise SystemExit("опора: не понял битрейт %s" % path)
+    return (os.path.getsize(path) - off) * 8 / (kbps * 1000)
+
+
+def mmss(sek):
+    sek = int(round(sek))
+    return "%d:%02d" % (sek // 60, sek % 60)
+
+
+def audio_podcast():
+    """Фрагмент подкаста: строка и свой плеер (кнопка, полоса, время) в тёмной
+    вставке, как у видео. Тег <audio> со своего сайта, preload="none". Без JS
+    остаётся обычный плеер браузера (controls), свой включает скрипт."""
+    src = os.path.join(SRC, AUDIO_PODCAST)
+    if not os.path.isfile(src):
+        raise SystemExit("опора: нет файла %s" % os.path.relpath(src, build.ROOT))
+    os.makedirs(os.path.join(DEST, os.path.dirname(AUDIO_PODCAST)), exist_ok=True)
+    shutil.copy2(src, os.path.join(DEST, AUDIO_PODCAST))
+    vsego = mmss(mp3_sekundy(src))
+    return """
+        <div class="op-bl-video op-bl-audio">
+          <p class="op-bl-video-nad">%s</p>
+          <audio class="op-audio" controls preload="none" src="/opora/%s?v=%s"></audio>
+          <div class="op-pleer" hidden>
+            <button class="op-play op-pleer-btn" type="button" aria-label="Слушать фрагмент подкаста"></button>
+            <div class="op-pleer-polosa" role="slider" tabindex="0" aria-label="Перемотка" aria-valuemin="0"
+                 aria-valuemax="100" aria-valuenow="0"><span></span></div>
+            <span class="op-pleer-vremya" data-vsego="%s">0:00 / %s</span>
+          </div>
+        </div>""" % (AUDIO_PODCAST_POD, AUDIO_PODCAST, file_hash(src), vsego, vsego)
+
+
+AUDIO_JS = ("document.querySelectorAll('.op-bl-audio').forEach(function(w){"
+            "var a=w.querySelector('audio'),p=w.querySelector('.op-pleer');if(!a||!p)return;"
+            "var b=p.querySelector('.op-pleer-btn'),l=p.querySelector('.op-pleer-polosa'),f=l.querySelector('span'),"
+            "t=p.querySelector('.op-pleer-vremya'),vs=t.getAttribute('data-vsego');"
+            "a.controls=false;a.hidden=true;p.hidden=false;"
+            "function mm(x){x=Math.floor(x||0);return Math.floor(x/60)+':'+('0'+x%60).slice(-2);}"
+            "function dl(){return isFinite(a.duration)&&a.duration>0?a.duration:0;}"
+            "function upd(){var d=dl(),k=d?a.currentTime/d*100:0;f.style.width=k+'%';"
+            "l.setAttribute('aria-valuenow',Math.round(k));t.textContent=mm(a.currentTime)+' / '+(d?mm(d):vs);}"
+            "b.addEventListener('click',function(){if(a.paused)a.play();else a.pause();});"
+            "a.addEventListener('play',function(){p.classList.add('igraet');b.setAttribute('aria-label','Пауза');});"
+            "a.addEventListener('pause',function(){p.classList.remove('igraet');b.setAttribute('aria-label','Слушать фрагмент подкаста');});"
+            "a.addEventListener('timeupdate',upd);a.addEventListener('loadedmetadata',upd);"
+            "function seek(k){var d=dl();if(!d){a.play();return;}a.currentTime=Math.max(0,Math.min(d,k*d));upd();}"
+            "l.addEventListener('click',function(e){var r=l.getBoundingClientRect();seek((e.clientX-r.left)/r.width);});"
+            "l.addEventListener('keydown',function(e){var d=dl();if(!d)return;"
+            "if(e.key==='ArrowRight'){a.currentTime=Math.min(d,a.currentTime+5);e.preventDefault();}"
+            "if(e.key==='ArrowLeft'){a.currentTime=Math.max(0,a.currentTime-5);e.preventDefault();}upd();});});")
+
+
 # Круглая кнопка play поверх обложки: без JS её нет, работают обычные controls.
 PLAY_JS = ("document.querySelectorAll('.op-bl-video-ramka').forEach(function(r){"
            "var v=r.querySelector('video'),b=r.querySelector('.op-play');if(!v||!b)return;"
@@ -822,13 +888,15 @@ def sec_poluchaete():
         if i == 0 and VIDEO_M1:   # первая карточка: текст, под ним фрагмент встречи
             t = re.sub(r"(\w+-\w+)", r'<span class="g-nw">\1</span>', nbsp_tail(t))
             return '<li class="op-bl-li-video"><h3>%s</h3>%s</li>' % (t, video_m1())
+        if i == 1 and AUDIO_PODCAST:   # «Подкасты»: название, строка и плеер вместо картинки
+            return '<li class="op-bl-li-video"><h3>%s</h3>%s</li>' % (t, audio_podcast())
         pic = img(k, "", (320, 490), "(max-width: 899px) 86vw, 150px", "op-bl-foto") if find_src(k) else ""
         # хвост склеиваем только в длинном заголовке: «и практические задания» одним куском не влезает
         t = nbsp_tail(t) if len(t.split()) > 6 else t
         t = re.sub(r"(\w+-\w+)", r'<span class="g-nw">\1</span>', t)   # «онлайн-встречи» не рвётся
         return '<li>%s<h3>%s</h3></li>' % (pic, t)
     pp = [punkt(i, t) for i, t in enumerate(POLUCHAETE)]
-    polov = 2   # слева заголовок, карточка с видео и «Подкасты», справа пять и итог: страницы ровнее
+    polov = 1   # слева заголовок и карточка с видео, справа «Подкасты» с плеером, ещё пять и итог
     kolca = '<i></i>' * 14
     kolca_tel = ''   # на телефоне кольца в картинке tel-top
     return """
@@ -1021,6 +1089,7 @@ def page():
             + '<div id="main" class="op-main" role="main">' + body + "</div>\n" + podval() + build.COOKIE_HTML
             + "<script>%s</script>\n" % build.COOKIE_JS
             + ("<script>%s</script>\n" % PLAY_JS if VIDEO_M1 else "")
+            + ("<script>%s</script>\n" % AUDIO_JS if AUDIO_PODCAST else "")
             + "</body>\n</html>\n")
 
 
@@ -1092,6 +1161,8 @@ def sverka(text):
         if elem == "Видео" and not VIDEO:
             continue
         if elem == "Видео в карточке" and not VIDEO_M1:
+            continue
+        if elem == "Аудио в карточке" and not AUDIO_PODCAST:
             continue
         if elem == "Видео в карточке" and t == "([N] минут)":
             t = video_m1_dlit()
