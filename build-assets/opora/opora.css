@@ -914,9 +914,9 @@ body.op {
 /* Пункты светлыми карточками на странице (вариант Артёма 05.11.2026: ровно, без скотча). */
 .op-bl-list li {
   display: grid;
-  grid-template-columns: 50px 1fr;
-  gap: 12px;
-  align-items: center;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  align-items: start;
   margin: 12px 0;
   padding: 16px 16px 14px;
   background: #FBF6EA;
@@ -1006,5 +1006,4 @@ body.op {
   .op-bl[style] .op-bl-kolca i::before, .op-bl[style] .op-bl-kolca i::after { display: none; }
   .op-bl-str { padding: 48px 46px; }
   .op-bl-img { width: 76px; height: 76px; }
-  .op-bl-list li { grid-template-columns: 76px 1fr; gap: 18px; }
 }
