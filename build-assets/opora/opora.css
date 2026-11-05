@@ -972,6 +972,12 @@ body.op {
 .op-bl[style] .op-bl-str, .op-bl[style]::after { margin-top: -2px; }
 .op-bl[style] .op-bl-str + .op-bl-str { border-top: 0; padding-top: 0; }
 .op-bl[style] .op-bl-kolca-tel { display: none; }
+/* на телефоне две страницы идут одним листом: между третьей и четвёртой
+   карточкой такой же промежуток, как между остальными */
+@media (max-width: 899px) {
+  .op-bl[style] .op-bl-str:has(+ .op-bl-kolca) { padding-bottom: 0; }
+  .op-bl[style] .op-bl-kolca + .op-bl-str .op-bl-list > li:first-child { margin-top: 0; }
+}
 
 @media (min-width: 900px) {
   .op-bl[style] {
