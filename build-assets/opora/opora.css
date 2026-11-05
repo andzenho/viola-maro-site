@@ -417,19 +417,41 @@ body.op {
 }
 
 /* ───────────────────────────────────────────────────────────── отзывы ── */
+/* «Что изменилось у участниц программ» (05.11.2026): светлые карточки
+   с двойной золотой рамкой, «было» на бежевом, «стало» на изумрудном. */
 
-.op-otzyvy { display: grid; gap: 16px; }
-.op-otzyv {
-  background: #fff;
-  border-radius: 6px;
-  outline: 1px solid var(--gold);
+.op-svetlyy#otzyvy .op-h2 { color: var(--wine); }
+.op-iz-lead { text-align: center; color: var(--izumrud); margin-top: -18px; }
+.op-iz-cards { display: grid; gap: 18px; max-width: 1120px; margin: 0 auto; }
+.op-iz {
+  background: #FFFDF8;
+  color: var(--izumrud);
+  border: 1px solid rgba(184, 147, 92, .6);
+  outline: 1px solid rgba(184, 147, 92, .3);
   outline-offset: -7px;
-  padding: 26px 26px 28px;
-  break-inside: avoid;
+  border-radius: 10px;
+  padding: 24px 20px 22px;
 }
-.op-otzyv-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 14px; }
-.op-vozrast { font-size: 16px; color: var(--izumrud); }
-.op-otzyv-t { text-wrap: pretty; }
+.op-iz-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.op-iz-n { font-weight: 700; font-size: 15px; color: #fff; background: var(--wine); border-radius: 4px; padding: 2px 8px; }
+.op-iz-sf { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--wine); }
+.op-iz-h { font-family: var(--prata); font-weight: 400; font-size: clamp(24px, 6vw, 32px); line-height: 1.2; color: var(--izumrud); margin-bottom: 18px; text-wrap: balance; }
+.op-iz-ba { display: grid; gap: 10px; }
+.op-iz-ba > div { padding: 14px 16px; border-radius: 8px; font-size: 17px; line-height: 1.5; text-wrap: pretty; }
+.op-iz-ba small { display: block; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 6px; }
+.op-iz-bylo { background: #EFE8DB; color: #3F4A47; }
+.op-iz-bylo small { color: #6A665E; }
+.op-iz-stalo { background: var(--izumrud); color: var(--text); }
+.op-iz-stalo small { color: var(--rose); }
+.op-iz-ar { display: none; }
+
+@media (min-width: 900px) {
+  .op-iz-cards { grid-template-columns: 1fr 1fr; gap: 22px; }
+  .op-iz { padding: 28px 26px 26px; }
+  .op-iz-ba { grid-template-columns: 1fr 34px 1fr; gap: 0; }
+  .op-iz-ar { display: grid; place-items: center; color: var(--gold); font-size: 26px; }
+  .op-iz-ba > div { font-size: 16px; }
+}
 
 /* ───────────────────────────────────────────────────────────── списки ── */
 
@@ -652,8 +674,6 @@ body.op {
   .op-arka { border-radius: 50% 50% 0 0 / 90px 90px 0 0; padding: 112px 0 112px; }
   .op-cards-4 { grid-template-columns: 1fr 1fr; }
   .op-cards-3 { grid-template-columns: repeat(3, 1fr); }
-  .op-otzyvy { display: block; columns: 2; column-gap: 18px; }
-  .op-otzyv { margin-bottom: 18px; }
   .op-tarify { grid-template-columns: 1fr 1fr; }
   .op-knopki { grid-template-columns: 1fr 1fr; }
   .op-podarok { flex-direction: row; padding: 36px 40px; gap: 32px; }
@@ -748,7 +768,6 @@ body.op {
   .op-kvadraty { columns: 2; column-gap: 56px; }
   .op-kvadraty li { break-inside: avoid; margin-bottom: 20px; }
   .op-kvadraty li + li { margin-top: 0; }
-  .op-otzyvy { columns: 3; }
   .op-viola { grid-template-columns: 1fr 400px; align-items: center; gap: 72px; }
   .op-viola-foto { max-width: none; order: 0; }
   .op-final > .op-fon { width: 100%; max-width: 1280px; margin: 8px auto 0; }
