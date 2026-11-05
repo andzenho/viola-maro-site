@@ -927,9 +927,9 @@ def podval():
 def page():
     hero = sec_hero()
     body = "".join([
-        sec_dlya_kogo(), sec_poluchaete(), sec_otzyvy(),
-        # 05.11.2026 Артём убрал все блоки после отзывов. Их функции остались, чтобы вернуть:
-        # sec_izmenitsya, sec_chto, sec_mesyac, sec_tri, sec_vhodit, sec_udobno, sec_viola,
+        sec_poluchaete(), sec_otzyvy(),
+        # 05.11.2026 Артём убрал «Для кого» и все блоки после отзывов. Их функции остались, чтобы вернуть:
+        # sec_dlya_kogo, sec_izmenitsya, sec_chto, sec_mesyac, sec_tri, sec_vhodit, sec_udobno, sec_viola,
         # sec_risk, sec_tarify, sec_voprosy, sec_final. Тексты в opora-teksty.md, раздел «Убрано со страницы».
     ])
     body = typograf(hero + body)
