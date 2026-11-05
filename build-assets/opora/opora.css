@@ -334,12 +334,20 @@ body.op {
   gap: 36px;
   max-width: 1080px;
   margin: 0 auto;
-  padding: 34px 22px 36px;
+  position: relative;
+  padding: 34px 22px 58px;
   background: var(--svetlyy);
   color: var(--izumrud);
   border-radius: 12px;
-  outline: 1px solid var(--gold);
-  outline-offset: -8px;
+}
+/* Внутренняя золотая рамка кончается над кругом со стрелкой, а не режет его. */
+.op-celi-panel::before {
+  content: "";
+  position: absolute;
+  inset: 8px 8px 36px;
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  pointer-events: none;
 }
 .op-celi-h { font-weight: 400; }
 .op-celi .op-h2 { color: var(--izumrud); font-size: clamp(30px, 7.4vw, 44px); }
@@ -407,13 +415,13 @@ body.op {
   content: "";
   position: absolute;
   left: 50%;
-  top: 44%;
+  top: 50%;
   width: 12px;
   height: 12px;
-  margin: -8px 0 0 -6px;
   border: solid var(--wine-text);
   border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+  /* сдвиг вверх на четверть диагонали: галочка оптически по центру круга */
+  transform: translate(-50%, -75%) rotate(45deg);
 }
 
 /* ───────────────────────────────────────────────────────────── отзывы ── */
@@ -695,7 +703,7 @@ body.op {
   .op-nazvanie { font-size: min(22.5vw, 150px); }
   .op-hero-cta { left: 50%; right: auto; width: 340px; margin-left: -170px; }
   .op-celi { padding-bottom: 96px; }
-  .op-celi-panel { grid-template-columns: 1fr 1fr; gap: 56px; padding: 52px 56px 56px; }
+  .op-celi-panel { grid-template-columns: 1fr 1fr; gap: 56px; padding: 52px 56px 72px; }
   .op-offer { font-size: 21px; }
 
   /* Последний экран: Виола по центру под текстом. */
@@ -803,21 +811,20 @@ body.op {
 
 .op-dk-h { text-align: center; color: var(--text); font-size: clamp(28px, 7vw, 46px); margin-bottom: 36px; }
 .op-h2-akc { color: var(--rose); }
-.op-dk-cards { display: grid; gap: 14px; max-width: 1080px; margin: 0 auto; }
+.op-dk-cards { display: grid; gap: 18px; max-width: 1120px; margin: 0 auto; }
+/* Карточка: сверху картинка-ситуация, под ней номер и текст (05.11.2026). */
 .op-dk-card {
-  display: grid;
-  grid-template-columns: 52px 1fr;
-  gap: 14px;
-  align-items: center;
-  padding: 22px 22px 22px 18px;
+  display: flex;
+  flex-direction: column;
   background: var(--svetlyy);
   color: var(--izumrud);
   border-radius: 10px;
-  outline: 1px solid var(--gold);
-  outline-offset: -7px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--gold), 0 18px 30px -18px rgba(0, 0, 0, .6);
 }
-/* у Prata единица похожа на «l»: номера жирным Golos */
-.op-dk-num { font-family: var(--golos); font-weight: 700; font-size: 34px; line-height: 1; letter-spacing: -.02em; color: var(--wine); text-align: center; }
+.op-dk-img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; }
+.op-dk-t { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; padding: 20px 20px 22px; }
+.op-dk-num { font-family: var(--golos); font-weight: 700; font-size: 30px; line-height: 1; letter-spacing: -.02em; color: var(--wine); }
 .op-dk-card p { font-size: 18px; line-height: 1.45; text-wrap: pretty; }
 .op-dk-card b { font-weight: 700; color: var(--wine); }
 .op-dk-itog {
@@ -834,10 +841,13 @@ body.op {
 }
 
 @media (min-width: 760px) {
-  .op-dk-cards { grid-template-columns: 1fr 1fr; gap: 18px; }
-  .op-dk-card { padding: 26px 28px 26px 22px; grid-template-columns: 64px 1fr; }
-  .op-dk-num { font-size: 40px; }
+  .op-dk-cards { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .op-dk-img { aspect-ratio: 4 / 3; }
   .op-dk-h { margin-bottom: 44px; }
+}
+@media (min-width: 1024px) {
+  .op-dk-cards { grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .op-dk-card p { font-size: 17px; }
 }
 
 /* ───────────────────────────────────── последний экран: стойка консьержа ── */
@@ -906,9 +916,9 @@ body.op {
 /* Пункты светлыми карточками на странице (вариант Артёма 05.11.2026: ровно, без скотча). */
 .op-bl-list li {
   display: grid;
-  grid-template-columns: 50px 1fr;
-  gap: 12px;
-  align-items: center;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  align-items: start;
   margin: 12px 0;
   padding: 16px 16px 14px;
   background: #FBF6EA;
@@ -940,29 +950,24 @@ body.op {
    с кольцами посередине. Без картинок остаётся кремовая страница. */
 
 .op-bl-kolca, .op-bl-kolca-tel { display: none; }
+/* Телефон: блокнот на пружине сверху (картинка Артёма 05.11.2026), разрезан
+   на три части: верх с кольцами и низ с уголками масштабируются целиком,
+   кольца не тянутся; середина листа тянется под текст. */
 .op-bl[style] {
   background: none;
   box-shadow: none;
-  position: relative;
-  margin-top: 40px;
-  border-style: solid;
-  border-width: 46px 26px 46px 26px;
-  border-image: var(--bl-page) 104 111 104 111 fill / 46px 32px 46px 32px stretch;
-  margin-left: -8px;
-  margin-right: -8px;
-  filter: drop-shadow(0 26px 30px rgba(0, 0, 0, .55));
+  margin: 24px -8px 0;
+  filter: drop-shadow(0 22px 26px rgba(0, 0, 0, .55));
 }
-.op-bl[style] .op-bl-str { padding: 0 0 6px; }
-.op-bl[style] .op-bl-str + .op-bl-str { padding-top: 6px; border-top: 1px dashed rgba(123, 25, 33, .3); }
-.op-bl[style] .op-bl-kolca-tel {
-  display: flex;
-  justify-content: space-between;
-  position: absolute;
-  left: -14px;
-  right: -14px;
-  top: -84px;
-}
-.op-bl-kolca-tel i { display: block; width: 22px; height: 70px; background: var(--bl-ring-v) center / contain no-repeat; }
+.op-bl[style]::before,
+.op-bl[style]::after { content: ""; display: block; background-position: 0 0; background-size: 100% 100%; background-repeat: no-repeat; }
+.op-bl[style]::before { aspect-ratio: 947 / 180; background-image: var(--bl-tel-top); }
+.op-bl[style]::after { aspect-ratio: 947 / 107; background-image: var(--bl-tel-bot); }
+.op-bl[style] .op-bl-str { padding: 2px 9% 8px; background: var(--bl-tel-mid) 0 0 / 100% 100% no-repeat; }
+/* части листа заходят друг на друга на 2px: иначе в зазор доли пикселя просвечивает фон */
+.op-bl[style] .op-bl-str, .op-bl[style]::after { margin-top: -2px; }
+.op-bl[style] .op-bl-str + .op-bl-str { border-top: 0; padding-top: 0; }
+.op-bl[style] .op-bl-kolca-tel { display: none; }
 
 @media (min-width: 900px) {
   .op-bl[style] {
@@ -972,6 +977,8 @@ body.op {
     grid-template-columns: 1fr 102px 1fr;
   }
   .op-bl[style] .op-bl-kolca-tel { display: none; }
+  .op-bl[style]::before, .op-bl[style]::after { display: none; }
+  .op-bl[style] .op-bl-str { background: none; margin-top: 0; }
   .op-bl[style] .op-bl-str { border-style: solid; border-color: transparent; }
   .op-bl[style] .op-bl-str:first-child,
   .op-bl[style] .op-bl-kolca-tel + .op-bl-str {
@@ -981,6 +988,7 @@ body.op {
   }
   .op-bl[style] .op-bl-str:last-child {
     border-width: 75px 80px 75px 0;
+    border-top-style: solid;
     border-image: var(--bl-r) 104 111 104 0 fill / 75px 80px 75px 0 stretch;
     padding: 10px 14px 0 34px;
   }
@@ -998,5 +1006,4 @@ body.op {
   .op-bl[style] .op-bl-kolca i::before, .op-bl[style] .op-bl-kolca i::after { display: none; }
   .op-bl-str { padding: 48px 46px; }
   .op-bl-img { width: 76px; height: 76px; }
-  .op-bl-list li { grid-template-columns: 76px 1fr; gap: 18px; }
 }
