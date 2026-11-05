@@ -960,6 +960,10 @@ body.op {
 .op-play:hover { filter: brightness(1.08); }
 .op-play:focus-visible { outline: 3px solid var(--rose); outline-offset: 3px; }
 .op-play[hidden] { display: none; }
+/* Скрин отзыва в карточке «Техники» (Артём 05.11.2026): под названием во всю ширину карточки. */
+.op-bl-list li.op-bl-li-otz { display: block; padding: 16px 14px 14px; }
+.op-bl-skrin { display: block; width: 100%; height: auto; margin-top: 12px; border-radius: 10px; box-shadow: 0 6px 14px -8px rgba(70, 35, 15, .5); }
+@media (max-width: 899px) { .op-bl-skrin { width: calc(100% + 16px); max-width: none; margin-left: -8px; } }
 /* Плеер подкаста (ТЗ Артёма 05.11.2026): кнопка --gold, полоса --gold по --panel, время справа. */
 .op-bl-audio .op-audio { display: block; width: 100%; margin-top: 12px; }
 .op-pleer { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
