@@ -932,7 +932,7 @@ body.op {
 }
 .op-bl-list li:first-child { margin-top: 18px; }
 .op-bl-img { width: 50px; height: 50px; object-fit: contain; }
-.op-bl-list h3 { font-family: var(--golos); font-weight: 700; font-size: 18px; line-height: 1.3; color: var(--wine); margin-bottom: 4px; text-wrap: balance; }
+.op-bl-list h3 { font-family: var(--golos); font-weight: 700; font-size: 18px; line-height: 1.3; color: var(--wine); margin: 0; text-wrap: balance; }
 .op-bl-list p { font-size: 17px; line-height: 1.45; text-wrap: pretty; }
 .op-bl-pod {
   margin-top: 18px;
