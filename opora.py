@@ -45,6 +45,9 @@ CENY_EUR = {"1m": "", "3m": ""}            # пусто, значит евро �
 SSYLKI = {"1m": "", "3m": "", "list": ""}  # куда ведут кнопки
 OFERTA = ""                  # оферта клуба, пока её нет
 VIDEO = ""                   # видео на 8 минут, пусто, значит блок без видео
+VIDEO_M1 = "video/m1-fragment.mp4"   # фрагмент встречи в первой карточке «Каждый месяц вы получаете»,
+                                     # обложка рядом: video/m1-poster.jpg; пусто, значит без видео
+AUDIO_PODCAST = "audio/podcast-primer.mp3"   # фрагмент подкаста в карточке «Подкасты»; пусто, значит без плеера
 # ═══════════════════════════════════════════════════════════════════════
 
 OUT = os.path.join(build.ROOT, "site")
@@ -58,6 +61,15 @@ WARN = []
 def otkryt():
     """Набор открыт, только если он открыт в конфиге и места остались."""
     return NABOR_OTKRYT and MEST_OSTALOS > 0
+
+
+def minut(n):
+    """«минут» по числу: 1 минута, 2 минуты, 10 минут."""
+    if n % 10 == 1 and n % 100 != 11:
+        return "минута"
+    if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14:
+        return "минуты"
+    return "минут"
 
 
 def mest(n):
@@ -239,6 +251,11 @@ POLUCHAETE = [   # только заголовки карточек, без оп
     "Фильм-терапия",
     "Чат сообщества",
 ]
+# Видео в первой карточке (ТЗ Артёма 05.11.2026). [N] минут считается по файлу.
+VIDEO_M1_NAD = "Посмотрите, как проходит встреча в клубе"
+VIDEO_M1_TEMA = ("Фрагмент встречи с Виолой: почему вас тянет к людям, которых надо спасать, "
+                 "и один вопрос, который вас остановит")
+AUDIO_PODCAST_POD = "Так звучат подкасты в клубе. Нажмите и послушайте фрагмент"
 POLUCHAETE_POD = "Всё это лежит только в закрытом клубе, в открытом доступе этого нет"
 POLUCHAETE_IKONKI = ["o-klyuchi", "o-mikrofon", "o-proektor", "o-tetrad", "o-chasy", "o-kino", "o-pismo"]
 PODARKI_H = "В день вступления вас уже ждут"
@@ -736,6 +753,129 @@ def bloknot_style():
     return ' style="%s"' % "; ".join(var)
 
 
+def mp4_sekundy(path):
+    """Длительность mp4 по заголовку mvhd, без ffprobe (его нет в сборке на GitHub)."""
+    import struct
+    with open(path, "rb") as f:
+        data = f.read(4 << 20)
+        i = data.find(b"mvhd")
+        if i < 0:   # moov в конце файла
+            f.seek(max(0, os.path.getsize(path) - (4 << 20)))
+            data = f.read()
+            i = data.find(b"mvhd")
+    if i < 0:
+        raise SystemExit("опора: в %s не найдена длительность (mvhd)" % path)
+    ver = data[i + 4]
+    if ver == 1:
+        scale, dur = struct.unpack(">IQ", data[i + 24:i + 36])
+    else:
+        scale, dur = struct.unpack(">II", data[i + 16:i + 24])
+    return dur / scale
+
+
+def video_m1_dlit():
+    n = max(1, round(mp4_sekundy(os.path.join(SRC, VIDEO_M1)) / 60))
+    return "(%d %s)" % (n, minut(n))
+
+
+def video_m1():
+    """Фрагмент встречи в первой карточке блокнота: подпись и видео со своего
+    сайта в тёмной вставке. --text и --rose читаются только на тёмном
+    (на кремовой карточке контраст около 1,2 : 1), поэтому вставка --izumrud."""
+    vid = os.path.join(SRC, VIDEO_M1)
+    poster = os.path.join(os.path.dirname(vid), "m1-poster.jpg")
+    for f in (vid, poster):
+        if not os.path.isfile(f):
+            raise SystemExit("опора: нет файла %s" % os.path.relpath(f, build.ROOT))
+    os.makedirs(os.path.join(DEST, os.path.dirname(VIDEO_M1)), exist_ok=True)
+    shutil.copy2(vid, os.path.join(DEST, VIDEO_M1))
+    poster_rel = os.path.join(os.path.dirname(VIDEO_M1), "m1-poster.jpg")
+    shutil.copy2(poster, os.path.join(DEST, poster_rel))
+    return """
+        <div class="op-bl-video">
+          <p class="op-bl-video-nad">%s</p>
+          <p class="op-bl-video-tema">%s</p>
+          <p class="op-bl-video-dlit">%s</p>
+          <div class="op-bl-video-ramka">
+            <video controls playsinline preload="none" poster="/opora/%s?v=%s" src="/opora/%s?v=%s"></video>
+            <button class="op-play" type="button" aria-label="Смотреть фрагмент встречи" hidden></button>
+          </div>
+        </div>""" % (VIDEO_M1_NAD, nbsp_tail(VIDEO_M1_TEMA), video_m1_dlit(),
+                     poster_rel, file_hash(poster), VIDEO_M1, file_hash(vid))
+
+
+def mp3_sekundy(path):
+    """Длительность mp3 с постоянным битрейтом: размер после тега ID3 делить
+    на битрейт из заголовка первого кадра (MPEG-1 Layer III)."""
+    with open(path, "rb") as f:
+        data = f.read(1 << 16)
+    off = 0
+    if data[:3] == b"ID3":
+        off = 10 + ((data[6] << 21) | (data[7] << 14) | (data[8] << 7) | data[9])
+    while off < len(data) - 4 and not (data[off] == 0xFF and data[off + 1] & 0xE0 == 0xE0):
+        off += 1
+    kbps = [0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 0][data[off + 2] >> 4]
+    if not kbps:
+        raise SystemExit("опора: не понял битрейт %s" % path)
+    return (os.path.getsize(path) - off) * 8 / (kbps * 1000)
+
+
+def mmss(sek):
+    sek = int(round(sek))
+    return "%d:%02d" % (sek // 60, sek % 60)
+
+
+def audio_podcast():
+    """Фрагмент подкаста: строка и свой плеер (кнопка, полоса, время) в тёмной
+    вставке, как у видео. Тег <audio> со своего сайта, preload="none". Без JS
+    остаётся обычный плеер браузера (controls), свой включает скрипт."""
+    src = os.path.join(SRC, AUDIO_PODCAST)
+    if not os.path.isfile(src):
+        raise SystemExit("опора: нет файла %s" % os.path.relpath(src, build.ROOT))
+    os.makedirs(os.path.join(DEST, os.path.dirname(AUDIO_PODCAST)), exist_ok=True)
+    shutil.copy2(src, os.path.join(DEST, AUDIO_PODCAST))
+    vsego = mmss(mp3_sekundy(src))
+    return """
+        <div class="op-bl-video op-bl-audio">
+          <p class="op-bl-video-nad">%s</p>
+          <audio class="op-audio" controls preload="none" src="/opora/%s?v=%s"></audio>
+          <div class="op-pleer" hidden>
+            <button class="op-play op-pleer-btn" type="button" aria-label="Слушать фрагмент подкаста"></button>
+            <div class="op-pleer-polosa" role="slider" tabindex="0" aria-label="Перемотка" aria-valuemin="0"
+                 aria-valuemax="100" aria-valuenow="0"><span></span></div>
+            <span class="op-pleer-vremya" data-vsego="%s">0:00 / %s</span>
+          </div>
+        </div>""" % (AUDIO_PODCAST_POD, AUDIO_PODCAST, file_hash(src), vsego, vsego)
+
+
+AUDIO_JS = ("document.querySelectorAll('.op-bl-audio').forEach(function(w){"
+            "var a=w.querySelector('audio'),p=w.querySelector('.op-pleer');if(!a||!p)return;"
+            "var b=p.querySelector('.op-pleer-btn'),l=p.querySelector('.op-pleer-polosa'),f=l.querySelector('span'),"
+            "t=p.querySelector('.op-pleer-vremya'),vs=t.getAttribute('data-vsego');"
+            "a.controls=false;a.hidden=true;p.hidden=false;"
+            "function mm(x){x=Math.floor(x||0);return Math.floor(x/60)+':'+('0'+x%60).slice(-2);}"
+            "function dl(){return isFinite(a.duration)&&a.duration>0?a.duration:0;}"
+            "function upd(){var d=dl(),k=d?a.currentTime/d*100:0;f.style.width=k+'%';"
+            "l.setAttribute('aria-valuenow',Math.round(k));t.textContent=mm(a.currentTime)+' / '+(d?mm(d):vs);}"
+            "b.addEventListener('click',function(){if(a.paused)a.play();else a.pause();});"
+            "a.addEventListener('play',function(){p.classList.add('igraet');b.setAttribute('aria-label','Пауза');});"
+            "a.addEventListener('pause',function(){p.classList.remove('igraet');b.setAttribute('aria-label','Слушать фрагмент подкаста');});"
+            "a.addEventListener('timeupdate',upd);a.addEventListener('loadedmetadata',upd);"
+            "function seek(k){var d=dl();if(!d){a.play();return;}a.currentTime=Math.max(0,Math.min(d,k*d));upd();}"
+            "l.addEventListener('click',function(e){var r=l.getBoundingClientRect();seek((e.clientX-r.left)/r.width);});"
+            "l.addEventListener('keydown',function(e){var d=dl();if(!d)return;"
+            "if(e.key==='ArrowRight'){a.currentTime=Math.min(d,a.currentTime+5);e.preventDefault();}"
+            "if(e.key==='ArrowLeft'){a.currentTime=Math.max(0,a.currentTime-5);e.preventDefault();}upd();});});")
+
+
+# Круглая кнопка play поверх обложки: без JS её нет, работают обычные controls.
+PLAY_JS = ("document.querySelectorAll('.op-bl-video-ramka').forEach(function(r){"
+           "var v=r.querySelector('video'),b=r.querySelector('.op-play');if(!v||!b)return;"
+           "b.hidden=false;b.addEventListener('click',function(){v.play();});"
+           "v.addEventListener('play',function(){b.hidden=true;});"
+           "v.addEventListener('ended',function(){b.hidden=false;});});")
+
+
 def sec_poluchaete():
     """«Каждый месяц вы получаете» раскрытым блокнотом на кольцах в бордовом
     переплёте (вариант Артёма 05.11.2026, по референсу «Гранд Будапешт»).
@@ -745,13 +885,18 @@ def sec_poluchaete():
     Слева заголовок и первые пункты, справа остальные, итог в самом конце."""
     def punkt(i, t):
         k = "pk-%d" % (i + 1)
+        if i == 0 and VIDEO_M1:   # первая карточка: текст, под ним фрагмент встречи
+            t = re.sub(r"(\w+-\w+)", r'<span class="g-nw">\1</span>', nbsp_tail(t))
+            return '<li class="op-bl-li-video"><h3>%s</h3>%s</li>' % (t, video_m1())
+        if i == 1 and AUDIO_PODCAST:   # «Подкасты»: название, строка и плеер вместо картинки
+            return '<li class="op-bl-li-video"><h3>%s</h3>%s</li>' % (t, audio_podcast())
         pic = img(k, "", (320, 490), "(max-width: 899px) 86vw, 150px", "op-bl-foto") if find_src(k) else ""
         # хвост склеиваем только в длинном заголовке: «и практические задания» одним куском не влезает
         t = nbsp_tail(t) if len(t.split()) > 6 else t
         t = re.sub(r"(\w+-\w+)", r'<span class="g-nw">\1</span>', t)   # «онлайн-встречи» не рвётся
         return '<li>%s<h3>%s</h3></li>' % (pic, t)
     pp = [punkt(i, t) for i, t in enumerate(POLUCHAETE)]
-    polov = 3   # слева заголовок и три карточки, справа четыре и итог: страницы ровнее
+    polov = 1   # слева заголовок и карточка с видео, справа «Подкасты» с плеером, ещё пять и итог
     kolca = '<i></i>' * 14
     kolca_tel = ''   # на телефоне кольца в картинке tel-top
     return """
@@ -942,7 +1087,10 @@ def page():
             # не <main>: правила общего site.css вида «main h2 {… !important}» писались
             # для страниц практикума и перекрашивали бы клуб
             + '<div id="main" class="op-main" role="main">' + body + "</div>\n" + podval() + build.COOKIE_HTML
-            + "<script>%s</script>\n</body>\n</html>\n" % build.COOKIE_JS)
+            + "<script>%s</script>\n" % build.COOKIE_JS
+            + ("<script>%s</script>\n" % PLAY_JS if VIDEO_M1 else "")
+            + ("<script>%s</script>\n" % AUDIO_JS if AUDIO_PODCAST else "")
+            + "</body>\n</html>\n")
 
 
 def check(text):
@@ -1012,6 +1160,12 @@ def sverka(text):
             continue
         if elem == "Видео" and not VIDEO:
             continue
+        if elem == "Видео в карточке" and not VIDEO_M1:
+            continue
+        if elem == "Аудио в карточке" and not AUDIO_PODCAST:
+            continue
+        if elem == "Видео в карточке" and t == "([N] минут)":
+            t = video_m1_dlit()
         if "когда набор закрыт" in elem and on:
             continue
         polnyy = MEST_OSTALOS == MEST_VSEGO

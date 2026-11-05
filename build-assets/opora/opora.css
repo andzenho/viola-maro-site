@@ -936,6 +936,52 @@ body.op {
    на компьютере слева от заголовка, чтобы блокнот не вырос в три экрана */
 .op-bl-list li:has(.op-bl-foto) { gap: 12px; padding: 8px 8px 14px; }
 .op-bl-list li:has(.op-bl-foto) h3 { padding: 0 8px; }
+/* Первая карточка с фрагментом встречи (ТЗ Артёма 05.11.2026): сверху её текст,
+   под ним тёмная вставка с подписью и видео. --text и --rose только на тёмном. */
+.op-bl-list li.op-bl-li-video { display: block; padding: 16px 14px 14px; }
+.op-bl-video { margin-top: 14px; padding: 18px 16px 16px; background: var(--izumrud); border-radius: 14px; }
+.op-bl-video p { margin: 0; }
+.op-bl-video-nad { color: var(--text); font-size: 15px; line-height: 1.4; }
+.op-bl-video-tema { margin-top: 6px !important; color: var(--rose); font-weight: 700; font-size: 17px; line-height: 1.35; text-wrap: pretty; }
+.op-bl-video-dlit { margin-top: 6px !important; color: var(--text); font-size: 15px; }
+.op-bl-video-ramka { position: relative; margin-top: 14px; border: 2px solid var(--gold); border-radius: 24px; overflow: hidden; background: var(--barhat); aspect-ratio: 16 / 9; }
+.op-bl-video-ramka video { display: block; width: 100%; height: 100%; object-fit: contain; }
+.op-play {
+  position: absolute; left: 50%; top: 50%;
+  width: 64px; height: 64px; margin: -32px 0 0 -32px;
+  border: 0; border-radius: 50%; background: var(--gold); cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .45);
+}
+.op-play::before {
+  content: ""; position: absolute; left: 50%; top: 50%; margin: -12px 0 0 -7px;
+  border-style: solid; border-width: 12px 0 12px 20px;
+  border-color: transparent transparent transparent var(--barhat);
+}
+.op-play:hover { filter: brightness(1.08); }
+.op-play:focus-visible { outline: 3px solid var(--rose); outline-offset: 3px; }
+.op-play[hidden] { display: none; }
+/* Плеер подкаста (ТЗ Артёма 05.11.2026): кнопка --gold, полоса --gold по --panel, время справа. */
+.op-bl-audio .op-audio { display: block; width: 100%; margin-top: 12px; }
+.op-pleer { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.op-pleer[hidden] { display: none; }
+.op-pleer .op-play { position: relative; left: auto; top: auto; flex: none; width: 48px; height: 48px; margin: 0; }
+.op-pleer .op-play::before { margin: -9px 0 0 -5px; border-width: 9px 0 9px 15px; }
+.op-pleer.igraet .op-play::before {
+  margin: -9px 0 0 -7px; width: 4px; height: 18px; border: 0;
+  border-left: 4px solid var(--barhat); border-right: 4px solid var(--barhat); background: transparent; box-sizing: content-box;
+}
+.op-pleer-polosa { position: relative; flex: 1; min-width: 0; height: 8px; border-radius: 4px; background: var(--panel); cursor: pointer; }
+.op-pleer-polosa::after { content: ""; position: absolute; inset: -14px 0; }
+.op-pleer-polosa span { display: block; width: 0; height: 100%; border-radius: 4px; background: var(--gold); }
+.op-pleer-polosa:focus-visible { outline: 3px solid var(--rose); outline-offset: 4px; }
+.op-pleer-vremya { flex: none; color: var(--text); font-size: 14px; font-variant-numeric: tabular-nums; }
+/* на телефоне вставка доходит до краёв карточки, а видео до краёв вставки:
+   иначе в узком листе блокнота кадр выходит шириной в пол-экрана */
+@media (max-width: 899px) {
+  .op-bl-list li.op-bl-li-video { padding-bottom: 0; overflow: hidden; }
+  .op-bl-video { margin: 14px -14px 0; padding: 18px 14px 14px; border-radius: 0; }
+  .op-bl-video-ramka { margin-left: -6px; margin-right: -6px; border-radius: 18px; }
+}
 .op-bl-foto { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 3px; }
 @media (min-width: 900px) {
   .op-bl-list li:has(.op-bl-foto) { grid-template-columns: 132px 1fr; align-items: center; gap: 14px; padding: 8px 14px 8px 8px; }
