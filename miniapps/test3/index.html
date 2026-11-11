@@ -77,7 +77,8 @@
   html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0; background: var(--izumrud); color: var(--text);
-    font-family: var(--golos); font-size: 17px; line-height: 1.5;
+    /* Golos плотнее обычного (500): на тёмном фоне 400 выглядел тонко. */
+    font-family: var(--golos); font-size: 17px; font-weight: 500; line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
   p, h1, h2, h3, ul { margin: 0; }
@@ -115,10 +116,11 @@
   .h1 {
     font-family: var(--prata); font-weight: 400; text-transform: uppercase;
     letter-spacing: .035em; line-height: 1.12; color: var(--rose);
-    font-size: clamp(1.9rem, 8.4vw, 2.6rem); text-wrap: balance;
+    font-size: clamp(1.55rem, 7vw, 2.5rem);
   }
-  .sub { color: var(--rose-muted); font-style: italic; font-size: 1.1rem; margin-top: -.5rem; }
-  .q-text { font-size: 1.32rem; line-height: 1.38; font-weight: 600; color: var(--text); text-wrap: pretty; }
+  .h1 .ln { white-space: nowrap; }
+  .sub { color: var(--rose-muted); font-style: italic; font-weight: 500; font-size: 1.1rem; margin-top: -.5rem; }
+  .q-text { font-size: 1.38rem; line-height: 1.36; font-weight: 700; color: var(--text); text-wrap: pretty; }
   .soft { color: var(--rose-muted); }
   .center { text-align: center; }
 
@@ -132,7 +134,7 @@
     display: flex; flex-direction: column; gap: .6rem; min-width: 0;
   }
   .who { font-size: .9rem; font-weight: 700; color: var(--wine); margin-bottom: -.35rem; }
-  .bubble p { text-wrap: pretty; }
+  .bubble p { text-wrap: pretty; font-weight: 500; }
 
   /* ответы на утверждение и варианты вопросов */
   .answers { display: flex; flex-direction: column; gap: .6rem; }
@@ -141,10 +143,11 @@
     padding: .95rem 1.1rem; min-height: 3.3rem;
     background: var(--panel); color: var(--text);
     border: 1px solid rgba(184, 147, 92, .55); border-radius: 6px;
-    font-size: 1.05rem; line-height: 1.35;
+    font-size: 1.06rem; font-weight: 600; line-height: 1.35;
     transition: background .15s, border-color .15s;
   }
-  .ans:hover { border-color: var(--gold); }
+  /* Подсветка наведения только для мыши: на телефоне она «залипала» после касания. */
+  @media (hover: hover) { .ans:hover { border-color: var(--gold); } }
   .ans:active, .ans.on { background: var(--wine); border-color: var(--gold); color: var(--wine-text); }
   .ans.multi { display: flex; gap: .75rem; align-items: center; }
   .ans.multi::before {
@@ -288,7 +291,8 @@ const CONFIG = {
    Своих формулировок не добавлять. re — реплика Виолы над следующим
    утверждением, если на это ответили «Да» или «Часто». */
 const INTRO = {
-  title: "Эмпат ли вы на самом деле?",
+  /* Перенос строки задан руками: сам браузер рвал заголовок на три неровные строки. */
+  title: "Эмпат ли вы<br>на самом деле?",
   sub: "Или вам только кажется",
   words: [
     "Дорогие мои, больше всего мне задают один вопрос: эмпат ли я, если у меня повышенная чувствительность.",
@@ -561,7 +565,7 @@ function intro() {
   stage = "intro";
   const n = el(`
     <div class="card">
-      <h1 class="h1">${INTRO.title}</h1>
+      <h1 class="h1">${INTRO.title.split("<br>").map(l => `<span class="ln">${l}</span>`).join("<br>")}</h1>
       <p class="sub">${INTRO.sub}</p>
       ${CONFIG.audio.start ? voiceHtml_("start") : ""}
       ${viola_(INTRO.words)}
