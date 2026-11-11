@@ -252,12 +252,27 @@
   .down {
     margin-top: auto; align-self: center; padding: 1.2rem .5rem .2rem;
     background: none; border: 0; color: var(--izumrud); text-align: center;
-    display: flex; flex-direction: column; align-items: center; gap: .5rem;
-    font-size: 1.02rem; font-weight: 600; line-height: 1.4; max-width: 19rem;
+    display: flex; flex-direction: column; align-items: center; gap: .9rem;
+    font-size: 1.02rem; font-weight: 600; line-height: 1.4;
   }
-  .down svg { width: 1.9rem; height: 1.9rem; color: var(--wine); animation: down 1.8s ease-in-out infinite; }
+  /* надпись плашкой, как карточки «Опоры»: белая, двойная золотая рамка */
+  .down-text {
+    background: var(--bumaga); border: 1px solid var(--gold); border-radius: 10px;
+    outline: 1px solid rgba(184, 147, 92, .4); outline-offset: -6px;
+    padding: .85rem 1.3rem; max-width: 20rem; text-wrap: balance;
+  }
+  /* стрелка в круглой бордовой кнопке, мягко подпрыгивает */
+  .down-ico {
+    width: 3.1rem; height: 3.1rem; border-radius: 50%;
+    background: var(--wine); color: var(--wine-text); border: 1px solid var(--gold);
+    box-shadow: inset 0 0 0 3px var(--wine), inset 0 0 0 4px rgba(184, 147, 92, .75);
+    display: flex; align-items: center; justify-content: center;
+    animation: down 1.8s ease-in-out infinite;
+  }
+  .down-ico svg { width: 1.45rem; height: 1.45rem; }
+  @media (hover: hover) { .down:hover .down-ico { background: #8E1F28; } }
   @keyframes down { 0%, 100% { transform: none; } 50% { transform: translateY(6px); } }
-  @media (prefers-reduced-motion: reduce) { .down svg { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .down-ico { animation: none; } }
 
   /* плавающая копия кнопки, пока основная за экраном */
   .float {
@@ -600,7 +615,7 @@ function istochnik_() {
 
 const ICON = {
   play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>',
-  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v17M5 13l7 7 7-7"/></svg>',
+  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v17M5 13l7 7 7-7"/></svg>',
   pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5.5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14" y="4" width="4.5" height="16" rx="1.2"/></svg>'
 };
 
@@ -808,7 +823,7 @@ function result() {
         <div class="plate"><span class="plate-label">${RESULT.label}</span><span class="plate-name">${t.name}</span></div>
         <p>${RESULT.listen}</p>
         ${voiceHtml_(res.type)}
-        <button class="down" type="button" id="down">${RESULT.down}${ICON.down}</button>
+        <button class="down" type="button" id="down"><span class="down-text">${RESULT.down}</span><span class="down-ico">${ICON.down}</span></button>
       </div>
       <div class="offer" id="offer-box">
         <h2>${RESULT.offer.title}</h2>
