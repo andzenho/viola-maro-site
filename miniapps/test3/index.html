@@ -236,13 +236,28 @@
     display: flex; flex-direction: column; gap: .9rem;
   }
   .offer h2 { font-family: var(--prata); font-weight: 400; text-transform: uppercase; letter-spacing: .04em;
-    font-size: 1.35rem; line-height: 1.2; color: var(--wine); }
+    font-size: clamp(1.85rem, 8.4vw, 2.4rem); line-height: 1.1; color: var(--wine); }
   .offer li { display: flex; gap: .65rem; align-items: baseline; }
   .offer li::before { content: ""; flex: none; width: .45rem; height: .45rem; border-radius: 50%; background: var(--gold); transform: translateY(-.1rem); }
   .offer ul { display: flex; flex-direction: column; gap: .45rem; }
   .offer-lead { font-size: 1.18rem; line-height: 1.4; font-weight: 600; text-wrap: pretty; }
   .offer p { text-wrap: pretty; }
   .offer-intro { margin-bottom: -.35rem; }
+
+  /* Первый экран результата на всю высоту: оффер начинается ниже, его видно
+     только после того, как человек пролистает по стрелке. */
+  #offer-box { scroll-margin-top: 1rem; }
+  .res-first { display: flex; flex-direction: column; gap: 1.3rem; min-height: calc(100vh - 2.7rem); }
+  @supports (height: 100svh) { .res-first { min-height: calc(100svh - 2.7rem); } }
+  .down {
+    margin-top: auto; align-self: center; padding: 1.2rem .5rem .2rem;
+    background: none; border: 0; color: var(--izumrud); text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: .5rem;
+    font-size: 1.02rem; font-weight: 600; line-height: 1.4; max-width: 19rem;
+  }
+  .down svg { width: 1.9rem; height: 1.9rem; color: var(--wine); animation: down 1.8s ease-in-out infinite; }
+  @keyframes down { 0%, 100% { transform: none; } 50% { transform: translateY(6px); } }
+  @media (prefers-reduced-motion: reduce) { .down svg { animation: none; } }
 
   /* плавающая копия кнопки, пока основная за экраном */
   .float {
@@ -405,6 +420,7 @@ const RESULT = {
   yes: "Да, вы эмпат",
   label: "Ваш тип",
   listen: "Что это значит и как вы устроены, я разобрала для вас в голосовом. Послушайте.",
+  down: "Информация для вас, если вы уже послушали голосовое",
   wait: "Голосовое появится совсем скоро",
   /* Мини-оффер (правка 11.11, заменяет прежние версии). Слова Виолы из её
      ролика о курсе: не править и не сокращать. Цифр про лекции и техники
@@ -584,6 +600,7 @@ function istochnik_() {
 
 const ICON = {
   play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>',
+  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v17M5 13l7 7 7-7"/></svg>',
   pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5.5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14" y="4" width="4.5" height="16" rx="1.2"/></svg>'
 };
 
@@ -786,11 +803,14 @@ function result() {
   const t = TYPES[res.type];
   const n = el(`
     <div class="card">
-      <h1 class="verdict">${RESULT.yes}</h1>
-      <div class="plate"><span class="plate-label">${RESULT.label}</span><span class="plate-name">${t.name}</span></div>
-      <p>${RESULT.listen}</p>
-      ${voiceHtml_(res.type)}
-      <div class="offer">
+      <div class="res-first">
+        <h1 class="verdict">${RESULT.yes}</h1>
+        <div class="plate"><span class="plate-label">${RESULT.label}</span><span class="plate-name">${t.name}</span></div>
+        <p>${RESULT.listen}</p>
+        ${voiceHtml_(res.type)}
+        <button class="down" type="button" id="down">${RESULT.down}${ICON.down}</button>
+      </div>
+      <div class="offer" id="offer-box">
         <h2>${RESULT.offer.title}</h2>
         <p class="offer-lead">${RESULT.offer.lead}</p>
         <p>${RESULT.offer.text}</p>
@@ -804,19 +824,30 @@ function result() {
   player_(n, res.type);
   n.querySelectorAll('a[href="' + CONFIG.offerUrl + '"]').forEach(a => a.addEventListener("click", () => event_("offer_click")));
   render(n);
-  floatButton_(n.querySelector("#offer"), n.querySelector("#float"));
+  const box = n.querySelector("#offer-box");
+  n.querySelector("#down").addEventListener("click", () => {
+    const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    box.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  });
+  floatButton_(n.querySelector("#offer"), n.querySelector("#float"), box);
 }
 
-/* Плавающая копия кнопки: видна, пока основная за экраном. */
-function floatButton_(main, fl) {
+/* Плавающая копия кнопки: видна, пока основная за экраном, но только после
+   того, как человек долистал до оффера (gate), чтобы не показать его раньше. */
+function floatButton_(main, fl, gate) {
   if (!main || !fl || !("IntersectionObserver" in window)) return;
   document.body.classList.add("has-float");
-  new IntersectionObserver(es => es.forEach(e => {
-    const on = !e.isIntersecting;
+  let mainSeen = false, reached = !gate;
+  const upd = () => {
+    const on = reached && !mainSeen;
     fl.classList.toggle("on", on);
     fl.setAttribute("aria-hidden", String(!on));
     fl.querySelector("a").tabIndex = on ? 0 : -1;
-  })).observe(main);
+  };
+  new IntersectionObserver(es => es.forEach(e => { mainSeen = e.isIntersecting; upd(); })).observe(main);
+  if (gate) new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting || e.boundingClientRect.top < 0) { reached = true; upd(); }
+  }), { rootMargin: "0px 0px -20% 0px" }).observe(gate);
 }
 
 /* ——— голосовое: как в Телеграме ——— */
