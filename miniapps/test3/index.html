@@ -240,6 +240,9 @@
   .offer li { display: flex; gap: .65rem; align-items: baseline; }
   .offer li::before { content: ""; flex: none; width: .45rem; height: .45rem; border-radius: 50%; background: var(--gold); transform: translateY(-.1rem); }
   .offer ul { display: flex; flex-direction: column; gap: .45rem; }
+  .offer-lead { font-size: 1.18rem; line-height: 1.4; font-weight: 600; text-wrap: pretty; }
+  .offer p { text-wrap: pretty; }
+  .offer-intro { margin-bottom: -.35rem; }
 
   /* плавающая копия кнопки, пока основная за экраном */
   .float {
@@ -279,7 +282,7 @@ const CONFIG = {
      Скрипт-таблицы-целиком.gs). Тест 3.0 он понимает с версии
      «2026-11-11 test3»: до её развёртывания записи ждут в буфере браузера. */
   sheetUrl: "https://script.google.com/macros/s/AKfycbznc7zwFhyc7t5FCkmm1gFIi2FH4ZcIeUeXQlCStxsVZ2npUFa4K_JipDzbCACG2WjSAQ/exec",
-  /* Кнопка «Посмотреть программу». Финальный адрес с оплатой даст Илья. */
+  /* Кнопка «Изучить программу». Финальный адрес с оплатой даст Илья. */
   offerUrl: "https://violamaro.ru",
   /* Кнопка «Мой Телеграм-канал» у «не эмпата»: открытый канал Виолы. */
   channelUrl: "https://t.me/violamaro1",
@@ -403,9 +406,22 @@ const RESULT = {
   label: "Ваш тип",
   listen: "Что это значит и как вы устроены, я разобрала для вас в голосовом. Послушайте.",
   wait: "Голосовое появится совсем скоро",
-  /* Мини-оффер: черновой текст, финальный даст Илья. Без «я приглашаю»:
-     приглашение Виола произносит в голосовом. */
-  offer: { title: "Прикладная эмпатия", lines: ["Шесть лекций в записи", "18 техник", "Доступ сразу после оплаты"], btn: "Посмотреть программу" },
+  /* Мини-оффер (правка 11.11, заменяет прежние версии). Слова Виолы из её
+     ролика о курсе: не править и не сокращать. Цифр про лекции и техники
+     здесь нет, «Доступ сразу после оплаты» только под кнопкой. */
+  offer: {
+    title: "Прикладная эмпатия",
+    lead: "Сейчас ваша эмпатия стопорит и мешает вашей жизни. Она может стать вашим другом.",
+    text: "Вы слушали лекции, читали книжки. Но осталась одна проблема: как? Как это применить, чтобы жизнь стала легче?",
+    listIntro: "Эта программа про «как»:",
+    lines: [
+      "поставить себя в приоритет и перестать быть удобной",
+      "найти свой источник энергии и никому его не отдавать",
+      "чтобы пришла та самая наполненность",
+    ],
+    btn: "Изучить программу",
+    note: "Доступ сразу после оплаты",
+  },
   no: "Вы не эмпат",
   noText: "По вашим ответам это чувствительность, а не эмпатия. Есть люди, которые очень остро отзываются на чужую боль, потому что у них самих болит в том же месте. Это со-чувствование, это не эмпатия.",
   noBtn: "Мой Телеграм-канал"
@@ -776,9 +792,13 @@ function result() {
       ${voiceHtml_(res.type)}
       <div class="offer">
         <h2>${RESULT.offer.title}</h2>
+        <p class="offer-lead">${RESULT.offer.lead}</p>
+        <p>${RESULT.offer.text}</p>
+        <p class="offer-intro">${RESULT.offer.listIntro}</p>
         <ul>${RESULT.offer.lines.map(l => `<li>${l}</li>`).join("")}</ul>
       </div>
-      <div class="foot"><a class="go" id="offer" href="${CONFIG.offerUrl}" target="_blank" rel="noopener">${RESULT.offer.btn}</a></div>
+      <div class="foot"><a class="go" id="offer" href="${CONFIG.offerUrl}" target="_blank" rel="noopener">${RESULT.offer.btn}</a>
+        <p class="fine center">${RESULT.offer.note}</p></div>
     </div>
     <div class="float" id="float" aria-hidden="true"><a class="go" href="${CONFIG.offerUrl}" target="_blank" rel="noopener" tabindex="-1">${RESULT.offer.btn}</a></div>`);
   player_(n, res.type);
