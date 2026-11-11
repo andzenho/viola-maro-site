@@ -20,7 +20,7 @@
 // Версия для интеграции мини-аппов. SaleBot-callback по-прежнему выключен,
 // пока в свойствах скрипта явно не выставлено SALEBOT_ENABLED=1.
 // У теста 2.0 свой выключатель: SALEBOT_T2_ENABLED=1.
-var ВЕРСИЯ = '2026-11-02 kastdev-telefon';
+var ВЕРСИЯ = '2026-11-11 test3';
 
 /* ═══ ИМЕНА ВКЛАДОК — ЕДИНСТВЕННОЕ МЕСТО, ГДЕ ОНИ ЗАДАЮТСЯ ═══════════
    Должны совпадать с именами вкладок в таблице ДОСЛОВНО. Разойдутся хоть
@@ -55,13 +55,38 @@ var ЛИСТЫ = {
   сайтЦена: 'Сайт: цена по заявке',
   /* Анкета для интервью (кастдевов), violamaro.ru/intervyu/ (30.10).
      Вкладку скрипт заведёт сам. Колонку «Статус» ведёт команда руками. */
-  ксдв: 'Кастдев'
+  ксдв: 'Кастдев',
+  /* Тест 3.0 «Эмпат ли вы на самом деле?» (miniapps/test3, 11.11).
+     Своя метка empat3 и свой лист, строки теста 2.0 не смешиваются.
+     Вкладку скрипт заведёт сам при первом прохождении. */
+  тест3: 'Тест 3.0'
 };
 /* ════════════════════════════════════════════════════════════════════ */
 
 var SHEET_NAME = ЛИСТЫ.тест;
 var LEAD_SHEET = ЛИСТЫ.предзапись;
 var START_HEADERS = ['Дата', 'ID в Телеграме', 'Тест', 'Источник', 'Событие'];
+
+/* Лист «Тест 3.0». Тест без Телеграма: человека узнаём только по номеру
+   прохождения. Пять колонок в конце дописываются позже, когда человек
+   слушает голосовое и нажимает кнопку программы (запись t3_event). */
+var T3_HEADERS = [
+  'Дата', 'ID прохождения', 'Источник', 'Результат', 'Тип', 'Развилка', 'Сфера',
+  'Сколько лет так живёт', 'Что пробовала', 'Возраст',
+  'Радар (R)', 'Похоже на эмпатию (T)', 'Спасатель (S)',
+  'Донор (D)', 'Без фильтра (F)', 'Спящий (Z)', 'Проснувшийся (P)',
+  'Сферы (баллы)', 'Ответы (1–29)', 'Секунд', 'Быстро', 'Одна кнопка',
+  'Голосовое: начала', 'Голосовое: половина', 'Голосовое: до конца', 'Кнопка программы', 'Канал'
+];
+var T3_TYPES = {
+  ne_empat: 'Не эмпат', donor: 'Эмпат-донор', filter: 'Эмпат без фильтра',
+  sleeping: 'Спящий эмпат', awake: 'Проснувшийся эмпат'
+};
+/* Какое событие страницы в какую колонку строки прохождения. */
+var T3_EVENTS = {
+  audio_start: 'Голосовое: начала', audio_50: 'Голосовое: половина',
+  audio_end: 'Голосовое: до конца', offer_click: 'Кнопка программы', channel_click: 'Канал'
+};
 
 var HEADERS = [
   'Дата', 'ID в Телеграме', 'Имя',
@@ -344,6 +369,9 @@ function route_(d) {
        и не должны попасть ни в лист первого теста, ни в его цепочку бота. */
     if (d.test === 'empat2') return routeT2_(d);
 
+    /* Тест 3.0: свой лист, без Телеграма и без бота. */
+    if (d.test === 'empat3') return routeT3_(d);
+
     if (d.type === 'start') return saveStart_(d);
     if (d.type === 'lead_intent') return saveIntent_(d);
 
@@ -397,7 +425,7 @@ function saveStart_(d) {
   /* У теста 2.0 старт пишем и без Телеграма, по номеру прохождения: по
      пересылке его открывают в обычном браузере, и без этого в воронке
      не было бы видно шага «открыли тест». */
-  var id = d.userId || (d.test === 'empat2' ? d.pid : '');
+  var id = d.userId || (d.test === 'empat2' || d.test === 'empat3' ? d.pid : '');
   if (!id) return json_({ ok: true, версия: ВЕРСИЯ, note: 'без ID не пишем' });
   var sheet = getSheet2_(ЛИСТЫ.старты, START_HEADERS);
   sheet.appendRow([new Date(), id, d.test || 'empat', d.istochnik || '', 'test_started']);
@@ -579,6 +607,79 @@ function saveLead_(d) {
   ]);
   /* Имя листа в ответе: видно, куда легла заявка, без чтения таблицы. */
   return json_({ ok: true, версия: ВЕРСИЯ, лист: sheet.getName() });
+}
+
+/* ═══ ТЕСТ 3.0 ═══════════════════════════════════════════════════════
+   Страница miniapps/test3 шлёт три вида записей, все с test: 'empat3':
+   start      — открыл первый вопрос                    → «Старты теста»
+   t3_result  — дошёл до результата                     → «Тест 3.0»
+   t3_event   — голосовое, кнопка программы, канал      → в ту же строку */
+function routeT3_(d) {
+  if (d.type === 'start') return saveStart_(d);
+  if (d.type === 't3_result') return saveT3_(d);
+  if (d.type === 't3_event') return saveT3Event_(d);
+  return json_({ ok: false, error: 'тест 3.0: неизвестный тип записи: ' + d.type });
+}
+
+/** Строка прохождения теста 3.0 по номеру прохождения. */
+function строкаТ3_(pid) {
+  pid = String(pid || '').trim();
+  if (!pid) return null;
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(ЛИСТЫ.тест3);
+  if (!sheet || sheet.getLastRow() < 2) return null;
+  var данные = sheet.getDataRange().getValues();
+  var шапка = данные[0];
+  var кол = шапка.indexOf('ID прохождения');
+  if (кол === -1) return null;
+  for (var i = данные.length - 1; i >= 1; i--) {
+    if (String(данные[i][кол]).trim() !== pid) continue;
+    var r = {};
+    for (var j = 0; j < шапка.length; j++) r[шапка[j]] = данные[i][j];
+    return { sheet: sheet, row: i + 1, шапка: шапка, r: r };
+  }
+  return null;
+}
+
+/** Прохождение теста 3.0. Повтор того же прохождения второй строкой не пишется. */
+function saveT3_(d) {
+  var sheet = getSheet2_(ЛИСТЫ.тест3, T3_HEADERS);
+  if (строкаТ3_(d.pid)) return json_({ ok: true, версия: ВЕРСИЯ, лист: sheet.getName(), duplicate: true });
+  var s = d.scales || {};
+  var sp = d.spheres || {};
+  sheet.appendRow([
+    new Date(),
+    d.pid || '',
+    d.istochnik || '',
+    d.type3 === 'ne_empat' ? 'не эмпат' : 'эмпат',
+    T3_TYPES[d.type3] || '',
+    d.razvilka ? 'да: ' + (T3_TYPES[d.razvilka] || d.razvilka) : '',
+    T2_SPHERES[d.sphere] || '',
+    какТекст_(d.let || ''),
+    какТекст_((d.probovali || []).join(', ')),
+    какТекст_(d.age || ''),
+    num_(s.R), num_(s.T), num_(s.S), num_(s.D), num_(s.F), num_(s.Z), num_(s.P),
+    T2_SPHERE_ORDER.map(function (k) { return T2_SPHERES[k] + ' ' + (sp[k] || 0); }).join(', '),
+    (d.answers || []).join(','),
+    d.seconds || '', d.fast ? 'да' : '', d.monotone ? 'да' : '',
+    '', '', '', '', ''
+  ]);
+  SpreadsheetApp.flush();
+  return json_({ ok: true, версия: ВЕРСИЯ, лист: sheet.getName() });
+}
+
+/** Голосовое, кнопка программы, канал: отметка в строку прохождения. */
+function saveT3Event_(d) {
+  var колонка = T3_EVENTS[d.event];
+  if (!колонка) return json_({ ok: true, версия: ВЕРСИЯ, note: 'событие не пишем: ' + d.event });
+  var найдено = строкаТ3_(d.pid);
+  /* Отметка может обогнать само прохождение: обе уходят из буфера разом. */
+  if (!найдено) {
+    if (d.pid) getSheet2_(ЛИСТЫ.старты, START_HEADERS).appendRow([new Date(), d.pid, 'empat3', d.istochnik || '', 't3:' + d.event]);
+    return json_({ ok: true, версия: ВЕРСИЯ, note: 'прохождение не найдено, отметка в журнале' });
+  }
+  var кол = найдено.шапка.indexOf(колонка);
+  if (кол !== -1) найдено.sheet.getRange(найдено.row, кол + 1).setValue('да');
+  return json_({ ok: true, версия: ВЕРСИЯ, лист: найдено.sheet.getName() });
 }
 
 /* ═══ ТЕСТ 2.0 ═══════════════════════════════════════════════════════

@@ -1,0 +1,959 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F3532">
+<meta name="color-scheme" content="only dark">
+<!-- Пока тексты не утверждены (Илья, затем Виола), страницу не индексируем. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Эмпат вы или вам только кажется. 29 утверждений, три-четыре минуты.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Виола Маро">
+<meta property="og:url" content="https://violamaro.ru/test3/">
+<meta property="og:title" content="Эмпат ли вы на самом деле?">
+<meta property="og:description" content="Эмпат вы или вам только кажется. 29 утверждений, три-четыре минуты.">
+<meta name="twitter:card" content="summary">
+<title>Эмпат ли вы на самом деле?</title>
+<script>
+/* Страховка: если основной скрипт упадёт на старом браузере, человек увидит
+   объяснение и кнопку, а не пустой экран. Только ES5. */
+(function () {
+  var shown = false;
+  function fallback(msg) {
+    if (shown) return;
+    shown = true;
+    try { localStorage.removeItem("viola3-state"); } catch (e) {}
+    var box = document.getElementById("screen") || document.body;
+    if (!box) return;
+    box.innerHTML =
+      '<div style="max-width:32rem;margin:1.5rem auto;padding:1.4rem;font:16px/1.55 system-ui,-apple-system,sans-serif;' +
+      'color:#1F3532;background:#F3E6E3;border-radius:6px">' +
+      '<p style="margin:0 0 .9rem;font-size:1.2rem">Тест не открылся с первого раза</p>' +
+      '<p style="margin:0 0 .9rem">Так бывает: оборвалась связь или страница не догрузилась.</p>' +
+      '<p style="margin:0 0 .9rem"><button onclick="location.reload()" ' +
+      'style="font:inherit;padding:.7rem 1.1rem;color:#F6E9E6;background:#7B1921;border:1px solid #B8935C;border-radius:6px">' +
+      'Открыть заново</button></p>' +
+      '<p style="margin:0;font-size:.8rem;opacity:.75">Если не помогло, пришлите нам эту строку: ' +
+      String(msg).replace(/</g, "&lt;").slice(0, 200) + '</p></div>';
+  }
+  window.__fallback = fallback;
+  window.addEventListener("error", function (e) { fallback(e && e.message ? e.message : "неизвестная ошибка"); });
+  setTimeout(function () {
+    var s = document.getElementById("screen");
+    if (s && !s.firstChild) fallback("пустой экран");
+  }, 7000);
+})();
+</script>
+<style>
+  /* Тест 3.0. Вид как у страницы клуба «Опора» (violamaro.ru/opora/,
+     build-assets/opora/opora.css): изумрудный фон, заголовки Prata
+     прописными цветом --rose, светлые карточки с тонкой золотой рамкой
+     внутри, бордовые кнопки с золотой кромкой. Только цвета, фон и шрифты:
+     наклеек, фото и прочих деталей той страницы здесь нет. */
+  @font-face { font-family: "Prata"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url(/assets/fonts/Prata-cyrillic.woff2) format("woff2"); unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+  @font-face { font-family: "Prata"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url(/assets/fonts/Prata-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122; }
+  @font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 700; font-display: swap;
+    src: url(/assets/fonts/GolosText-cyrillic.woff2) format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+  @font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 700; font-display: swap;
+    src: url(/assets/fonts/GolosText-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD; }
+
+  :root {
+    --izumrud: #1F3532;     /* фон */
+    --barhat: #141C15;      /* шапка, плавающая кнопка */
+    --panel: #2D4240;       /* подложка кнопок ответа */
+    --rose: #E8C8CA;        /* заголовки */
+    --rose-muted: #B6928D;  /* подписи, мелкий текст */
+    --text: #EFE4E0;        /* основной текст */
+    --wine: #7B1921;        /* кнопки, акценты на светлом */
+    --wine-text: #F6E9E6;   /* текст на кнопках */
+    --gold: #B8935C;        /* линии, рамки */
+    --svetlyy: #F3E6E3;     /* светлые карточки, текст на них --izumrud */
+    --prata: "Prata", Georgia, "Times New Roman", serif;
+    --golos: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--izumrud); color: var(--text);
+    font-family: var(--golos); font-size: 17px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  p, h1, h2, h3, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  a { color: var(--rose); }
+  button { font: inherit; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+  .nw { white-space: nowrap; }
+
+  .wrap { max-width: 34rem; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* шапка: аватарка, имя, где мы, полоса */
+  .top {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--barhat);
+    padding: .7rem 1rem .6rem;
+    border-bottom: 1px solid rgba(184, 147, 92, .35);
+  }
+  .top[hidden] { display: none; }
+  .brand { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
+  .brand-who { display: flex; align-items: center; gap: .55rem; font-weight: 600; color: var(--rose); }
+  #counter { font-size: .88rem; color: var(--rose-muted); text-align: right; }
+  .bar { margin-top: .55rem; height: 3px; background: rgba(184, 147, 92, .22); border-radius: 2px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--gold); transition: width .3s; }
+
+  main { flex: 1; padding: 1.4rem 1rem 2.5rem; }
+  .card { display: flex; flex-direction: column; gap: 1.3rem; }
+  .fade { animation: fade .25s ease-out; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .fade { animation: none; } .bar i { transition: none; } }
+
+  .ava { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; border: 1px solid var(--gold); }
+
+  /* заголовки как на «Опоре» */
+  .h1 {
+    font-family: var(--prata); font-weight: 400; text-transform: uppercase;
+    letter-spacing: .035em; line-height: 1.12; color: var(--rose);
+    font-size: clamp(1.9rem, 8.4vw, 2.6rem); text-wrap: balance;
+  }
+  .sub { color: var(--rose-muted); font-style: italic; font-size: 1.1rem; margin-top: -.5rem; }
+  .q-text { font-size: 1.32rem; line-height: 1.38; font-weight: 600; color: var(--text); text-wrap: pretty; }
+  .soft { color: var(--rose-muted); }
+  .center { text-align: center; }
+
+  /* слова Виолы: аватарка, имя, светлый пузырь с золотой рамкой внутри */
+  .msg { display: grid; grid-template-columns: 36px 1fr; column-gap: .55rem; align-items: end; }
+  .bubble {
+    background: var(--svetlyy); color: var(--izumrud);
+    border-radius: 14px 14px 14px 4px;
+    outline: 1px solid var(--gold); outline-offset: -5px;
+    padding: .85rem 1.05rem .95rem;
+    display: flex; flex-direction: column; gap: .6rem; min-width: 0;
+  }
+  .who { font-size: .9rem; font-weight: 700; color: var(--wine); margin-bottom: -.35rem; }
+  .bubble p { text-wrap: pretty; }
+
+  /* ответы на утверждение и варианты вопросов */
+  .answers { display: flex; flex-direction: column; gap: .6rem; }
+  .ans {
+    width: 100%; text-align: left;
+    padding: .95rem 1.1rem; min-height: 3.3rem;
+    background: var(--panel); color: var(--text);
+    border: 1px solid rgba(184, 147, 92, .55); border-radius: 6px;
+    font-size: 1.05rem; line-height: 1.35;
+    transition: background .15s, border-color .15s;
+  }
+  .ans:hover { border-color: var(--gold); }
+  .ans:active, .ans.on { background: var(--wine); border-color: var(--gold); color: var(--wine-text); }
+  .ans.multi { display: flex; gap: .75rem; align-items: center; }
+  .ans.multi::before {
+    content: ""; flex: none; width: 1.15rem; height: 1.15rem; border-radius: 3px;
+    border: 1.5px solid var(--gold); background: transparent;
+  }
+  .ans.multi.on::before { background: var(--gold); box-shadow: inset 0 0 0 3px var(--wine); }
+
+  /* главная кнопка: бордо, золотая кромка и тонкая рамка внутри */
+  .go {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 100%; min-height: 3.6rem; padding: .9rem 1.4rem;
+    background: var(--wine); color: var(--wine-text) !important;
+    border: 1px solid var(--gold); border-radius: 6px;
+    box-shadow: inset 0 0 0 4px var(--wine), inset 0 0 0 5px rgba(184, 147, 92, .75);
+    font-family: var(--golos); font-weight: 600; font-size: 1rem; line-height: 1.25;
+    letter-spacing: .1em; text-transform: uppercase; text-decoration: none; text-align: center;
+  }
+  .go:hover { background: #8E1F28; box-shadow: inset 0 0 0 4px #8E1F28, inset 0 0 0 5px rgba(184, 147, 92, .75); }
+  .go:disabled { opacity: .55; cursor: default; }
+  .ghost {
+    align-self: flex-start; background: none; border: 0; padding: .3rem 0;
+    color: var(--rose-muted); font-size: .95rem;
+  }
+  .foot { display: flex; flex-direction: column; gap: .8rem; margin-top: .3rem; }
+  .fine { font-size: .82rem; line-height: 1.5; color: var(--rose-muted); }
+  .fine a { color: var(--rose-muted); }
+  .hint { font-size: .9rem; color: var(--rose-muted); margin-top: -.6rem; }
+  .err { color: #F2A7AE; font-size: .92rem; }
+
+  /* результат */
+  .verdict { font-family: var(--prata); text-transform: uppercase; letter-spacing: .03em; line-height: 1.1;
+    color: var(--rose); font-size: clamp(2.1rem, 10vw, 3rem); text-wrap: balance; }
+  .plate {
+    border: 1px solid var(--gold); border-radius: 6px; padding: 1rem 1.1rem 1.1rem;
+    display: flex; flex-direction: column; gap: .35rem;
+  }
+  .plate-label { font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--rose-muted); }
+  .plate-name { font-family: var(--prata); text-transform: uppercase; letter-spacing: .035em; font-size: 1.45rem; line-height: 1.2; color: var(--rose); }
+
+  /* голосовое: как в Телеграме — аватарка, круглая кнопка, дорожка, время, скорость */
+  .voice {
+    display: grid; grid-template-columns: 36px 1fr; column-gap: .55rem; align-items: end;
+  }
+  .voice-box {
+    background: var(--svetlyy); color: var(--izumrud);
+    border-radius: 14px 14px 14px 4px;
+    outline: 1px solid var(--gold); outline-offset: -5px;
+    padding: .8rem .95rem .75rem;
+    display: grid; grid-template-columns: 2.8rem 1fr auto; gap: .35rem .75rem; align-items: center;
+  }
+  .play {
+    grid-row: span 2; width: 2.8rem; height: 2.8rem; border-radius: 50%;
+    background: var(--wine); color: var(--wine-text); border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .play svg { width: 1.15rem; height: 1.15rem; }
+  .track { position: relative; height: 1.6rem; display: flex; align-items: center; cursor: pointer; }
+  .track-line { position: relative; width: 100%; height: 4px; border-radius: 2px; background: rgba(31, 53, 50, .2); overflow: hidden; }
+  .track-line i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--wine); }
+  .speed {
+    grid-row: span 2; align-self: center;
+    background: none; border: 1px solid var(--gold); border-radius: 999px;
+    color: var(--wine); font-size: .82rem; font-weight: 700; padding: .25rem .55rem; min-width: 3rem;
+  }
+  .time { font-size: .82rem; color: var(--izumrud); opacity: .75; font-variant-numeric: tabular-nums; }
+  .voice-wait { grid-column: 2 / 4; font-size: .95rem; }
+  .voice-box.off .play { opacity: .45; cursor: default; }
+
+  /* мини-оффер: светлая карточка, как на «Опоре» */
+  .offer {
+    background: var(--svetlyy); color: var(--izumrud);
+    border-radius: 6px; outline: 1px solid var(--gold); outline-offset: -7px;
+    padding: 1.5rem 1.4rem 1.6rem;
+    display: flex; flex-direction: column; gap: .9rem;
+  }
+  .offer h2 { font-family: var(--prata); font-weight: 400; text-transform: uppercase; letter-spacing: .04em;
+    font-size: 1.35rem; line-height: 1.2; color: var(--wine); }
+  .offer li { display: flex; gap: .65rem; align-items: baseline; }
+  .offer li::before { content: ""; flex: none; width: .45rem; height: .45rem; border-radius: 50%; background: var(--gold); transform: translateY(-.1rem); }
+  .offer ul { display: flex; flex-direction: column; gap: .45rem; }
+
+  /* плавающая копия кнопки, пока основная за экраном */
+  .float {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
+    padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom, 0px));
+    background: var(--barhat); border-top: 1px solid rgba(184, 147, 92, .35);
+    transform: translateY(110%); transition: transform .25s;
+  }
+  .float.on { transform: none; }
+  .float .go { max-width: 32rem; margin: 0 auto; display: flex; }
+  .has-float main { padding-bottom: 6.5rem; }
+</style>
+
+<div class="wrap">
+  <header class="top" id="top" hidden>
+    <div class="brand">
+      <span class="brand-who"><img class="ava" id="brand-ava" alt="" width="36" height="36"><span>Виола Маро</span></span>
+      <span id="counter"></span>
+    </div>
+    <div class="bar" aria-hidden="true"><i id="bar-fill"></i></div>
+  </header>
+  <main id="screen"></main>
+</div>
+
+<script>
+"use strict";
+
+/* Тест 3.0 «Эмпат ли вы на самом деле?» (ТЗ, черновик 6 от 11.11.2026).
+   Отдельная страница violamaro.ru/test3/, тест 2.0 (miniapps/test2) не трогаем.
+   Обычная веб-страница, без связки с Телеграмом (решение 11.11): ни имени,
+   ни ID из Телеграма, ни ответа боту. Результат показываем здесь же.
+   Всё про тексты, подсчёт и таблицу — miniapps/test3/README.md. */
+
+/* ——— настройки ——— */
+const CONFIG = {
+  /* Скрипт таблицы «Заявки | Виола Маро» (integrations/google-sheets/
+     Скрипт-таблицы-целиком.gs). Тест 3.0 он понимает с версии
+     «2026-11-11 test3»: до её развёртывания записи ждут в буфере браузера. */
+  sheetUrl: "https://script.google.com/macros/s/AKfycbznc7zwFhyc7t5FCkmm1gFIi2FH4ZcIeUeXQlCStxsVZ2npUFa4K_JipDzbCACG2WjSAQ/exec",
+  /* Кнопка «Посмотреть программу». Финальный адрес с оплатой даст Илья. */
+  offerUrl: "https://violamaro.ru",
+  /* Кнопка «Мой Телеграм-канал» у «не эмпата»: открытый канал Виолы. */
+  channelUrl: "https://t.me/violamaro1",
+  docs: { privacy: "https://violamaro.ru/privacy/" },
+  /* Голосовые Виолы: miniapps/test3/audio/<имя>.mp3. Пока файла нет, ставьте
+     false: вместо плеера будет «Голосовое появится совсем скоро». */
+  audio: { start: false, donor: false, filter: false, sleeping: false, awake: false },
+  /* Пороги черновые: проверить по первым 100 прохождениям (ТЗ, раздел 7). */
+  porog: {
+    neEmpat: 7,     // R не больше этого — «не эмпат»
+    awake: 7,       // «проснувшийся» в кандидатах только при P не меньше этого
+    low: 2          // максимум D, F, Z, P не больше этого — тип «без фильтра»
+  },
+  /* Экран «Собираю ваш результат…» стоит не меньше этого времени. */
+  minSaveMs: 1800
+};
+
+/* ——— тексты ———
+   Всё от первого лица Виолы, утверждения — её фразы из эфиров и лекций.
+   Своих формулировок не добавлять. re — реплика Виолы над следующим
+   утверждением, если на это ответили «Да» или «Часто». */
+const INTRO = {
+  title: "Эмпат ли вы на самом деле?",
+  sub: "Или вам только кажется",
+  words: [
+    "Дорогие мои, больше всего мне задают один вопрос: эмпат ли я, если у меня повышенная чувствительность.",
+    "Есть люди просто эмоциональные, и это не значит, что у них есть эмпатия. Если это тревожность, это тоже не эмпатия.",
+    "Давайте разбираться. Здесь 29 утверждений, это три-четыре минуты.",
+    "Если вы эмпат, я скажу, какой именно. И в голосовом расскажу, как вы устроены и что с этим делать."
+  ]
+};
+const DISCLAIM = "Это не диагностика и не диагноз. Это способ посмотреть на себя со стороны.";
+
+const SCALE = ["Да, прямо про меня", "Часто", "Редко", "Нет, это не про меня"];   // 3, 2, 1, 0
+
+/* Блоки по порядку. В «Ответы (1–29)» таблицы ответы идут в этом же порядке.
+   after(сумма) — экран с ответом Виолы после блока; нет after — сразу дальше. */
+const BLOCKS = [
+  { key: "R", name: "Радар",
+    intro: "Обычно мы видим то, что человек показывает. Эмпат видит то, что у него внутри. Посмотрим, как у вас.",
+    items: [
+      { id: "R1", s: "R", t: "Человек говорит «всё хорошо», а вы слышите, что это не так." },
+      { id: "R2", s: "R", t: "Если в комнате напряжённая атмосфера, вы чувствуете это телом: тяжесть в воздухе, давление в груди." },
+      { id: "R3", s: "R", t: "Рядом с человеком в стрессе у вас появляется его напряжение или его головная боль.", re: "Для эмпата тело - главный барометр." },
+      { id: "R4", s: "R", t: "Среди людей вы устаёте, хотя ничего не произошло." },
+      { id: "R5", s: "R", t: "После общения вам нужно побыть одной в тишине." }
+    ],
+    after: v => v >= 11 ? "Радар у вас есть. Это врождённое, повторяю, это не слабость. Идём дальше."
+              : v >= 8 ? "Чувствительность у вас есть. Эмпатия это или нет, станет видно дальше."
+              : "Пока я вижу человека, который людей замечает, но живёт у себя. Идём дальше." },
+  { key: "T", name: "Похоже на эмпатию",
+    intro: "Теперь минуточку. Есть вещи, которые очень похожи на эмпатию.",
+    items: [
+      { id: "T1", s: "T", t: "Вы тревожитесь, даже когда всё спокойно." },
+      { id: "T2", s: "T", t: "Чужая история задевает вас сильнее, если с вами было то же самое.", re: "Это не эмпатия. Но эмпаты могут быть тревожными. Смотрим дальше." }
+    ] },
+  { key: "S", name: "Спасатель",
+    intro: "А теперь небольшая хирургическая операция.",
+    items: [
+      { id: "S1", s: "S", t: "Вам рассказали о проблеме, и вы уже думаете, как её решить." },
+      { id: "S2", s: "S", t: "Вы даёте совет, о котором вас не просили." },
+      { id: "S3", s: "S", t: "Чужая ссора или чужая беда не выходит у вас из головы до ночи." },
+      { id: "S4", s: "S", t: "Вы хотите починить то, что не вы ломали." }
+    ],
+    after: v => v >= 7 ? "Вы узнали себя почти везде. Это роль спасателя. Не вы это ломали, это не ваша ответственность."
+              : v >= 4 ? "Спасатель в вас есть. Не всё, что вы видите, требует вашего вмешательства."
+              : "Чужое вы на себя почти не берёте. Это редкость." },
+  /* Перемешано так, чтобы один тип не шёл подряд. */
+  { key: "L", name: "Как вы живёте",
+    intro: "Теперь посмотрим, как вы с этим живёте.",
+    items: [
+      { id: "D1", s: "D", t: "Вы хотите сказать «нет», в горле ком, и вы говорите «да»." },
+      { id: "F1", s: "F", t: "От одного резкого слова у вас как удар в живот." },
+      { id: "Z1", s: "Z", t: "Вы всё поняли про человека, но промолчали и сделали вид, что не заметили." },
+      { id: "P1", s: "P", t: "Вас предали, и вы не плакали. Вы собрались и затихли." },
+      { id: "D2", s: "D", t: "Вы видите, что вами пользуются, но соглашаетесь.", re: "У вас невероятное терпение." },
+      { id: "F2", s: "F", t: "Вас предавали, а вы всё равно открываетесь.", re: "Отчаянно хотелось верить, надеяться и любить." },
+      { id: "Z2", s: "Z", t: "К вечеру вы без сил, хотя ничего тяжёлого не делали.", re: "Это не лень и не слабость, это усталость." },
+      { id: "P2", s: "P", t: "Вам врут, а вы уже не злитесь. Просто видите и отходите." },
+      { id: "D3", s: "D", t: "Когда вам дарят или помогают, вам неловко." },
+      { id: "F3", s: "F", t: "Вы рассказываете о себе всё уже при первой встрече." },
+      { id: "Z3", s: "Z", t: "Вроде всё спокойно, а внутри тяжесть и давление.", re: "Всё чувствовали, всё знали, но ничего не выбрали." },
+      { id: "P3", s: "P", t: "Вам говорили: «Ты стала холодной».", re: "У вас просто разбились иллюзии." }
+    ],
+    after: () => "Какой вы эмпат, мне уже видно. Осталось понять, где это стоит вам дороже всего." },
+  { key: "Q", name: "Сферы",
+    intro: "И последнее. Где это стоит вам дороже всего.",
+    items: [
+      { id: "Q1", s: "Q", sphere: "ya",    t: "Вас спрашивают «а чего хочешь ты?», и вы не знаете, что ответить." },
+      { id: "Q2", s: "Q", sphere: "otn",   t: "Рядом с близким человеком у вас зажим в теле или тревога." },
+      { id: "Q3", s: "Q", sphere: "semya", t: "Вы сказали родным «нет» и потом весь вечер чувствуете вину." },
+      { id: "Q4", s: "Q", sphere: "telo",  t: "После тяжёлого человека у вас болит голова или живот." },
+      { id: "Q5", s: "Q", sphere: "delo",  t: "Вы знаете, что способны на большее, но не начинаете." },
+      { id: "Q6", s: "Q", sphere: "dengi", t: "Когда нужно попросить деньги, даже свои, вам становится не по себе." }
+    ] }
+];
+
+/* Все утверждения подряд: номер в массиве — номер в «Ответы (1–29)». */
+const ALL = [];
+BLOCKS.forEach((b, bi) => b.items.forEach((it, i) => ALL.push(Object.assign({ b: bi, i: i }, it))));
+
+/* Сферы в порядке недель программы: при равных баллах берём раньшую неделю. */
+const SPHERES = ["ya", "otn", "semya", "telo", "delo", "dengi"];
+
+const TYPES = {
+  donor:    { scale: "D", name: "Эмпат-донор",        fork: "Я всё отдаю другим" },
+  filter:   { scale: "F", name: "Эмпат без фильтра",  fork: "Я всё пропускаю через себя" },
+  sleeping: { scale: "Z", name: "Спящий эмпат",       fork: "Я стараюсь не чувствовать" },
+  awake:    { scale: "P", name: "Проснувшийся эмпат", fork: "Я больше не пускаю внутрь кого попало" }
+};
+const TYPE_ORDER = ["donor", "filter", "sleeping", "awake"];
+
+const FORK_Q = "Что из этого сейчас больше про вас?";
+const LET = { q: "Сколько лет вы так живёте?", a: ["меньше года", "несколько лет", "больше десяти лет", "сколько себя помню"] };
+const PROB = { q: "Что вы уже пробовали?", a: ["книги и видео", "психолог или терапия", "курсы и тренинги", "мои видео", "ничего"] };
+const AGES = ["до 35", "35–44", "45–54", "55–64", "65 и старше"];
+
+const RESULT = {
+  yes: "Да, вы эмпат",
+  label: "Ваш тип",
+  listen: "Что это значит и как вы устроены, я разобрала для вас в голосовом. Послушайте.",
+  wait: "Голосовое появится совсем скоро",
+  /* Мини-оффер: черновой текст, финальный даст Илья. Без «я приглашаю»:
+     приглашение Виола произносит в голосовом. */
+  offer: { title: "Прикладная эмпатия", lines: ["Шесть лекций в записи", "18 техник", "Доступ сразу после оплаты"], btn: "Посмотреть программу" },
+  no: "Вы не эмпат",
+  noText: "По вашим ответам это чувствительность, а не эмпатия. Есть люди, которые очень остро отзываются на чужую боль, потому что у них самих болит в том же месте. Это со-чувствование, это не эмпатия.",
+  noBtn: "Мой Телеграм-канал"
+};
+
+/* ——— состояние ———
+   Ответы лежат в браузере: закрыла и вернулась — продолжает с того же места.
+   Пройденный тест открывается сразу на своём результате. Ключ свой, не тот,
+   что у теста 2.0: прохождения разных версий не смешиваются. */
+const STATE_KEY = "viola3-state";
+const TTL_MID = 24 * 3600e3;          // недопройденный тест живёт сутки
+const TTL_DONE = 180 * 24 * 3600e3;   // готовый результат — полгода
+
+let stage = "intro";   // intro | q | after | fork | let | prob | age | saving | result
+let idx = 0;           // номер утверждения в ALL
+let afterBlock = -1;   // после какого блока стоит экран «after»
+const answers = [];
+let razvilka = "";     // выбор на развилке: donor | filter | sleeping | awake
+let forkOptions = [];
+let letAns = "";
+let prob = [];
+let age = "";
+let startedAt = 0;
+let pid = "";
+let src0 = "";
+let res = null;        // готовый результат
+
+function saveState() {
+  try {
+    localStorage.setItem(STATE_KEY, JSON.stringify({
+      v: 3, t: Date.now(), stage: stage, idx: idx, afterBlock: afterBlock, answers: answers.slice(),
+      razvilka: razvilka, forkOptions: forkOptions, let: letAns, prob: prob, age: age,
+      startedAt: startedAt, pid: pid, src: src0, res: res
+    }));
+  } catch (e) {}
+}
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STATE_KEY) || "null");
+    if (!s || s.v !== 3 || !s.t) return null;
+    if (Date.now() - s.t > (s.res ? TTL_DONE : TTL_MID)) return null;
+    if (!Array.isArray(s.answers) || s.answers.length > ALL.length) return null;
+    if (!s.answers.every(v => typeof v === "number" && v >= 0 && v <= 3)) return null;
+    if (s.res && s.res.type !== "ne_empat" && !TYPES[s.res.type]) return null;
+    return s;
+  } catch (e) { return null; }
+}
+
+/* ——— подсчёт (ТЗ, раздел 7) ——— */
+function sums_() {
+  const s = { R: 0, T: 0, S: 0, D: 0, F: 0, Z: 0, P: 0 };
+  const sp = {}; SPHERES.forEach(k => { sp[k] = 0; });
+  ALL.forEach((it, i) => {
+    const v = answers[i] || 0;
+    if (it.s === "Q") sp[it.sphere] = v; else s[it.s] += v;
+  });
+  return { scales: s, spheres: sp };
+}
+function sphere_(sp) {
+  let best = SPHERES[0];
+  SPHERES.forEach(k => { if (sp[k] > sp[best]) best = k; });
+  return best;
+}
+/* Кандидаты в тип. Пусто — «не эмпат». Один — это тип. Несколько — развилка. */
+function candidates_(s) {
+  if (s.R <= CONFIG.porog.neEmpat) return [];
+  const ok = TYPE_ORDER.filter(t => t !== "awake" || s.P >= CONFIG.porog.awake);
+  const max = Math.max.apply(null, ok.map(t => s[TYPES[t].scale]));
+  if (max <= CONFIG.porog.low) return ["filter"];
+  return ok.filter(t => s[TYPES[t].scale] === max);
+}
+function score_() {
+  const z = sums_();
+  const c = candidates_(z.scales);
+  let type = "ne_empat";
+  if (c.length === 1) type = c[0];
+  else if (c.length > 1) type = razvilka && c.indexOf(razvilka) !== -1 ? razvilka : c[0];
+  return {
+    type: type, razvilka: c.length > 1 ? type : "",
+    sphere: sphere_(z.spheres), scales: z.scales, spheres: z.spheres
+  };
+}
+
+/* ——— мелочи ——— */
+const screen = document.getElementById("screen");
+const topEl = document.getElementById("top");
+const counter = document.getElementById("counter");
+const barFill = document.getElementById("bar-fill");
+
+const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ESC[c]); }
+
+/* Неразрывные пробелы: предлог, союз или число не остаются в конце строки. */
+const SHORT_WORD = /(^|[\s«( ])([А-Яа-яЁё]{1,2}|\d+)[ \t\n]+(?=\S)/g;
+function typograf_(root) {
+  if (!document.createTreeWalker) return;
+  const walker = document.createTreeWalker(root, 4, null);
+  let node;
+  while ((node = walker.nextNode())) {
+    const tag = node.parentNode && node.parentNode.nodeName;
+    if (tag === "SCRIPT" || tag === "STYLE") continue;
+    let t = node.nodeValue, was;
+    if (!/\S/.test(t)) continue;
+    t = t.replace(/ (\d[\d.,]*)(?=[.,!?»)]*(\s|$))/g, " $1");
+    do { was = t; t = t.replace(SHORT_WORD, "$1$2 "); } while (t !== was);
+    if (t !== node.nodeValue) node.nodeValue = t;
+  }
+}
+function el(html) {
+  const d = document.createElement("div");
+  d.className = "fade";
+  d.innerHTML = html;
+  typograf_(d);
+  return d;
+}
+function render(node) {
+  while (screen.firstChild) screen.removeChild(screen.firstChild);
+  screen.appendChild(node);
+  paintTop();
+  try { window.scrollTo(0, 0); } catch (e) {}
+}
+function viola_(paras) {
+  return `
+    <div class="msg">
+      <img class="ava" src="${AVATAR}" alt="" width="36" height="36">
+      <div class="bubble"><div class="who">Виола Маро</div>${paras.map(p => `<p>${p}</p>`).join("")}</div>
+    </div>`;
+}
+/* Шапка: на вопросах — блок и номер внутри него («Радар · 3 из 5»). */
+function paintTop() {
+  const on = stage !== "intro" && stage !== "result" && stage !== "saving";
+  topEl.hidden = !on;
+  if (!on) return;
+  let label = "", done = 0;
+  if (stage === "q") {
+    const it = ALL[idx], b = BLOCKS[it.b];
+    label = b.name + " · " + (it.i + 1) + " из " + b.items.length;
+    done = idx;
+  } else if (stage === "after") {
+    label = BLOCKS[afterBlock].name;
+    done = ALL.filter(it => it.b <= afterBlock).length;
+  } else {
+    label = "Почти готово";
+    done = ALL.length;
+  }
+  counter.textContent = label;
+  barFill.style.width = Math.round(done / (ALL.length + 3) * 100) + "%";
+}
+function newPid_() { return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+
+/* Откуда пришли: ?src=reels или utm_source. */
+function istochnik_() {
+  let s = "";
+  try {
+    const q = new URLSearchParams(location.search);
+    s = q.get("src") || q.get("utm_source") || "";
+  } catch (e) {}
+  return String(s).replace(/[^\w\-]/g, "").slice(0, 40);
+}
+
+const ICON = {
+  play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>',
+  pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5.5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14" y="4" width="4.5" height="16" rx="1.2"/></svg>'
+};
+
+/* ——— старт ——— */
+function intro() {
+  stage = "intro";
+  const n = el(`
+    <div class="card">
+      <h1 class="h1">${INTRO.title}</h1>
+      <p class="sub">${INTRO.sub}</p>
+      ${CONFIG.audio.start ? voiceHtml_("start") : ""}
+      ${viola_(INTRO.words)}
+      <div class="foot"><button class="go" id="start">Начать</button></div>
+      <div class="fine">
+        <p>${DISCLAIM}</p>
+        <p>Нажимая «Начать», вы соглашаетесь с <a href="${CONFIG.docs.privacy}" target="_blank" rel="noopener">Политикой обработки персональных данных</a>.</p>
+      </div>
+    </div>`);
+  if (CONFIG.audio.start) player_(n, "start");
+  n.querySelector("#start").addEventListener("click", () => {
+    idx = 0; answers.length = 0; razvilka = ""; letAns = ""; prob = []; age = "";
+    startedAt = Date.now(); pid = newPid_(); src0 = istochnik_(); res = null;
+    pingStart_();
+    stage = "q"; saveState(); question();
+  });
+  render(n);
+}
+
+/* ——— утверждение ——— */
+function question() {
+  stage = "q";
+  const it = ALL[idx], b = BLOCKS[it.b];
+  const prev = idx > 0 ? ALL[idx - 1] : null;
+  const voice = [];
+  if (prev && prev.re && answers[idx - 1] >= 2) voice.push(prev.re);   // реплика на прошлый ответ
+  if (it.i === 0) voice.push(b.intro);                                // вступление к блоку
+  const n = el(`
+    <div class="card">
+      ${voice.length ? viola_(voice) : ""}
+      <h2 class="q-text">${it.t}</h2>
+      <div class="answers">
+        ${SCALE.map((s, i) => `<button class="ans${answers[idx] === 3 - i ? " on" : ""}" data-v="${3 - i}">${s}</button>`).join("")}
+      </div>
+      ${idx > 0 ? `<button class="ghost" id="back">← Назад</button>` : ""}
+    </div>`);
+  n.querySelectorAll(".ans").forEach(btn => btn.addEventListener("click", () => {
+    answers[idx] = Number(btn.dataset.v);
+    answers.length = idx + 1;
+    const last = idx === ALL.length - 1 || ALL[idx + 1].b !== it.b;
+    if (last && b.after) { afterBlock = it.b; stage = "after"; saveState(); after(); return; }
+    if (idx === ALL.length - 1) { afterQuestions_(); return; }
+    idx++; saveState(); question();
+  }));
+  const back = n.querySelector("#back");
+  if (back) back.addEventListener("click", () => { idx--; saveState(); question(); });
+  render(n);
+}
+
+/* Ответ Виолы после блока: отдельный экран с кнопкой «Дальше». */
+function after() {
+  stage = "after";
+  const b = BLOCKS[afterBlock];
+  const sum = ALL.reduce((a, it, i) => a + (it.b === afterBlock ? (answers[i] || 0) : 0), 0);
+  const n = el(`
+    <div class="card">
+      ${viola_([b.after(sum)])}
+      <div class="foot"><button class="go" id="next">Дальше</button></div>
+      <button class="ghost" id="back">← Назад</button>
+    </div>`);
+  n.querySelector("#next").addEventListener("click", () => {
+    if (idx >= ALL.length - 1) { afterQuestions_(); return; }
+    idx++; stage = "q"; saveState(); question();
+  });
+  n.querySelector("#back").addEventListener("click", () => { stage = "q"; saveState(); question(); });
+  render(n);
+}
+
+/* После утверждений: развилка (только при ничьей), потом три вопроса. */
+function afterQuestions_() {
+  const c = candidates_(sums_().scales);
+  if (c.length > 1) { forkOptions = c; stage = "fork"; saveState(); fork(); return; }
+  forkOptions = []; razvilka = "";
+  stage = "let"; saveState(); letScreen();
+}
+function backToStatements_() {
+  idx = ALL.length - 1; stage = "q"; saveState(); question();
+}
+
+function fork() {
+  stage = "fork";
+  const n = el(`
+    <div class="card">
+      ${viola_([FORK_Q])}
+      <div class="answers">
+        ${forkOptions.map(t => `<button class="ans${razvilka === t ? " on" : ""}" data-t="${t}">${TYPES[t].fork}</button>`).join("")}
+      </div>
+      <button class="ghost" id="back">← Назад</button>
+    </div>`);
+  n.querySelectorAll(".ans").forEach(btn => btn.addEventListener("click", () => {
+    razvilka = btn.dataset.t; stage = "let"; saveState(); letScreen();
+  }));
+  n.querySelector("#back").addEventListener("click", backToStatements_);
+  render(n);
+}
+
+function letScreen() {
+  stage = "let";
+  const n = el(`
+    <div class="card">
+      <h2 class="q-text">${LET.q}</h2>
+      <div class="answers">${LET.a.map((a, i) => `<button class="ans${letAns === a ? " on" : ""}" data-i="${i}">${a}</button>`).join("")}</div>
+      <button class="ghost" id="back">← Назад</button>
+    </div>`);
+  n.querySelectorAll(".ans").forEach(btn => btn.addEventListener("click", () => {
+    letAns = LET.a[Number(btn.dataset.i)]; stage = "prob"; saveState(); probScreen();
+  }));
+  n.querySelector("#back").addEventListener("click", () => {
+    if (forkOptions.length > 1) { stage = "fork"; saveState(); fork(); } else backToStatements_();
+  });
+  render(n);
+}
+
+function probScreen() {
+  stage = "prob";
+  const NONE = PROB.a[PROB.a.length - 1];
+  const n = el(`
+    <div class="card">
+      <h2 class="q-text">${PROB.q}</h2>
+      <p class="hint">Можно выбрать несколько</p>
+      <div class="answers">${PROB.a.map((a, i) => `<button class="ans multi${prob.indexOf(a) !== -1 ? " on" : ""}" data-i="${i}" aria-pressed="${prob.indexOf(a) !== -1}">${a}</button>`).join("")}</div>
+      <p class="err" id="err" hidden>Выберите хотя бы один вариант</p>
+      <div class="foot"><button class="go" id="next">Дальше</button></div>
+      <button class="ghost" id="back">← Назад</button>
+    </div>`);
+  const btns = n.querySelectorAll(".ans");
+  const paint = () => btns.forEach(b => { const on = prob.indexOf(PROB.a[Number(b.dataset.i)]) !== -1; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+  btns.forEach(btn => btn.addEventListener("click", () => {
+    const a = PROB.a[Number(btn.dataset.i)];
+    const i = prob.indexOf(a);
+    if (i !== -1) prob.splice(i, 1);
+    else if (a === NONE) prob = [NONE];                    // «ничего» снимает остальное
+    else { prob = prob.filter(x => x !== NONE); prob.push(a); }
+    prob.sort((x, y) => PROB.a.indexOf(x) - PROB.a.indexOf(y));
+    n.querySelector("#err").hidden = true;
+    paint(); saveState();
+  }));
+  n.querySelector("#next").addEventListener("click", () => {
+    if (!prob.length) { n.querySelector("#err").hidden = false; return; }
+    stage = "age"; saveState(); ageScreen();
+  });
+  n.querySelector("#back").addEventListener("click", () => { stage = "let"; saveState(); letScreen(); });
+  render(n);
+}
+
+function ageScreen() {
+  stage = "age";
+  const n = el(`
+    <div class="card">
+      <h2 class="q-text">Сколько вам лет?</h2>
+      <div class="answers">${AGES.map((a, i) => `<button class="ans${age === a ? " on" : ""}" data-i="${i}">${a}</button>`).join("")}</div>
+      <p class="fine">На результат не влияет.</p>
+      <button class="ghost" id="back">← Назад</button>
+    </div>`);
+  n.querySelectorAll(".ans").forEach(btn => btn.addEventListener("click", () => {
+    age = AGES[Number(btn.dataset.i)]; finish_();
+  }));
+  n.querySelector("#back").addEventListener("click", () => { stage = "prob"; saveState(); probScreen(); });
+  render(n);
+}
+
+/* ——— «Собираю ваш результат…» ———
+   Пока прохождение уходит в таблицу, и не меньше CONFIG.minSaveMs. Таблица
+   не ответила за 8 секунд — результат всё равно показываем, запись остаётся
+   в очереди браузера и уйдёт при следующем открытии. */
+function finish_() {
+  res = score_();
+  stage = "saving"; saveState();
+  render(el(`<div class="card"><p class="soft center" style="margin-top:3rem">Собираю ваш результат…</p></div>`));
+  const p = resultPayload_(res);
+  const wait = new Promise(r => setTimeout(r, CONFIG.minSaveMs));
+  const save = Promise.race([saveResult_(p), new Promise(r => setTimeout(r, 8000))]);
+  Promise.all([wait, save]).then(() => { stage = "result"; saveState(); result(); });
+}
+
+/* ——— результат ——— */
+function result() {
+  stage = "result";
+  document.body.classList.remove("has-float");
+  if (res.type === "ne_empat") {
+    const n = el(`
+      <div class="card">
+        <h1 class="verdict">${RESULT.no}</h1>
+        ${viola_([RESULT.noText])}
+        <div class="foot"><a class="go" id="channel" href="${CONFIG.channelUrl}" target="_blank" rel="noopener">${RESULT.noBtn}</a></div>
+      </div>`);
+    n.querySelector("#channel").addEventListener("click", () => event_("channel_click"));
+    render(n);
+    return;
+  }
+  const t = TYPES[res.type];
+  const n = el(`
+    <div class="card">
+      <h1 class="verdict">${RESULT.yes}</h1>
+      <div class="plate"><span class="plate-label">${RESULT.label}</span><span class="plate-name">${t.name}</span></div>
+      <p>${RESULT.listen}</p>
+      ${voiceHtml_(res.type)}
+      <div class="offer">
+        <h2>${RESULT.offer.title}</h2>
+        <ul>${RESULT.offer.lines.map(l => `<li>${l}</li>`).join("")}</ul>
+      </div>
+      <div class="foot"><a class="go" id="offer" href="${CONFIG.offerUrl}" target="_blank" rel="noopener">${RESULT.offer.btn}</a></div>
+    </div>
+    <div class="float" id="float" aria-hidden="true"><a class="go" href="${CONFIG.offerUrl}" target="_blank" rel="noopener" tabindex="-1">${RESULT.offer.btn}</a></div>`);
+  player_(n, res.type);
+  n.querySelectorAll('a[href="' + CONFIG.offerUrl + '"]').forEach(a => a.addEventListener("click", () => event_("offer_click")));
+  render(n);
+  floatButton_(n.querySelector("#offer"), n.querySelector("#float"));
+}
+
+/* Плавающая копия кнопки: видна, пока основная за экраном. */
+function floatButton_(main, fl) {
+  if (!main || !fl || !("IntersectionObserver" in window)) return;
+  document.body.classList.add("has-float");
+  new IntersectionObserver(es => es.forEach(e => {
+    const on = !e.isIntersecting;
+    fl.classList.toggle("on", on);
+    fl.setAttribute("aria-hidden", String(!on));
+    fl.querySelector("a").tabIndex = on ? 0 : -1;
+  })).observe(main);
+}
+
+/* ——— голосовое: как в Телеграме ——— */
+function voiceHtml_(key) {
+  const on = !!CONFIG.audio[key];
+  return `
+    <div class="voice" data-voice="${key}">
+      <img class="ava" src="${AVATAR}" alt="" width="36" height="36">
+      <div class="voice-box${on ? "" : " off"}">
+        <button class="play" type="button" aria-label="Слушать голосовое Виолы"${on ? "" : " disabled"}>${ICON.play}</button>
+        ${on ? `
+        <div class="track" role="slider" aria-label="Перемотка" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="track-line"><i></i></div></div>
+        <button class="speed" type="button" aria-label="Скорость">1×</button>
+        <span class="time">0:00</span>
+        <audio preload="metadata" src="audio/${key}.mp3"></audio>` : `<p class="voice-wait">${RESULT.wait}</p>`}
+      </div>
+    </div>`;
+}
+function mmss_(s) { s = Math.max(0, Math.round(s || 0)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+function player_(root, key) {
+  const box = root.querySelector('[data-voice="' + key + '"]');
+  const audio = box && box.querySelector("audio");
+  if (!audio) return;
+  const play = box.querySelector(".play"), line = box.querySelector(".track-line i"),
+        track = box.querySelector(".track"), time = box.querySelector(".time"), speed = box.querySelector(".speed");
+  const sent = {};
+  const once = name => { if (key === "start" || sent[name]) return; sent[name] = true; event_(name); };
+  const paint = () => {
+    const d = audio.duration || 0, c = audio.currentTime || 0;
+    line.style.width = d ? (c / d * 100) + "%" : "0";
+    track.setAttribute("aria-valuenow", d ? Math.round(c / d * 100) : 0);
+    time.textContent = audio.paused && !c ? mmss_(d) : mmss_(c) + " / " + mmss_(d);
+  };
+  play.addEventListener("click", () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
+  audio.addEventListener("play", () => { play.innerHTML = ICON.pause; play.setAttribute("aria-label", "Пауза"); once("audio_start"); });
+  audio.addEventListener("pause", () => { play.innerHTML = ICON.play; play.setAttribute("aria-label", "Слушать голосовое Виолы"); });
+  audio.addEventListener("loadedmetadata", paint);
+  audio.addEventListener("timeupdate", () => { paint(); if (audio.duration && audio.currentTime / audio.duration >= .5) once("audio_50"); });
+  audio.addEventListener("ended", () => { once("audio_end"); audio.currentTime = 0; paint(); });
+  track.addEventListener("click", e => {
+    if (!audio.duration) return;
+    const r = track.getBoundingClientRect();
+    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
+    paint();
+  });
+  speed.addEventListener("click", () => {
+    audio.playbackRate = audio.playbackRate === 1 ? 1.5 : 1;
+    speed.textContent = audio.playbackRate === 1 ? "1×" : "1,5×";
+  });
+}
+
+/* ——— отправка в таблицу ———
+   Все записи с test: "empat3" и form: "test3". Уходят обычным GET с параметром,
+   как у теста 2.0. До ответа {"ok":true} запись лежит в очереди браузера. */
+const BUFFER_KEY = "viola3-pending";
+
+function base_(type) {
+  return { type: type, form: "test3", test: "empat3", pid: pid, istochnik: src0 || istochnik_() };
+}
+function send_(payload) {
+  return fetch(CONFIG.sheetUrl + "?payload=" + encodeURIComponent(JSON.stringify(payload)), { keepalive: true });
+}
+/* «Открыла первое утверждение»: один раз и мимо очереди, это не лид. */
+function pingStart_() {
+  if (!CONFIG.sheetUrl) return;
+  try { send_({ type: "start", test: "empat3", form: "test3", pid: pid, istochnik: src0 }).catch(() => {}); } catch (e) {}
+}
+function event_(name) {
+  if (!CONFIG.sheetUrl || !pid) return;
+  const e = base_("t3_event");
+  e.event = name;
+  e.t = Date.now();
+  buffer(e); flush();
+}
+function resultPayload_(r) {
+  const seconds = startedAt ? Math.round((Date.now() - startedAt) / 1000) : 0;
+  const p = base_("t3_result");
+  p.type3 = r.type;
+  p.razvilka = r.razvilka;
+  p.sphere = r.sphere;
+  p.scales = r.scales;
+  p.spheres = r.spheres;
+  p.let = letAns;
+  p.probovali = prob.slice();
+  p.age = age;
+  p.answers = answers.slice();
+  p.seconds = seconds;
+  p.fast = seconds > 0 && seconds < 40;                                   // 29 утверждений быстрее 40 секунд
+  p.monotone = answers.length > 0 && answers.every(x => x === answers[0]); // одна кнопка на всё
+  return p;
+}
+function saveResult_(p) {
+  if (!CONFIG.sheetUrl) return Promise.resolve(true);
+  buffer(p);
+  let tries = 0;
+  return new Promise(resolve => {
+    const attempt = () => {
+      tries++;
+      const slow = new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 7000));
+      Promise.race([send_(p).then(r => r.text()), slow])
+        .then(txt => { if (!/"ok"\s*:\s*true/.test(String(txt))) throw new Error("not ok"); unbuffer(p); resolve(true); })
+        .catch(() => { if (tries < 2) setTimeout(attempt, 1200); else resolve(false); });
+    };
+    attempt();
+  });
+}
+function buffer(item) {
+  try {
+    const all = JSON.parse(localStorage.getItem(BUFFER_KEY) || "[]");
+    all.push(item);
+    localStorage.setItem(BUFFER_KEY, JSON.stringify(all));
+  } catch (e) {}
+}
+function unbuffer(item) {
+  try {
+    const s = JSON.stringify(item);
+    const all = JSON.parse(localStorage.getItem(BUFFER_KEY) || "[]");
+    const i = all.findIndex(x => JSON.stringify(x) === s);
+    if (i !== -1) { all.splice(i, 1); localStorage.setItem(BUFFER_KEY, JSON.stringify(all)); }
+  } catch (e) {}
+}
+const inFlight = new Set();
+function flush() {
+  if (!CONFIG.sheetUrl) return;
+  let all = [];
+  try { all = JSON.parse(localStorage.getItem(BUFFER_KEY) || "[]"); } catch (e) { return; }
+  all.forEach(item => {
+    const key = JSON.stringify(item);
+    if (inFlight.has(key)) return;
+    inFlight.add(key);
+    try {
+      send_(item).then(r => r.text())
+        .then(txt => { if (/"ok"\s*:\s*true/.test(String(txt)) || item.type === "t3_event") unbuffer(item); })
+        .catch(() => {})
+        .then(() => { inFlight.delete(key); });
+    } catch (e) { inFlight.delete(key); }
+  });
+}
+
+/* ——— запуск ——— */
+function boot() {
+  document.getElementById("brand-ava").src = AVATAR;
+  /* ?reset=1 — для проверок команды: забыть прохождение на этом устройстве. */
+  try { if (new URLSearchParams(location.search).get("reset") === "1") localStorage.removeItem(STATE_KEY); } catch (e) {}
+  flush();
+  const s = loadState();
+  if (!s) { intro(); return; }
+  s.answers.forEach(v => answers.push(v));
+  idx = Math.max(0, Math.min(Number(s.idx) || 0, ALL.length - 1));
+  afterBlock = typeof s.afterBlock === "number" ? s.afterBlock : -1;
+  razvilka = s.razvilka || ""; forkOptions = Array.isArray(s.forkOptions) ? s.forkOptions : [];
+  letAns = s.let || ""; prob = Array.isArray(s.prob) ? s.prob : []; age = s.age || "";
+  startedAt = s.startedAt || 0; pid = s.pid || ""; src0 = s.src || ""; res = s.res || null;
+
+  /* Повторный вход после результата — тот же экран с тем же результатом. */
+  if (res) { stage = "result"; result(); return; }
+  if (s.stage === "saving" && answers.length === ALL.length && age) { finish_(); return; }
+  if (s.stage === "after" && afterBlock >= 0 && answers.length) { after(); return; }
+  if (answers.length === ALL.length) {
+    if (s.stage === "fork" && forkOptions.length > 1) { fork(); return; }
+    if (s.stage === "prob") { probScreen(); return; }
+    if (s.stage === "age") { ageScreen(); return; }
+    if (s.stage === "let") { letScreen(); return; }
+    afterQuestions_(); return;
+  }
+  if (s.stage === "q" && pid) { idx = Math.min(idx, answers.length); question(); return; }
+  intro();
+}
+
+/* Аватарка Виолы: та же, что в тесте 2.0, вшита в файл. */
+const AVATAR = "data:image/jpeg;base64,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";
+
+try { boot(); } catch (e) { if (window.__fallback) window.__fallback(e && e.message ? e.message : e); }
+</script>
+</html>

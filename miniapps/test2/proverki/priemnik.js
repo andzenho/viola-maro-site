@@ -210,8 +210,35 @@ ok(r.ok === false && sheets['Кастдев'].rows.length === 2, 'анкета �
 r = post(ksdv({ website: 'spam' }));
 ok(r.ok && sheets['Кастдев'].rows.length === 2, 'бот (заполнил скрытое поле) не пишется');
 
+console.log('— тест 3.0 /test3/ (11.11) —');
+const t3 = extra => Object.assign({ type: 't3_result', form: 'test3', test: 'empat3', pid: 'p3A', istochnik: 'reels',
+  type3: 'donor', razvilka: '', sphere: 'semya', let: 'сколько себя помню', probovali: ['книги и видео', 'мои видео'], age: '45–54',
+  scales: { R: 12, T: 4, S: 9, D: 8, F: 5, Z: 3, P: 2 }, spheres: { ya: 1, otn: 2, semya: 3, telo: 0, delo: 1, dengi: 2 },
+  answers: [3,3,2,2,2, 2,2, 3,2,2,2, 3,1,1,0, 3,2,1,0, 2,1,1,1, 1,2,3,0,1,2], seconds: 180, fast: false, monotone: false }, extra);
+r = get({ type: 'start', test: 'empat3', pid: 'p3A', istochnik: 'reels' });
+ok(r.ok && row('Старты теста', sheets['Старты теста'].rows.length - 1)['Тест'] === 'empat3', 'тест 3.0: старт по номеру прохождения');
+r = get({ type: 't3_event', test: 'empat3', form: 'test3', pid: 'p3B', event: 'audio_start' });
+ok(r.ok && /не найдено/.test(r.note), 'тест 3.0: отметка раньше прохождения уходит в журнал');
+r = get(t3());
+let t3r = row('Тест 3.0', 1);
+ok(r.ok && r.лист === 'Тест 3.0' && t3r['Результат'] === 'эмпат' && t3r['Тип'] === 'Эмпат-донор' && t3r['Сфера'] === 'Родители и дети'
+  && t3r['Радар (R)'] === 12 && t3r['Проснувшийся (P)'] === 2 && t3r['Что пробовала'] === 'книги и видео, мои видео'
+  && t3r['Ответы (1–29)'].split(',').length === 29, 'тест 3.0: строка в «Тест 3.0», тип, сфера, шкалы, ответы');
+ok(sheets['Тест 3.0'].rows[0].length === sheets['Тест 3.0'].rows[1].length, 'тест 3.0: строка той же ширины, что шапка');
+r = get(t3());
+ok(r.ok && r.duplicate === true && sheets['Тест 3.0'].rows.length === 2, 'тест 3.0: повтор прохождения второй строкой не пишется');
+r = get({ type: 't3_event', test: 'empat3', form: 'test3', pid: 'p3A', event: 'audio_50' });
+r = get({ type: 't3_event', test: 'empat3', form: 'test3', pid: 'p3A', event: 'offer_click' });
+t3r = row('Тест 3.0', 1);
+ok(t3r['Голосовое: половина'] === 'да' && t3r['Кнопка программы'] === 'да' && t3r['Голосовое: до конца'] === '', 'тест 3.0: голосовое и кнопка программы в строке прохождения');
+r = get(t3({ pid: 'p3C', type3: 'ne_empat', razvilka: '' }));
+ok(row('Тест 3.0', 2)['Результат'] === 'не эмпат' && row('Тест 3.0', 2)['Тип'] === 'Не эмпат', 'тест 3.0: «не эмпат»');
+r = get(t3({ pid: 'p3D', type3: 'filter', razvilka: 'filter' }));
+ok(row('Тест 3.0', 3)['Развилка'] === 'да: Эмпат без фильтра', 'тест 3.0: развилка');
+ok(!sheets['Тест 2.0'] || sheets['Тест 2.0'].rows.every(x => String(x[1]).indexOf('p3') !== 0), 'тест 3.0 не пишет в лист теста 2.0');
+
 r = JSON.parse(ctx.doGet({ parameter: {} }).text);
-ok(r.версия === '2026-11-02 kastdev-telefon', 'версия приёмника: ' + r.версия);
+ok(r.версия === '2026-11-11 test3', 'версия приёмника: ' + r.версия);
 
 console.log(fails ? '\nПРОВАЛОВ: ' + fails : '\nВсе проверки пройдены');
 process.exit(fails ? 1 : 0);

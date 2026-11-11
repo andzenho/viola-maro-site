@@ -89,6 +89,14 @@ jobs:
           cp miniapps/koleso/index.html site/koleso/index.html
           cp miniapps/test2/index.html site/test2/index.html
 
+      # Тест 3.0 «Эмпат ли вы на самом деле?»: отдельная страница, тест 2.0
+      # не трогает. Голосовые Виолы лежат рядом, в audio/.
+      - name: Добавить тест 3.0
+        run: |
+          mkdir -p site/test3
+          cp -r miniapps/test3/. site/test3/
+          rm -f site/test3/README.md site/test3/audio/.gitkeep
+
       # Анкета участниц потока: одна страница, свой приёмник и своя таблица.
       # В меню сайта её нет, индексация запрещена в самой странице.
       - name: Добавить анкету участниц
