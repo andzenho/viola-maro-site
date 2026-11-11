@@ -2,7 +2,7 @@
 <html lang="ru">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1F3532">
+<meta name="theme-color" content="#F3E6E3">
 <meta name="color-scheme" content="only dark">
 <!-- Пока тексты не утверждены (Илья, затем Виола), страницу не индексируем. -->
 <meta name="robots" content="noindex, nofollow">
@@ -69,23 +69,27 @@
     --wine: #7B1921;        /* кнопки, акценты на светлом */
     --wine-text: #F6E9E6;   /* текст на кнопках */
     --gold: #B8935C;        /* линии, рамки */
-    --svetlyy: #F3E6E3;     /* светлые карточки, текст на них --izumrud */
+    --svetlyy: #F3E6E3;     /* фон страницы, как светлые экраны «Опоры» */
+    --bumaga: #FFFDF8;      /* карточки ответов и оффера на светлом */
+    --muted: #6A5651;       /* подписи на светлом, контраст 6,4 : 1 */
     --prata: "Prata", Georgia, "Times New Roman", serif;
     --golos: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body {
-    margin: 0; background: var(--izumrud); color: var(--text);
-    /* Golos плотнее обычного (500): на тёмном фоне 400 выглядел тонко. */
+    /* Светлая схема, как светлые экраны violamaro.ru/opora/: кремовый фон,
+       изумрудный текст, бордовые заголовки, золото только линиями. */
+    margin: 0; background: var(--svetlyy); color: var(--izumrud);
+    /* Golos плотнее обычного (500). */
     font-family: var(--golos); font-size: 17px; font-weight: 500; line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
   p, h1, h2, h3, ul { margin: 0; }
   ul { padding: 0; list-style: none; }
-  a { color: var(--rose); }
+  a { color: var(--wine); }
   button { font: inherit; cursor: pointer; }
-  :focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--wine); outline-offset: 3px; }
   .nw { white-space: nowrap; }
 
   .wrap { max-width: 34rem; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
@@ -95,15 +99,15 @@
      отдельным прямоугольником. Низ шапки и есть полоса прогресса. */
   .top {
     position: sticky; top: 0; z-index: 5;
-    background: rgba(31, 53, 50, .94);
+    background: rgba(243, 230, 227, .94);
     -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
     padding: .8rem 1rem 0;
   }
   .top[hidden] { display: none; }
   .brand { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
-  .brand-who { display: flex; align-items: center; gap: .55rem; font-weight: 600; color: var(--rose); }
-  #counter { font-size: .74rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); text-align: right; }
-  .bar { margin: .75rem -1rem 0; height: 2px; background: rgba(184, 147, 92, .22); overflow: hidden; }
+  .brand-who { display: flex; align-items: center; gap: .55rem; font-weight: 600; color: var(--izumrud); }
+  #counter { font-size: .74rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--wine); text-align: right; }
+  .bar { margin: .75rem -1rem 0; height: 2px; background: rgba(184, 147, 92, .3); overflow: hidden; }
   .bar i { display: block; height: 100%; width: 0; background: var(--gold); transition: width .3s; }
 
   main { flex: 1; padding: 1.4rem 1rem 2.5rem; }
@@ -117,25 +121,26 @@
   /* заголовки как на «Опоре» */
   .h1 {
     font-family: var(--prata); font-weight: 400; text-transform: uppercase;
-    letter-spacing: .035em; line-height: 1.12; color: var(--rose);
+    letter-spacing: .035em; line-height: 1.12; color: var(--wine);
     font-size: clamp(1.55rem, 7vw, 2.5rem);
   }
   .h1 .ln { white-space: nowrap; }
-  .sub { color: var(--rose-muted); font-style: italic; font-weight: 500; font-size: 1.1rem; margin-top: -.5rem; }
-  .q-text { font-size: 1.38rem; line-height: 1.36; font-weight: 700; color: var(--text); text-wrap: pretty; }
-  .soft { color: var(--rose-muted); }
+  .sub { color: var(--muted); font-style: italic; font-weight: 500; font-size: 1.1rem; margin-top: -.5rem; }
+  .q-text { font-size: 1.38rem; line-height: 1.36; font-weight: 700; color: var(--izumrud); text-wrap: pretty; }
+  .soft { color: var(--muted); }
   .center { text-align: center; }
 
-  /* слова Виолы: аватарка, имя, светлый пузырь с золотой рамкой внутри */
+  /* слова Виолы: аватарка, имя, изумрудный пузырь с золотой рамкой внутри
+     (на светлом фоне он отличается от белых карточек ответов) */
   .msg { display: grid; grid-template-columns: 36px 1fr; column-gap: .55rem; align-items: end; }
   .bubble {
-    background: var(--svetlyy); color: var(--izumrud);
+    background: var(--izumrud); color: var(--text);
     border-radius: 14px 14px 14px 4px;
     outline: 1px solid var(--gold); outline-offset: -5px;
     padding: .85rem 1.05rem .95rem;
     display: flex; flex-direction: column; gap: .6rem; min-width: 0;
   }
-  .who { font-size: .9rem; font-weight: 700; color: var(--wine); margin-bottom: -.35rem; }
+  .who { font-size: .9rem; font-weight: 700; color: var(--rose); margin-bottom: -.35rem; }
   .bubble p { text-wrap: pretty; font-weight: 500; }
 
   /* ответы на утверждение и варианты вопросов */
@@ -143,8 +148,8 @@
   .ans {
     width: 100%; text-align: left;
     padding: .95rem 1.1rem; min-height: 3.3rem;
-    background: var(--panel); color: var(--text);
-    border: 1px solid rgba(184, 147, 92, .55); border-radius: 6px;
+    background: var(--bumaga); color: var(--izumrud);
+    border: 1px solid rgba(184, 147, 92, .7); border-radius: 6px;
     font-size: 1.06rem; font-weight: 600; line-height: 1.35;
     transition: background .15s, border-color .15s;
   }
@@ -172,30 +177,31 @@
   .go:disabled { opacity: .55; cursor: default; }
   .ghost {
     align-self: flex-start; background: none; border: 0; padding: .3rem 0;
-    color: var(--rose-muted); font-size: .95rem;
+    color: var(--muted); font-size: .95rem;
   }
   .foot { display: flex; flex-direction: column; gap: .8rem; margin-top: .3rem; }
-  .fine { font-size: .82rem; line-height: 1.5; color: var(--rose-muted); }
-  .fine a { color: var(--rose-muted); }
-  .hint { font-size: .9rem; color: var(--rose-muted); margin-top: -.6rem; }
-  .err { color: #F2A7AE; font-size: .92rem; }
+  .fine { font-size: .82rem; line-height: 1.5; color: var(--muted); }
+  .fine a { color: var(--muted); }
+  .hint { font-size: .9rem; color: var(--muted); margin-top: -.6rem; }
+  .err { color: var(--wine); font-size: .92rem; }
 
   /* результат */
   .verdict { font-family: var(--prata); text-transform: uppercase; letter-spacing: .03em; line-height: 1.1;
-    color: var(--rose); font-size: clamp(2.1rem, 10vw, 3rem); text-wrap: balance; }
+    color: var(--wine); font-size: clamp(2.1rem, 10vw, 3rem); text-wrap: balance; }
   .plate {
+    background: var(--bumaga);
     border: 1px solid var(--gold); border-radius: 6px; padding: 1rem 1.1rem 1.1rem;
     display: flex; flex-direction: column; gap: .35rem;
   }
-  .plate-label { font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--rose-muted); }
-  .plate-name { font-family: var(--prata); text-transform: uppercase; letter-spacing: .035em; font-size: 1.45rem; line-height: 1.2; color: var(--rose); }
+  .plate-label { font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .plate-name { font-family: var(--prata); text-transform: uppercase; letter-spacing: .035em; font-size: 1.45rem; line-height: 1.2; color: var(--wine); }
 
   /* голосовое: как в Телеграме — аватарка, круглая кнопка, дорожка, время, скорость */
   .voice {
     display: grid; grid-template-columns: 36px 1fr; column-gap: .55rem; align-items: end;
   }
   .voice-box {
-    background: var(--svetlyy); color: var(--izumrud);
+    background: var(--izumrud); color: var(--text);
     border-radius: 14px 14px 14px 4px;
     outline: 1px solid var(--gold); outline-offset: -5px;
     padding: .8rem .95rem .75rem;
@@ -208,20 +214,20 @@
   }
   .play svg { width: 1.15rem; height: 1.15rem; }
   .track { position: relative; height: 1.6rem; display: flex; align-items: center; cursor: pointer; }
-  .track-line { position: relative; width: 100%; height: 4px; border-radius: 2px; background: rgba(31, 53, 50, .2); overflow: hidden; }
-  .track-line i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--wine); }
+  .track-line { position: relative; width: 100%; height: 4px; border-radius: 2px; background: rgba(239, 228, 224, .25); overflow: hidden; }
+  .track-line i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--gold); }
   .speed {
     grid-row: span 2; align-self: center;
     background: none; border: 1px solid var(--gold); border-radius: 999px;
-    color: var(--wine); font-size: .82rem; font-weight: 700; padding: .25rem .55rem; min-width: 3rem;
+    color: var(--rose); font-size: .82rem; font-weight: 700; padding: .25rem .55rem; min-width: 3rem;
   }
-  .time { font-size: .82rem; color: var(--izumrud); opacity: .75; font-variant-numeric: tabular-nums; }
+  .time { font-size: .82rem; color: var(--text); opacity: .75; font-variant-numeric: tabular-nums; }
   .voice-wait { grid-column: 2 / 4; font-size: .95rem; }
   .voice-box.off .play { opacity: .45; cursor: default; }
 
   /* мини-оффер: светлая карточка, как на «Опоре» */
   .offer {
-    background: var(--svetlyy); color: var(--izumrud);
+    background: var(--bumaga); color: var(--izumrud);
     border-radius: 6px; outline: 1px solid var(--gold); outline-offset: -7px;
     padding: 1.5rem 1.4rem 1.6rem;
     display: flex; flex-direction: column; gap: .9rem;
@@ -236,7 +242,7 @@
   .float {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
     padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom, 0px));
-    background: var(--barhat); border-top: 1px solid rgba(184, 147, 92, .35);
+    background: rgba(243, 230, 227, .96); border-top: 1px solid rgba(184, 147, 92, .5);
     transform: translateY(110%); transition: transform .25s;
   }
   .float.on { transform: none; }
