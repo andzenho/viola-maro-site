@@ -2,7 +2,7 @@
 <html lang="ru">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F3E6E3">
+<meta name="theme-color" content="#EFE3CC">
 <meta name="color-scheme" content="only dark">
 <!-- Пока тексты не утверждены (Илья, затем Виола), страницу не индексируем. -->
 <meta name="robots" content="noindex, nofollow">
@@ -69,7 +69,8 @@
     --wine: #7B1921;        /* кнопки, акценты на светлом */
     --wine-text: #F6E9E6;   /* текст на кнопках */
     --gold: #B8935C;        /* линии, рамки */
-    --svetlyy: #F3E6E3;     /* фон страницы, как светлые экраны «Опоры» */
+    --svetlyy: #F3E6E3;
+    --slonovaya: #EFE3CC;   /* фон страницы: бумага цвета слоновой кости, как на «Опоре» */
     --bumaga: #FFFDF8;      /* карточки ответов и оффера на светлом */
     --muted: #6A5651;       /* подписи на светлом, контраст 6,4 : 1 */
     --prata: "Prata", Georgia, "Times New Roman", serif;
@@ -80,7 +81,9 @@
   body {
     /* Светлая схема, как светлые экраны violamaro.ru/opora/: кремовый фон,
        изумрудный текст, бордовые заголовки, золото только линиями. */
-    margin: 0; background: var(--svetlyy); color: var(--izumrud);
+    margin: 0; color: var(--izumrud);
+    /* та же плитка бумаги, что на светлых экранах «Опоры» (fon-bumaga.webp рядом) */
+    background: var(--slonovaya) url(fon-bumaga.webp) repeat; background-size: 620px auto;
     /* Golos плотнее обычного (500). */
     font-family: var(--golos); font-size: 17px; font-weight: 500; line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -99,7 +102,7 @@
      отдельным прямоугольником. Низ шапки и есть полоса прогресса. */
   .top {
     position: sticky; top: 0; z-index: 5;
-    background: rgba(243, 230, 227, .94);
+    background: rgba(239, 227, 204, .94);
     -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
     padding: .8rem 1rem 0;
   }
@@ -242,7 +245,7 @@
   .float {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
     padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom, 0px));
-    background: rgba(243, 230, 227, .96); border-top: 1px solid rgba(184, 147, 92, .5);
+    background: rgba(239, 227, 204, .96); border-top: 1px solid rgba(184, 147, 92, .5);
     transform: translateY(110%); transition: transform .25s;
   }
   .float.on { transform: none; }
