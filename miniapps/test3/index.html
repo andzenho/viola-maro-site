@@ -91,17 +91,19 @@
   .wrap { max-width: 34rem; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
 
   /* шапка: аватарка, имя, где мы, полоса */
+  /* Шапка в цвет страницы, без тёмной плашки: на компьютере плашка висела
+     отдельным прямоугольником. Низ шапки и есть полоса прогресса. */
   .top {
     position: sticky; top: 0; z-index: 5;
-    background: var(--barhat);
-    padding: .7rem 1rem .6rem;
-    border-bottom: 1px solid rgba(184, 147, 92, .35);
+    background: rgba(31, 53, 50, .94);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    padding: .8rem 1rem 0;
   }
   .top[hidden] { display: none; }
   .brand { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
   .brand-who { display: flex; align-items: center; gap: .55rem; font-weight: 600; color: var(--rose); }
-  #counter { font-size: .88rem; color: var(--rose-muted); text-align: right; }
-  .bar { margin-top: .55rem; height: 3px; background: rgba(184, 147, 92, .22); border-radius: 2px; overflow: hidden; }
+  #counter { font-size: .74rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); text-align: right; }
+  .bar { margin: .75rem -1rem 0; height: 2px; background: rgba(184, 147, 92, .22); overflow: hidden; }
   .bar i { display: block; height: 100%; width: 0; background: var(--gold); transition: width .3s; }
 
   main { flex: 1; padding: 1.4rem 1rem 2.5rem; }
