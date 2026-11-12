@@ -199,7 +199,7 @@
 
   <form id="f" novalidate>
     <p class="form-title">Анкета предзаписи</p>
-    <p class="form-note">Меньше минуты. После анкеты откроется закрытый канал.</p>
+    <p class="form-note">Одна минута. После анкеты откроется закрытый канал.</p>
 
     <div class="field" data-f="name">
       <label class="cap" for="name">Как вас зовут</label>
@@ -210,22 +210,25 @@
     <div class="field" data-f="telegram">
       <label class="cap" for="telegram">Ваш ник в Телеграме</label>
       <input id="telegram" name="telegram" type="text" placeholder="Например, @anna" autocapitalize="none" autocomplete="off" maxlength="64">
-      <div class="err">Напишите ник или оставьте телефон ниже</div>
+      <div class="err">Напишите ник в Телеграме</div>
     </div>
 
     <div class="field" data-f="phone">
-      <label class="cap" for="phone">Телефон <i>если ника нет</i></label>
+      <label class="cap" for="phone">Телефон</label>
       <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+7" maxlength="24">
+      <div class="err">Напишите номер телефона</div>
     </div>
 
     <div class="field" data-f="readiness">
-      <label class="cap" for="readiness">Чем вы занимаетесь <i>необязательно</i></label>
+      <label class="cap" for="readiness">Чем вы занимаетесь</label>
       <input id="readiness" name="readiness" type="text" maxlength="160">
+      <div class="err">Напишите пару слов о себе</div>
     </div>
 
     <div class="field" data-f="situation">
-      <label class="cap" for="situation">Что вы хотите изменить в новом году <i>необязательно</i></label>
+      <label class="cap" for="situation">Что вы хотите изменить в новом году</label>
       <textarea id="situation" name="situation" maxlength="1200"></textarea>
+      <div class="err">Ответьте хотя бы одной фразой</div>
     </div>
 
     <div class="hp" aria-hidden="true">
@@ -308,7 +311,6 @@ try { if (localStorage.getItem(CONFIG.storeKey)) showDone(false); } catch (e) {}
 form.addEventListener("input", function (e) {
   var f = e.target.closest(".field");
   if (f) f.classList.remove("bad");
-  if (e.target.id === "telegram" || e.target.id === "phone") mark("telegram", false);
 });
 $("accept_pd").addEventListener("change", function () { $("consentRow").classList.remove("bad"); });
 
@@ -321,7 +323,10 @@ form.addEventListener("submit", function (e) {
   var ok = true, first = null;
 
   if (!name) { mark("name", true); ok = false; first = first || $("name"); }
-  if (!tg && !phoneOk) { mark("telegram", true); ok = false; first = first || $("telegram"); }
+  if (!tg) { mark("telegram", true); ok = false; first = first || $("telegram"); }
+  if (!phoneOk) { mark("phone", true); ok = false; first = first || $("phone"); }
+  if (!$("readiness").value.trim()) { mark("readiness", true); ok = false; first = first || $("readiness"); }
+  if (!$("situation").value.trim()) { mark("situation", true); ok = false; first = first || $("situation"); }
   if (!$("accept_pd").checked) { $("consentRow").classList.add("bad"); ok = false; first = first || $("accept_pd"); }
   if (!ok) { first.focus(); first.scrollIntoView({ block: "center", behavior: "smooth" }); return; }
 
