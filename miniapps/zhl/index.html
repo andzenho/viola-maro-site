@@ -333,8 +333,9 @@ form.addEventListener("submit", function (e) {
     telegram: tg,
     phone: phoneOk ? phone : "",
     readiness: $("readiness").value.trim(),
-    situation: $("situation").value.trim(),
-    plan: "Женщина-лидер, предзапись",
+    /* Ответ на открытый вопрос идёт в колонку «Тариф»: у развёрнутого
+       скрипта таблицы колонки «Что происходит» нет, а тарифа тут не бывает. */
+    plan: $("situation").value.trim(),
     accept_pd: true,
     accept_offer: false,
     accept_ads: false,
