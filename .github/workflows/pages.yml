@@ -110,6 +110,13 @@ jobs:
           mkdir -p site/intervyu
           cp miniapps/intervyu/index.html site/intervyu/index.html
 
+      # Предзапись на «Женщину-лидера» (/zhl/): анкета, заявки в лист
+      # «Предзапись с сайта», после отправки переход в закрытый канал.
+      - name: Добавить предзапись на «Женщину-лидера»
+        run: |
+          mkdir -p site/zhl
+          cp miniapps/zhl/index.html site/zhl/index.html
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3

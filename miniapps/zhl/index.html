@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#070d1f">
+<title>Женщина-лидер. Предзапись</title>
+<meta name="description" content="Большой проект Виолы Маро. Старт 22 января. Предзапись.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #070d1f;
+    --deep: #0b1533;
+    --panel: #101d42;
+    --line: #26376b;
+    --line-strong: #3a4f8f;
+    --text: #eef1fa;
+    --muted: #a3afd0;
+    --gold: #d9b877;
+    --gold-strong: #ecd09a;
+    --error: #ff9c9c;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background:
+      radial-gradient(900px 600px at 85% -10%, rgba(64, 96, 200, .34), transparent 60%),
+      radial-gradient(700px 520px at -10% 105%, rgba(34, 58, 140, .42), transparent 62%),
+      linear-gradient(180deg, var(--night), var(--deep));
+    background-color: var(--deep);
+    color: var(--text);
+    font-family: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  .wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 44px 20px calc(48px + env(safe-area-inset-bottom));
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(217, 184, 119, .45);
+    border-radius: 999px;
+    padding: 7px 14px;
+  }
+  h1 {
+    font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    font-size: clamp(52px, 15vw, 84px);
+    line-height: .94;
+    letter-spacing: -.01em;
+    margin: 26px 0 0;
+    text-wrap: balance;
+  }
+  h1 em { font-style: italic; font-weight: 500; color: var(--gold-strong); }
+  .lead {
+    margin: 22px 0 0;
+    color: var(--muted);
+    font-size: 19px;
+    max-width: 30em;
+  }
+  .lead b { color: var(--text); font-weight: 500; }
+  .date {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 28px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .date span { color: var(--muted); font-size: 15px; letter-spacing: .08em; text-transform: uppercase; }
+  .date strong {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+    font-size: 34px;
+    line-height: 1;
+  }
+
+  form, .done {
+    margin-top: 32px;
+    background: rgba(16, 29, 66, .78);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 26px 20px 22px;
+    backdrop-filter: blur(6px);
+  }
+  .form-title {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1.05;
+    margin: 0 0 6px;
+  }
+  .form-note { margin: 0 0 20px; color: var(--muted); font-size: 16px; }
+  .field { margin-top: 16px; }
+  label.cap { display: block; font-size: 16px; font-weight: 500; margin-bottom: 7px; }
+  label.cap i { font-style: normal; color: var(--muted); font-weight: 400; }
+  input[type="text"], input[type="tel"], textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 18px;
+    color: var(--text);
+    background: rgba(7, 13, 31, .7);
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    padding: 15px 16px;
+    min-height: 56px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  textarea { min-height: 104px; resize: vertical; }
+  input::placeholder, textarea::placeholder { color: #6f7ca6; }
+  input:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(217, 184, 119, .2); }
+  .field.bad input, .field.bad textarea { border-color: var(--error); }
+  .field .err { display: none; color: var(--error); font-size: 15px; margin-top: 6px; }
+  .field.bad .err { display: block; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .consent { display: flex; gap: 12px; align-items: flex-start; margin-top: 20px; font-size: 15px; color: var(--muted); }
+  .consent input {
+    flex: none; width: 24px; height: 24px; margin: 1px 0 0;
+    accent-color: var(--gold);
+  }
+  .consent a { color: var(--text); }
+  .consent.bad { color: var(--error); }
+
+  button.go, a.go {
+    display: block;
+    width: 100%;
+    margin-top: 22px;
+    font: inherit;
+    font-weight: 600;
+    font-size: 19px;
+    text-align: center;
+    text-decoration: none;
+    color: #1a1407;
+    background: linear-gradient(180deg, var(--gold-strong), var(--gold));
+    border: 0;
+    border-radius: 16px;
+    padding: 18px 20px;
+    min-height: 62px;
+    cursor: pointer;
+  }
+  button.go:disabled { opacity: .6; cursor: default; }
+  button.go:focus-visible, a.go:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+  .send-err { display: none; color: var(--error); font-size: 16px; margin: 14px 0 0; }
+  .send-err.on { display: block; }
+
+  .done { display: none; text-align: left; }
+  .done h2 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+    font-size: 38px;
+    line-height: 1.02;
+    margin: 0 0 12px;
+  }
+  .done p { margin: 0 0 10px; color: var(--muted); }
+  .done p b { color: var(--text); font-weight: 500; }
+  .timer { margin-top: 14px !important; font-size: 16px; }
+  .timer span { color: var(--gold-strong); font-weight: 600; }
+  body.sent form { display: none; }
+  body.sent .done { display: block; }
+
+  footer { margin-top: 28px; color: #6f7ca6; font-size: 14px; }
+  footer a { color: inherit; }
+
+  @media (min-width: 640px) {
+    .wrap { padding-top: 72px; }
+    form, .done { padding: 32px 30px 28px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .wrap > * { animation: rise .7s both; }
+    .wrap > *:nth-child(2) { animation-delay: .06s; }
+    .wrap > *:nth-child(3) { animation-delay: .12s; }
+    .wrap > *:nth-child(4) { animation-delay: .18s; }
+    .wrap > *:nth-child(5) { animation-delay: .24s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <span class="eyebrow">Виола Маро · предзапись</span>
+  <h1>Женщина-<em>лидер</em></h1>
+  <p class="lead">Большой проект Виолы в новом году. <b>Подробности первыми узнают те, кто в предзаписи.</b></p>
+  <div class="date"><span>Старт</span><strong>22 января</strong></div>
+
+  <form id="f" novalidate>
+    <p class="form-title">Анкета предзаписи</p>
+    <p class="form-note">Меньше минуты. После анкеты откроется закрытый канал.</p>
+
+    <div class="field" data-f="name">
+      <label class="cap" for="name">Как вас зовут</label>
+      <input id="name" name="name" type="text" autocomplete="given-name" maxlength="80">
+      <div class="err">Напишите имя</div>
+    </div>
+
+    <div class="field" data-f="telegram">
+      <label class="cap" for="telegram">Ваш ник в Телеграме</label>
+      <input id="telegram" name="telegram" type="text" placeholder="Например, @anna" autocapitalize="none" autocomplete="off" maxlength="64">
+      <div class="err">Напишите ник или оставьте телефон ниже</div>
+    </div>
+
+    <div class="field" data-f="phone">
+      <label class="cap" for="phone">Телефон <i>если ника нет</i></label>
+      <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+7" maxlength="24">
+    </div>
+
+    <div class="field" data-f="readiness">
+      <label class="cap" for="readiness">Чем вы занимаетесь <i>необязательно</i></label>
+      <input id="readiness" name="readiness" type="text" maxlength="160">
+    </div>
+
+    <div class="field" data-f="situation">
+      <label class="cap" for="situation">Что вы хотите изменить в новом году <i>необязательно</i></label>
+      <textarea id="situation" name="situation" maxlength="1200"></textarea>
+    </div>
+
+    <div class="hp" aria-hidden="true">
+      <label>Сайт<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+    </div>
+
+    <label class="consent" id="consentRow">
+      <input type="checkbox" id="accept_pd">
+      <span>Согласна на <a href="https://violamaro.ru/consent/" target="_blank" rel="noopener">обработку персональных данных</a> по <a href="https://violamaro.ru/privacy/" target="_blank" rel="noopener">политике конфиденциальности</a></span>
+    </label>
+
+    <button class="go" type="submit" id="btn">Записаться в предзапись</button>
+    <p class="send-err" id="sendErr">Не получилось отправить анкету. Проверьте интернет и нажмите ещё раз.</p>
+  </form>
+
+  <section class="done" id="done" aria-live="polite">
+    <h2>Вы в предзаписи</h2>
+    <p>Остался один шаг. <b>Вступите в закрытый канал</b>, там Виола первой расскажет о проекте.</p>
+    <a class="go" id="toChannel" href="#">Перейти в канал</a>
+    <p class="timer" id="timer">Канал откроется сам через <span id="sec">10</span> сек.</p>
+  </section>
+
+  <footer>© Виола Маро · <a href="https://violamaro.ru/privacy/">Политика конфиденциальности</a></footer>
+</main>
+
+<script>
+"use strict";
+var CONFIG = {
+  /* Приёмник: скрипт таблицы «Заявки | Виола Маро», тот же, что у форм сайта.
+     Форма 'предзапись' ложится в лист «Предзапись с сайта»; вкладка
+     «Предзапись ЖЛ» собирает оттуда строки этой страницы формулой. */
+  sheetUrl: "https://script.google.com/macros/s/AKfycby3T-T1o2X9Y29957ZDDQs7r6vtltiKiyLkYT97cyin-roOagb3vUMBWWQoK0-P8Mzbsg/exec",
+  secret: "PxlGXL9bQSjc0dHcLoiCZJZWtNdfv9D8yY9SHBuJ",
+  docVersionConsent: "2026-08-10",
+  /* Закрытый канал ожидающих. */
+  channelUrl: "https://t.me/+4ve8dUk5r18wM2Uy",
+  redirectSec: 10,
+  storeKey: "viola-zhl-predzapis"
+};
+
+var $ = function (id) { return document.getElementById(id); };
+var form = $("f"), btn = $("btn");
+$("toChannel").href = CONFIG.channelUrl;
+
+function params() {
+  var q = new URLSearchParams(location.search), out = {};
+  ["utm_source", "utm_medium", "utm_campaign", "utm_content", "src"].forEach(function (k) {
+    out[k] = (q.get(k) || "").slice(0, 120);
+  });
+  return out;
+}
+
+function normTg(v) {
+  v = String(v || "").trim().replace(/^https?:\/\/t\.me\//i, "").replace(/\s+/g, "");
+  if (!v) return "";
+  return v.charAt(0) === "@" ? v : "@" + v;
+}
+
+function mark(name, bad) {
+  var el = form.querySelector('[data-f="' + name + '"]');
+  if (el) el.classList.toggle("bad", !!bad);
+}
+
+function showDone(auto) {
+  document.body.classList.add("sent");
+  window.scrollTo(0, 0);
+  if (!auto) { $("timer").style.display = "none"; return; }
+  var left = CONFIG.redirectSec, sec = $("sec");
+  var t = setInterval(function () {
+    left -= 1;
+    sec.textContent = Math.max(left, 0);
+    if (left <= 0) { clearInterval(t); location.href = CONFIG.channelUrl; }
+  }, 1000);
+  $("toChannel").addEventListener("click", function () { clearInterval(t); $("timer").style.display = "none"; });
+}
+
+/* Уже заполняла: показываем экран с кнопкой, без повторной отправки и без таймера. */
+try { if (localStorage.getItem(CONFIG.storeKey)) showDone(false); } catch (e) {}
+
+form.addEventListener("input", function (e) {
+  var f = e.target.closest(".field");
+  if (f) f.classList.remove("bad");
+  if (e.target.id === "telegram" || e.target.id === "phone") mark("telegram", false);
+});
+$("accept_pd").addEventListener("change", function () { $("consentRow").classList.remove("bad"); });
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  var name = $("name").value.trim();
+  var tg = normTg($("telegram").value);
+  var phone = $("phone").value.trim();
+  var phoneOk = phone.replace(/\D/g, "").length >= 7;
+  var ok = true, first = null;
+
+  if (!name) { mark("name", true); ok = false; first = first || $("name"); }
+  if (!tg && !phoneOk) { mark("telegram", true); ok = false; first = first || $("telegram"); }
+  if (!$("accept_pd").checked) { $("consentRow").classList.add("bad"); ok = false; first = first || $("accept_pd"); }
+  if (!ok) { first.focus(); first.scrollIntoView({ block: "center", behavior: "smooth" }); return; }
+
+  var payload = {
+    form: "предзапись",
+    secret: CONFIG.secret,
+    website: form.querySelector('[name="website"]').value,
+    name: name,
+    telegram: tg,
+    phone: phoneOk ? phone : "",
+    readiness: $("readiness").value.trim(),
+    situation: $("situation").value.trim(),
+    plan: "Женщина-лидер, предзапись",
+    accept_pd: true,
+    accept_offer: false,
+    accept_ads: false,
+    consent_ts: new Date().toISOString(),
+    doc_version_consent: CONFIG.docVersionConsent,
+    page: location.origin + location.pathname,
+    ua: navigator.userAgent,
+    referrer: document.referrer || ""
+  };
+  var p = params();
+  Object.keys(p).forEach(function (k) { payload[k] = p[k]; });
+
+  btn.disabled = true;
+  btn.textContent = "Отправляем…";
+  $("sendErr").classList.remove("on");
+
+  /* redirect: 'manual' — как на сайте: Apps Script отвечает 302 только после
+     того, как строка записана, а домен ответа местами заблокирован. */
+  fetch(CONFIG.sheetUrl, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload),
+    redirect: "manual",
+    keepalive: true
+  }).then(function (res) {
+    if (res.type !== "opaqueredirect" && !res.ok) throw new Error("HTTP " + res.status);
+    try { localStorage.setItem(CONFIG.storeKey, String(Date.now())); } catch (e) {}
+    showDone(true);
+  }).catch(function () {
+    btn.disabled = false;
+    btn.textContent = "Записаться в предзапись";
+    $("sendErr").classList.add("on");
+  });
+});
+</script>
+</body>
+</html>
