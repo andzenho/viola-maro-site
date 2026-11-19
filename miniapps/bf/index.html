@@ -268,14 +268,14 @@
 
   /* Форма перед оплатой: имя и телефон или Телеграм для выдачи доступа.
      Светлое окно, как карточки тарифов, крупные поля. */
-  .lead {
+  .lead-dlg {
     --text: #1F3532; --muted: #5F4B46; --akcent: #7B1921;
     width: min(32rem, calc(100% - 1.5rem)); max-height: calc(100% - 1.5rem); overflow: auto;
     padding: 0; border: 2px solid var(--gold); border-radius: 12px;
     background: #F6ECE8; color: var(--text);
   }
-  .lead::backdrop { background: rgba(10, 14, 11, .78); }
-  .lead form { padding: 1.4rem 1.25rem 1.5rem; }
+  .lead-dlg::backdrop { background: rgba(10, 14, 11, .78); }
+  .lead-dlg form { padding: 1.4rem 1.25rem 1.5rem; }
   .lead-h { font-family: var(--prata); font-size: 1.6rem; line-height: 1.2; padding-right: 2.5rem; }
   .lead-sub { margin-top: .5rem; font-weight: 600; color: var(--akcent); font-size: 1.08rem; }
   .lead-x {
@@ -283,21 +283,21 @@
     border: 1.5px solid var(--akcent); background: transparent; color: var(--akcent); cursor: pointer;
     font-size: 1.5rem; line-height: 1; font-family: var(--golos);
   }
-  .lead label.f { display: block; margin-top: 1.2rem; font-weight: 700; font-size: 1.08rem; }
-  .lead .f-hint { display: block; font-weight: 450; color: var(--muted); font-size: .95rem; margin-top: .1rem; }
-  .lead input[type=text] {
+  .lead-dlg label.f { display: block; margin-top: 1.2rem; font-weight: 700; font-size: 1.08rem; }
+  .lead-dlg .f-hint { display: block; font-weight: 450; color: var(--muted); font-size: .95rem; margin-top: .1rem; }
+  .lead-dlg input[type=text] {
     display: block; width: 100%; margin-top: .45rem; padding: .85rem .95rem; min-height: 3.4rem;
     font: inherit; font-size: 1.12rem; color: var(--text); background: #FFFDF8;
     border: 1.5px solid rgba(31, 53, 50, .35); border-radius: 6px;
   }
-  .lead input[type=text]:focus { outline: 2px solid var(--akcent); outline-offset: 1px; border-color: var(--akcent); }
-  .lead .chk { display: grid; grid-template-columns: 1.6rem 1fr; gap: .7rem; align-items: start; margin-top: 1rem; font-size: 1rem; line-height: 1.45; cursor: pointer; }
-  .lead .chk input { width: 1.45rem; height: 1.45rem; margin: .1rem 0 0; accent-color: var(--wine); }
-  .lead .chk a { color: var(--akcent); }
-  .lead .err { color: #B3141F; font-weight: 600; margin-top: .9rem; }
-  .lead .btn { max-width: none; margin-top: 1.3rem; }
-  .lead .note-s { color: var(--muted); font-size: .92rem; margin-top: .7rem; }
-  .lead .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .lead-dlg input[type=text]:focus { outline: 2px solid var(--akcent); outline-offset: 1px; border-color: var(--akcent); }
+  .lead-dlg .chk { display: grid; grid-template-columns: 1.6rem 1fr; gap: .7rem; align-items: start; margin-top: 1rem; font-size: 1rem; line-height: 1.45; cursor: pointer; }
+  .lead-dlg .chk input { width: 1.45rem; height: 1.45rem; margin: .1rem 0 0; accent-color: var(--wine); }
+  .lead-dlg .chk a { color: var(--akcent); }
+  .lead-dlg .err { color: #B3141F; font-weight: 600; margin-top: .9rem; }
+  .lead-dlg .btn { max-width: none; margin-top: 1.3rem; }
+  .lead-dlg .note-s { color: var(--muted); font-size: .92rem; margin-top: .7rem; }
+  .lead-dlg .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
   /* 7. нижняя панель */
   .bar {
@@ -557,7 +557,7 @@
   </div>
 </div>
 
-<dialog class="lead" id="lead" aria-labelledby="lead-h">
+<dialog class="lead-dlg" id="lead" aria-labelledby="lead-h">
   <form id="lead-form" novalidate>
     <button type="button" class="lead-x" id="lead-x" aria-label="Закрыть">×</button>
     <p class="lead-h" id="lead-h">Оформление доступа</p>
