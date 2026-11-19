@@ -154,21 +154,7 @@
   .tarif .accept a, .tarif .accept { color: var(--muted); }
   /* компьютер: картинка слева (45%), справа «Тариф N», название, «для кого»,
      цена, кнопка, таймер; состав ниже на всю ширину. На телефоне порядок тот же, столбиком. */
-  @media (min-width: 900px) {
-    .wrap { max-width: 60rem; }
-    /* полоса «Тариф N» на всю ширину карточки, под ней слева картинка
-       на тёмной подложке (без обрезки, по центру), справа название, цена, кнопка */
-    .t-top { display: grid; grid-template-columns: 45% 1fr; margin: 0 -2.2rem; align-items: start; }
-    .t-top .t-main { display: contents; }
-    .t-top .band { grid-column: 1 / -1; grid-row: 1; margin: 0; padding: .8rem 2.2rem; }
-    .t-top .t-img { grid-column: 1; grid-row: 2 / span 5; align-self: stretch; width: 100%; height: 100%; margin: 0;
-      aspect-ratio: auto; object-fit: contain; object-position: center; box-sizing: border-box; padding: .9rem; background: var(--fon); }
-    .t-top .t-main > :not(.band) { grid-column: 2; margin-left: 2rem; margin-right: 2.2rem; }
-    .t-top .t-main > h3 { margin-top: 1.4rem; }
-    .t-top .t-main > .buy { margin-bottom: 1.6rem; }
-    /* состав под картинкой одной колонкой: абзацы, программы и список одной ширины */
-    .tarif > .after, .tarif > .hint, .tarif > .sostav, .tarif > .plain { max-width: 38rem; }
-  }
+
   @media (min-width: 700px) {
     .tarif { padding: 0 2.2rem 2rem; }
     .band { margin: 0 -2.2rem 2rem; padding: 1rem 2.2rem; }
