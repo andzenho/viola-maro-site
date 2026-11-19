@@ -93,14 +93,14 @@
     font-family: var(--prata); font-size: 1.6rem; line-height: 1;
     display: flex; align-items: center; justify-content: center;
   }
-  .pick-t { text-wrap: pretty; font-size: 1.08rem; line-height: 1.45; }
+  .pick-t { text-wrap: pretty; font-size: 1.12rem; line-height: 1.45; color: var(--text); }
   .pick-go {
     justify-self: start; margin-top: .75rem; padding: .5rem 1rem;
-    border: 1px solid var(--akcent); border-radius: 4px; color: var(--akcent);
-    font-weight: 600; font-size: .98rem;
+    background: var(--wine); border: 1px solid var(--gold); border-radius: 4px; color: var(--wine-text);
+    font-weight: 600; font-size: 1.05rem;
   }
   .pick:hover { border-color: var(--gold); }
-  .pick:hover .pick-go { background: rgba(232, 200, 202, .08); }
+  .pick:hover .pick-go { background: #8E1F28; }
 
   /* 4. тарифы: как разделы прайс-листа */
   /* Тарифы карточками (просьба 19.11: взрослой аудитории так понятнее и легче
@@ -116,8 +116,9 @@
     padding: 2.1rem 1.4rem 1.7rem; margin-top: 1.8rem; scroll-margin-top: 1rem;
   }
   .tarif.main { border-width: 2px; }
-  .tarif .mark { font-size: .95rem; font-weight: 700; }
-  .tarif .tno { color: var(--muted); }
+  /* «Тариф N» и отметки: крупно и контрастно (просьба 19.11: не читалось) */
+  .tarif .mark { font-size: 1.05rem; font-weight: 700; }
+  .tarif .tno { color: var(--akcent); font-size: 1.15rem; font-weight: 700; margin-bottom: .35rem; }
   .tarif .price .eur { font-weight: 550; }
   .tarif .btn.off { color: #5F4B46; }
   .tarif .accept a, .tarif .accept { color: var(--muted); }
@@ -132,18 +133,20 @@
     padding: 1rem 1.15rem 0; overflow: hidden;
   }
   .price .row { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-  .price .lab { color: var(--muted); font-size: 1rem; }
+  .price .lab { color: var(--text); font-size: 1.05rem; font-weight: 600; }
   .price .was .val { font-size: 1.35rem; color: var(--muted); text-decoration: line-through; text-decoration-color: var(--akcent); text-decoration-thickness: 2px; }
   .price .now { margin-top: .35rem; padding-top: .55rem; border-top: 1px dashed rgba(31, 53, 50, .2); }
   .price .now .lab { color: var(--akcent); font-weight: 700; }
   .price .now .val { font-family: var(--prata); color: var(--akcent); font-size: clamp(2.4rem, 11vw, 3rem); line-height: 1.1; white-space: nowrap; }
-  .price .eur { color: var(--muted); font-size: .95rem; text-align: right; margin-top: .1rem; }
+  .price .eur { color: var(--text); font-size: 1.02rem; text-align: right; margin-top: .15rem; }
   .price .save {
-    margin: .9rem -1.15rem 0; padding: .7rem 1.15rem;
-    background: var(--wine); color: var(--wine-text); font-weight: 600; font-size: 1.02rem; line-height: 1.35;
+    margin: 1rem -1.15rem 0; padding: .85rem 1.15rem .95rem;
+    background: var(--wine); color: var(--wine-text); line-height: 1.3;
   }
-  .vs { color: var(--muted); font-size: 1rem; line-height: 1.45; margin-top: .8rem; text-wrap: pretty; }
-  .vs b { color: var(--akcent); font-weight: 700; }
+  .price .save .s1 { display: block; font-size: 1.05rem; font-weight: 600; }
+  .price .save .s2 { display: block; font-size: 1.55rem; font-weight: 700; margin-top: .15rem; white-space: nowrap; }
+  .vs { color: var(--text); font-size: 1.08rem; line-height: 1.5; margin-top: .9rem; text-wrap: pretty; }
+  .vs b { color: var(--akcent); font-weight: 700; font-size: 1.15em; }
   @media (min-width: 700px) {
     .tarif-head { grid-template-columns: 1fr 19rem; gap: 2rem; align-items: start; }
   }
@@ -283,7 +286,7 @@
           <p class="row was"><span class="lab">Было</span><s class="val">20&nbsp;590&nbsp;₽</s></p>
           <p class="row now"><span class="lab">Сейчас</span><span class="val">9&nbsp;999&nbsp;₽</span></p>
           <p class="eur">В евро: 109&nbsp;€ вместо 223&nbsp;€</p>
-          <p class="save">Скидка 51%: вы экономите 10&nbsp;591&nbsp;₽</p>
+          <p class="save"><span class="s1">Скидка 51%, вы экономите</span><span class="s2">10&nbsp;591&nbsp;₽</span></p>
         </div>
       </div>
       <p class="for"><b>Для кого:</b> для тех, кого продавливают близкие, партнёр или коллеги. Кто годами остаётся удобным для всех, кроме себя, и не понимает, почему не может просто уйти или сказать «нет».</p>
@@ -353,7 +356,7 @@
           <p class="row was"><span class="lab">Было</span><s class="val">19&nbsp;990&nbsp;₽</s></p>
           <p class="row now"><span class="lab">Сейчас</span><span class="val">12&nbsp;990&nbsp;₽</span></p>
           <p class="eur">В евро: 140&nbsp;€ вместо 300&nbsp;€</p>
-          <p class="save">Скидка 35%: вы экономите 7&nbsp;000&nbsp;₽</p>
+          <p class="save"><span class="s1">Скидка 35%, вы экономите</span><span class="s2">7&nbsp;000&nbsp;₽</span></p>
         </div>
       </div>
       <p class="tagline">Переведите жизнь на новую линию за 21 день.</p>
@@ -414,7 +417,7 @@
           <p class="row was"><span class="lab">Было</span><s class="val">40&nbsp;580&nbsp;₽</s></p>
           <p class="row now"><span class="lab">Сейчас</span><span class="val">17&nbsp;990&nbsp;₽</span></p>
           <p class="eur">В евро: 195&nbsp;€ вместо 523&nbsp;€</p>
-          <p class="save">Скидка 56%: вы экономите 22&nbsp;590&nbsp;₽</p>
+          <p class="save"><span class="s1">Скидка 56%, вы экономите</span><span class="s2">22&nbsp;590&nbsp;₽</span></p>
         </div>
         <p class="vs">Тариф 1 и тариф 2 по отдельности на чёрной пятнице стоят 22&nbsp;989&nbsp;₽. С тарифом 3 вы экономите ещё <b>4&nbsp;999&nbsp;₽</b>.</p>
         </div>
