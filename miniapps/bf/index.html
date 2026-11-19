@@ -110,15 +110,27 @@
   .tarif-head { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
   .mark { color: var(--akcent); font-size: .9rem; font-weight: 600; margin-bottom: .35rem; }
   .tno { display: block; font-family: var(--golos); font-size: 1rem; color: var(--muted); margin-bottom: .3rem; letter-spacing: 0; }
-  .price { text-align: right; border-top: 1px solid var(--line); padding-top: 1rem; }
-  .price .old { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 1px; }
-  .price .new { font-family: var(--prata); color: var(--akcent); font-size: clamp(2.6rem, 12vw, 3.4rem); line-height: 1.1; margin-top: .15rem; white-space: nowrap; }
-  .price .eur { font-size: 1.15rem; }
-  .price .disc { color: var(--muted); }
-  .price .vs { color: var(--muted); font-size: .95rem; line-height: 1.45; margin-top: .7rem; text-wrap: pretty; }
+  /* Ценник: сначала прежняя цена (якорь), потом новая, подписи «Было» и
+     «Сейчас», внизу выгода в рублях бордовой полосой. */
+  .price {
+    background: #FFFDF8; border: 1px solid rgba(184, 147, 92, .7); border-radius: 8px;
+    padding: 1rem 1.15rem 0; overflow: hidden;
+  }
+  .price .row { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .price .lab { color: var(--muted); font-size: 1rem; }
+  .price .was .val { font-size: 1.35rem; color: var(--muted); text-decoration: line-through; text-decoration-color: var(--akcent); text-decoration-thickness: 2px; }
+  .price .now { margin-top: .35rem; padding-top: .55rem; border-top: 1px dashed rgba(31, 53, 50, .2); }
+  .price .now .lab { color: var(--akcent); font-weight: 700; }
+  .price .now .val { font-family: var(--prata); color: var(--akcent); font-size: clamp(2.4rem, 11vw, 3rem); line-height: 1.1; white-space: nowrap; }
+  .price .eur { color: var(--muted); font-size: .95rem; text-align: right; margin-top: .1rem; }
+  .price .save {
+    margin: .9rem -1.15rem 0; padding: .7rem 1.15rem;
+    background: var(--wine); color: var(--wine-text); font-weight: 600; font-size: 1.02rem; line-height: 1.35;
+  }
+  .vs { color: var(--muted); font-size: 1rem; line-height: 1.45; margin-top: .8rem; text-wrap: pretty; }
+  .vs b { color: var(--akcent); font-weight: 700; }
   @media (min-width: 700px) {
-    .tarif-head { grid-template-columns: 1fr 15rem; gap: 2rem; align-items: start; }
-    .price { border-top: 0; padding-top: 0; }
+    .tarif-head { grid-template-columns: 1fr 19rem; gap: 2rem; align-items: start; }
   }
   .tagline { font-family: var(--prata); font-size: 1.45rem; line-height: 1.3; margin-top: 1.6rem; text-wrap: pretty; }
   .for { margin-top: 1.6rem; text-wrap: pretty; }
@@ -134,6 +146,13 @@
     font-family: var(--golos); font-weight: 600; font-size: 1.12rem; line-height: 1.25;
   }
   .btn:hover { background: #8E1F28; }
+  .btn2 {
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    width: 100%; max-width: 26rem; min-height: 3.2rem; margin-top: .6rem; padding: .7rem 1.2rem;
+    color: var(--akcent); text-decoration: none; border: 1px solid var(--akcent); border-radius: 4px;
+    font-weight: 600; font-size: 1.02rem; line-height: 1.25;
+  }
+  .btn2:hover { background: rgba(123, 25, 33, .06); }
   .btn.off { background: var(--off); border-color: var(--off); color: var(--muted); cursor: default; }
   .buy .left { margin-top: .6rem; color: var(--muted); }
   .buy .over-t { font-family: var(--prata); font-size: 1.35rem; }
@@ -236,14 +255,14 @@
       <div class="tarif-head">
         <h3><span class="tno">Тариф 1</span>Два марафона и «Неудобные»</h3>
         <div class="price num">
-          <p class="old">20&nbsp;590&nbsp;₽ или 223&nbsp;€</p>
-          <p class="new">9&nbsp;999&nbsp;₽</p>
-          <p class="eur">или 109&nbsp;€</p>
-          <p class="disc">Скидка 51%</p>
+          <p class="row was"><span class="lab">Было</span><s class="val">20&nbsp;590&nbsp;₽</s></p>
+          <p class="row now"><span class="lab">Сейчас</span><span class="val">9&nbsp;999&nbsp;₽</span></p>
+          <p class="eur">В евро: 109&nbsp;€ вместо 223&nbsp;€</p>
+          <p class="save">Скидка 51%: вы экономите 10&nbsp;591&nbsp;₽</p>
         </div>
       </div>
       <p class="for"><b>Для кого:</b> для тех, кого продавливают близкие, партнёр или коллеги. Кто годами остаётся удобным для всех, кроме себя, и не понимает, почему не может просто уйти или сказать «нет».</p>
-      <div class="buy" data-buy="t1" data-price="9&nbsp;999&nbsp;₽"></div>
+      <div class="buy" data-buy="t1" data-price="9&nbsp;999&nbsp;₽" data-eur="109&nbsp;€"></div>
 
       <div class="sostav">
         <details>
@@ -304,16 +323,16 @@
           <h3><span class="tno">Тариф 2</span>Ключи к вашей реальности</h3>
         </div>
         <div class="price num">
-          <p class="old">19&nbsp;990&nbsp;₽ или 300&nbsp;€</p>
-          <p class="new">12&nbsp;990&nbsp;₽</p>
-          <p class="eur">или 140&nbsp;€</p>
-          <p class="disc">Скидка 35%</p>
+          <p class="row was"><span class="lab">Было</span><s class="val">19&nbsp;990&nbsp;₽</s></p>
+          <p class="row now"><span class="lab">Сейчас</span><span class="val">12&nbsp;990&nbsp;₽</span></p>
+          <p class="eur">В евро: 140&nbsp;€ вместо 300&nbsp;€</p>
+          <p class="save">Скидка 35%: вы экономите 7&nbsp;000&nbsp;₽</p>
         </div>
       </div>
       <p class="tagline">Переведите жизнь на новую линию за 21 день.</p>
       <p class="for"><b>Для кого:</b> для тех, кто вышел из тяжёлых отношений, развода или кризиса, наладил жизнь, но чувствует, что чего-то не хватает. Хочется большего: здоровых отношений, своего дела, денег, путешествий, а как к этому прийти, непонятно. Для тех, кто выгорел, откладывает важное на потом и не видит результатов от своих усилий.</p>
       <p class="after">Марафоны помогают выйти из старого. «Ключи» дают практические инструменты, как построить новое: себя, отношения, своё дело и деньги.</p>
-      <div class="buy" data-buy="t2" data-price="12&nbsp;990&nbsp;₽"></div>
+      <div class="buy" data-buy="t2" data-price="12&nbsp;990&nbsp;₽" data-eur="140&nbsp;€"></div>
 
       <div class="sostav">
         <details>
@@ -361,16 +380,18 @@
           <p class="mark">Самый выгодный</p>
           <h3><span class="tno">Тариф 3</span>Ключи, два марафона и «Неудобные»</h3>
         </div>
+        <div>
         <div class="price num">
-          <p class="old">40&nbsp;580&nbsp;₽ или 523&nbsp;€</p>
-          <p class="new">17&nbsp;990&nbsp;₽</p>
-          <p class="eur">или 195&nbsp;€</p>
-          <p class="disc">Скидка 56%</p>
-          <p class="vs">Тариф 1 и тариф 2 по отдельности на чёрной пятнице стоят 22&nbsp;989&nbsp;₽.</p>
+          <p class="row was"><span class="lab">Было</span><s class="val">40&nbsp;580&nbsp;₽</s></p>
+          <p class="row now"><span class="lab">Сейчас</span><span class="val">17&nbsp;990&nbsp;₽</span></p>
+          <p class="eur">В евро: 195&nbsp;€ вместо 523&nbsp;€</p>
+          <p class="save">Скидка 56%: вы экономите 22&nbsp;590&nbsp;₽</p>
+        </div>
+        <p class="vs">Тариф 1 и тариф 2 по отдельности на чёрной пятнице стоят 22&nbsp;989&nbsp;₽. С тарифом 3 вы экономите ещё <b>4&nbsp;999&nbsp;₽</b>.</p>
         </div>
       </div>
       <p class="for"><b>Для кого:</b> весь путь целиком. Сначала выйти из того, что держит: манипуляций, роли удобного человека, позиции жертвы. Потом построить новое: опору внутри себя, отношения, деньги.</p>
-      <div class="buy" data-buy="t3" data-price="17&nbsp;990&nbsp;₽"></div>
+      <div class="buy" data-buy="t3" data-price="17&nbsp;990&nbsp;₽" data-eur="195&nbsp;€"></div>
       <div class="plain">
         <ul class="dash">
           <li>Интенсив «Ключи к вашей реальности», 21 день</li>
@@ -453,12 +474,13 @@
    Время московское (+03:00). START: открытие, END: последняя секунда цены. */
 const START = "2026-11-27T09:00:00+03:00";
 const END   = "2026-11-30T23:59:59+03:00";
-/* Ссылки на оплату по тарифам. Пока заглушки: пусто, значит кнопка ведёт
-   к своему тарифу на этой же странице. */
+/* Ссылки на оплату: по тарифу две, в рублях (российская карта) и в евро
+   (зарубежная карта). Пока заглушки: пусто, значит кнопка ведёт к своему
+   тарифу на этой же странице. */
 const PAY = {
-  t1: "",
-  t2: "",
-  t3: ""
+  t1: { rub: "", eur: "" },   // 9 999 ₽  и 109 €
+  t2: { rub: "", eur: "" },   // 12 990 ₽ и 140 €
+  t3: { rub: "", eur: "" }    // 17 990 ₽ и 195 €
 };
 /* ═══════════════════════════════════════ */
 
@@ -502,8 +524,10 @@ function render(st) {
       box.innerHTML = '<span class="btn off" role="link" aria-disabled="true">Откроется 27 ноября</span>' +
         '<p class="left">Откроется через <span class="num" data-timer></span></p>';
     } else {
-      const href = PAY[k] || ("#tarif-" + k.slice(1));
-      box.innerHTML = '<a class="btn" href="' + href + '"' + (PAY[k] ? ' rel="noopener"' : "") + '>Купить за ' + price + '</a>' +
+      const stub = "#tarif-" + k.slice(1);
+      const rub = PAY[k].rub || stub, eur = PAY[k].eur || stub;
+      box.innerHTML = '<a class="btn" href="' + rub + '">Купить за ' + price + '</a>' +
+        '<a class="btn2" href="' + eur + '">Зарубежной картой за ' + box.dataset.eur + '</a>' +
         '<p class="left">Цена действует ещё <span class="num" data-timer></span></p>' +
         '<p class="accept">Оплачивая, вы принимаете условия <a href="/bf/oferta/" target="_blank" rel="noopener">публичной оферты</a> ' +
         'и <a href="/bf/prilozhenie/" target="_blank" rel="noopener">приложения к ней</a>.</p>';

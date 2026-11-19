@@ -36,7 +36,7 @@ DOC_CSS = """
   body { padding-bottom: 0; }
   .doc-top { border-bottom: 1px solid var(--line); }
   .doc-top a { display: inline-block; padding: 1rem 0; color: var(--muted); text-underline-offset: .18em; }
-  .doc { padding: 2.2rem 0 3rem; font-size: 1.02rem; }
+  .doc { padding-top: 2.2rem; padding-bottom: 3rem; font-size: 1.02rem; }
   .doc h1 { font-size: clamp(1.9rem, 7.5vw, 2.6rem); line-height: 1.15; margin-bottom: 1.4rem; }
   .doc h2 { font-family: var(--golos); font-weight: 650; font-size: 1.2rem; line-height: 1.35; margin: 2.2rem 0 .8rem; }
   .doc h3 { font-family: var(--golos); font-weight: 650; font-size: 1.05rem; line-height: 1.4; margin: 1.6rem 0 .6rem; }
@@ -51,6 +51,8 @@ DOC_CSS = """
   .doc table { border-collapse: collapse; min-width: 100%; font-size: .95rem; }
   .doc th, .doc td { border: 1px solid var(--line); padding: .5rem .65rem; text-align: left; vertical-align: top; }
   .doc th { font-weight: 650; }
+  .doc mark.todo { background: #F2D27A; color: #141C15; padding: 0 .2em; border-radius: 2px; }
+  .doc code { font-family: inherit; }
 """
 
 
@@ -81,9 +83,11 @@ def main(out):
         m = re.search(r"<h([12])[^>]*>(.*?)</h\1>", frag, re.S)
         heading = re.sub(r"\s+", " ", re.sub("<[^>]+>", "", m.group(2))).strip()
         frag = frag[:m.start()] + frag[m.end():]
+        # незаполненные места {{...}} подсвечиваем, чтобы их было видно при проверке
+        frag = re.sub(r"\{\{(.*?)\}\}", r'<mark class="todo">{{\1}}</mark>', frag, flags=re.S)
         frag = re.sub(r"<table", '<div class="tw"><table', frag)
         frag = re.sub(r"</table>", "</table></div>", frag)
-        name = heading[:1] + heading[1:].lower() if heading.isupper() else heading
+        name = title   # заголовок страницы обычным регистром, подзаголовок документа остаётся
 
         doc = """<!doctype html>
 <html lang="ru">
