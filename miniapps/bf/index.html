@@ -55,6 +55,7 @@
   a { color: inherit; }
   :focus-visible { outline: 2px solid var(--akcent); outline-offset: 3px; }
   [hidden] { display: none !important; }
+  .nw { white-space: nowrap; }
 
   .wrap { max-width: 46rem; margin: 0 auto; padding: 0 1.25rem; }
   .sec { padding: 2.6rem 0; border-top: 1px solid var(--line); }
@@ -352,10 +353,10 @@
       <div class="tarif-head">
         <h3>Два марафона и «Неудобные»</h3>
         <div class="price num">
-          <p class="row was"><span class="lab">Было</span><s class="val">20&nbsp;590&nbsp;₽</s></p>
-          <p class="row now"><span class="lab">Сейчас</span><span class="val">9&nbsp;999&nbsp;₽</span></p>
-          <p class="eur">В евро: 109&nbsp;€ вместо 223&nbsp;€</p>
-          <p class="save"><span class="s1">Скидка 51%, вы экономите</span><span class="s2">10&nbsp;591&nbsp;₽</span></p>
+          <p class="row was"><span class="lab">Было</span><s class="val">223&nbsp;€</s></p>
+          <p class="row now"><span class="lab">Сейчас</span><span class="val">109&nbsp;€</span></p>
+          <p class="eur">В рублях: <span class="nw">9&nbsp;999&nbsp;₽ вместо 20&nbsp;590&nbsp;₽</span></p>
+          <p class="save"><span class="s1">Скидка 51%, вы экономите</span><span class="s2">114&nbsp;€</span></p>
         </div>
       </div>
       <p class="for"><b>Для кого:</b> для тех, кого продавливают близкие, партнёр или коллеги. Кто годами остаётся удобным для всех, кроме себя, и не понимает, почему не может просто уйти или сказать «нет».</p>
@@ -421,10 +422,10 @@
       <div class="tarif-head">
         <h3>Ключи к вашей реальности</h3>
         <div class="price num">
-          <p class="row was"><span class="lab">Было</span><s class="val">19&nbsp;990&nbsp;₽</s></p>
-          <p class="row now"><span class="lab">Сейчас</span><span class="val">12&nbsp;990&nbsp;₽</span></p>
-          <p class="eur">В евро: 140&nbsp;€ вместо 300&nbsp;€</p>
-          <p class="save"><span class="s1">Скидка 35%, вы экономите</span><span class="s2">7&nbsp;000&nbsp;₽</span></p>
+          <p class="row was"><span class="lab">Было</span><s class="val">300&nbsp;€</s></p>
+          <p class="row now"><span class="lab">Сейчас</span><span class="val">140&nbsp;€</span></p>
+          <p class="eur">В рублях: <span class="nw">12&nbsp;990&nbsp;₽ вместо 19&nbsp;990&nbsp;₽</span></p>
+          <p class="save"><span class="s1">Скидка 53%, вы экономите</span><span class="s2">160&nbsp;€</span></p>
         </div>
       </div>
       <p class="tagline">Интенсив на 21 день о том, как построить жизнь, которую вы хотите, но не знаете как.</p>
@@ -468,12 +469,12 @@
         <h3>Ключи, два марафона и «Неудобные»</h3>
         <div>
         <div class="price num">
-          <p class="row was"><span class="lab">Было</span><s class="val">40&nbsp;580&nbsp;₽</s></p>
-          <p class="row now"><span class="lab">Сейчас</span><span class="val">17&nbsp;990&nbsp;₽</span></p>
-          <p class="eur">В евро: 195&nbsp;€ вместо 523&nbsp;€</p>
-          <p class="save"><span class="s1">Скидка 56%, вы экономите</span><span class="s2">22&nbsp;590&nbsp;₽</span></p>
+          <p class="row was"><span class="lab">Было</span><s class="val">523&nbsp;€</s></p>
+          <p class="row now"><span class="lab">Сейчас</span><span class="val">195&nbsp;€</span></p>
+          <p class="eur">В рублях: <span class="nw">17&nbsp;990&nbsp;₽ вместо 40&nbsp;580&nbsp;₽</span></p>
+          <p class="save"><span class="s1">Скидка 63%, вы экономите</span><span class="s2">328&nbsp;€</span></p>
         </div>
-        <p class="vs">Тариф 1 и тариф 2 по отдельности на чёрной пятнице стоят 22&nbsp;989&nbsp;₽. С тарифом 3 вы экономите ещё <b>4&nbsp;999&nbsp;₽</b>.</p>
+        <p class="vs">Тариф 1 и тариф 2 по отдельности на чёрной пятнице стоят 249&nbsp;€ (22&nbsp;989&nbsp;₽). С тарифом 3 вы экономите ещё <b>54&nbsp;€</b> (4&nbsp;999&nbsp;₽).</p>
         </div>
       </div>
       <p class="for"><b>Для кого:</b> весь путь целиком. Сначала выйти из того, что держит: манипуляций, роли удобного человека, позиции жертвы. Потом построить новое: опору внутри себя, отношения, деньги.</p>
@@ -631,8 +632,9 @@ function render(st) {
         '<p class="left">Откроется через <span class="num" data-timer></span></p>';
     } else {
       /* кнопки открывают форму (имя и контакт для выдачи доступа), после неё оплата */
-      box.innerHTML = '<button type="button" class="btn" data-pay="' + k + '" data-cur="rub">Купить за ' + price + '</button>' +
-        '<button type="button" class="btn2" data-pay="' + k + '" data-cur="eur">Зарубежной картой за ' + box.dataset.eur + '</button>' +
+      /* евро основная цена (правка 19.11), рубли второй кнопкой */
+      box.innerHTML = '<button type="button" class="btn" data-pay="' + k + '" data-cur="eur">Купить за ' + box.dataset.eur + '</button>' +
+        '<button type="button" class="btn2" data-pay="' + k + '" data-cur="rub">Российской картой за ' + price + '</button>' +
         '<p class="left">Цена действует ещё <span class="num" data-timer></span></p>';
     }
   });
@@ -706,7 +708,7 @@ document.addEventListener("click", e => {
   if (!b) return;
   pick = { k: b.dataset.pay, cur: b.dataset.cur };
   const t = TARIF[pick.k];
-  document.getElementById("lead-sub").textContent = t.name + ", " + (pick.cur === "eur" ? t.eur + " зарубежной картой" : t.rub);
+  document.getElementById("lead-sub").textContent = t.name + ", " + (pick.cur === "eur" ? t.eur : t.rub + " российской картой");
   errBox.hidden = true; goBtn.disabled = false; goBtn.textContent = "Перейти к оплате";
   if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
   setTimeout(() => document.getElementById("lead-name").focus(), 50);
