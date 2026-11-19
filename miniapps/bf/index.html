@@ -88,15 +88,24 @@
   .start a:hover { text-decoration-color: var(--akcent); }
 
   /* 4. тарифы: как разделы прайс-листа */
-  /* Тарифы карточками (просьба 19.11: взрослой аудитории так понятнее, где
-     кончается один тариф и начинается другой): изумрудная карточка с двойной
-     золотой рамкой, как карточки «Опоры». Главный продукт рамкой поярче. */
+  /* Тарифы карточками (просьба 19.11: взрослой аудитории так понятнее и легче
+     читать): кремовая карточка, как карточки «Опоры», тёмный изумрудный текст,
+     цены и отметки бордовые, двойная золотая рамка. Цвета внутри карточки
+     переопределены переменными, поэтому все вложенные правила подхватывают их. */
   .tarif {
-    background: #1F3532; border: 1px solid rgba(184, 147, 92, .55); border-radius: 10px;
-    outline: 1px solid rgba(184, 147, 92, .22); outline-offset: -7px;
-    padding: 2rem 1.3rem 1.6rem; margin-top: 1.6rem; scroll-margin-top: 1rem;
+    --text: #1F3532; --muted: #5F4B46; --akcent: #7B1921; --off: #E2D5D0;
+    --line: rgba(31, 53, 50, .16);
+    background: #F6ECE8; color: var(--text);
+    border: 1px solid var(--gold); border-radius: 10px;
+    outline: 1px solid rgba(184, 147, 92, .55); outline-offset: -8px;
+    padding: 2.1rem 1.4rem 1.7rem; margin-top: 1.8rem; scroll-margin-top: 1rem;
   }
-  .tarif.main { border-color: var(--gold); outline-color: rgba(184, 147, 92, .45); }
+  .tarif.main { border-width: 2px; }
+  .tarif .mark { font-size: .95rem; font-weight: 700; }
+  .tarif .tno { color: var(--muted); }
+  .tarif .price .eur { font-weight: 550; }
+  .tarif .btn.off { color: #5F4B46; }
+  .tarif .accept a, .tarif .accept { color: var(--muted); }
   @media (min-width: 700px) { .tarif { padding: 2.6rem 2.4rem 2rem; } }
   .tarif-head { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
   .mark { color: var(--akcent); font-size: .9rem; font-weight: 600; margin-bottom: .35rem; }
@@ -164,6 +173,19 @@
   .faq summary .s-name { font-weight: 600; }
 
   .foot-space { height: 2rem; }
+  .accept { margin-top: .5rem; font-size: .9rem; line-height: 1.45; color: var(--muted); max-width: 26rem; }
+  .accept a { color: var(--muted); text-underline-offset: .18em; }
+
+  /* подвал: реквизиты и документы, как на основном сайте, без значков */
+  .ft { border-top: 1px solid var(--line); padding-top: 2.4rem; padding-bottom: 2rem; font-size: .95rem; line-height: 1.5; color: var(--muted); }
+  .ft-grid { display: grid; gap: 1.6rem; }
+  @media (min-width: 700px) { .ft-grid { grid-template-columns: 1.3fr 1fr; column-gap: 2.4rem; } }
+  .ft-h { color: var(--text); font-weight: 600; margin-bottom: .3rem; }
+  .ft a { color: var(--muted); text-underline-offset: .18em; }
+  .ft a:hover { color: var(--text); }
+  .ft-docs a { display: block; padding: .2rem 0; }
+  .ft-small { margin-top: 1.8rem; font-size: .85rem; }
+  .ft-small + .ft-small { margin-top: .8rem; }
 
   /* 7. нижняя панель */
   .bar {
@@ -393,8 +415,30 @@
       </details>
     </div>
   </section>
-  <div class="foot-space"></div>
 </main>
+
+<!-- Подвал: реквизиты и документы. Этот же блок берёт dokumenty.py для страниц документов. -->
+<footer class="ft wrap" aria-label="Реквизиты и документы">
+  <div class="ft-grid">
+    <div>
+      <p class="ft-h">Организатор программ Виолы Маро</p>
+      <p>ИП Нижевясова Анна Станиславовна<br>ОГРНИП 321695200039136<br>ИНН 690503942107<br>Зарегистрирована Межрайонной ИФНС России №&nbsp;10 по&nbsp;Тверской области</p>
+      <p style="margin-top:1rem">e-mail: <a href="mailto:mg.ananizh@gmail.com">mg.ananizh@gmail.com</a></p>
+      <p style="margin-top:1rem">Служба заботы в&nbsp;Telegram: <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a><br>пн–пт, 10:00–18:00&nbsp;МСК</p>
+    </div>
+    <nav class="ft-docs" aria-label="Документы">
+      <p class="ft-h">Документы</p>
+      <a href="/bf/oferta/">Публичная оферта</a>
+      <a href="/bf/prilozhenie/">Приложение №&nbsp;1 к оферте</a>
+      <a href="/privacy/">Политика обработки персональных данных</a>
+      <a href="/consent/">Согласие на обработку персональных данных</a>
+      <a href="/consent-ads/">Согласие на рекламные и информационные сообщения</a>
+      <a href="/terms/">Пользовательское соглашение</a>
+    </nav>
+  </div>
+  <p class="ft-small">Информация на&nbsp;сайте носит информационно-просветительский характер, не&nbsp;является медицинской услугой и&nbsp;не&nbsp;заменяет консультацию специалиста. 18+</p>
+  <p class="ft-small">© Нижевясова А.&nbsp;С., 2026. Все права защищены. Любое использование или копирование материалов сайта, элементов дизайна и&nbsp;оформления допускается только с&nbsp;письменного разрешения правообладателя и&nbsp;со&nbsp;ссылкой на&nbsp;источник.</p>
+</footer>
 
 <!-- 7. Нижняя панель -->
 <div class="bar" data-bar>
@@ -460,7 +504,9 @@ function render(st) {
     } else {
       const href = PAY[k] || ("#tarif-" + k.slice(1));
       box.innerHTML = '<a class="btn" href="' + href + '"' + (PAY[k] ? ' rel="noopener"' : "") + '>Купить за ' + price + '</a>' +
-        '<p class="left">Цена действует ещё <span class="num" data-timer></span></p>';
+        '<p class="left">Цена действует ещё <span class="num" data-timer></span></p>' +
+        '<p class="accept">Оплачивая, вы принимаете условия <a href="/bf/oferta/" target="_blank" rel="noopener">публичной оферты</a> ' +
+        'и <a href="/bf/prilozhenie/" target="_blank" rel="noopener">приложения к ней</a>.</p>';
     }
   });
 }
