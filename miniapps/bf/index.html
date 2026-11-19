@@ -156,10 +156,18 @@
      цена, кнопка, таймер; состав ниже на всю ширину. На телефоне порядок тот же, столбиком. */
   @media (min-width: 900px) {
     .wrap { max-width: 60rem; }
-    .t-top { display: grid; grid-template-columns: 45% 1fr; margin: 0 -2.2rem; }
-    .t-top .t-img { width: 100%; margin: 0; align-self: start; height: auto; aspect-ratio: 1448 / 1086; }   /* 4:3 без обрезки */
-    .t-top .t-main { padding: 0 2.2rem 1.6rem 2rem; }
-    .t-top .band { margin: 0 -2.2rem 1.1rem -2rem; padding-left: 2rem; }
+    /* полоса «Тариф N» на всю ширину карточки, под ней слева картинка
+       на тёмной подложке (без обрезки, по центру), справа название, цена, кнопка */
+    .t-top { display: grid; grid-template-columns: 45% 1fr; margin: 0 -2.2rem; align-items: start; }
+    .t-top .t-main { display: contents; }
+    .t-top .band { grid-column: 1 / -1; grid-row: 1; margin: 0; padding: .8rem 2.2rem; }
+    .t-top .t-img { grid-column: 1; grid-row: 2 / span 5; align-self: stretch; width: 100%; height: 100%; margin: 0;
+      aspect-ratio: auto; object-fit: contain; object-position: center; box-sizing: border-box; padding: .9rem; background: var(--fon); }
+    .t-top .t-main > :not(.band) { grid-column: 2; margin-left: 2rem; margin-right: 2.2rem; }
+    .t-top .t-main > h3 { margin-top: 1.4rem; }
+    .t-top .t-main > .buy { margin-bottom: 1.6rem; }
+    /* состав под картинкой одной колонкой: абзацы, программы и список одной ширины */
+    .tarif > .after, .tarif > .hint, .tarif > .sostav, .tarif > .plain { max-width: 38rem; }
   }
   @media (min-width: 700px) {
     .tarif { padding: 0 2.2rem 2rem; }
@@ -665,7 +673,7 @@ function render(st) {
     const k = box.dataset.buy, price = box.dataset.price;
     if (ended) { box.innerHTML = '<p class="over-t">Чёрная пятница закончилась</p>'; return; }
     if (st === "before") {
-      box.innerHTML = '<button type="button" class="btn" data-pay="' + k + '" data-cur="remind">Напомнить об открытии</button>' +
+      box.innerHTML = '<span class="btn off" role="link" aria-disabled="true">Откроется 27 ноября</span>' +
         '<p class="left">Откроется через <span class="num" data-timer-short></span></p>';
     } else {
       /* кнопки открывают форму (имя и контакт для выдачи доступа), после неё оплата */
