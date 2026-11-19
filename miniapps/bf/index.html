@@ -88,7 +88,16 @@
   .start a:hover { text-decoration-color: var(--akcent); }
 
   /* 4. тарифы: как разделы прайс-листа */
-  .tarif { padding: 2.8rem 0; border-top: 1px solid var(--line); scroll-margin-top: 1rem; }
+  /* Тарифы карточками (просьба 19.11: взрослой аудитории так понятнее, где
+     кончается один тариф и начинается другой): изумрудная карточка с двойной
+     золотой рамкой, как карточки «Опоры». Главный продукт рамкой поярче. */
+  .tarif {
+    background: #1F3532; border: 1px solid rgba(184, 147, 92, .55); border-radius: 10px;
+    outline: 1px solid rgba(184, 147, 92, .22); outline-offset: -7px;
+    padding: 2rem 1.3rem 1.6rem; margin-top: 1.6rem; scroll-margin-top: 1rem;
+  }
+  .tarif.main { border-color: var(--gold); outline-color: rgba(184, 147, 92, .45); }
+  @media (min-width: 700px) { .tarif { padding: 2.6rem 2.4rem 2rem; } }
   .tarif-head { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
   .mark { color: var(--akcent); font-size: .9rem; font-weight: 600; margin-bottom: .35rem; }
   .tno { display: block; font-family: var(--golos); font-size: 1rem; color: var(--muted); margin-bottom: .3rem; letter-spacing: 0; }
@@ -125,6 +134,7 @@
      закрывает линия следующего тарифа */
   .sostav { margin-top: 2.2rem; }
   .sostav:has(+ .after) { border-bottom: 1px solid var(--line); }
+  .sostav details:last-child .d-body { padding-bottom: .4rem; }
   details { border-top: 1px solid var(--line); }
   summary {
     list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr 1.6rem; gap: .9rem;
@@ -196,11 +206,11 @@
   </section>
 
   <!-- 4. Тарифы -->
-  <section class="sec" id="tarify" style="padding-bottom:0">
+  <section class="sec" id="tarify">
     <h2 style="margin-bottom:0">Тарифы</h2>
 
     <!-- Тариф 1 -->
-    <article class="tarif" id="tarif-1" style="margin-top:2rem">
+    <article class="tarif" id="tarif-1">
       <div class="tarif-head">
         <h3><span class="tno">Тариф 1</span>Два марафона и «Неудобные»</h3>
         <div class="price num">
@@ -265,7 +275,7 @@
     </article>
 
     <!-- Тариф 2 -->
-    <article class="tarif" id="tarif-2">
+    <article class="tarif main" id="tarif-2">
       <div class="tarif-head">
         <div>
           <p class="mark">Главный продукт</p>
