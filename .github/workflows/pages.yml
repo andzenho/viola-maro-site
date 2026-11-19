@@ -117,6 +117,12 @@ jobs:
           mkdir -p site/zhl
           cp miniapps/zhl/index.html site/zhl/index.html
 
+      # Чёрная пятница (/bf/): прайс тарифов с таймером, ссылки на оплату в PAY.
+      - name: Добавить чёрную пятницу
+        run: |
+          mkdir -p site/bf
+          cp miniapps/bf/index.html site/bf/index.html
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3

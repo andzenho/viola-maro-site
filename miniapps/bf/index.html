@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#141C15">
+<title>Чёрная пятница от Виолы Маро</title>
+<meta name="description" content="Интенсив и марафоны в записи по сниженной цене, доступ навсегда. 27–30 ноября.">
+<meta property="og:title" content="Чёрная пятница от Виолы Маро">
+<meta property="og:description" content="Интенсив и марафоны в записи по сниженной цене, доступ навсегда. 27–30 ноября.">
+<meta property="og:type" content="website">
+<style>
+  /* Чёрная пятница violamaro.ru/bf/. Цвета и шрифты Виолы (как «Опора» и тест 3.0):
+     бархатный тёмный фон, Prata и Golos, тонкие золотые линии, бордовые кнопки.
+     Вёрстка как у печатного прайс-листа: разделы друг под другом, линии и воздух,
+     без карточек, теней, градиентов, значков и анимаций. */
+  @font-face { font-family: "Prata"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url(/assets/fonts/Prata-cyrillic.woff2) format("woff2"); unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+  @font-face { font-family: "Prata"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url(/assets/fonts/Prata-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122; }
+  @font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 700; font-display: swap;
+    src: url(/assets/fonts/GolosText-cyrillic.woff2) format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+  @font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 700; font-display: swap;
+    src: url(/assets/fonts/GolosText-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD; }
+  /* знак рубля есть только в этом файле Golos */
+  @font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 700; font-display: swap;
+    src: url(/assets/fonts/GolosText-latin-ext.woff2) format("woff2"); unicode-range: U+20A0-20AB, U+20AD-20C0; }
+
+  :root {
+    --fon: #141C15;         /* бархат: фон всей страницы, сплошной */
+    --text: #EFE4E0;        /* основной текст */
+    --muted: #B6928D;       /* второстепенный текст, контраст 6 : 1 */
+    --akcent: #E8C8CA;      /* новые цены, «Главный продукт», «Самый выгодный» */
+    --wine: #7B1921;        /* кнопки */
+    --wine-text: #F6E9E6;
+    --gold: #B8935C;        /* кромка кнопки */
+    --line: rgba(184, 147, 92, .32);   /* линии между разделами, 1px */
+    --off: #2A2F2B;         /* кнопка до открытия */
+    --prata: "Prata", "Golos Text", Georgia, serif;
+    --golos: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  body {
+    margin: 0; background: var(--fon); color: var(--text);
+    font-family: var(--golos); font-size: 19px; font-weight: 450; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px));
+  }
+  body.ended { padding-bottom: 0; }
+  p, h1, h2, h3, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--akcent); outline-offset: 3px; }
+  [hidden] { display: none !important; }
+
+  .wrap { max-width: 46rem; margin: 0 auto; padding: 0 1.25rem; }
+  .sec { padding: 2.6rem 0; border-top: 1px solid var(--line); }
+  .sec:first-child { border-top: 0; }
+  .muted { color: var(--muted); }
+  .num { font-variant-numeric: tabular-nums; }
+
+  h1, h2, h3 { font-family: var(--prata); font-weight: 400; text-wrap: balance; }
+  h1 { font-size: clamp(2.5rem, 11vw, 4.4rem); line-height: 1.06; letter-spacing: -.005em; }
+  h2 { font-size: clamp(1.9rem, 7.5vw, 2.6rem); line-height: 1.15; margin-bottom: 1.4rem; }
+  h3 { font-size: clamp(1.75rem, 7vw, 2.3rem); line-height: 1.15; }
+
+  /* 1. шапка */
+  .hero { padding: 3rem 0 2.6rem; }
+  .hero .lead { font-size: 1.2rem; margin-top: 1.2rem; max-width: 30rem; text-wrap: pretty; }
+  .hero .dates { font-family: var(--prata); font-size: 1.6rem; margin-top: 1.6rem; }
+  .countdown { margin-top: 1.4rem; }
+  .countdown .label { color: var(--muted); }
+  .countdown .timer { display: block; font-family: var(--golos); font-weight: 600; font-size: clamp(2rem, 9vw, 2.8rem); line-height: 1.2; }
+  .over { font-family: var(--prata); font-size: 1.6rem; margin-top: 1.4rem; }
+
+  /* 2–3 */
+  .text p + p { margin-top: 1rem; }
+  .text p { text-wrap: pretty; }
+  .start a {
+    display: block; padding: 1rem 0; border-top: 1px solid var(--line);
+    text-decoration: underline; text-decoration-color: rgba(232, 200, 202, .45);
+    text-decoration-thickness: 1px; text-underline-offset: .22em; text-wrap: pretty;
+  }
+  .start a:first-child { border-top: 0; padding-top: 0; }
+  .start a:hover { text-decoration-color: var(--akcent); }
+
+  /* 4. тарифы: как разделы прайс-листа */
+  .tarif { padding: 2.8rem 0; border-top: 1px solid var(--line); scroll-margin-top: 1rem; }
+  .tarif-head { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
+  .mark { color: var(--akcent); font-size: .9rem; font-weight: 600; margin-bottom: .35rem; }
+  .tno { display: block; font-family: var(--golos); font-size: 1rem; color: var(--muted); margin-bottom: .3rem; letter-spacing: 0; }
+  .price { text-align: right; border-top: 1px solid var(--line); padding-top: 1rem; }
+  .price .old { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .price .new { font-family: var(--prata); color: var(--akcent); font-size: clamp(2.6rem, 12vw, 3.4rem); line-height: 1.1; margin-top: .15rem; white-space: nowrap; }
+  .price .eur { font-size: 1.15rem; }
+  .price .disc { color: var(--muted); }
+  .price .vs { color: var(--muted); font-size: .95rem; line-height: 1.45; margin-top: .7rem; text-wrap: pretty; }
+  @media (min-width: 700px) {
+    .tarif-head { grid-template-columns: 1fr 15rem; gap: 2rem; align-items: start; }
+    .price { border-top: 0; padding-top: 0; }
+  }
+  .tagline { font-family: var(--prata); font-size: 1.45rem; line-height: 1.3; margin-top: 1.6rem; text-wrap: pretty; }
+  .for { margin-top: 1.6rem; text-wrap: pretty; }
+  .for b, .after b { font-weight: 650; }
+  .after { margin-top: 1rem; text-wrap: pretty; }
+
+  .buy { margin-top: 1.8rem; }
+  .btn {
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    width: 100%; max-width: 26rem; min-height: 3.6rem; padding: .9rem 1.4rem;
+    background: var(--wine); color: var(--wine-text); text-decoration: none;
+    border: 1px solid var(--gold); border-radius: 4px;
+    font-family: var(--golos); font-weight: 600; font-size: 1.12rem; line-height: 1.25;
+  }
+  .btn:hover { background: #8E1F28; }
+  .btn.off { background: var(--off); border-color: var(--off); color: var(--muted); cursor: default; }
+  .buy .left { margin-top: .6rem; color: var(--muted); }
+  .buy .over-t { font-family: var(--prata); font-size: 1.35rem; }
+
+  /* состав: раскрывается по клику */
+  /* нижняя линия состава нужна, только если под ним ещё текст: иначе её
+     закрывает линия следующего тарифа */
+  .sostav { margin-top: 2.2rem; }
+  .sostav:has(+ .after) { border-bottom: 1px solid var(--line); }
+  details { border-top: 1px solid var(--line); }
+  summary {
+    list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr 1.6rem; gap: .9rem;
+    padding: 1.15rem 0; align-items: start;
+  }
+  summary::-webkit-details-marker { display: none; }
+  .s-name { font-weight: 650; font-size: 1.08rem; line-height: 1.4; display: block; text-wrap: pretty; }
+  .s-line { display: block; color: var(--muted); margin-top: .25rem; text-wrap: pretty; }
+  /* плюс и минус двумя линиями, без значков */
+  .pm { position: relative; width: 1.1rem; height: 1.1rem; margin-top: .35rem; justify-self: end; }
+  .pm::before, .pm::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: var(--akcent); }
+  .pm::after { transform: rotate(90deg); }
+  details[open] .pm::after { display: none; }
+  .d-body { padding: 0 0 1.5rem; }
+  .dash li { position: relative; padding-left: 1.4rem; text-wrap: pretty; }
+  .dash li + li { margin-top: .55rem; }
+  .dash li::before { content: "—"; position: absolute; left: 0; color: var(--muted); }
+  .d-body .note { margin-top: 1.1rem; text-wrap: pretty; }
+  .otzyvy { margin-top: 1.3rem; }
+  .otzyvy .note-h { color: var(--muted); }
+  .otzyvy p { font-style: italic; margin-top: .45rem; text-wrap: pretty; }
+  .plain { margin-top: 2.2rem; }
+  .plain-h { color: var(--muted); margin-bottom: .8rem; }
+
+  /* 5–6 */
+  .faq { border-bottom: 1px solid var(--line); }
+  .faq summary .s-name { font-weight: 600; }
+
+  .foot-space { height: 2rem; }
+
+  /* 7. нижняя панель */
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    background: var(--fon); border-top: 1px solid var(--line);
+    padding: .7rem 1.25rem calc(.7rem + env(safe-area-inset-bottom, 0px));
+  }
+  .bar-in { max-width: 46rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: .9rem; }
+  .bar-t { line-height: 1.25; min-width: 0; }
+  .bar-t .label { display: block; color: var(--muted); font-size: .85rem; }
+  .bar-t .timer { font-weight: 600; font-size: 1.12rem; white-space: nowrap; }
+  .bar .btn { width: auto; min-height: 3.1rem; padding: .7rem 1.1rem; font-size: 1rem; flex: none; }
+  @media (max-width: 359px) { .bar .btn { padding: .6rem .8rem; font-size: .92rem; } .bar-t .timer { font-size: 1rem; } }
+</style>
+</head>
+<body>
+
+<main class="wrap">
+
+  <!-- 1. Шапка -->
+  <header class="hero">
+    <h1>Чёрная пятница от Виолы Маро</h1>
+    <p class="lead">Интенсив и марафоны в записи по сниженной цене, доступ навсегда.</p>
+    <p class="dates">27–30 ноября</p>
+    <p class="countdown" data-live><span class="label" data-label>До открытия:</span> <span class="timer num" data-timer></span></p>
+    <p class="over" data-over hidden>Чёрная пятница закончилась</p>
+  </header>
+
+  <!-- 2. Вступление -->
+  <section class="sec text">
+    <p>Все программы в записи, доступ к ним остаётся навсегда. Смотрите и слушайте в своём темпе. Оплатить можно российской картой в рублях или зарубежной в евро.</p>
+  </section>
+
+  <!-- 3. С чего начать -->
+  <section class="sec start">
+    <h2>С чего начать</h2>
+    <a href="#tarif-1">Если на вас давят и хочется выйти из этого, начните с тарифа 1.</a>
+    <a href="#tarif-2">Если из старого вы вышли и хочется строить новую жизнь, вам тариф 2.</a>
+    <a href="#tarif-3">Если хотите пройти весь путь, выйти из старого и построить новое, берите тариф 3.</a>
+  </section>
+
+  <!-- 4. Тарифы -->
+  <section class="sec" id="tarify" style="padding-bottom:0">
+    <h2 style="margin-bottom:0">Тарифы</h2>
+
+    <!-- Тариф 1 -->
+    <article class="tarif" id="tarif-1" style="margin-top:2rem">
+      <div class="tarif-head">
+        <h3><span class="tno">Тариф 1</span>Два марафона и «Неудобные»</h3>
+        <div class="price num">
+          <p class="old">20&nbsp;590&nbsp;₽ или 223&nbsp;€</p>
+          <p class="new">9&nbsp;999&nbsp;₽</p>
+          <p class="eur">или 109&nbsp;€</p>
+          <p class="disc">Скидка 51%</p>
+        </div>
+      </div>
+      <p class="for"><b>Для кого:</b> для тех, кого продавливают близкие, партнёр или коллеги. Кто годами остаётся удобным для всех, кроме себя, и не понимает, почему не может просто уйти или сказать «нет».</p>
+      <div class="buy" data-buy="t1" data-price="9&nbsp;999&nbsp;₽"></div>
+
+      <div class="sostav">
+        <details>
+          <summary><span><span class="s-name">Аудиомарафон «Манипуляция и абьюз: от распознавания до свободы», 10 эпизодов</span><span class="s-line">Видеть манипуляцию сразу и не давать себя продавить.</span></span><span class="pm" aria-hidden="true"></span></summary>
+          <div class="d-body">
+            <ul class="dash">
+              <li>Ответ на главный вопрос: «Со мной это действительно происходит, или мне кажется?»</li>
+              <li>Три главных приёма манипуляторов. Проекция: «Это из-за тебя я сорвался». Триангуляция: постоянные сравнения с коллегой или бывшими. Шантаж и угрозы</li>
+              <li>Тихий абьюз, когда нет криков: игнор и молчание, эмоциональное пренебрежение, качели «восхищение и обесценивание»</li>
+              <li>Как остановить манипуляцию в моменте и сохранить самообладание</li>
+              <li>Как говорить «нет» без оправданий и чувства вины: пошаговые техники и готовые фразы для отказа семье, друзьям, на работе</li>
+              <li>План выхода из токсичных отношений</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary><span><span class="s-name">Аудиомарафон «Выход из позиции жертвы», 10 дней</span><span class="s-line">Перестать жить для других и поставить себя в центр своей жизни.</span></span><span class="pm" aria-hidden="true"></span></summary>
+          <div class="d-body">
+            <ul class="dash">
+              <li>Аудиомарафон-терапия о сложных отношениях: с партнёром, с родителями, на работе, с деньгами и с собственными мыслями</li>
+              <li>Как попадают в созависимые отношения и как из них выходят</li>
+              <li>Личные границы: способы, фразы и действия</li>
+              <li>Выход из детской позиции и из роли жертвы</li>
+              <li>Как строить отношения людям с повышенной чувствительностью</li>
+              <li>Основа здоровых отношений</li>
+            </ul>
+            <div class="otzyvy">
+              <p class="note-h">Из отзывов участников</p>
+              <p>«За конкретный маршрут и механизм выхода из роли жертвы».</p>
+              <p>«Сейчас стало понятно что делать и главное как».</p>
+              <p>«Вы дали не только знания, вы дали силу духа, которой не хватало».</p>
+            </div>
+          </div>
+        </details>
+        <details>
+          <summary><span><span class="s-name">Терапевтический уикенд «Неудобные» в записи, 3 дня</span><span class="s-line">Выйти из роли человека, которым удобно пользоваться.</span></span><span class="pm" aria-hidden="true"></span></summary>
+          <div class="d-body">
+            <ul class="dash">
+              <li>Три дня на практике разбираем роль человека, которым удобно пользоваться: как в неё попадают и что держит в ней годами</li>
+              <li>Жертва, спасатель, преследователь: как найти свои роли и увидеть свой сценарий</li>
+              <li>Откуда берётся внутренний критик и как отделить его голос от своего</li>
+              <li>Как тело первым сигналит о давлении и как через него находить свои границы</li>
+              <li>Как заменить «мне нельзя» на «мне можно»</li>
+              <li>Медитация Виолы на разрешающие установки</li>
+              <li>День ответов: Виола разбирает реальные ситуации участников</li>
+            </ul>
+            <p class="note">Выход из роли не про то, чтобы стать жёстче. Он про то, чтобы огромный ресурс, который вы всю жизнь раздаёте, наконец направился на вашу жизнь.</p>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <!-- Тариф 2 -->
+    <article class="tarif" id="tarif-2">
+      <div class="tarif-head">
+        <div>
+          <p class="mark">Главный продукт</p>
+          <h3><span class="tno">Тариф 2</span>Ключи к вашей реальности</h3>
+        </div>
+        <div class="price num">
+          <p class="old">19&nbsp;990&nbsp;₽ или 300&nbsp;€</p>
+          <p class="new">12&nbsp;990&nbsp;₽</p>
+          <p class="eur">или 140&nbsp;€</p>
+          <p class="disc">Скидка 35%</p>
+        </div>
+      </div>
+      <p class="tagline">Переведите жизнь на новую линию за 21 день.</p>
+      <p class="for"><b>Для кого:</b> для тех, кто вышел из тяжёлых отношений, развода или кризиса, наладил жизнь, но чувствует, что чего-то не хватает. Хочется большего: здоровых отношений, своего дела, денег, путешествий, а как к этому прийти, непонятно. Для тех, кто выгорел, откладывает важное на потом и не видит результатов от своих усилий.</p>
+      <p class="after">Марафоны помогают выйти из старого. «Ключи» дают практические инструменты, как построить новое: себя, отношения, своё дело и деньги.</p>
+      <div class="buy" data-buy="t2" data-price="12&nbsp;990&nbsp;₽"></div>
+
+      <div class="sostav">
+        <details>
+          <summary><span><span class="s-name">Неделя 1. Вы сами: самооценка и мышление</span><span class="s-line">Выйти из режима выживания и собрать опору внутри себя.</span></span><span class="pm" aria-hidden="true"></span></summary>
+          <div class="d-body">
+            <ul class="dash">
+              <li>Видеоурок «Моя линия жизни» с техникой «Моя текущая линия жизни»</li>
+              <li>Видеоурок «Ловушки мышления»: внутренний критик и как мысли загоняют в тупик</li>
+              <li>Видеоурок «6 столпов самооценки»: фундамент уверенности и практика «3 минуты благодарности»</li>
+              <li>Подкасты «От выживания к проживанию жизни» и «Нейропластичность и новые привычки мышления»</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary><span><span class="s-name">Неделя 2. Отношения</span><span class="s-line">Понять, почему выбираете «не тех», и выйти из старых сценариев.</span></span><span class="pm" aria-hidden="true"></span></summary>
+          <div class="d-body">
+            <ul class="dash">
+              <li>Подкаст о привязанности и языках любви: почему нас тянет к знакомой тревоге</li>
+              <li>Подкаст о конфликтах как точках роста близости</li>
+              <li>Видеоурок о ролях и сценариях в отношениях, техника «Определи свой сценарий отношений»</li>
+              <li>Видеоурок «Эмоции как навигатор», практика «Стоп-кнопка эмоций»</li>
+              <li>Видеоурок о границах и близости, техника «Карта личных границ»</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary><span><span class="s-name">Неделя 3. Деньги, цели и привычки</span><span class="s-line">Перестать отталкивать желаемое и двигаться к целям маленькими шагами.</span></span><span class="pm" aria-hidden="true"></span></summary>
+          <div class="d-body">
+            <ul class="dash">
+              <li>Подкасты «Деньги как энергия и внутренние сценарии богатства» и «Цели и целостность»</li>
+              <li>Видеоурок «Мышление изобилия», техника «Переписывание финансовых убеждений»</li>
+              <li>Видеоурок о привычках и прокрастинации, техники «Атомные шаги» и «Съешь лягушку»</li>
+              <li>Видеоурок о внутренней энергии, практика «Моё состояние изобилия»</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <p class="after">К каждому уроку рабочая тетрадь с краткой выжимкой, практическими заданиями и чек-листом для самопроверки.</p>
+    </article>
+
+    <!-- Тариф 3 -->
+    <article class="tarif" id="tarif-3">
+      <div class="tarif-head">
+        <div>
+          <p class="mark">Самый выгодный</p>
+          <h3><span class="tno">Тариф 3</span>Ключи, два марафона и «Неудобные»</h3>
+        </div>
+        <div class="price num">
+          <p class="old">40&nbsp;580&nbsp;₽ или 523&nbsp;€</p>
+          <p class="new">17&nbsp;990&nbsp;₽</p>
+          <p class="eur">или 195&nbsp;€</p>
+          <p class="disc">Скидка 56%</p>
+          <p class="vs">Тариф 1 и тариф 2 по отдельности на чёрной пятнице стоят 22&nbsp;989&nbsp;₽.</p>
+        </div>
+      </div>
+      <p class="for"><b>Для кого:</b> весь путь целиком. Сначала выйти из того, что держит: манипуляций, роли удобного человека, позиции жертвы. Потом построить новое: опору внутри себя, отношения, деньги.</p>
+      <div class="buy" data-buy="t3" data-price="17&nbsp;990&nbsp;₽"></div>
+      <div class="plain">
+        <ul class="dash">
+          <li>Интенсив «Ключи к вашей реальности», 21 день</li>
+          <li>Аудиомарафон «Манипуляция и абьюз», 10 эпизодов</li>
+          <li>Аудиомарафон «Выход из позиции жертвы», 10 дней</li>
+          <li>Терапевтический уикенд «Неудобные» в записи, 3 дня</li>
+        </ul>
+      </div>
+    </article>
+  </section>
+
+  <!-- 5. Кто ведёт -->
+  <section class="sec text">
+    <h2>Кто ведёт</h2>
+    <p>Виола Маро, психолог и психотерапевт, 25 лет практики. Живёт в Италии, ведёт частную практику.</p>
+    <p class="muted">Программы не заменяют очную психотерапию. Если у вас сейчас острое состояние, сначала обратитесь к своему специалисту.</p>
+  </section>
+
+  <!-- 6. Вопросы -->
+  <section class="sec">
+    <h2>Вопросы</h2>
+    <div class="faq">
+      <details>
+        <summary><span class="s-name">Как я получу доступ?</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>После оплаты команда пришлёт доступ к записям. Если что-то не пришло, напишите в поддержку <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>.</p></div>
+      </details>
+      <details>
+        <summary><span class="s-name">Сколько действует доступ?</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>Навсегда. Смотреть и слушать можно в своём темпе и возвращаться к записям когда угодно.</p></div>
+      </details>
+      <details>
+        <summary><span class="s-name">Одна из программ у меня уже есть. Брать пакет?</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>Посмотрите состав тарифов, возможно, вам подойдёт другой. Если сомневаетесь, напишите <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>.</p></div>
+      </details>
+      <details>
+        <summary><span class="s-name">Можно оплатить из-за рубежа?</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>Да, картой в евро. Российской картой оплата в рублях.</p></div>
+      </details>
+      <details>
+        <summary><span class="s-name">Мне пишут от имени Виолы и просят оплату</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>У команды только три аккаунта: <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>, <a href="https://t.me/artempakwork" target="_blank" rel="noopener">@artempakwork</a>, <a href="https://t.me/violamarohelper" target="_blank" rel="noopener">@violamarohelper</a>. Оплата только на этой странице.</p></div>
+      </details>
+    </div>
+  </section>
+  <div class="foot-space"></div>
+</main>
+
+<!-- 7. Нижняя панель -->
+<div class="bar" data-bar>
+  <div class="bar-in">
+    <p class="bar-t"><span class="label" data-label-short>До открытия</span><span class="timer num" data-timer></span></p>
+    <a class="btn" href="#tarify">Выбрать программу</a>
+  </div>
+</div>
+
+<script>
+/* ═══ Даты и ссылки: меняются здесь ═══
+   Время московское (+03:00). START: открытие, END: последняя секунда цены. */
+const START = "2026-11-27T09:00:00+03:00";
+const END   = "2026-11-30T23:59:59+03:00";
+/* Ссылки на оплату по тарифам. Пока заглушки: пусто, значит кнопка ведёт
+   к своему тарифу на этой же странице. */
+const PAY = {
+  t1: "",
+  t2: "",
+  t3: ""
+};
+/* ═══════════════════════════════════════ */
+
+const startMs = Date.parse(START);
+const endMs = Date.parse(END) + 1000;   // цена действует до конца секунды 23:59:59
+
+function plural(n, one, few, many) {
+  const a = n % 10, b = n % 100;
+  if (a === 1 && b !== 11) return one;
+  if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+  return many;
+}
+/* «2 дня 14:05:33», без дней — «14:05:33» */
+function fmt(ms) {
+  let s = Math.max(0, Math.floor(ms / 1000));
+  const d = Math.floor(s / 86400); s -= d * 86400;
+  const h = Math.floor(s / 3600); s -= h * 3600;
+  const m = Math.floor(s / 60); s -= m * 60;
+  const p = n => String(n).padStart(2, "0");
+  const t = p(h) + ":" + p(m) + ":" + p(s);
+  return d > 0 ? d + " " + plural(d, "день", "дня", "дней") + " " + t : t;
+}
+function state(now) { return now < startMs ? "before" : now < endMs ? "sale" : "ended"; }
+
+const $ = (s, r) => Array.from((r || document).querySelectorAll(s));
+let shown = "";
+
+function render(st) {
+  shown = st;
+  const ended = st === "ended";
+  document.body.classList.toggle("ended", ended);
+  $("[data-live]").forEach(e => e.hidden = ended);
+  $("[data-over]").forEach(e => e.hidden = !ended);
+  $("[data-bar]").forEach(e => e.hidden = ended);
+  $("[data-label]").forEach(e => e.textContent = st === "before" ? "До открытия:" : "До конца чёрной пятницы:");
+  $("[data-label-short]").forEach(e => e.textContent = st === "before" ? "До открытия" : "До конца чёрной пятницы");
+  $("[data-buy]").forEach(box => {
+    const k = box.dataset.buy, price = box.dataset.price;
+    if (ended) { box.innerHTML = '<p class="over-t">Чёрная пятница закончилась</p>'; return; }
+    if (st === "before") {
+      box.innerHTML = '<span class="btn off" role="link" aria-disabled="true">Откроется 27 ноября</span>' +
+        '<p class="left">Откроется через <span class="num" data-timer></span></p>';
+    } else {
+      const href = PAY[k] || ("#tarif-" + k.slice(1));
+      box.innerHTML = '<a class="btn" href="' + href + '"' + (PAY[k] ? ' rel="noopener"' : "") + '>Купить за ' + price + '</a>' +
+        '<p class="left">Цена действует ещё <span class="num" data-timer></span></p>';
+    }
+  });
+}
+
+function tick() {
+  const now = Date.now(), st = state(now);
+  if (st !== shown) render(st);
+  if (st === "ended") return;
+  const left = fmt((st === "before" ? startMs : endMs) - now);
+  $("[data-timer]").forEach(e => { if (e.textContent !== left) e.textContent = left; });
+  setTimeout(tick, 1000 - (now % 1000) + 20);
+}
+
+/* Неразрывные пробелы: короткое слово или число не остаются в конце строки. */
+(function typograf() {
+  const w = document.createTreeWalker(document.querySelector("main"), NodeFilter.SHOW_TEXT);
+  const re = /(^|[\s«( ])([А-Яа-яЁё]{1,2}|\d+)[ \t\n]+(?=\S)/g;
+  let n;
+  while ((n = w.nextNode())) {
+    let t = n.nodeValue, was;
+    if (!/\S/.test(t)) continue;
+    do { was = t; t = t.replace(re, "$1$2 "); } while (t !== was);
+    if (t !== n.nodeValue) n.nodeValue = t;
+  }
+})();
+
+tick();
+</script>
+</body>
+</html>
