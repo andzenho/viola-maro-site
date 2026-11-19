@@ -122,6 +122,7 @@ jobs:
         run: |
           mkdir -p site/bf
           cp miniapps/bf/index.html site/bf/index.html
+          python3 miniapps/bf/dokumenty.py site/bf
 
       - uses: actions/configure-pages@v5
 
