@@ -86,14 +86,6 @@
   .hero .dates { font-family: var(--prata); font-size: 1.6rem; margin-top: 1.6rem; }
   .countdown { margin-top: 1.4rem; }
   .who-line { margin-top: .8rem; color: var(--muted); font-size: 1.02rem; max-width: 30rem; text-wrap: pretty; }
-  .hero-tarify { margin-top: 1.6rem; border-top: 1px solid var(--line); }
-  .hero-tarify a {
-    display: flex; align-items: center; min-height: 48px; padding: .55rem 0;
-    border-bottom: 1px solid var(--line); text-decoration: underline; text-decoration-color: rgba(232, 200, 202, .4);
-    text-decoration-thickness: 1px; text-underline-offset: .22em; font-size: 1.05rem; line-height: 1.4; text-wrap: pretty;
-  }
-  .hero-tarify a:hover { text-decoration-color: var(--akcent); }
-  .hero-tarify b { font-weight: 700; white-space: nowrap; color: var(--akcent); }
   .countdown .label { color: var(--muted); }
   .countdown .timer { display: block; font-family: var(--golos); font-weight: 600; font-size: clamp(2rem, 9vw, 2.8rem); line-height: 1.2; }
   .over { font-family: var(--prata); font-size: 1.6rem; margin-top: 1.4rem; }
@@ -351,12 +343,6 @@
     <p class="dates">27–30 ноября</p>
     <p class="countdown" data-live><span class="label" data-label>До открытия:</span> <span class="timer num" data-timer></span></p>
     <p class="over" data-over hidden>Чёрная пятница закончилась</p>
-    <!-- три тарифа сразу на первом экране: что это и почём; каждая строка ведёт к тарифу -->
-    <nav class="hero-tarify" aria-label="Тарифы">
-      <a href="#tarif-1"><span>Тариф 1. Два марафона и «Неудобные», <b>9&nbsp;999&nbsp;₽</b></span></a>
-      <a href="#tarif-2"><span>Тариф 2. Ключи к вашей реальности, <b>12&nbsp;990&nbsp;₽</b></span></a>
-      <a href="#tarif-3"><span>Тариф 3. Всё вместе, <b>17&nbsp;990&nbsp;₽</b></span></a>
-    </nav>
   </header>
 
   <!-- 3. С чего начать -->
