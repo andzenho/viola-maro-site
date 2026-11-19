@@ -79,13 +79,28 @@
   /* 2–3 */
   .text p + p { margin-top: 1rem; }
   .text p { text-wrap: pretty; }
-  .start a {
-    display: block; padding: 1rem 0; border-top: 1px solid var(--line);
-    text-decoration: underline; text-decoration-color: rgba(232, 200, 202, .45);
-    text-decoration-thickness: 1px; text-underline-offset: .22em; text-wrap: pretty;
+  /* «С чего начать»: три плашки-выбора. Крупная цифра тарифа, ситуация,
+     кнопка «Смотреть тариф». Вся плашка ведёт к своему тарифу. */
+  .picks { display: grid; gap: .9rem; }
+  .pick {
+    display: grid; grid-template-columns: 3rem 1fr; gap: .2rem 1rem; align-items: start;
+    padding: 1.15rem 1.15rem 1.2rem; text-decoration: none;
+    background: #1F3532; border: 1px solid rgba(184, 147, 92, .55); border-radius: 10px;
   }
-  .start a:first-child { border-top: 0; padding-top: 0; }
-  .start a:hover { text-decoration-color: var(--akcent); }
+  .pick-n {
+    grid-row: span 2; width: 3rem; height: 3rem; border-radius: 50%;
+    border: 1px solid var(--gold); color: var(--akcent);
+    font-family: var(--prata); font-size: 1.6rem; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pick-t { text-wrap: pretty; font-size: 1.08rem; line-height: 1.45; }
+  .pick-go {
+    justify-self: start; margin-top: .75rem; padding: .5rem 1rem;
+    border: 1px solid var(--akcent); border-radius: 4px; color: var(--akcent);
+    font-weight: 600; font-size: .98rem;
+  }
+  .pick:hover { border-color: var(--gold); }
+  .pick:hover .pick-go { background: rgba(232, 200, 202, .08); }
 
   /* 4. тарифы: как разделы прайс-листа */
   /* Тарифы карточками (просьба 19.11: взрослой аудитории так понятнее и легче
@@ -161,19 +176,26 @@
   /* нижняя линия состава нужна, только если под ним ещё текст: иначе её
      закрывает линия следующего тарифа */
   .sostav { margin-top: 2.2rem; }
+  /* подсказка над раскрывающимися списками: взрослой аудитории нужно прямо
+     сказать, что на плюс можно нажать */
+  .sostav-h { font-weight: 700; font-size: 1.1rem; margin-top: 2.2rem; }
+  .hint { color: var(--muted); font-size: 1rem; line-height: 1.45; margin-top: .25rem; text-wrap: pretty; }
+  .sostav-h + .hint + .sostav { margin-top: 1rem; }
+  h2 + .hint { margin: -.8rem 0 1.2rem; }
   .sostav:has(+ .after) { border-bottom: 1px solid var(--line); }
   .sostav details:last-child .d-body { padding-bottom: .4rem; }
   details { border-top: 1px solid var(--line); }
   summary {
-    list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr 1.6rem; gap: .9rem;
+    list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr 2rem; gap: .9rem;
     padding: 1.15rem 0; align-items: start;
   }
   summary::-webkit-details-marker { display: none; }
   .s-name { font-weight: 650; font-size: 1.08rem; line-height: 1.4; display: block; text-wrap: pretty; }
   .s-line { display: block; color: var(--muted); margin-top: .25rem; text-wrap: pretty; }
   /* плюс и минус двумя линиями, без значков */
-  .pm { position: relative; width: 1.1rem; height: 1.1rem; margin-top: .35rem; justify-self: end; }
-  .pm::before, .pm::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: var(--akcent); }
+  /* плюс в кружке: крупно и видно, что можно нажать */
+  .pm { position: relative; width: 2rem; height: 2rem; border: 1.5px solid var(--akcent); border-radius: 50%; margin-top: .05rem; justify-self: end; }
+  .pm::before, .pm::after { content: ""; position: absolute; left: 25%; right: 25%; top: 50%; height: 2px; margin-top: -1px; background: var(--akcent); }
   .pm::after { transform: rotate(90deg); }
   details[open] .pm::after { display: none; }
   .d-body { padding: 0 0 1.5rem; }
@@ -185,6 +207,7 @@
   .otzyvy .note-h { color: var(--muted); }
   .otzyvy p { font-style: italic; margin-top: .45rem; text-wrap: pretty; }
   .plain { margin-top: 2.2rem; }
+  .sostav-h + .plain { margin-top: .8rem; }
   .plain-h { color: var(--muted); margin-bottom: .8rem; }
 
   /* 5–6 */
@@ -241,9 +264,11 @@
   <!-- 3. С чего начать -->
   <section class="sec start">
     <h2>С чего начать</h2>
-    <a href="#tarif-1">Если на вас давят и хочется выйти из этого, начните с тарифа 1.</a>
-    <a href="#tarif-2">Если из старого вы вышли и хочется строить новую жизнь, вам тариф 2.</a>
-    <a href="#tarif-3">Если хотите пройти весь путь, выйти из старого и построить новое, берите тариф 3.</a>
+    <div class="picks">
+      <a class="pick" href="#tarif-1"><span class="pick-n" aria-hidden="true">1</span><span class="pick-t">Если на вас давят и хочется выйти из этого, начните с тарифа 1.</span><span class="pick-go">Смотреть тариф 1</span></a>
+      <a class="pick" href="#tarif-2"><span class="pick-n" aria-hidden="true">2</span><span class="pick-t">Если из старого вы вышли и хочется строить новую жизнь, вам тариф 2.</span><span class="pick-go">Смотреть тариф 2</span></a>
+      <a class="pick" href="#tarif-3"><span class="pick-n" aria-hidden="true">3</span><span class="pick-t">Если хотите пройти весь путь, выйти из старого и построить новое, берите тариф 3.</span><span class="pick-go">Смотреть тариф 3</span></a>
+    </div>
   </section>
 
   <!-- 4. Тарифы -->
@@ -264,6 +289,8 @@
       <p class="for"><b>Для кого:</b> для тех, кого продавливают близкие, партнёр или коллеги. Кто годами остаётся удобным для всех, кроме себя, и не понимает, почему не может просто уйти или сказать «нет».</p>
       <div class="buy" data-buy="t1" data-price="9&nbsp;999&nbsp;₽" data-eur="109&nbsp;€"></div>
 
+      <p class="sostav-h">Что входит</p>
+      <p class="hint">Нажмите на плюс или на название, чтобы прочитать подробнее.</p>
       <div class="sostav">
         <details>
           <summary><span><span class="s-name">Аудиомарафон «Манипуляция и абьюз: от распознавания до свободы», 10 эпизодов</span><span class="s-line">Видеть манипуляцию сразу и не давать себя продавить.</span></span><span class="pm" aria-hidden="true"></span></summary>
@@ -334,6 +361,8 @@
       <p class="after">Марафоны помогают выйти из старого. «Ключи» дают практические инструменты, как построить новое: себя, отношения, своё дело и деньги.</p>
       <div class="buy" data-buy="t2" data-price="12&nbsp;990&nbsp;₽" data-eur="140&nbsp;€"></div>
 
+      <p class="sostav-h">Что входит</p>
+      <p class="hint">Нажмите на плюс или на название, чтобы прочитать подробнее.</p>
       <div class="sostav">
         <details>
           <summary><span><span class="s-name">Неделя 1. Вы сами: самооценка и мышление</span><span class="s-line">Выйти из режима выживания и собрать опору внутри себя.</span></span><span class="pm" aria-hidden="true"></span></summary>
@@ -392,6 +421,7 @@
       </div>
       <p class="for"><b>Для кого:</b> весь путь целиком. Сначала выйти из того, что держит: манипуляций, роли удобного человека, позиции жертвы. Потом построить новое: опору внутри себя, отношения, деньги.</p>
       <div class="buy" data-buy="t3" data-price="17&nbsp;990&nbsp;₽" data-eur="195&nbsp;€"></div>
+      <p class="sostav-h">Что входит</p>
       <div class="plain">
         <ul class="dash">
           <li>Интенсив «Ключи к вашей реальности», 21 день</li>
@@ -413,6 +443,7 @@
   <!-- 6. Вопросы -->
   <section class="sec">
     <h2>Вопросы</h2>
+    <p class="hint">Нажмите на вопрос, чтобы увидеть ответ.</p>
     <div class="faq">
       <details>
         <summary><span class="s-name">Как я получу доступ?</span><span class="pm" aria-hidden="true"></span></summary>
