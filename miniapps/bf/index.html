@@ -116,9 +116,6 @@
   }
   /* Полоса сверху карточки: «Тариф N» крупно, рядом отметка. Сразу видно,
      где начинается каждый тариф (просьба 19.11: «Тариф 1» был мелким). */
-  /* картинка с материалами тарифа: первым элементом карточки, на всю её
-     ширину, 4:3 без обрезки; верхние углы скругляет сама карточка */
-  .t-img { display: block; width: calc(100% + 2.5rem); max-width: none; height: auto; aspect-ratio: 1448 / 1086; margin: 0 -1.25rem; }
   .band {
     margin: 0 -1.25rem 1.5rem; padding: .85rem 1.25rem;
     background: var(--wine); color: var(--wine-text);
@@ -133,7 +130,6 @@
   @media (min-width: 700px) {
     .tarif { padding: 0 2.2rem 2rem; }
     .band { margin: 0 -2.2rem 2rem; padding: 1rem 2.2rem; }
-    .t-img { width: calc(100% + 4.4rem); margin: 0 -2.2rem; }
   }
   .tarif-head { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
   .mark { color: var(--akcent); font-size: .9rem; font-weight: 600; margin-bottom: .35rem; }
@@ -312,7 +308,6 @@
 
     <!-- Тариф 1 -->
     <article class="tarif" id="tarif-1">
-      <img class="t-img" src="img/bf-tarif-1.webp" alt="Материалы тарифа 1: аудиомарафоны «Манипуляция и абьюз» и «Выход из позиции жертвы», запись уикенда «Неудобные»" width="1448" height="1086" loading="lazy" decoding="async">
       <div class="band"><span class="band-n">Тариф 1</span></div>
       <div class="tarif-head">
         <h3>Два марафона и «Неудобные»</h3>
@@ -381,7 +376,6 @@
 
     <!-- Тариф 2 -->
     <article class="tarif main" id="tarif-2">
-      <img class="t-img" src="img/bf-tarif-2.webp" alt="Материалы интенсива «Ключи к вашей реальности»: видеоуроки и рабочие тетради на три недели" width="1448" height="1086" loading="lazy" decoding="async">
       <div class="band"><span class="band-n">Тариф 2</span><span class="band-m">Главный продукт</span></div>
       <div class="tarif-head">
         <h3>Ключи к вашей реальности</h3>
@@ -427,7 +421,6 @@
 
     <!-- Тариф 3 -->
     <article class="tarif" id="tarif-3">
-      <img class="t-img" src="img/bf-tarif-3.webp" alt="Полный комплект: все материалы тарифов 1 и 2" width="1448" height="1086" loading="lazy" decoding="async">
       <div class="band"><span class="band-n">Тариф 3</span><span class="band-m">Самый выгодный</span></div>
       <div class="tarif-head">
         <h3>Ключи, два марафона и «Неудобные»</h3>
