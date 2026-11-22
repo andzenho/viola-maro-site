@@ -109,24 +109,40 @@
   .more:hover { border-color: #d6d6d6; }
   .on-light .more { border-color: var(--black); }
 
-  /* 1. шапка: тёмная, фото справа */
-  .hero { background: var(--mag1); color: #fff; }
-  .hero-in { display: grid; grid-template-columns: 1fr; padding-top: 40px; }
-  .hero-text { padding-bottom: 8px; }
-  .hero .lead { font-size: 1.15rem; font-weight: 600; margin-top: 1.1rem; }
-  .hero .dates { font-family: var(--prata); font-weight: 600; font-size: clamp(1.25rem, 4.6vw, 1.6rem); margin-top: 1.4rem; }
-  .countdown { margin-top: 1.1rem; }
-  .countdown .label { display: block; font-size: 1rem; font-weight: 600; }
-  .countdown .timer { display: block; font-family: var(--prata); font-weight: 700; font-size: clamp(1.7rem, 7vw, 2.4rem); line-height: 1.2; }
+  /* 1. первый экран как у melrobbins.com: жёлтая полоса, тёмная шапка, фото слева, текст справа */
+  .topbar { display: block; background: var(--pink); color: var(--text); text-align: center; font-weight: 700; font-size: 15px; line-height: 1.3;
+    padding: 9px 16px; text-decoration: underline; text-underline-offset: .2em; }
+  .topbar:hover { text-decoration-thickness: 2px; }
+  @media (min-width: 768px) { .topbar { font-size: 17px; padding: 10px 16px; } }
+  .hero { background: radial-gradient(ellipse 60% 70% at 26% 62%, #3a3c3b 0, rgba(33, 35, 34, 0) 70%), var(--mag1); color: #fff; overflow: hidden; }
+  .hero-in { display: grid; grid-template-columns: 1fr; }
+  .hero-photo { justify-self: center; width: min(66vw, 250px); height: 236px; overflow: hidden; margin: 16px 0 0; }
+  .hero-photo img { display: block; width: 100%; height: auto; -webkit-mask-image: linear-gradient(#000 62%, transparent 96%); mask-image: linear-gradient(#000 62%, transparent 96%); }
+  .hero-text { padding: 0 0 36px; }
+  .hero h1 { font-size: clamp(1.55rem, 7.3vw, 3.1rem); line-height: 1.18; }
+  .hl { background: var(--pink); color: var(--text); padding: 0 .16em; border-radius: 8px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .hero .lead { font-size: 1.12rem; font-weight: 500; line-height: 1.5; margin-top: 1.1rem; color: rgba(255, 255, 255, .88); }
+  .who-line { margin-top: .6rem; font-size: .95rem; font-weight: 500; color: rgba(255, 255, 255, .62); }
+  .hero .dates { font-family: var(--prata); font-weight: 700; font-size: clamp(1.2rem, 4.6vw, 1.55rem); color: var(--pink); margin-top: 1.2rem; }
+  .countdown { margin-top: .8rem; }
+  .cd-label { font-size: .8rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: rgba(255, 255, 255, .85); }
+  .cd { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: .6rem; max-width: 26rem; }
+  .cd-t { display: flex; flex-direction: column; align-items: center; padding: 10px 4px 8px; border-radius: 14px;
+    background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .16); }
+  .cd-t b { font-family: var(--prata); font-weight: 700; font-size: clamp(1.45rem, 6.6vw, 1.9rem); line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .cd-t i { font-style: normal; font-size: .78rem; color: rgba(255, 255, 255, .7); margin-top: 2px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .over { font-family: var(--prata); font-weight: 600; font-size: 1.4rem; margin-top: 1.2rem; }
-  .who-line { margin-top: 1.1rem; font-size: 1.02rem; font-weight: 600; }
-  .hero .btn { margin-top: 1.6rem; }
-  .hero-photo { align-self: end; justify-self: center; width: min(100%, 300px); margin-top: 1.6rem; }
-  .hero-photo img { display: block; width: 100%; height: auto; }
-  @media (min-width: 768px) {
-    .hero-in { grid-template-columns: 1fr minmax(260px, 38%); column-gap: 2rem; padding-top: 56px; }
-    .hero-text { padding-bottom: 56px; }
-    .hero-photo { width: 100%; max-width: 420px; margin-top: 0; }
+  .hero .btn { margin-top: 1.3rem; max-width: 26rem; }
+  @media (min-width: 900px) {
+    .hero-in { grid-template-columns: minmax(0, 46%) minmax(0, 1fr); column-gap: 3rem; min-height: min(700px, calc(100svh - 44px)); }
+    .hero-photo { order: 0; align-self: end; justify-self: center; width: auto; height: auto; margin: 32px 0 0; overflow: visible; }
+    .hero-photo img { width: auto; height: min(640px, calc(100svh - 110px)); max-width: 100%; object-fit: contain; object-position: bottom; -webkit-mask-image: none; mask-image: none; }
+    .hero .lead { margin-top: 1.3rem; }
+    .hero .dates { margin-top: 1.6rem; }
+    .hero .btn { margin-top: 1.7rem; }
+    .hero-text { align-self: center; padding: 56px 0 64px; }
+    .hl { display: inline-block; transform: rotate(-1.5deg); padding: 0 .2em .04em; margin: .08em 0; }
   }
 
   /* 2. путь */
@@ -232,10 +248,12 @@
 
   /* Кто такая Виола Маро: фото слева, текст справа; на телефоне фото сверху */
   .about-v { display: grid; gap: 1.6rem; }
-  .about-photo img { display: block; width: 100%; max-width: 26rem; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--r); }
+  .about-photo { margin: 0; }
+  .about-photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 20%; border-radius: var(--r); }
+  .about-text { align-self: center; }
   .about-text p + p { margin-top: .9rem; }
   .about-lead { font-weight: 700; font-size: 1.1rem; }
-  @media (min-width: 768px) { .about-v { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 3rem; align-items: center; } }
+  @media (min-width: 768px) { .about-v { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 3.5rem; align-items: stretch; } .about-photo img { height: 100%; min-height: 26rem; aspect-ratio: auto; } }
 
   /* Служба заботы */
   .care { background: var(--soft); border-radius: var(--r); padding: 32px 22px; }
@@ -376,19 +394,24 @@
 <body>
 
 <!-- 1. Шапка: малиновый градиент, фото Виолы справа (как на violamaro.com/audio-therapy) -->
+<a class="topbar" href="#tarif-1"><span>Чёрная пятница 27–30 ноября: скидки до 56%</span></a>
 <header class="hero">
   <div class="wrap hero-in">
-    <div class="hero-text">
-      <h1>Чёрная пятница от Виолы Маро</h1>
-      <p class="lead">Интенсив и марафоны в записи по сниженной цене, доступ навсегда.</p>
-      <p class="dates">27–30 ноября</p>
-      <p class="countdown" data-live><span class="label" data-label>До открытия:</span><span class="timer num" data-timer></span></p>
-      <p class="over" data-over hidden>Чёрная пятница завершилась</p>
-      <p class="who-line">Ведёт Виола Маро, психолог и психотерапевт, 25 лет практики</p>
-      <a class="btn" href="#tarif-1">Выбрать программу</a>
-    </div>
     <!-- Фото Виолы с её страницы violamaro.com/audio-therapy (настоящее, не сгенерированное) -->
     <figure class="hero-photo"><img src="img/viola.webp?v=2" alt="Виола Маро" width="560" height="660" fetchpriority="high"></figure>
+    <div class="hero-text">
+      <h1><span class="hl">Чёрная пятница</span> от Виолы Маро</h1>
+      <p class="lead">Интенсив и марафоны в записи по сниженной цене, доступ навсегда.</p>
+      <p class="who-line">Ведёт Виола Маро, психолог и психотерапевт, 25 лет практики</p>
+      <p class="dates">27–30 ноября</p>
+      <div class="countdown" data-live>
+        <p class="cd-label" data-label-short>До открытия</p>
+        <div class="cd" data-tiles aria-hidden="true"></div>
+        <p class="sr"><span data-label>До открытия:</span> <span class="num" data-timer></span></p>
+      </div>
+      <p class="over" data-over hidden>Чёрная пятница завершилась</p>
+      <a class="btn" href="#tarif-1">Выбрать программу</a>
+    </div>
   </div>
 </header>
 
@@ -506,11 +529,11 @@
   <section class="sec about-v" id="viola">
     <figure class="about-photo"><img src="img/viola-about.webp?v=2" alt="Виола Маро" width="720" height="900" loading="lazy" decoding="async"></figure>
     <div class="about-text">
-      <h2>Кто такая Виола Маро</h2>
-      <p class="about-lead">Дипломированный психолог, психотерапевт по образованию и по призванию. 25 лет практики.</p>
-      <p>Помогает людям находить опору в себе и решать сложные вопросы разных сфер жизни.</p>
-      <p>Училась в Санкт-Петербурге, Милане, Нью-Йорке и Париже, выступала на сессии ООН и создаёт авторские программы по психологии отношений и самореализации. Уже более 1500 человек из разных стран доверили ей свой путь к переменам — и нашли новые смыслы, опору и уверенность в себе.</p>
-      <p>Живёт в Италии, ведёт частную практику.</p>
+      <h2>Виола Маро</h2>
+      <p class="about-lead">Дипломированный психолог (СПБГУ), психотерапевт по образованию и по призванию. 25 лет проф практики.</p>
+      <p>Идеолог и популяризатор концепции практической эмпатии — это ключевое направление ее работы и основа авторской линейки образовательных продуктов.</p>
+      <p>Создатель обучающих программ в области психологии отношений и самореализации.</p>
+      <p>Гуманист по призванию и «технарь» в психологии — совмещает глубокую эмпатию с четкой, системной методологией.</p>
       <p class="muted">Программы не заменяют очную психотерапию. Если у вас сейчас острое состояние, сначала обратитесь к своему специалисту.</p>
     </div>
   </section>
@@ -1074,6 +1097,22 @@ function fmt(ms) {
   const t = p(h) + ":" + p(m) + ":" + p(s);
   return d > 0 ? d + " " + plural(d, "день", "дня", "дней") + " " + t : t;
 }
+/* плитки таймера в шапке: дни, часы, минуты, секунды */
+function tiles(ms) {
+  let s = Math.max(0, Math.floor(ms / 1000));
+  const d = Math.floor(s / 86400); s -= d * 86400;
+  const h = Math.floor(s / 3600); s -= h * 3600;
+  const m = Math.floor(s / 60); s -= m * 60;
+  const v = [String(d), String(h).padStart(2, "0"), String(m).padStart(2, "0"), String(s).padStart(2, "0")];
+  const l = [plural(d, "день", "дня", "дней"), plural(h, "час", "часа", "часов"), plural(m, "минута", "минуты", "минут"), plural(s, "секунда", "секунды", "секунд")];
+  document.querySelectorAll("[data-tiles]").forEach(box => {
+    if (!box.children.length) box.innerHTML = '<span class="cd-t"><b></b><i></i></span>'.repeat(4);
+    Array.from(box.children).forEach((t, i) => {
+      if (t.firstChild.textContent !== v[i]) t.firstChild.textContent = v[i];
+      if (t.lastChild.textContent !== l[i]) t.lastChild.textContent = l[i];
+    });
+  });
+}
 function state(now) { return now < startMs ? "before" : now < endMs ? "sale" : "ended"; }
 
 const $ = (s, r) => Array.from((r || document).querySelectorAll(s));
@@ -1108,6 +1147,7 @@ function tick() {
   if (st !== shown) render(st);
   if (st === "ended") return;
   const left = fmt((st === "before" ? startMs : endMs) - now);
+  tiles((st === "before" ? startMs : endMs) - now);
   $("[data-timer]").forEach(e => { if (e.textContent !== left) e.textContent = left; });
   const short = left.slice(0, -3);   // под кнопкой без секунд: «2 дня 14:05»
   $("[data-timer-short]").forEach(e => { if (e.textContent !== short) e.textContent = short; });
