@@ -179,12 +179,42 @@
   .all-list .dur { display: block; color: var(--muted); font-weight: 500; font-size: .95rem; }
   .all .vs { margin-top: 1.2rem; font-weight: 700; }
 
+  /* «Что внутри»: цифра крупно, название рядом, цифры одной колонкой */
+  .inside { margin-top: 1.2rem; }
+  .inside-h { font-size: .95rem; font-weight: 600; color: var(--muted); margin-bottom: .2rem; }
+  .inside li { display: grid; grid-template-columns: 2.4rem 1fr; gap: .8rem; align-items: baseline; padding: .45rem 0; border-top: 1px solid #ece6df; font-size: 17px; line-height: 1.35; }
+  .inside li:first-child { border-top: 0; }
+  .inside li b { font-family: var(--prata); font-weight: 700; font-size: 24px; line-height: 1.1; color: #6e1230; text-align: right; }
+  .opens { font-weight: 800; font-size: 1.08rem; }
+
+  /* «суть» в начале окна */
+  .pg-sut { margin-top: 1.2rem; }
+  .sut-idea { font-family: var(--prata); font-weight: 700; font-size: clamp(1.25rem, 5vw, 1.5rem); line-height: 1.3; }
+  .sut-p { font-size: 18.5px; line-height: 1.55; margin-top: .8rem; }
+  .pg-div { border: 0; border-top: 1px solid #d9d9d9; margin: 1.8rem 0 .4rem; }
+
   /* 5. отзывы */
   .reviews { display: grid; gap: 16px; }
   @media (min-width: 768px) { .reviews { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
   .review { background: var(--soft); border-radius: var(--r); padding: 26px 24px; }
   .review p + p { margin-top: .7rem; }
   .review .who { margin-top: 1rem; font-weight: 800; }
+  .rev-sub { grid-column: 1 / -1; font-family: var(--prata); font-weight: 600; font-size: 1.1rem; margin-top: .4rem; max-width: none !important; }
+  .rev-more { margin: 1.6rem auto 0; }
+
+  /* Кто такая Виола Маро: фото слева, текст справа; на телефоне фото сверху */
+  .about { display: grid; gap: 1.6rem; }
+  .about-photo img { display: block; width: 100%; max-width: 26rem; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--r); }
+  .about-text p + p { margin-top: .9rem; }
+  .about-lead { font-weight: 700; font-size: 1.1rem; }
+  @media (min-width: 768px) { .about { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 3rem; align-items: center; } }
+
+  /* Служба заботы */
+  .care { background: var(--soft); border-radius: var(--r); padding: 32px 22px; }
+  @media (min-width: 768px) { .care { padding: 44px 40px; } }
+  .care h2 { margin-bottom: .6rem; }
+  .care .btn { margin-top: 1.4rem; }
+  .care-h { margin-top: .8rem; color: var(--muted); font-size: .98rem; }
 
   /* 6. кто ведёт, вопросы */
   .text p + p { margin-top: 1rem; }
@@ -324,11 +354,12 @@
     <!-- Тариф 1 -->
     <article class="tarif" id="tarif-1">
       <div class="t-head">
-        <img class="t-img" src="img/bf-tarif-1.webp?v=2" alt="Материалы тарифа 1: аудиомарафоны «Манипуляция и абьюз» и «Выход из позиции жертвы», запись уикенда «Неудобные»" width="1448" height="1086" loading="lazy" decoding="async">
+        <img class="t-img" src="img/bf-tarif-1.webp?v=3" alt="Материалы тарифа 1: аудиомарафоны «Манипуляция и абьюз» и «Выход из позиции жертвы», запись уикенда «Неудобные»" width="1448" height="1086" loading="lazy" decoding="async">
         <div class="t-info">
           <div class="t-label"><span class="t-no">Тариф 1</span></div>
           <h3>Два марафона и «Неудобные»</h3>
           <p class="for">Для тех, кого продавливают близкие, партнёр или коллеги, и кто устал быть удобным для всех, кроме себя.</p>
+          <div class="inside"><p class="inside-h">Что внутри</p><ul><li><b>20</b><span>аудиоуроков</span></li><li><b>2</b><span>записи эфиров с ответами Виолы</span></li><li><b>1</b><span>урок</span></li><li><b>1</b><span>аудиомедитация</span></li><li><b>1</b><span>методическое пособие</span></li></ul></div>
           <div class="price num">
             <p class="p-old"><s>20&nbsp;590&nbsp;₽</s><span class="p-pct">−51%</span></p>
             <p class="p-new">9&nbsp;999&nbsp;₽</p>
@@ -341,18 +372,19 @@
       <div class="cards">
         <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Манипуляция и абьюз: от распознавания до свободы»</h4><span class="dur">10 эпизодов</span><p class="about">Видеть манипуляцию сразу и не давать себя продавить.</p><button type="button" class="more" data-prog="manip"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
         <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Выход из позиции жертвы»</h4><span class="dur">10 дней</span><p class="about">Перестать жить для других и поставить себя в центр своей жизни.</p><button type="button" class="more" data-prog="zhertva"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
-        <div class="pcard"><span class="fmt">Терапевтический уикенд в записи</span><h4>«Неудобные»</h4><span class="dur">3 дня</span><p class="about">Выйти из роли человека, которым удобно пользоваться.</p><button type="button" class="more" data-prog="neudobnye"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+        <div class="pcard"><span class="fmt">Терапевтический уикенд в записи</span><h4>«Неудобные»</h4><span class="dur">Урок, аудиомедитация и запись эфира</span><p class="about">Выйти из роли человека, которым удобно пользоваться.</p><button type="button" class="more" data-prog="neudobnye"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
       </div>
     </article>
 
     <!-- Тариф 2 -->
     <article class="tarif" id="tarif-2">
       <div class="t-head">
-        <img class="t-img" src="img/bf-tarif-2.webp?v=2" alt="Материалы интенсива «Ключи к вашей реальности»: видеоуроки и рабочие тетради на три недели" width="1448" height="1086" loading="lazy" decoding="async">
+        <img class="t-img" src="img/bf-tarif-2.webp?v=3" alt="Материалы интенсива «Ключи к вашей реальности»: видеоуроки и рабочие тетради на три недели" width="1448" height="1086" loading="lazy" decoding="async">
         <div class="t-info">
           <div class="t-label"><span class="t-no">Тариф 2</span><span class="pill">Главный продукт</span></div>
           <h3>Ключи к вашей реальности</h3>
           <p class="for">Для тех, кто вышел из кризиса, наладил жизнь, но чувствует, что чего-то не хватает: отношений, своего дела, денег.</p>
+          <div class="inside"><p class="inside-h">Что внутри</p><ul><li><b>9</b><span>видеоуроков</span></li><li><b>6</b><span>подкастов</span></li><li><b>11</b><span>техник и практик</span></li><li><b>3</b><span>рабочие тетради</span></li><li><b>1</b><span>лекция</span></li><li><b>1</b><span>мастер-класс с ответами на вопросы</span></li></ul></div>
           <div class="price num">
             <p class="p-old"><s>19&nbsp;990&nbsp;₽</s><span class="p-pct">−35%</span></p>
             <p class="p-new">12&nbsp;990&nbsp;₽</p>
@@ -374,9 +406,10 @@
       <p class="all-name">Ключи, два марафона и «Неудобные»</p>
       <div class="all-card on-light">
         <div class="t-head">
-          <img class="t-img" src="img/bf-tarif-3.webp?v=2" alt="Полный комплект: все материалы тарифов 1 и 2" width="1448" height="1086" loading="lazy" decoding="async">
+          <img class="t-img" src="img/bf-tarif-3.webp?v=3" alt="Полный комплект: все материалы тарифов 1 и 2" width="1448" height="1086" loading="lazy" decoding="async">
           <div class="t-info">
             <p class="for">Весь путь: выйти из старого и построить новое.</p>
+          <div class="inside"><p class="inside-h">Что внутри</p><ul><li><b>20</b><span>аудиоуроков</span></li><li><b>9</b><span>видеоуроков</span></li><li><b>6</b><span>подкастов</span></li><li><b>11</b><span>техник и практик</span></li><li><b>3</b><span>записи эфиров с ответами Виолы</span></li><li><b>3</b><span>рабочие тетради</span></li><li><b>1</b><span>урок</span></li><li><b>1</b><span>лекция</span></li><li><b>1</b><span>аудиомедитация</span></li><li><b>1</b><span>методическое пособие</span></li></ul></div>
             <div class="price num">
               <p class="p-old"><s>40&nbsp;580&nbsp;₽</s><span class="p-pct">−56%</span></p>
               <p class="p-new">17&nbsp;990&nbsp;₽</p>
@@ -389,53 +422,54 @@
           <li><span><span class="nm">Интенсив «Ключи к вашей реальности»</span><span class="dur">21 день</span></span><button type="button" class="more" data-prog="klyuchi"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></li>
           <li><span><span class="nm">Аудиомарафон «Манипуляция и абьюз»</span><span class="dur">10 эпизодов</span></span><button type="button" class="more" data-prog="manip"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></li>
           <li><span><span class="nm">Аудиомарафон «Выход из позиции жертвы»</span><span class="dur">10 дней</span></span><button type="button" class="more" data-prog="zhertva"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></li>
-          <li><span><span class="nm">Терапевтический уикенд «Неудобные»</span><span class="dur">В записи, 3 дня</span></span><button type="button" class="more" data-prog="neudobnye"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></li>
+          <li><span><span class="nm">Терапевтический уикенд «Неудобные»</span><span class="dur">Урок, аудиомедитация и запись эфира</span></span><button type="button" class="more" data-prog="neudobnye"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></li>
         </ul>
         <p class="vs">Тарифы 1 и 2 по отдельности стоят 22&nbsp;989&nbsp;₽, тариф 3 — 17&nbsp;990&nbsp;₽</p>
       </div>
     </article>
   </section>
 
-  <!-- 4. Отзывы: с violamaro.com/keys-of-life и /audio-therapy, дословно -->
-  <section class="sec">
-    <h2>Отзывы</h2>
+  <!-- 4. Отзывы: тексты присланы командой 23.11, дословно, орфография авторов -->
+  <section class="sec" id="otzyvy">
+    <h2>Отзывы о работе с Виолой</h2>
     <div class="reviews">
-      <figure class="review">
-        <p>Вы уникально преподносите информацию. Ваше дело и знания полезны. Конструктивно. Доступно. Лаконично.</p>
-        <p>Порой по жизни, как на машине по дороге: разметки, встречка, обочина. Теряешь контроль, засмотрелся куда-то, отвлёкся — и вот уже машина на встречке. Суета.</p>
-        <p>Благодаря вашей работе собрался с мыслями, выровнялся и едешь дальше. Рука помощи.</p>
-        <p>От души — 🍀💗</p>
-        <figcaption class="who">Участник программы</figcaption>
-      </figure>
-      <figure class="review">
-        <p>Виола, хочу вам выразить огромную благодарность!! Я получила так много информации, которую, мне кажется, буду осознавать ещё очень долго.</p>
-        <p>Но самое главное — я действительно чувствую, что не боюсь больше жить, я сижу за рулём своей собственной жизни.</p>
-        <p>У меня были очень сложные отношения с нарциссом, после чего я не верила в себя, считала, что со мной уже ничего хорошего не произойдёт.</p>
-        <p>Вы мне дали невероятный стимул идти дальше, и мне кажется, я помолодела на 20 лет. Уже долгие годы я себя так не чувствовала.</p>
-        <p>Огромное вам спасибо за то, что вы делаете и как помогаете людям 🔥🔥🔥. Мне очень помогли, спасибо 🥰.</p>
-        <figcaption class="who">Участница программы</figcaption>
-      </figure>
-      <figure class="review">
-        <p>Я была на многих курсах по психологии, они всегда пополняли мои знания, но это единственный курс, который имел глубокую практическую направленность и по-настоящему глубокие результаты.</p>
-        <p>Виола изначально предупредила, что это не терапевтический курс, но для меня это оказалось именно так. Огромное спасибо, что вы есть!</p>
-        <figcaption class="who">Участница программы</figcaption>
-      </figure>
-      <figure class="review">
-        <p>Виола, огромное, преогромное спасибо Вам. С замиранием сердца слушала Вас, на одном дыхании — это кайф!!!</p>
-        <p>Слушая Вас, открываю себя в себе и просто кайфую от этих открытий. Всю жизнь себя гнобила, а теперь, даже если что-то всплывает наружу не очень приятное для меня, то я уже стараюсь не пугаться этого — и это так классно!</p>
-        <p>Такие темы затронули, это чудо, чудо для меня. Ответы, которые лежали у меня глубоко внутри, все говорили, что я «не такая», всплыли наружу, подтвердив тем самым для меня, что со мной всё в порядке.</p>
-        <p>И что самое ценное — я понимаю потихонечку правильность своего пути.</p>
-        <p>Спасибо, спасибо Вам. Не пропадайте.</p>
-        <figcaption class="who">Natasha Kaliendina</figcaption>
-      </figure>
+      <p class="rev-sub">Аудиомарафон «Выход из позиции жертвы»</p>
+      <figure class="review"><p>Вы дали все инструменты, как это сделать, как облегчить этот путь, а так же укрепили веру в то, что можно справиться.</p><figcaption class="who">Участница аудиомарафона</figcaption></figure>
+      <figure class="review"><p>Сейчас стало понятно что делать и главное как.</p><figcaption class="who">Участница аудиомарафона</figcaption></figure>
+      <figure class="review"><p>Вы дали не только знания, вы дали силу духа, которой не хватало. Эх, знать бы раньше!</p><figcaption class="who">Участница аудиомарафона</figcaption></figure>
+      <figure class="review"><p>Пришло понимание, уважение к себе, сердце любит! Душа поет! Тело радуется!</p><figcaption class="who">Участница аудиомарафона</figcaption></figure>
+      <figure class="review"><p>Многое встало в моей голове на свои места. Буду стараться жить по-другому с новыми знаниями и главное: принятием и любовью к себе!</p><figcaption class="who">Участница аудиомарафона</figcaption></figure>
+      <figure class="review"><p>Очень полезными и ценными были мастер-классы с ответами.</p><figcaption class="who">Участница аудиомарафона</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Я получила так много информации, которую мне кажется буду осознавать ещё очень долго. Но что самое главное я действительно чувствую, что я не боюсь больше жить, я сижу за рулём своей собственной жизни. И у меня были очень сложные отношения с нарциссом после чего не верила в себя, считала что со мной уже ничего хорошего не произойдёт. Вы мне дали невероятный стимул идти дальше, мне кажется я помолодела на 20 лет. Уже долгие годы себя так не чувствовала.</p><figcaption class="who">Участница</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Я люблю одиночество! Я в нем совершенствуюсь, я в нем независима. Раньше мне казалось, что когда я среди людей, мои проблемы решаются благодаря окружению, но с годами все поменялось, только когда я сама с собой я анализирую, спокойно, все что произошло, и нахожу решение или выход. Мне не скучно одной, я могу делать то, что мне интересно и не надо разрешения, искать время среди хлопот, я стала жить для себя, как говорят, в свое удовольствие. Мир велик! Дети, внуки, я теперь живу не их жизнью, а своей! И я вдруг поняла, что я сама себе нужна!</p><figcaption class="who">Участница</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Благодарю Вас за знания и техники. Теперь я с лёгкостью могу распознать и понять, где мои эмоции, а где чужие. Жить стало интересней, жить стало веселей… До этого курса я вообще не понимал, что происходит со мной. Более того, у меня получается увидеть людей чьи эти эмоции. Хотелось бы пойти дальше и тренировать свою эмпатию.</p><figcaption class="who">Участник</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Увидев раньше ваши сторис в инсте, я только от вас мог услышать именно то что чувствую будучи эмпатом, и проходя много разных терапий, психологов, и изучая психологию и другое, не было этих ответов и инсайдов для меня. Окунувшись в курс, я наконец начал понимать как управлять своими чувствами, быть смелым в проявлении, не бояться погружаться в сны и их расшифровку чувствами, прожить до конца травмы, мне легче общаться со всеми, не строя врагов в голове и навешивая ярлыки нарциссов и т.д. И удивительно как раскрываются коммуникации. Много всего, но самое главное, я не боюсь быть с собой, быть один, давать себе и быть самой любовью для себя.</p><figcaption class="who">Участник</figcaption></figure>
+      <figure class="review" data-extra hidden><p>По итогу курса я больше стал принимать себя, я стал принимать свои особенности. Более легко принимать отличия других людей. Идти своим путем, при этом конечно делая выбор, иногда помочь и уделить время другим, кому ты хочешь это сделать. Но при этом не «предавая» себя, как бывало ранее, а оставаясь собой. Мне кажется это хорошее чувство. Чувство быть собой, но при этом принимая особенности других.</p><figcaption class="who">Участник</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Я одно знаю что я теряла и глушила свою интуицию и свой голос годами и пыталась подстроиться к людям что меня окружают, хотела быть как все но моя интуиция никуда не делась, тихонько ждала своё время. Я буду пересматривать материал снова и снова пока не научусь всеми техниками. И самое главное то что я не сумасшедшая, как мне мой собственный муж внушал очень много лет. И да я очень чувствительная но это не диагноз и не приговор. Я старалась не пропустить ни одну конференцию с вами и ждала вторника как манну небесную.</p><figcaption class="who">Участница</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Пол года назад я была у вас на сессии и вы сняли мою травму связанную с работой в Люксембурге. Сегодня у меня там (в соседнем здании с бывшей работой!) классный проект с классными людьми, сбывается мечта. Всё как вы говорите. Отпустились и предыдущие травмы с университета и школы. Прошлое стало светлым. Как будто я паровоз, который отцепил старые вагоны. Прекрасное чувство лёгкости. Спасибо и за этот курс. Раньше я стыдилась своей чувствительности. Жизнь была как ад без чёрта. А теперь я чувствую себя нормальной и буду дальше развивать свою эмпатию и креативность.</p><figcaption class="who">Участница</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Я была на многих курсах по психологии, они всегда пополняли мои знания, но это единственный курс, который имел глубокую практическую направленность и по-настоящему глубокие результаты. Виола изначально предупредила, что это не терапевтический курс, но для меня это оказалось именно так.</p><figcaption class="who">Участница</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Вы не только дали много знаний про природу эмпатии, вы научили меня быть сильной, осознанной, дали чувство защищённости, помогли разобраться в вопросах, ответы на которые я искала всю жизнь. Если бы я владела этими знаниями раньше, то наверное многое сложилось бы иначе.</p><figcaption class="who">Участница</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Вы просто заново меня родили.</p><figcaption class="who">Участница</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Было тепло в вашем поле, каждый раз радостно приступать к прослушиванию лекций, много практики. Буду долго переслушивать. Говорю спасибо себе за риск прийти к вам на обучение.</p><figcaption class="who">Участница</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Я вижу как это работает потому что вижу и чувствую изменение в самой себе и конечно в реакции окружающих, но это меня не касается. Главное то, что я начала чувствовать свою интуицию.</p><figcaption class="who">Участница</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Я пришла с тяжелым состоянием обиды на людей, на жизнь, у меня было много страхов, гораздо больше чем я могла себе представить. И мне кажется я научилась их ощущать, отпускать. Мне очень помогли практики для того чтобы понять как глубоко сидели во мне мои обиды, а я думала что давно их отпустила. Самое главное поняла что психология может помочь мне лично решить именно мои проблемы. Виола вы не поверите!! на той лёгкости которая ко мне пришла я познакомилась с мужчиной, что давно со мной не случалось. Но присматриваюсь, как мы и говорили, не спешу. И вообще улыбка не сходит с моего лица.</p><figcaption class="who">Участница</figcaption></figure>
+      <figure class="review" data-extra hidden><p>С замиранием сердца слушала Вас, на одном дыхании. Слушая Вас, открываю себя в себе, всю жизнь себя гнобила, а теперь, даже если что-то всплывает наружу не очень приятное для меня, то я уже стараюсь не пугаться этого. Ответы которые лежали у меня глубоко внутри, все говорили, что я не такая, всплыли наружу, подтвердив тем самым для меня, что со мной все в порядке.</p><figcaption class="who">Участница</figcaption></figure>
+      <figure class="review" data-extra hidden><p>Порой по жизни, как на машине по дороге, разметки, встреча, обочина. Теряешь контроль, или засмотрелся куда-то, отвлёкся, отвлекли… Машину повезло, сам вылетел на встречку… Суета. Благодаря Вашей Работе, собрался с мыслями, выровнялся и едешь дальше… Рука помощи.</p><figcaption class="who">Участник</figcaption></figure>
     </div>
+    <button type="button" class="btn btn-dark rev-more" id="rev-more">Показать ещё отзывы</button>
   </section>
 
-  <!-- 5. Кто ведёт -->
-  <section class="sec text">
-    <h2>Кто ведёт</h2>
-    <p>Виола Маро, психолог и психотерапевт, 25 лет практики. Живёт в Италии, ведёт частную практику.</p>
-    <p class="muted">Программы не заменяют очную психотерапию. Если у вас сейчас острое состояние, сначала обратитесь к своему специалисту.</p>
+  <!-- 5. Кто такая Виола Маро: тексты с keys-of-life («Об авторе») и audio-therapy, в третьем лице -->
+  <section class="sec about" id="viola">
+    <figure class="about-photo"><img src="img/viola-about.webp" alt="Виола Маро" width="720" height="900" loading="lazy" decoding="async"></figure>
+    <div class="about-text">
+      <h2>Кто такая Виола Маро</h2>
+      <p class="about-lead">Дипломированный психолог, психотерапевт по образованию и по призванию. 25 лет практики.</p>
+      <p>Помогает людям находить опору в себе и решать сложные вопросы разных сфер жизни.</p>
+      <p>Училась в Санкт-Петербурге, Милане, Нью-Йорке и Париже, выступала на сессии ООН и создаёт авторские программы по психологии отношений и самореализации. Уже более 1500 человек из разных стран доверили ей свой путь к переменам — и нашли новые смыслы, опору и уверенность в себе.</p>
+      <p>Живёт в Италии, ведёт частную практику.</p>
+      <p class="muted">Программы не заменяют очную психотерапию. Если у вас сейчас острое состояние, сначала обратитесь к своему специалисту.</p>
+    </div>
   </section>
 
   <!-- 6. Вопросы -->
@@ -463,6 +497,16 @@
         <summary><span class="s-name">Мне пишут от имени Виолы и просят оплату</span><span class="pm" aria-hidden="true"></span></summary>
         <div class="d-body"><p>У команды только три аккаунта: <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>, <a href="https://t.me/artempakwork" target="_blank" rel="noopener">@artempakwork</a>, <a href="https://t.me/violamarohelper" target="_blank" rel="noopener">@violamarohelper</a>. Оплата только на этой странице.</p></div>
       </details>
+    </div>
+  </section>
+
+  <!-- 7. Служба заботы -->
+  <section class="sec">
+    <div class="care">
+      <h2>Остались вопросы?</h2>
+      <p>Напишите в Службу заботы, ответим и поможем выбрать программу</p>
+      <a class="btn" href="https://t.me/violamaroteam" target="_blank" rel="noopener">Написать в Службу заботы</a>
+      <p class="care-h">пн–пт, 10:00–18:00 по Москве</p>
     </div>
   </section>
 </main>
@@ -515,6 +559,11 @@
 <template id="tpl-manip">
   <p class="pg-title">Аудиомарафон «Манипуляция и абьюз: от распознавания до свободы»</p>
   <p class="pg-meta">10 эпизодов</p>
+  <div class="pg-sut">
+    <p class="sut-idea">Марафон «Манипуляция &amp; Абьюз», где вы учитесь видеть и обезвреживать манипуляции, выстраивая несокрушимые границы.</p>
+    
+  </div>
+  <hr class="pg-div">
   <p class="pg-step">Эпизод 1</p>
   <div class="pg-card">
     <h4>Красный флаг или паранойя?</h4>
@@ -600,6 +649,11 @@
 <template id="tpl-zhertva">
   <p class="pg-title">Аудиомарафон «Возвращение к себе: выход из позиции жертвы»</p>
   <p class="pg-meta">10 дней</p>
+  <div class="pg-sut">
+    <p class="sut-idea">Марафон «Выходим из позиции жертвы», где вы обретаете внутренний стержень.</p>
+    <p class="sut-p">Аудио марафон-терапия от Виолы Маро по работе с сложными травмирующими отношениями.</p><p class="sut-p">В отношениях, своей голове, с родителями, на работе, деньгах. Ставим себя в центр своего мира.</p>
+  </div>
+  <hr class="pg-div">
   <p class="pg-blk">Блок I. Осознание и распознавание сценариев зависимости и манипуляций</p>
   <p class="pg-step">День 1</p>
   <div class="pg-card">
@@ -653,14 +707,15 @@
     <ul><li>Эмоции — ваши друзья: позитивные и негативные.</li><li>Эмоциональный спектр.</li><li>«Я выхожу из позиции жертвы, она мне больше не нужна».</li></ul>
   </div>
   <div class="pg-card" style="margin-top:1.4rem"><p>В конце: запись мастер-класса с ответами на вопросы от Виолы Маро.</p></div>
+  <div class="pg-card"><p>Материалы: методическое пособие по сложным травмирующим отношениям.</p></div>
 </template>
 
 <template id="tpl-klyuchi">
   <p class="pg-title">Интенсив «Ключи к вашей реальности»</p>
   <p class="pg-meta">21 день</p>
-  <div class="pg-card">
-    <h4>Переведите жизнь на новую линию за 21 день</h4>
-    <p>Кардинальные изменения в отношениях, финансах и самореализации с помощью психологии и авторской методики.</p>
+  <div class="pg-sut">
+    <p class="sut-idea">Переведите жизнь на новую линию за 21 день</p>
+    <p class="sut-p">Кардинальные изменения в отношениях, финансах и самореализации с помощью психологии и авторской методики.</p>
   </div>
   <div class="pg-card">
     <h4>Чувствуете, что живёте не своей жизнью?</h4>
@@ -698,6 +753,7 @@
     </ul>
   </div>
 
+  <hr class="pg-div">
   <p class="pg-blk">Программа курса</p>
   <div class="pg-card">
     <p>3 недели увлекательной работы как с собой, так и с окружающим миром. Курс построен по принципу «полного погружения», где каждая неделя посвящена одной ключевой сфере вашей жизни. В каждой неделе три видео и два подкаста.</p>
@@ -769,11 +825,12 @@
     <ul><li>Управление вниманием и внутренними ресурсами</li><li>Аутентичность и смелость проявляться</li><li>Практика: «Моё состояние изобилия» (визуализация + якорение)</li></ul>
   </div>
 
-  <p class="pg-blk">О Виоле</p>
+  <p class="pg-blk">Также в записи</p>
   <div class="pg-card">
-    <p>Виола Маро, дипломированный психолог, психотерапевт.</p>
-    <p>Её цель — помогать людям находить опору в себе и жить в согласии с собой и миром.</p>
-    <p>Виола — практикующий психолог с более чем 20-летним опытом. Училась в Санкт-Петербурге, Милане, Нью-Йорке и Париже, выступала на сессии ООН и создаёт авторские программы по психологии отношений и самореализации. Уже более 1500 человек из разных стран доверили ей свой путь к переменам — и нашли новые смыслы, опору и уверенность в себе.</p>
+    <ul>
+      <li>Итоговый мастер-класс «Ответы на вопросы».</li>
+      <li>Эксклюзивная лекция «Внутренняя география личности». Раскроете новые грани своего «Я».</li>
+    </ul>
   </div>
 
   <p class="pg-blk">Переход на новую линию жизни</p>
@@ -786,12 +843,14 @@
 
 <template id="tpl-neudobnye">
   <p class="pg-title">Терапевтический уикенд «Неудобные»</p>
-  <p class="pg-meta">3 дня, в записи</p>
-  <div class="pg-card">
-    <p>Добрый и удобный — это разные вещи. Три дня, чтобы перестать быть удобным для тех, кто этим пользуется, — и остаться собой.</p>
+  <p class="pg-meta">В записи: урок, аудиомедитация и запись эфира</p>
+  <div class="pg-sut">
+    <p class="sut-idea">Добрый и удобный — это разные вещи.</p>
+    <p class="sut-p">Вы перестаёте доказывать. Перестаёте ввязываться в ссоры, споры и сражения, которые стоят вам вашего покоя. Ваше молчание, ваша пауза становятся вашей бронёй.</p><p class="sut-p">Неудобными вы становитесь для тех, кто любил вас покорными. А для себя — спокойными, лёгкими и уверенными.</p>
   </div>
+  <hr class="pg-div">
 
-  <p class="pg-blk">За эти три дня вы</p>
+  <p class="pg-blk">После уикенда вы</p>
   <div class="pg-card">
     <ul>
       <li>Начнёте ставить себя на первое место — без чувства вины и без скандала</li>
@@ -799,12 +858,6 @@
       <li>Почувствуете, что вам можно — и это состояние останется с вами в записи, на случай когда снова начнёте растворяться в чужом</li>
       <li>Перестанете полночи прокручивать разговоры. Внутри становится тихо, а силы остаются вам</li>
     </ul>
-  </div>
-
-  <p class="pg-blk">Что значит «неудобные»</p>
-  <div class="pg-card">
-    <p>Вы перестаёте доказывать. Перестаёте ввязываться в ссоры, споры и сражения, которые стоят вам вашего покоя. Ваше молчание, ваша пауза становятся вашей бронёй.</p>
-    <p>Неудобными вы становитесь для тех, кто любил вас покорными. А для себя — спокойными, лёгкими и уверенными.</p>
   </div>
 
   <p class="pg-blk">Почему до сих пор не получалось?</p>
@@ -829,22 +882,22 @@
     </ul>
   </div>
 
-  <p class="pg-blk">Что будет в эти три дня?</p>
-  <p class="pg-step">День 1</p>
+  <p class="pg-blk">Что внутри</p>
+  <p class="pg-step">Урок</p>
   <div class="pg-card">
     <h4>Лекция о жизненных ролях</h4>
     <p class="pg-meta" style="margin-top:0">30–40 минут</p>
     <p class="lbl">Почему вы постоянно обслуживаете чужую жизнь.</p>
     <p>Синдром спасателя. Синдром жертвы. Синдром отличника. Роль матери, роль жены, роль того, кто всегда виноват. Виола показывает, в какой залипли вы и кто вам её назначил. Вина принадлежит роли. Не вам. Когда роль названа и понятно, в чём проблема, тогда её можно решать.</p>
   </div>
-  <p class="pg-step">День 2</p>
+  <p class="pg-step">Аудиомедитация</p>
   <div class="pg-card">
     <h4>Аудиомедитация «Мне можно»</h4>
     <p class="pg-meta" style="margin-top:0">До 30 минут</p>
     <p class="lbl">Ваши желания важны, и это можно почувствовать.</p>
-    <p>Медитация собрана под решение, которое вы примете в первый день, и удерживает его. Вы ставите себя в приоритет и принимаете своё право на свою жизнь. После неё внутри тихо и свободно. Силы возвращаются. Не нужно ничего доказывать и никого спасать.</p>
+    <p>Медитация собрана под решение, которое вы примете на уроке, и удерживает его. Вы ставите себя в приоритет и принимаете своё право на свою жизнь. После неё внутри тихо и свободно. Силы возвращаются. Не нужно ничего доказывать и никого спасать.</p>
   </div>
-  <p class="pg-step">День 3</p>
+  <p class="pg-step">Запись эфира</p>
   <div class="pg-card">
     <h4>Вопросы и ответы</h4>
     <p class="pg-meta" style="margin-top:0">Запись эфира, не меньше часа</p>
@@ -856,7 +909,7 @@
     <ul>
       <li>Имя вашей роли и кто её на вас надел. Новая лекция о ролях и синдромах, больше её нигде не будет</li>
       <li>Состояние «мне можно», которое остаётся с вами. Аудиомедитация записана специально под этот уикенд</li>
-      <li>Записи всех трёх дней с таймкодами</li>
+      <li>Записи с таймкодами</li>
     </ul>
   </div>
 
@@ -872,7 +925,7 @@
     <p class="lbl">Не сюда, если</p>
     <ul>
       <li>вы хотите, чтобы после уикенда изменились муж, мама или начальник. Здесь меняется только то, что делаете вы</li>
-      <li>вам нужна личная терапия тяжёлого состояния — три дня её не заменят</li>
+      <li>вам нужна личная терапия тяжёлого состояния — уикенд её не заменит</li>
     </ul>
   </div>
 
@@ -963,7 +1016,7 @@ function render(st) {
     const k = box.dataset.buy, price = box.dataset.price;
     if (ended) { box.innerHTML = '<p class="over-t">Чёрная пятница закончилась</p>'; return; }
     if (st === "before") {
-      box.innerHTML = '<button type="button" class="btn" data-pay="' + k + '" data-cur="remind">Напомнить об открытии</button>' +
+      box.innerHTML = '<p class="opens">Оплата откроется 27 ноября в 9:00 по Москве</p>' +
         '<p class="left">Откроется через <span class="num" data-timer-short></span></p>';
     } else {
       /* кнопки открывают форму (имя и контакт для выдачи доступа), после неё оплата */
@@ -1098,6 +1151,12 @@ form.addEventListener("submit", e => {
     goBtn.textContent = "Заявка записана";
     fail("Заявка записана. Ссылка на оплату появится здесь совсем скоро.");
   });
+});
+
+/* ═══ «Показать ещё отзывы» ═══ */
+document.getElementById("rev-more").addEventListener("click", e => {
+  document.querySelectorAll("#otzyvy [data-extra]").forEach(el => el.hidden = false);
+  e.currentTarget.hidden = true;
 });
 
 /* ═══ «Подробнее о программе» ═══
