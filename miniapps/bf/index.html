@@ -344,15 +344,17 @@
     .bar-t .timer { font-size: 1rem; }
     .bar .btn { padding: .55rem 1rem; font-size: .95rem; }
   }
-  /* телефон: карточки программ до краёв блока тарифа, чтобы плашки «Ключей»
-     уместились в три строки (им нужно около 300px) */
+  /* телефон: карточки программ внутри блока тарифа с ровными отступами */
   @media (max-width: 767px) {
     .pcard { padding: 24px 16px 18px; }
     .plates li { font-size: 14px; }
     .all { padding-left: 12px; padding-right: 12px; }
     .all-card { padding: 16px 12px; }
-    .tarif .cards { margin-left: -16px; margin-right: -16px; }
-    .all .cards { margin-left: -24px; margin-right: -24px; }
+    .more { white-space: nowrap; font-size: 14.5px; gap: .5rem; padding-left: 1rem; }
+    .cards > .pcard { min-width: 0; }
+  }
+  @media (max-width: 370px) {
+    .more { white-space: normal; }
   }
 </style>
 </head>
