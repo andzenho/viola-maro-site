@@ -93,7 +93,8 @@
   .btn-dark:hover { background: #2a2a2a; }
   .btn.off { background: #ececec; color: #4d4d4d; cursor: default; }
   /* неактивная кнопка оплаты: та же форма, розовый на 35%, не нажимается */
-  .btn.btn-wait, .btn.btn-wait:hover { background: rgba(255, 22, 115, .35); color: #fff; cursor: default; }
+  .btn.btn-wait, .btn.btn-wait:hover { background: rgba(255, 22, 115, .35); color: #fff; cursor: default; white-space: nowrap; padding-left: 1rem; padding-right: 1rem; }
+  @media (max-width: 420px) { .btn.btn-long { font-size: 15px; } }
 
   /* «Подробнее о программе»: белая таблетка с чёрным кругом и стрелкой справа */
   .more {
@@ -147,7 +148,7 @@
   /* подзаголовок тарифа: строка полужирная, под ней описание */
   .t-lead { margin-top: .6rem; font-size: 17.5px; font-weight: 600; line-height: 1.4; color: var(--text); }
   .t-desc { margin-top: 7px; font-size: 18px; font-weight: 400; line-height: 1.5; color: var(--text); }
-  .t-lead + .t-desc { margin-top: 7px; }
+  .t-info h3 + .t-desc { margin-top: 9px; }
   .p-vs { margin-top: .4rem; font-weight: 700; font-size: 1rem; }
   .price { margin-top: 1.2rem; }
   .p-old { color: var(--muted); font-size: 1.02rem; display: flex; align-items: baseline; gap: .6rem; }
@@ -391,7 +392,6 @@
         <div class="t-info">
           <div class="t-label"><span class="t-no">Тариф 1</span></div>
           <h3>Два марафона и «Неудобные»</h3>
-          <p class="t-lead">2 аудиомарафона и онлайн-уикенд</p>
           <p class="t-desc">Программы, которые помогут обрести внутренний стержень, видеть манипуляции и выстроить несокрушимые границы.</p>
           <div class="price num">
             <p class="p-old"><s>20&nbsp;590&nbsp;₽</s><span class="p-pct">−51%</span></p>
@@ -416,7 +416,6 @@
         <div class="t-info">
           <div class="t-label"><span class="t-no">Тариф 2</span><span class="pill">Главный продукт</span></div>
           <h3>Ключи к вашей реальности</h3>
-          <p class="t-lead">Интенсив «Ключи к вашей реальности»</p>
           <p class="t-desc">Большая программа Виолы Маро, которая поможет перевести жизнь на новую линию за 21 день: от выживания к полноценной жизни, с переменами в самоощущении, отношениях и финансах.</p>
           <div class="price num">
             <p class="p-old"><s>19&nbsp;990&nbsp;₽</s><span class="p-pct">−35%</span></p>
@@ -436,7 +435,6 @@
     <article class="all" id="tarif-3">
       <div class="t-label"><span class="t-no">Тариф 3</span><span class="pill pill-light">Самый выгодный</span></div>
       <h2>Всё вместе</h2>
-      <p class="all-name">Интенсив, 2 аудиомарафона и онлайн-уикенд</p>
       <div class="all-card on-light">
         <div class="t-head">
           <img class="t-img" src="img/bf-tarif-3.webp?v=3" alt="Полный комплект: все материалы тарифов 1 и 2" width="1448" height="1086" loading="lazy" decoding="async">
@@ -1049,13 +1047,12 @@ function render(st) {
     const k = box.dataset.buy, price = box.dataset.price;
     /* до открытия и после закрытия — неактивная кнопка, без ссылки на оплату */
     if (ended || st === "before") {
-      box.innerHTML = '<span class="btn btn-wait" role="button" aria-disabled="true">' +
-        (ended ? 'Продажи закрыты' : 'Откроется 27 ноября в 9:00 по Москве') + '</span>';
+      box.innerHTML = '<span class="btn btn-wait' + (ended ? '' : ' btn-long') + '" role="button" aria-disabled="true">' +
+        (ended ? 'Продажи закрыты' : 'Откроется 27 ноября в 9:00 МСК') + '</span>';
     } else {
       /* кнопки открывают форму (имя и контакт для выдачи доступа), после неё оплата */
       /* одна кнопка в рублях; евро — строкой «или … € картой из-за рубежа» под ценой */
-      box.innerHTML = '<button type="button" class="btn" data-pay="' + k + '" data-cur="rub">Купить за ' + price + '</button>' +
-        '<p class="left">Цена действует ещё <span class="num" data-timer-short></span></p>';
+      box.innerHTML = '<button type="button" class="btn" data-pay="' + k + '" data-cur="rub">Купить</button>';
     }
   });
 }
