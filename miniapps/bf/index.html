@@ -157,14 +157,28 @@
   /* программы тарифа: чёрные карточки, на компьютере в ряд */
   .t-sub { font-family: var(--prata); font-weight: 600; font-size: 1.1rem; margin: 2.2rem 0 1rem; }
   .cards { display: grid; gap: 16px; }
-  @media (min-width: 768px) { .cards { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 20px; } }
-  @media (min-width: 768px) { .cards.one { grid-template-columns: minmax(0, 26rem); } }
+  /* сетка карточек программ: «Ключи» (.wide) всегда на всю ширину и первой;
+     768–1023 — по две, одиночная в ряду (.span-md) на всю ширину; от 1024 — по три */
+  @media (min-width: 768px) {
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .pcard.wide, .pcard.span-md { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1024px) {
+    .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .pcard.span-md { grid-column: auto; }
+    .pcard.wide { grid-column: 1 / -1; }
+  }
+  .pcard.wide .about { max-width: 720px; }
+
   .pcard { background: var(--black); color: #fff; border-radius: var(--r); padding: 26px 22px 22px;
     display: flex; flex-direction: column; gap: .55rem; }
   .pcard .fmt { font-size: .92rem; font-weight: 700; color: #d9d9d9; }
   .pcard .dur { font-size: .95rem; color: #d9d9d9; }
-  .pcard .about { color: #f0f0f0; margin-bottom: .9rem; }
-  .pcard .more { align-self: flex-start; }
+  .pcard .about { color: #f0f0f0; }
+  .pcard .more { align-self: flex-start; margin-top: auto; }
+  /* плашки материалов: тонкая рамка, без заливки; от описания 12px, до кнопки 16px */
+  .plates { display: flex; flex-wrap: wrap; gap: 6px; margin: calc(12px - .55rem) 0 16px; padding: 0; list-style: none; }
+  .plates li { border: 1px solid rgba(255, 255, 255, .25); border-radius: 6px; padding: 4px 10px; font-size: 14.5px; font-weight: 400; line-height: 1.35; color: #ededed; max-width: none !important; }
 
   /* тариф 3: блок «Всё вместе» на малиновом */
   .all { margin-top: var(--gap); background: linear-gradient(135deg, var(--mag1), var(--mag2)); color: #fff; border-radius: var(--r); padding: 28px 16px 16px; scroll-margin-top: 12px; }
@@ -205,11 +219,11 @@
   .rev-more { margin: 1.6rem auto 0; }
 
   /* Кто такая Виола Маро: фото слева, текст справа; на телефоне фото сверху */
-  .about { display: grid; gap: 1.6rem; }
+  .about-v { display: grid; gap: 1.6rem; }
   .about-photo img { display: block; width: 100%; max-width: 26rem; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--r); }
   .about-text p + p { margin-top: .9rem; }
   .about-lead { font-weight: 700; font-size: 1.1rem; }
-  @media (min-width: 768px) { .about { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 3rem; align-items: center; } }
+  @media (min-width: 768px) { .about-v { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 3rem; align-items: center; } }
 
   /* Служба заботы */
   .care { background: var(--soft); border-radius: var(--r); padding: 32px 22px; }
@@ -322,6 +336,16 @@
     .bar-t .timer { font-size: 1rem; }
     .bar .btn { padding: .55rem 1rem; font-size: .95rem; }
   }
+  /* телефон: карточки программ до краёв блока тарифа, чтобы плашки «Ключей»
+     уместились в три строки (им нужно около 300px) */
+  @media (max-width: 767px) {
+    .pcard { padding: 24px 16px 18px; }
+    .plates li { font-size: 14px; }
+    .all { padding-left: 12px; padding-right: 12px; }
+    .all-card { padding: 16px 12px; }
+    .tarif .cards { margin-left: -16px; margin-right: -16px; }
+    .all .cards { margin-left: -24px; margin-right: -24px; }
+  }
 </style>
 </head>
 <body>
@@ -361,7 +385,6 @@
           <div class="t-label"><span class="t-no">Тариф 1</span></div>
           <h3>Два марафона и «Неудобные»</h3>
           <p class="for">Для тех, кого продавливают близкие, партнёр или коллеги, и кто устал быть удобным для всех, кроме себя.</p>
-          <div class="inside"><p class="inside-h">Что внутри</p><ul><li><b>20</b><span>аудиоуроков</span></li><li><b>2</b><span>записи эфиров с ответами Виолы</span></li><li><b>1</b><span>урок</span></li><li><b>1</b><span>аудиомедитация</span></li><li><b>1</b><span>методическое пособие</span></li></ul></div>
           <div class="price num">
             <p class="p-old"><s>20&nbsp;590&nbsp;₽</s><span class="p-pct">−51%</span></p>
             <p class="p-new">9&nbsp;999&nbsp;₽</p>
@@ -372,9 +395,9 @@
       </div>
       <p class="t-sub">Программы тарифа</p>
       <div class="cards">
-        <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Манипуляция и абьюз: от распознавания до свободы»</h4><span class="dur">10 эпизодов</span><p class="about">Видеть манипуляцию сразу и не давать себя продавить.</p><button type="button" class="more" data-prog="manip"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
-        <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Выход из позиции жертвы»</h4><span class="dur">10 дней</span><p class="about">Перестать жить для других и поставить себя в центр своей жизни.</p><button type="button" class="more" data-prog="zhertva"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
-        <div class="pcard"><span class="fmt">Терапевтический уикенд в записи</span><h4>«Неудобные»</h4><span class="dur">Урок, аудиомедитация и запись эфира</span><p class="about">Выйти из роли человека, которым удобно пользоваться.</p><button type="button" class="more" data-prog="neudobnye"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+        <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Манипуляция и абьюз: от распознавания до свободы»</h4><span class="dur">10 эпизодов</span><p class="about">Видеть манипуляцию сразу и не давать себя продавить.</p><ul class="plates"><li>10 аудиоуроков</li></ul><button type="button" class="more" data-prog="manip"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+        <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Выход из позиции жертвы»</h4><span class="dur">10 дней</span><p class="about">Перестать жить для других и поставить себя в центр своей жизни.</p><ul class="plates"><li>10 аудиоуроков</li><li>запись эфира с ответами Виолы</li><li>методическое пособие</li></ul><button type="button" class="more" data-prog="zhertva"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+        <div class="pcard span-md"><span class="fmt">Терапевтический уикенд в записи</span><h4>«Неудобные»</h4><span class="dur">Урок, аудиомедитация и запись эфира</span><p class="about">Выйти из роли человека, которым удобно пользоваться.</p><ul class="plates"><li>урок</li><li>аудиомедитация</li><li>запись эфира</li></ul><button type="button" class="more" data-prog="neudobnye"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
       </div>
     </article>
 
@@ -386,7 +409,6 @@
           <div class="t-label"><span class="t-no">Тариф 2</span><span class="pill">Главный продукт</span></div>
           <h3>Ключи к вашей реальности</h3>
           <p class="for">Для тех, кто вышел из кризиса, наладил жизнь, но чувствует, что чего-то не хватает: отношений, своего дела, денег.</p>
-          <div class="inside"><p class="inside-h">Что внутри</p><ul><li><b>9</b><span>видеоуроков</span></li><li><b>6</b><span>подкастов</span></li><li><b>11</b><span>техник и практик</span></li><li><b>3</b><span>рабочие тетради</span></li><li><b>1</b><span>лекция</span></li><li><b>1</b><span>мастер-класс с ответами на вопросы</span></li></ul></div>
           <div class="price num">
             <p class="p-old"><s>19&nbsp;990&nbsp;₽</s><span class="p-pct">−35%</span></p>
             <p class="p-new">12&nbsp;990&nbsp;₽</p>
@@ -396,8 +418,8 @@
         </div>
       </div>
       <p class="t-sub">Программа тарифа</p>
-      <div class="cards one">
-        <div class="pcard"><span class="fmt">Интенсив</span><h4>«Ключи к вашей реальности»</h4><span class="dur">21 день</span><p class="about">Переведите жизнь на новую линию за 21 день.</p><button type="button" class="more" data-prog="klyuchi"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+      <div class="cards">
+        <div class="pcard wide"><span class="fmt">Интенсив</span><h4>«Ключи к вашей реальности»</h4><span class="dur">21 день</span><p class="about">Переведите жизнь на новую линию за 21 день.</p><ul class="plates"><li>9 видеоуроков</li><li>6 подкастов</li><li>11 техник и практик</li><li>3 рабочие тетради</li><li>лекция</li><li>мастер-класс с ответами</li></ul><button type="button" class="more" data-prog="klyuchi"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
       </div>
     </article>
 
@@ -411,7 +433,6 @@
           <img class="t-img" src="img/bf-tarif-3.webp?v=3" alt="Полный комплект: все материалы тарифов 1 и 2" width="1448" height="1086" loading="lazy" decoding="async">
           <div class="t-info">
             <p class="for">Весь путь: выйти из старого и построить новое.</p>
-          <div class="inside"><p class="inside-h">Что внутри</p><ul><li><b>20</b><span>аудиоуроков</span></li><li><b>9</b><span>видеоуроков</span></li><li><b>6</b><span>подкастов</span></li><li><b>11</b><span>техник и практик</span></li><li><b>3</b><span>записи эфиров с ответами Виолы</span></li><li><b>3</b><span>рабочие тетради</span></li><li><b>1</b><span>урок</span></li><li><b>1</b><span>лекция</span></li><li><b>1</b><span>аудиомедитация</span></li><li><b>1</b><span>методическое пособие</span></li></ul></div>
             <div class="price num">
               <p class="p-old"><s>40&nbsp;580&nbsp;₽</s><span class="p-pct">−56%</span></p>
               <p class="p-new">17&nbsp;990&nbsp;₽</p>
@@ -420,12 +441,13 @@
             <div class="buy" data-buy="t3" data-price="17&nbsp;990&nbsp;₽" data-eur="195&nbsp;€"></div>
           </div>
         </div>
-        <ul class="all-list">
-          <li><span><span class="nm">Интенсив «Ключи к вашей реальности»</span><span class="dur">21 день</span></span><button type="button" class="more" data-prog="klyuchi"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></li>
-          <li><span><span class="nm">Аудиомарафон «Манипуляция и абьюз»</span><span class="dur">10 эпизодов</span></span><button type="button" class="more" data-prog="manip"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></li>
-          <li><span><span class="nm">Аудиомарафон «Выход из позиции жертвы»</span><span class="dur">10 дней</span></span><button type="button" class="more" data-prog="zhertva"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></li>
-          <li><span><span class="nm">Терапевтический уикенд «Неудобные»</span><span class="dur">Урок, аудиомедитация и запись эфира</span></span><button type="button" class="more" data-prog="neudobnye"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></li>
-        </ul>
+        <p class="t-sub">Программы тарифа</p>
+        <div class="cards">
+          <div class="pcard wide"><span class="fmt">Интенсив</span><h4>«Ключи к вашей реальности»</h4><span class="dur">21 день</span><p class="about">Переведите жизнь на новую линию за 21 день.</p><ul class="plates"><li>9 видеоуроков</li><li>6 подкастов</li><li>11 техник и практик</li><li>3 рабочие тетради</li><li>лекция</li><li>мастер-класс с ответами</li></ul><button type="button" class="more" data-prog="klyuchi"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+          <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Манипуляция и абьюз: от распознавания до свободы»</h4><span class="dur">10 эпизодов</span><p class="about">Видеть манипуляцию сразу и не давать себя продавить.</p><ul class="plates"><li>10 аудиоуроков</li></ul><button type="button" class="more" data-prog="manip"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+          <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Выход из позиции жертвы»</h4><span class="dur">10 дней</span><p class="about">Перестать жить для других и поставить себя в центр своей жизни.</p><ul class="plates"><li>10 аудиоуроков</li><li>запись эфира с ответами Виолы</li><li>методическое пособие</li></ul><button type="button" class="more" data-prog="zhertva"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+          <div class="pcard span-md"><span class="fmt">Терапевтический уикенд в записи</span><h4>«Неудобные»</h4><span class="dur">Урок, аудиомедитация и запись эфира</span><p class="about">Выйти из роли человека, которым удобно пользоваться.</p><ul class="plates"><li>урок</li><li>аудиомедитация</li><li>запись эфира</li></ul><button type="button" class="more" data-prog="neudobnye"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+        </div>
         <p class="vs">Тарифы 1 и 2 по отдельности стоят 22&nbsp;989&nbsp;₽, тариф 3 — 17&nbsp;990&nbsp;₽</p>
       </div>
     </article>
@@ -462,7 +484,7 @@
   </section>
 
   <!-- 5. Кто такая Виола Маро: тексты с keys-of-life («Об авторе») и audio-therapy, в третьем лице -->
-  <section class="sec about" id="viola">
+  <section class="sec about-v" id="viola">
     <figure class="about-photo"><img src="img/viola-about.webp" alt="Виола Маро" width="720" height="900" loading="lazy" decoding="async"></figure>
     <div class="about-text">
       <h2>Кто такая Виола Маро</h2>
