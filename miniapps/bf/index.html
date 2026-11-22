@@ -130,8 +130,10 @@
   .path { font-size: clamp(1.08rem, 2.6vw, 1.25rem); line-height: 1.55; font-weight: 600; }
 
   /* 4. тарифы */
-  .tarif { padding-top: var(--gap); scroll-margin-top: 12px; }
-  .tarif + .tarif { margin-top: var(--gap); border-top: 1px solid var(--line); }
+  /* тарифы 1 и 2 тоже карточками (как «Всё вместе», но на светло-сером) */
+  .tarif { margin-top: var(--gap); background: var(--soft); border-radius: var(--r); padding: 16px 16px 20px; scroll-margin-top: 12px; }
+  @media (min-width: 768px) { .tarif { padding: 32px 36px 36px; } }
+  .tarif .inside li { border-top-color: #e2dcd4; }
   .t-head { display: grid; gap: 1.4rem; }
   @media (min-width: 900px) { .t-head { grid-template-columns: 1fr 1fr; gap: 2.4rem; align-items: center; } }
   .t-img { display: block; width: 100%; height: auto; aspect-ratio: 1448 / 1086; border-radius: var(--r); }
