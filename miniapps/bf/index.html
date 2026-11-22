@@ -119,21 +119,22 @@
   .hero-photo { justify-self: center; width: min(66vw, 250px); height: 236px; overflow: hidden; margin: 16px 0 0; }
   .hero-photo img { display: block; width: 100%; height: auto; -webkit-mask-image: linear-gradient(#000 62%, transparent 96%); mask-image: linear-gradient(#000 62%, transparent 96%); }
   .hero-text { padding: 0 0 36px; }
-  .hero h1 { font-size: clamp(1.55rem, 7.3vw, 3.1rem); line-height: 1.18; }
-  .hl { background: var(--pink); color: var(--text); padding: 0 .16em; border-radius: 8px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .hero h1 { font-size: clamp(1.55rem, 7.3vw, 2.75rem); line-height: 1.18; }
   .hero .lead { font-size: 1.12rem; font-weight: 500; line-height: 1.5; margin-top: 1.1rem; color: rgba(255, 255, 255, .88); }
   .who-line { margin-top: .6rem; font-size: .95rem; font-weight: 500; color: rgba(255, 255, 255, .62); }
   .hero .dates { font-family: var(--prata); font-weight: 700; font-size: clamp(1.2rem, 4.6vw, 1.55rem); color: var(--pink); margin-top: 1.2rem; }
   .countdown { margin-top: .8rem; }
   .cd-label { font-size: .8rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: rgba(255, 255, 255, .85); }
-  .cd { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: .6rem; max-width: 26rem; }
+  .cd { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: .6rem; }
   .cd-t { display: flex; flex-direction: column; align-items: center; padding: 10px 4px 8px; border-radius: 14px;
     background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .16); }
   .cd-t b { font-family: var(--prata); font-weight: 700; font-size: clamp(1.45rem, 6.6vw, 1.9rem); line-height: 1.1; font-variant-numeric: tabular-nums; }
   .cd-t i { font-style: normal; font-size: .78rem; color: rgba(255, 255, 255, .7); margin-top: 2px; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .over { font-family: var(--prata); font-weight: 600; font-size: 1.4rem; margin-top: 1.2rem; }
-  .hero .btn { margin-top: 1.3rem; max-width: 26rem; }
+  .hero .btn { margin-top: 1.3rem; max-width: none; }
+  .hero-text { width: 100%; max-width: 32rem; }
+  .hero-text p { max-width: none; }
   @media (min-width: 900px) {
     .hero-in { grid-template-columns: minmax(0, 46%) minmax(0, 1fr); column-gap: 3rem; min-height: min(700px, calc(100svh - 44px)); }
     .hero-photo { order: 0; align-self: end; justify-self: center; width: auto; height: auto; margin: 32px 0 0; overflow: visible; }
@@ -142,8 +143,7 @@
     .hero .dates { margin-top: 1.6rem; }
     .hero .btn { margin-top: 1.7rem; }
     .hero-text { align-self: center; padding: 56px 0 64px; }
-    .hl { display: inline-block; transform: rotate(-1.5deg); padding: 0 .2em .04em; margin: .08em 0; }
-  }
+    }
 
   /* 2. путь */
   .path { font-size: clamp(1.08rem, 2.6vw, 1.25rem); line-height: 1.55; font-weight: 600; }
@@ -400,7 +400,7 @@
     <!-- Фото Виолы с её страницы violamaro.com/audio-therapy (настоящее, не сгенерированное) -->
     <figure class="hero-photo"><img src="img/viola.webp?v=2" alt="Виола Маро" width="560" height="660" fetchpriority="high"></figure>
     <div class="hero-text">
-      <h1><span class="hl">Чёрная пятница</span> от Виолы Маро</h1>
+      <h1>Чёрная пятница от Виолы Маро</h1>
       <p class="lead">Интенсив и марафоны в записи по сниженной цене, доступ навсегда.</p>
       <p class="who-line">Ведёт Виола Маро, психолог и психотерапевт, 25 лет практики</p>
       <p class="dates">27–30 ноября</p>
