@@ -134,6 +134,8 @@
 
   /* 4. тарифы */
   /* тарифы 1 и 2 тоже карточками (как «Всё вместе», но на светло-сером) */
+  #tarify > .tarif:first-child { margin-top: 32px; }
+  @media (min-width: 768px) { #tarify > .tarif:first-child { margin-top: 48px; } }
   .tarif { margin-top: var(--gap); background: var(--soft); border-radius: var(--r); padding: 16px 16px 20px; scroll-margin-top: 12px; }
   @media (min-width: 768px) { .tarif { padding: 32px 36px 36px; } }
   .tarif .inside li { border-top-color: #e2dcd4; }
@@ -150,6 +152,9 @@
   .t-desc { margin-top: 7px; font-size: 18px; font-weight: 400; line-height: 1.5; color: var(--text); }
   .t-info h3 + .t-desc { margin-top: 9px; }
   .p-vs { margin-top: .4rem; font-weight: 700; font-size: 1rem; }
+  .p-save { margin-top: .3rem; font-size: 16px; font-weight: 400; color: var(--text); }
+  .t-head > * { min-width: 0; }
+  @media (max-width: 340px) { .p-new { font-size: 2.1rem; } }
   .price { margin-top: 1.2rem; }
   .p-old { color: var(--muted); font-size: 1.02rem; display: flex; align-items: baseline; gap: .6rem; }
   .p-old s { text-decoration-thickness: 1.5px; }
@@ -310,6 +315,7 @@
   /* внутри окна: чёрные плашки блоков, розовые плашки дней и эпизодов, белые карточки */
   .pg-title { font-family: var(--prata); font-weight: 700; font-size: clamp(1.3rem, 5vw, 1.8rem); line-height: 1.2; }
   .pg-meta { color: var(--muted); font-weight: 700; margin-top: .4rem; }
+  .pg-body > .pg-meta:first-child { margin-top: 0; }
   .pg-blk { margin-top: 1.6rem; background: var(--black); color: #fff; border-radius: 20px; padding: 14px 20px;
     font-family: var(--prata); font-weight: 600; font-size: 1.05rem; line-height: 1.35; }
   .pg-step { display: inline-block; margin-top: 1.4rem; background: var(--pink); color: #fff; border-radius: 999px;
@@ -370,7 +376,7 @@
       <p class="countdown" data-live><span class="label" data-label>До открытия:</span><span class="timer num" data-timer></span></p>
       <p class="over" data-over hidden>Чёрная пятница завершилась</p>
       <p class="who-line">Ведёт Виола Маро, психолог и психотерапевт, 25 лет практики</p>
-      <a class="btn" href="#tarify">Выбрать программу</a>
+      <a class="btn" href="#tarif-1">Выбрать программу</a>
     </div>
     <!-- Фото Виолы с её страницы violamaro.com/audio-therapy (настоящее, не сгенерированное) -->
     <figure class="hero-photo"><img src="img/viola.webp" alt="Виола Маро" width="560" height="660" fetchpriority="high"></figure>
@@ -378,11 +384,6 @@
 </header>
 
 <main class="wrap">
-
-  <!-- 2. Путь -->
-  <section class="sec">
-    <p class="path">Программы складываются в путь. Тариф 1 помогает выйти из старого: из манипуляций, роли удобного человека и позиции жертвы. Тариф 2, интенсив «Ключи», помогает построить новое: опору внутри себя, отношения, деньги. Тариф 3 — весь путь целиком. Можно выбрать ту ступень, которая важна сейчас.</p>
-  </section>
 
   <!-- 3. Тарифы -->
   <section id="tarify">
@@ -398,6 +399,7 @@
           <div class="price num">
             <p class="p-old"><s>20&nbsp;590&nbsp;₽</s><span class="p-pct">−51%</span></p>
             <p class="p-new">9&nbsp;999&nbsp;₽</p>
+            <p class="p-save">Выгода 10&nbsp;591&nbsp;₽</p>
             <p class="p-eur"><button type="button" class="eur-link" data-pay="t1" data-cur="eur">или 109&nbsp;€ картой из-за рубежа</button></p>
           </div>
           <div class="buy" data-buy="t1" data-price="9&nbsp;999&nbsp;₽" data-eur="109&nbsp;€"></div>
@@ -422,6 +424,7 @@
           <div class="price num">
             <p class="p-old"><s>19&nbsp;990&nbsp;₽</s><span class="p-pct">−35%</span></p>
             <p class="p-new">12&nbsp;990&nbsp;₽</p>
+            <p class="p-save">Выгода 7&nbsp;000&nbsp;₽</p>
             <p class="p-eur"><button type="button" class="eur-link" data-pay="t2" data-cur="eur">или 140&nbsp;€ картой из-за рубежа</button></p>
           </div>
           <div class="buy" data-buy="t2" data-price="12&nbsp;990&nbsp;₽" data-eur="140&nbsp;€"></div>
@@ -445,8 +448,9 @@
             <div class="price num">
               <p class="p-old"><s>40&nbsp;580&nbsp;₽</s><span class="p-pct">−56%</span></p>
               <p class="p-new">17&nbsp;990&nbsp;₽</p>
-              <p class="p-eur"><button type="button" class="eur-link" data-pay="t3" data-cur="eur">или 195&nbsp;€ картой из-за рубежа</button></p>
+            <p class="p-save">Выгода 22&nbsp;590&nbsp;₽</p>
               <p class="p-vs">На 4&nbsp;999&nbsp;₽ дешевле, чем тарифы 1 и 2 по отдельности</p>
+              <p class="p-eur"><button type="button" class="eur-link" data-pay="t3" data-cur="eur">или 195&nbsp;€ картой из-за рубежа</button></p>
             </div>
             <div class="buy" data-buy="t3" data-price="17&nbsp;990&nbsp;₽" data-eur="195&nbsp;€"></div>
           </div>
@@ -571,7 +575,7 @@
 <div class="bar" data-bar>
   <div class="bar-in">
     <p class="bar-t"><span class="label" data-label-short>До открытия</span><span class="timer num" data-timer-short></span></p>
-    <a class="btn btn-sm" href="#tarify">Выбрать программу</a>
+    <a class="btn btn-sm" href="#tarif-1">Выбрать программу</a>
   </div>
 </div>
 
@@ -590,10 +594,9 @@
      сроков доступа и того, чего нет в записи. -->
 
 <template id="tpl-manip">
-  <p class="pg-title">Аудиомарафон «Манипуляция &amp; Абьюз: от распознавания до свободы»</p>
   <p class="pg-meta">10 эпизодов</p>
   <div class="pg-sut">
-    <p class="sut-idea">Марафон «Манипуляция &amp; Абьюз», где вы учитесь видеть и обезвреживать манипуляции, выстраивая несокрушимые границы.</p>
+    <p class="sut-idea">Марафон, где вы учитесь видеть и обезвреживать манипуляции, выстраивая несокрушимые границы.</p>
     
   </div>
   <hr class="pg-div">
@@ -680,11 +683,10 @@
 </template>
 
 <template id="tpl-zhertva">
-  <p class="pg-title">Аудиомарафон «Возвращение к себе: выход из позиции жертвы»</p>
   <p class="pg-meta">10 дней</p>
   <div class="pg-sut">
-    <p class="sut-idea">Марафон «Выходим из позиции жертвы», где вы обретаете внутренний стержень.</p>
-    <p class="sut-p">Аудио марафон-терапия от Виолы Маро по работе с сложными травмирующими отношениями.</p><p class="sut-p">В отношениях, своей голове, с родителями, на работе, деньгах. Ставим себя в центр своего мира.</p>
+    <p class="sut-idea">Марафон, где вы обретаете внутренний стержень.</p>
+    <p class="sut-p">Аудиомарафон-терапия от Виолы Маро по работе со сложными травмирующими отношениями.</p><p class="sut-p">В отношениях, своей голове, с родителями, на работе, деньгах. Ставим себя в центр своего мира.</p>
   </div>
   <hr class="pg-div">
   <p class="pg-blk">Блок I. Осознание и распознавание сценариев зависимости и манипуляций</p>
@@ -744,7 +746,6 @@
 </template>
 
 <template id="tpl-klyuchi">
-  <p class="pg-title">Интенсив «Ключи к вашей реальности»</p>
   <p class="pg-meta">21 день</p>
   <div class="pg-sut">
     <p class="sut-idea">Переведите жизнь на новую линию за 21 день</p>
@@ -875,7 +876,6 @@
 </template>
 
 <template id="tpl-neudobnye">
-  <p class="pg-title">Терапевтический уикенд «Неудобные»</p>
   <p class="pg-meta">В записи: урок, аудиомедитация и запись эфира</p>
   <div class="pg-sut">
     <p class="sut-idea">Добрый и удобный — это разные вещи.</p>
@@ -1197,8 +1197,8 @@ document.getElementById("rev-more").addEventListener("click", e => {
 const PROGRAMS = {
   klyuchi:   "Интенсив «Ключи к вашей реальности»",
   zhertva:   "Аудиомарафон «Выход из позиции жертвы»",
-  manip:     "Аудиомарафон «Манипуляция & Абьюз»",
-  neudobnye: "Терапевтический уикенд «Неудобные»"
+  manip:     "Аудиомарафон «Манипуляция & Абьюз: от распознавания до свободы»",
+  neudobnye: "Терапевтический онлайн-уикенд «Неудобные»"
 };
 const pdlg = document.getElementById("prog"), pbody = document.getElementById("prog-body");
 let pOpener = null, pScroll = 0;
