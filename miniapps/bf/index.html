@@ -92,6 +92,8 @@
   .btn-dark { background: var(--black); }
   .btn-dark:hover { background: #2a2a2a; }
   .btn.off { background: #ececec; color: #4d4d4d; cursor: default; }
+  /* неактивная кнопка оплаты: та же форма, розовый на 35%, не нажимается */
+  .btn.btn-wait, .btn.btn-wait:hover { background: rgba(255, 22, 115, .35); color: #fff; cursor: default; }
 
   /* «Подробнее о программе»: белая таблетка с чёрным кругом и стрелкой справа */
   .more {
@@ -142,6 +144,11 @@
   .pill { display: inline-flex; align-items: center; min-height: 30px; padding: .2rem .85rem; border-radius: 999px;
     background: var(--black); color: #fff; font-weight: 700; font-size: .9rem; }
   .t-info .for { margin-top: .7rem; color: var(--muted); }
+  /* подзаголовок тарифа: строка полужирная, под ней описание */
+  .t-lead { margin-top: .6rem; font-size: 17.5px; font-weight: 600; line-height: 1.4; color: var(--text); }
+  .t-desc { margin-top: 7px; font-size: 18px; font-weight: 400; line-height: 1.5; color: var(--text); }
+  .t-lead + .t-desc { margin-top: 7px; }
+  .p-vs { margin-top: .4rem; font-weight: 700; font-size: 1rem; }
   .price { margin-top: 1.2rem; }
   .p-old { color: var(--muted); font-size: 1.02rem; display: flex; align-items: baseline; gap: .6rem; }
   .p-old s { text-decoration-thickness: 1.5px; }
@@ -358,7 +365,7 @@
       <p class="lead">Интенсив и марафоны в записи по сниженной цене, доступ навсегда.</p>
       <p class="dates">27–30 ноября</p>
       <p class="countdown" data-live><span class="label" data-label>До открытия:</span><span class="timer num" data-timer></span></p>
-      <p class="over" data-over hidden>Чёрная пятница закончилась</p>
+      <p class="over" data-over hidden>Чёрная пятница завершилась</p>
       <p class="who-line">Ведёт Виола Маро, психолог и психотерапевт, 25 лет практики</p>
       <a class="btn" href="#tarify">Выбрать программу</a>
     </div>
@@ -380,11 +387,12 @@
     <!-- Тариф 1 -->
     <article class="tarif" id="tarif-1">
       <div class="t-head">
-        <img class="t-img" src="img/bf-tarif-1.webp?v=3" alt="Материалы тарифа 1: аудиомарафоны «Манипуляция и абьюз» и «Выход из позиции жертвы», запись уикенда «Неудобные»" width="1448" height="1086" loading="lazy" decoding="async">
+        <img class="t-img" src="img/bf-tarif-1.webp?v=3" alt="Материалы тарифа 1: аудиомарафоны «Манипуляция &amp; Абьюз» и «Выход из позиции жертвы», запись уикенда «Неудобные»" width="1448" height="1086" loading="lazy" decoding="async">
         <div class="t-info">
           <div class="t-label"><span class="t-no">Тариф 1</span></div>
           <h3>Два марафона и «Неудобные»</h3>
-          <p class="for">Для тех, кого продавливают близкие, партнёр или коллеги, и кто устал быть удобным для всех, кроме себя.</p>
+          <p class="t-lead">2 аудиомарафона и онлайн-уикенд</p>
+          <p class="t-desc">Программы, которые помогут обрести внутренний стержень, видеть манипуляции и выстроить несокрушимые границы.</p>
           <div class="price num">
             <p class="p-old"><s>20&nbsp;590&nbsp;₽</s><span class="p-pct">−51%</span></p>
             <p class="p-new">9&nbsp;999&nbsp;₽</p>
@@ -395,9 +403,9 @@
       </div>
       <p class="t-sub">Программы тарифа</p>
       <div class="cards">
-        <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Манипуляция и абьюз: от распознавания до свободы»</h4><span class="dur">10 эпизодов</span><p class="about">Видеть манипуляцию сразу и не давать себя продавить.</p><ul class="plates"><li>10 аудиоуроков</li></ul><button type="button" class="more" data-prog="manip"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+        <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Манипуляция &amp; Абьюз: от распознавания до свободы»</h4><span class="dur">10 эпизодов</span><p class="about">Видеть манипуляцию сразу и не давать себя продавить.</p><ul class="plates"><li>10 аудиоуроков</li></ul><button type="button" class="more" data-prog="manip"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
         <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Выход из позиции жертвы»</h4><span class="dur">10 дней</span><p class="about">Перестать жить для других и поставить себя в центр своей жизни.</p><ul class="plates"><li>10 аудиоуроков</li><li>запись эфира с ответами Виолы</li><li>методическое пособие</li></ul><button type="button" class="more" data-prog="zhertva"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
-        <div class="pcard span-md"><span class="fmt">Терапевтический уикенд в записи</span><h4>«Неудобные»</h4><span class="dur">Урок, аудиомедитация и запись эфира</span><p class="about">Выйти из роли человека, которым удобно пользоваться.</p><ul class="plates"><li>урок</li><li>аудиомедитация</li><li>запись эфира</li></ul><button type="button" class="more" data-prog="neudobnye"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+        <div class="pcard span-md"><span class="fmt">Терапевтический онлайн-уикенд</span><h4>«Неудобные»</h4><p class="about">Выйти из роли человека, которым удобно пользоваться.</p><ul class="plates"><li>урок</li><li>аудиомедитация</li><li>запись эфира</li></ul><button type="button" class="more" data-prog="neudobnye"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
       </div>
     </article>
 
@@ -408,7 +416,8 @@
         <div class="t-info">
           <div class="t-label"><span class="t-no">Тариф 2</span><span class="pill">Главный продукт</span></div>
           <h3>Ключи к вашей реальности</h3>
-          <p class="for">Для тех, кто вышел из кризиса, наладил жизнь, но чувствует, что чего-то не хватает: отношений, своего дела, денег.</p>
+          <p class="t-lead">Интенсив «Ключи к вашей реальности»</p>
+          <p class="t-desc">Большая программа Виолы Маро, которая поможет перевести жизнь на новую линию за 21 день: от выживания к полноценной жизни, с переменами в самоощущении, отношениях и финансах.</p>
           <div class="price num">
             <p class="p-old"><s>19&nbsp;990&nbsp;₽</s><span class="p-pct">−35%</span></p>
             <p class="p-new">12&nbsp;990&nbsp;₽</p>
@@ -427,16 +436,17 @@
     <article class="all" id="tarif-3">
       <div class="t-label"><span class="t-no">Тариф 3</span><span class="pill pill-light">Самый выгодный</span></div>
       <h2>Всё вместе</h2>
-      <p class="all-name">Ключи, два марафона и «Неудобные»</p>
+      <p class="all-name">Интенсив, 2 аудиомарафона и онлайн-уикенд</p>
       <div class="all-card on-light">
         <div class="t-head">
           <img class="t-img" src="img/bf-tarif-3.webp?v=3" alt="Полный комплект: все материалы тарифов 1 и 2" width="1448" height="1086" loading="lazy" decoding="async">
           <div class="t-info">
-            <p class="for">Весь путь: выйти из старого и построить новое.</p>
+            <p class="t-desc">Весь путь: выйти из старого и построить новую жизнь в отношениях, деньгах и самореализации.</p>
             <div class="price num">
               <p class="p-old"><s>40&nbsp;580&nbsp;₽</s><span class="p-pct">−56%</span></p>
               <p class="p-new">17&nbsp;990&nbsp;₽</p>
               <p class="p-eur"><button type="button" class="eur-link" data-pay="t3" data-cur="eur">или 195&nbsp;€ картой из-за рубежа</button></p>
+              <p class="p-vs">На 4&nbsp;999&nbsp;₽ дешевле, чем тарифы 1 и 2 по отдельности</p>
             </div>
             <div class="buy" data-buy="t3" data-price="17&nbsp;990&nbsp;₽" data-eur="195&nbsp;€"></div>
           </div>
@@ -444,11 +454,10 @@
         <p class="t-sub">Программы тарифа</p>
         <div class="cards">
           <div class="pcard wide"><span class="fmt">Интенсив</span><h4>«Ключи к вашей реальности»</h4><span class="dur">21 день</span><p class="about">Переведите жизнь на новую линию за 21 день.</p><ul class="plates"><li>9 видеоуроков</li><li>6 подкастов</li><li>11 техник и практик</li><li>3 рабочие тетради</li><li>лекция</li><li>мастер-класс с ответами</li></ul><button type="button" class="more" data-prog="klyuchi"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
-          <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Манипуляция и абьюз: от распознавания до свободы»</h4><span class="dur">10 эпизодов</span><p class="about">Видеть манипуляцию сразу и не давать себя продавить.</p><ul class="plates"><li>10 аудиоуроков</li></ul><button type="button" class="more" data-prog="manip"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+          <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Манипуляция &amp; Абьюз: от распознавания до свободы»</h4><span class="dur">10 эпизодов</span><p class="about">Видеть манипуляцию сразу и не давать себя продавить.</p><ul class="plates"><li>10 аудиоуроков</li></ul><button type="button" class="more" data-prog="manip"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
           <div class="pcard"><span class="fmt">Аудиомарафон</span><h4>«Выход из позиции жертвы»</h4><span class="dur">10 дней</span><p class="about">Перестать жить для других и поставить себя в центр своей жизни.</p><ul class="plates"><li>10 аудиоуроков</li><li>запись эфира с ответами Виолы</li><li>методическое пособие</li></ul><button type="button" class="more" data-prog="zhertva"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
-          <div class="pcard span-md"><span class="fmt">Терапевтический уикенд в записи</span><h4>«Неудобные»</h4><span class="dur">Урок, аудиомедитация и запись эфира</span><p class="about">Выйти из роли человека, которым удобно пользоваться.</p><ul class="plates"><li>урок</li><li>аудиомедитация</li><li>запись эфира</li></ul><button type="button" class="more" data-prog="neudobnye"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+          <div class="pcard span-md"><span class="fmt">Терапевтический онлайн-уикенд</span><h4>«Неудобные»</h4><p class="about">Выйти из роли человека, которым удобно пользоваться.</p><ul class="plates"><li>урок</li><li>аудиомедитация</li><li>запись эфира</li></ul><button type="button" class="more" data-prog="neudobnye"><span>Подробнее о программе</span><span class="more-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
         </div>
-        <p class="vs">Тарифы 1 и 2 по отдельности стоят 22&nbsp;989&nbsp;₽, тариф 3 — 17&nbsp;990&nbsp;₽</p>
       </div>
     </article>
   </section>
@@ -581,7 +590,7 @@
      сроков доступа и того, чего нет в записи. -->
 
 <template id="tpl-manip">
-  <p class="pg-title">Аудиомарафон «Манипуляция и абьюз: от распознавания до свободы»</p>
+  <p class="pg-title">Аудиомарафон «Манипуляция &amp; Абьюз: от распознавания до свободы»</p>
   <p class="pg-meta">10 эпизодов</p>
   <div class="pg-sut">
     <p class="sut-idea">Марафон «Манипуляция &amp; Абьюз», где вы учитесь видеть и обезвреживать манипуляции, выстраивая несокрушимые границы.</p>
@@ -990,8 +999,8 @@
 <script>
 /* ═══ Даты и ссылки: меняются здесь ═══
    Время московское (+03:00). START: открытие, END: последняя секунда цены. */
-const START = "2026-11-27T09:00:00+03:00";
-const END   = "2026-11-30T23:59:59+03:00";
+const START = "2026-11-27T06:00:00Z";   // 27.11, 9:00 по Москве
+const END   = "2026-11-30T20:59:59Z";   // 30.11, 23:59:59 по Москве
 /* Ссылки на оплату: по тарифу две, в рублях (российская карта) и в евро
    (зарубежная карта). Пока заглушки: пусто, значит кнопка ведёт к своему
    тарифу на этой же странице. */
@@ -1038,10 +1047,10 @@ function render(st) {
   $("[data-label-short]").forEach(e => e.textContent = st === "before" ? "До открытия" : "До конца чёрной пятницы");
   $("[data-buy]").forEach(box => {
     const k = box.dataset.buy, price = box.dataset.price;
-    if (ended) { box.innerHTML = '<p class="over-t">Чёрная пятница закончилась</p>'; return; }
-    if (st === "before") {
-      box.innerHTML = '<p class="opens">Оплата откроется 27 ноября в 9:00 по Москве</p>' +
-        '<p class="left">Откроется через <span class="num" data-timer-short></span></p>';
+    /* до открытия и после закрытия — неактивная кнопка, без ссылки на оплату */
+    if (ended || st === "before") {
+      box.innerHTML = '<span class="btn btn-wait" role="button" aria-disabled="true">' +
+        (ended ? 'Продажи закрыты' : 'Откроется 27 ноября в 9:00 по Москве') + '</span>';
     } else {
       /* кнопки открывают форму (имя и контакт для выдачи доступа), после неё оплата */
       /* одна кнопка в рублях; евро — строкой «или … € картой из-за рубежа» под ценой */
@@ -1086,7 +1095,7 @@ const DOC_VERSIONS = { doc_version_offer: "2026-11-19 bf", doc_version_annex: "2
 const TARIF = {
   t1: { name: "Тариф 1 «Два марафона и „Неудобные“»", rub: "9 999 ₽", eur: "109 €" },
   t2: { name: "Тариф 2 «Ключи к вашей реальности»", rub: "12 990 ₽", eur: "140 €" },
-  t3: { name: "Тариф 3 «Ключи, два марафона и „Неудобные“»", rub: "17 990 ₽", eur: "195 €" }
+  t3: { name: "Тариф 3 «Всё вместе»", rub: "17 990 ₽", eur: "195 €" }
 };
 
 /* метки рекламы: из ссылки, хранятся на время визита */
@@ -1189,7 +1198,7 @@ document.getElementById("rev-more").addEventListener("click", e => {
 const PROGRAMS = {
   klyuchi:   "Интенсив «Ключи к вашей реальности»",
   zhertva:   "Аудиомарафон «Выход из позиции жертвы»",
-  manip:     "Аудиомарафон «Манипуляция и абьюз»",
+  manip:     "Аудиомарафон «Манипуляция & Абьюз»",
   neudobnye: "Терапевтический уикенд «Неудобные»"
 };
 const pdlg = document.getElementById("prog"), pbody = document.getElementById("prog-body");
