@@ -357,6 +357,7 @@
   .pg-bottom { flex: none; padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); background: #fff; border-top: 1px solid var(--line); }
   .pg-bottom .btn { max-width: none; }
   .pg-body.pg-body-frame { padding: 0; overflow: hidden; }
+  @media (min-width: 641px) { .pg-dlg.pg-wide { width: min(1240px, calc(100% - 2rem)); } }
   .pg-frame { display: block; width: 100%; height: 100%; border: 0; }
   @media (max-width: 640px) { .pg-dlg { width: 100%; height: 100%; margin: 0; border-radius: 0; } }
   /* внутри окна: вводный абзац, разделы, белые карточки на сером */
@@ -1335,6 +1336,7 @@ document.addEventListener("click", e => {
   /* у «Ключей» в окне — копия страницы Виолы (/bf/keys/), у остальных — текст из шаблона */
   const page = PAGES[key];
   pbody.classList.toggle("pg-body-frame", !!page);
+  pdlg.classList.toggle("pg-wide", !!page);
   if (page) {
     const f = document.createElement("iframe");
     f.src = page; f.title = PROGRAMS[key]; f.className = "pg-frame";
