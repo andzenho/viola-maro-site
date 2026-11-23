@@ -131,7 +131,6 @@ jobs:
         run: |
           mkdir -p site/pe
           cp miniapps/pe/index.html site/pe/index.html
-          cp miniapps/pe/site.css site/pe/site.css
           cp -r miniapps/pe/img site/pe/img
 
       - uses: actions/configure-pages@v5
