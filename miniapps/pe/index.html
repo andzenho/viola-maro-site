@@ -1,22 +1,20 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+<meta name="robots" content="noindex, nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
 <title>Прикладная эмпатия: программа Виолы Маро</title>
-<meta name="description" content="6-недельная программа Виолы Маро для эмпатов: научитесь пользоваться своей эмпатией, перестаньте спасать всех и терпеть тех, кто вами пользуется. Доступ ко всем материалам курса сразу после оплаты.">
-<meta name="theme-color" content="#212322">
+<meta name="description" content="Программа Виолы Маро для эмпатов: научитесь пользоваться своей эмпатией как силой. Доступ ко всем материалам курса сразу после оплаты.">
+<meta name="theme-color" content="#241C18">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Прикладная эмпатия: программа Виолы Маро">
-<meta property="og:description" content="6-недельная программа Виолы Маро для эмпатов. Доступ ко всем материалам курса сразу после оплаты.">
+<meta property="og:description" content="Программа Виолы Маро для эмпатов. Доступ ко всем материалам курса сразу после оплаты.">
 <meta property="og:url" content="https://violamaro.ru/pe/">
 <meta property="og:locale" content="ru_RU">
-<link rel="icon" href="/pe/img/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/pe/img/apple-touch-icon.png">
-<!-- Блоки и формы как у /zayavka/ (glavnaya.py + assets/site.css), цвета /bf/.
-     site.css здесь своя копия, перекрашенная: общий файл сайта не трогаем. -->
-<link rel="stylesheet" href="/pe/site.css?v=1">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<!-- Оформление /zayavka/ один в один: общий /assets/site.css и стили glavnaya.py ниже. -->
+<link rel="stylesheet" href="/assets/site.css?v=3321036f">
 <style>
 /* Главная (glavnaya.py). Схема блоков — по mentorstvo2025 (красная сцена
    с названием, белая панель поверх неё, этапы-недели с меткой в рамке,
@@ -28,8 +26,8 @@
 @font-face { font-family: 'Bebas Neue'; font-weight: 700; font-display: swap;
   src: url(/assets/fonts/BebasNeue-Bold.ttf) format('truetype'); }
 body { padding-bottom: 0 !important; background: #fff; }
-.gl { --red: #212322; --red-d: #212322; --ink: #1C1A1D; --soft: #55505A; --pink: #FFF7B8; --grey: #F3F2F0;
-  --line: #E6E1DA; --barhat: linear-gradient(150deg, #212322 0%, #212322 62%, #212322 100%);
+.gl { --red: #C4142C; --red-d: #A30F23; --ink: #1C1A1D; --soft: #55505A; --pink: #FCE9EA; --grey: #F3F2F0;
+  --line: #E6E1DA; --barhat: linear-gradient(150deg, #DE1E38 0%, #C4142C 62%, #B21028 100%);
   --bebas: 'Bebas Neue', 'Arial Narrow', Impact, sans-serif;
   --card: 0 0 0 1px #E6E1DA, 0 24px 44px -30px rgba(28,26,29,.35);
   color: var(--ink); font-size: 18px; line-height: 1.6; }
@@ -63,8 +61,8 @@ body { padding-bottom: 0 !important; background: #fff; }
 .g-btn { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 440px;
   min-height: 64px; margin: 26px auto 0; padding: 16px 22px; border: 0; border-radius: 18px; cursor: pointer;
   font: 800 16px/1.25 'Golos Text', system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase;
-  text-decoration: none; text-align: center; color: #fff; background: linear-gradient(135deg, #212322 0%, #212322 100%);
-  box-shadow: 0 18px 32px -14px rgba(33,35,34,.65), inset 0 1px 0 rgba(255,255,255,.25); transition: transform .15s ease, filter .15s ease; }
+  text-decoration: none; text-align: center; color: #fff; background: linear-gradient(135deg, #E2283F 0%, #B01027 100%);
+  box-shadow: 0 18px 32px -14px rgba(196,20,44,.65), inset 0 1px 0 rgba(255,255,255,.25); transition: transform .15s ease, filter .15s ease; }
 .g-btn:hover { filter: brightness(1.06); color: #fff; }
 .g-btn:active { transform: scale(.985); }
 .g-btn-white { background: #fff; color: var(--red); box-shadow: 0 18px 34px -16px rgba(0,0,0,.45); }
@@ -76,7 +74,7 @@ body { padding-bottom: 0 !important; background: #fff; }
 .g-checks { display: flex; flex-direction: column; gap: 16px; }
 .g-checks li { position: relative; padding-left: 38px; line-height: 1.45; }
 .g-checks li::before { content: ""; position: absolute; left: 0; top: .12em; width: 24px; height: 24px; border-radius: 6px;
-  background: var(--red); box-shadow: 0 6px 12px -6px rgba(33,35,34,.8); }
+  background: var(--red); box-shadow: 0 6px 12px -6px rgba(196,20,44,.8); }
 .g-checks li::after { content: ""; position: absolute; left: 8.5px; top: calc(.12em + 4.5px); width: 6px; height: 11px;
   border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); }
 .g-checks li span { display: block; color: var(--soft); font-size: 16px; margin-top: 2px; }
@@ -95,7 +93,7 @@ body { padding-bottom: 0 !important; background: #fff; }
   .g-fakty { background: rgba(255,255,255,.72); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 }
 .g-fakty li { position: relative; padding-left: 14px; }
-.g-fakty li::before { content: ""; position: absolute; left: 0; top: .5em; width: 6px; height: 6px; border-radius: 50%; background: #212322; }
+.g-fakty li::before { content: ""; position: absolute; left: 0; top: .5em; width: 6px; height: 6px; border-radius: 50%; background: #C4142C; }
 .g-fakty b { font-weight: 800; color: #1C1A1D; }
 /* Телефон и планшет (вариант с аркой): внизу фото, правее центра. */
 .g-fakty-h2 { right: 8px; bottom: 28px; width: min(67%, 270px); font-size: 12px; line-height: 1.25; gap: 4px; padding: 9px 11px; }
@@ -111,8 +109,8 @@ body { padding-bottom: 0 !important; background: #fff; }
    на mentorstvo2025: глянцевая карточка, мелкая строка и крупная. */
 .g-planshet-badge { position: absolute; right: 3%; bottom: -10%; width: 40%; max-width: 190px; margin: 0;
   padding: 14px 12px 15px; border-radius: 20px; text-align: center; color: #fff;
-  background: radial-gradient(120% 90% at 30% 0%, #212322 0%, rgba(33,35,34,0) 60%), linear-gradient(160deg, #212322 0%, #212322 100%);
-  box-shadow: 0 18px 30px -12px rgba(33,35,34,.75), inset 0 1px 0 rgba(255,255,255,.45), inset 0 -2px 0 rgba(0,0,0,.12);
+  background: radial-gradient(120% 90% at 30% 0%, #F24A5E 0%, rgba(242,74,94,0) 60%), linear-gradient(160deg, #E2283F 0%, #B01027 100%);
+  box-shadow: 0 18px 30px -12px rgba(176,16,39,.75), inset 0 1px 0 rgba(255,255,255,.45), inset 0 -2px 0 rgba(0,0,0,.12);
   display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .g-planshet-badge span { white-space: nowrap; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; opacity: .9; line-height: 1.2; }
 .g-planshet-badge b { font-family: var(--bebas); font-weight: 700; font-size: 22px; line-height: 1.02; letter-spacing: .02em;
@@ -125,7 +123,7 @@ body { padding-bottom: 0 !important; background: #fff; }
 .g-about-name { font-family: 'Prata', 'Times New Roman', Georgia, serif; font-size: 26px; line-height: 1.2; margin-bottom: 18px !important; }
 [data-h2-def].g-offer { margin: 0 !important; font-size: 23px !important; line-height: 1.35 !important; font-weight: 600 !important;
   color: #1C1A1D !important; text-wrap: pretty; }
-[data-h2-def].g-offer b { color: #212322 !important; font-weight: 800 !important; }
+[data-h2-def].g-offer b { color: #B01027 !important; font-weight: 800 !important; }
 .g-goals-sec { background: #fff; padding: 8px 0 8px; }
 .g-panel { background: var(--grey); border-radius: 26px; padding: 26px 20px 28px; }
 .g-panel .g-h2 { margin-bottom: 16px; }
@@ -133,10 +131,10 @@ body { padding-bottom: 0 !important; background: #fff; }
 
 /* 2. недели этапами */
 .g-weeks { display: grid; gap: 0; position: relative; }
-.g-week { position: relative; padding: 0 0 34px 26px; border-left: 2px dashed rgba(33,35,34,.35); margin-left: 8px; }
+.g-week { position: relative; padding: 0 0 34px 26px; border-left: 2px dashed rgba(196,20,44,.35); margin-left: 8px; }
 .g-week:last-child { border-left-color: transparent; padding-bottom: 6px; }
 .g-week::before { content: ""; position: absolute; left: -9px; top: 6px; width: 16px; height: 16px; border-radius: 50%;
-  background: var(--red); box-shadow: 0 0 0 5px rgba(33,35,34,.15); }
+  background: var(--red); box-shadow: 0 0 0 5px rgba(196,20,44,.15); }
 .gl .g-week-n { display: inline-block; font-family: var(--bebas); font-size: 26px; line-height: 1; padding: 7px 12px 5px; border: 2px solid var(--red);
   border-radius: 8px; color: var(--red); letter-spacing: .02em; }
 .gl .g-week-h { font-family: 'Prata', 'Times New Roman', Georgia, serif !important; font-weight: 400; color: var(--red-d); font-size: 26px !important;
@@ -154,7 +152,7 @@ body { padding-bottom: 0 !important; background: #fff; }
 .g-tarify > *, .g-stories > *, .g-weeks > * { min-width: 0; }
 .g-tarif { position: relative; background: #fff; color: var(--ink); border-radius: 26px; padding: 14px 14px 22px; box-shadow: 0 30px 50px -30px rgba(0,0,0,.5); }
 .g-tarif-head { position: relative; border-radius: 18px; padding: 22px 16px 20px; text-align: center; background: #F6F5F3; box-shadow: inset 0 0 0 1px #E6E1DA; }
-.g-tarif-top .g-tarif-head { background: var(--barhat); color: #fff; box-shadow: 0 16px 30px -18px rgba(33,35,34,.8); }
+.g-tarif-top .g-tarif-head { background: var(--barhat); color: #fff; box-shadow: 0 16px 30px -18px rgba(196,20,44,.8); }
 .gl .g-tarif-h { font-family: var(--bebas) !important; font-weight: 700; text-transform: uppercase; font-size: 46px !important; line-height: 1; margin: 0; color: var(--red); }
 .g-tarif-top .g-tarif-h { color: #fff; }
 .g-badge { display: inline-block; margin-bottom: 10px; padding: 5px 12px; border-radius: 999px; background: #1C1A1D; color: #fff;
@@ -228,7 +226,7 @@ body { padding-bottom: 0 !important; background: #fff; }
 .g-nums li { display: flex; gap: 14px; align-items: center; line-height: 1.4; }
 .g-num { flex: none; display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; border-radius: 12px;
   background: var(--barhat); color: #fff; font-family: var(--bebas); font-size: 26px; padding-top: 3px;
-  box-shadow: 0 10px 18px -10px rgba(33,35,34,.9); }
+  box-shadow: 0 10px 18px -10px rgba(196,20,44,.9); }
 
 /* 10. вопросы */
 .g-faq { border-radius: 20px; background: #fff; box-shadow: var(--card); overflow: hidden; }
@@ -283,7 +281,7 @@ body.g-lock .g-bar { display: none; }
 .g-opt { font-weight: 400; color: var(--soft); font-size: 15px; }
 .g-cb { display: flex; gap: 12px; align-items: flex-start; font-size: 15.5px; line-height: 1.45; color: var(--soft); margin: 10px 0; cursor: pointer; }
 .g-cb input { flex: none; width: 24px; height: 24px; margin: 1px 0 0; accent-color: var(--red); }
-.g-cb em { font-style: normal; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: #212322; white-space: nowrap; }
+.g-cb em { font-style: normal; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: #8A5A2B; white-space: nowrap; }
 .g-cb.g-bad span { color: var(--red); }
 .g-err { margin-top: 12px !important; color: var(--red); font-weight: 700; }
 .g-form .g-btn { max-width: none; margin-top: 18px; }
@@ -357,7 +355,7 @@ body.g-lock { overflow: hidden; }
   font-family: 'Golos Text', system-ui, sans-serif; }
 .g-kol text { font-size: 17px; font-weight: 600; fill: var(--ink); }
 .g-kol-set, .g-kol-os { fill: none; stroke: #DCD5CC; stroke-width: 1; }
-.g-kol-posle { fill: rgba(33,35,34,.16); stroke: var(--red); stroke-width: 2.5; stroke-linejoin: round; }
+.g-kol-posle { fill: rgba(196,20,44,.16); stroke: var(--red); stroke-width: 2.5; stroke-linejoin: round; }
 .g-kol-do { fill: rgba(28,26,29,.06); stroke: #77717C; stroke-width: 2; stroke-dasharray: 6 5; stroke-linejoin: round; }
 .g-kol-t { fill: var(--red); }
 .g-kol-leg { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 20px; margin-top: 8px; font-size: 15px; }
@@ -372,7 +370,7 @@ body.g-lock { overflow: hidden; }
 .g-rez-shagi p { line-height: 1.55; }
 .g-sert { margin-top: 16px !important; max-width: 290px; padding: 16px 18px 14px; text-align: center; background: #fff;
   border: 1px solid var(--line); border-radius: 12px;
-  box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 7px rgba(33,35,34,.35), 0 16px 30px -20px rgba(28,26,29,.5); }
+  box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 7px rgba(196,20,44,.35), 0 16px 30px -20px rgba(28,26,29,.5); }
 .gl .g-sert-h { font-family: var(--bebas); font-size: 26px; letter-spacing: .08em; line-height: 1; color: var(--red); }
 .gl .g-sert-imya { font-family: 'Prata', 'Times New Roman', Georgia, serif; font-size: 20px; margin: 8px 0 4px !important; }
 .gl .g-sert-t { font-size: 12.5px; line-height: 1.35; color: var(--soft); }
@@ -477,240 +475,178 @@ body.g-lock { overflow: hidden; }
 }
 .g-p2 { margin-top: 16px !important; }</style>
 <style>
-  /* форма перед оплатой */
-  .lead-dlg { width: min(32rem, calc(100% - 1.5rem)); max-height: calc(100% - 1.5rem); overflow: auto;
-    padding: 0; border: 0; border-radius: var(--r); background: #fff; color: var(--text); }
-  .lead-dlg::backdrop { background: rgba(0, 0, 0, .55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
-  .lead-dlg form { padding: 1.6rem 1.4rem 1.6rem; }
-  .lead-h { font-family: var(--prata); font-weight: 700; font-size: 1.45rem; line-height: 1.2; padding-right: 3rem; }
-  .lead-sub { margin-top: .5rem; font-weight: 700; color: var(--pink-dark); font-size: 1.05rem; }
-  .lead-x { position: absolute; top: .8rem; right: .8rem; width: 44px; height: 44px; border-radius: 50%;
-    border: 0; background: var(--black); color: #fff; cursor: pointer; font-size: 1.4rem; line-height: 1; font-family: var(--golos); }
-  .lead-dlg label.f { display: block; margin-top: 1.2rem; font-weight: 700; font-size: 1.05rem; }
-  .lead-dlg .f-hint { display: block; font-weight: 500; color: var(--muted); font-size: .95rem; margin-top: .1rem; }
-  .lead-dlg input[type=text] { display: block; width: 100%; margin-top: .45rem; padding: .85rem 1.1rem; min-height: 56px;
-    font: inherit; font-size: 1.1rem; color: var(--text); background: #fff; border: 1.5px solid #b9b9b9; border-radius: 16px; }
-  .lead-dlg input[type=text]:focus { outline: 3px solid var(--pink-dark); outline-offset: 1px; border-color: var(--pink-dark); }
-  .lead-dlg .chk { display: grid; grid-template-columns: 1.6rem 1fr; gap: .7rem; align-items: start; margin-top: 1rem; font-size: 1rem; line-height: 1.45; cursor: pointer; }
-  .lead-dlg .chk input { width: 1.45rem; height: 1.45rem; margin: .1rem 0 0; accent-color: var(--pink-dark); }
-  .lead-dlg .chk a { color: var(--pink-dark); }
-  .lead-dlg .err { color: #b3141f; font-weight: 700; margin-top: .9rem; }
-  .lead-dlg .btn { max-width: none; margin-top: 1.3rem; }
-  .lead-dlg .note-s { color: var(--muted); font-size: .92rem; margin-top: .7rem; }
-  .lead-dlg .lead-ok p { margin-top: 1.2rem; font-size: 1.15rem; font-weight: 700; line-height: 1.45; }
-  .lead-dlg.done label, .lead-dlg.done input, .lead-dlg.done .err, .lead-dlg.done #lead-go, .lead-dlg.done #lead-note { display: none; }
-  .lead-dlg .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-
-/* ═══ /pe/: цвета /bf/ поверх блоков /zayavka/ (просьба 23.11: «просто цвета поменять») ═══
-   Красный /zayavka/ стал графитом #212322, золото и акценты стали жёлтым #FCE500. */
-body { background: #fff; }
-.gl { --red: #212322; --red-d: #212322; --pink: #FFF7B8; --barhat: #FCE500; --ink: #212322; }
-.g-btn, .g-btn:hover { background: #FCE500; color: #212322; box-shadow: 0 18px 32px -16px rgba(33,35,34,.45), inset 0 1px 0 rgba(255,255,255,.5); }
-.g-btn:hover { filter: brightness(1.04); }
-.g-checks li::before { background: #FCE500; box-shadow: none; }
-.g-checks li::after { border-color: #212322; }
-.gl .g-acc { text-decoration: underline; text-decoration-color: #FCE500; text-decoration-thickness: .32em;
-  text-underline-offset: -.2em; text-decoration-skip-ink: none; }
-/* кнопки первого экрана /zayavka/ (site.css) — жёлтые, как на /bf/ */
-[data-h2] [data-btn="primary"], [data-hero-stage] [data-btn="primary"] { background: #FCE500 !important; color: #212322 !important;
-  box-shadow: 0 16px 30px -14px rgba(0,0,0,.6) !important; }
-/* десктоп: в кадре /zayavka/ красный фон вшит в фото, здесь тёмная сцена /bf/ и вырезанная Виола */
-[data-hero-stage] { background: #212322; }
-[data-hero-stage]::after { content: ""; position: absolute; width: 640px; height: 640px; right: -120px; top: -200px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(252,229,0,.16), rgba(252,229,0,0) 70%); filter: blur(60px); pointer-events: none; }
-[data-hero-photo] img.pe-viola { position: absolute; right: max(2vw, calc(50% - 600px)); bottom: 0; left: auto; width: auto; height: 96%;
-  object-fit: contain; object-position: 100% 100%; }
-[data-hero-stage] [data-hero-veil] { display: none; }
-/* «Об авторе»: фото /zayavka/ с красным фоном → та же вырезанная Виола на тёмной карточке */
-.g-about-foto.pe-foto { position: relative; aspect-ratio: 1 / 1; border-radius: 24px; overflow: hidden;
-  background: radial-gradient(70% 60% at 70% 20%, rgba(252,229,0,.28), rgba(252,229,0,0) 70%), #212322; }
-.g-about-foto.pe-foto img { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 94%; object-fit: contain; object-position: 50% 100%; border-radius: 0; }
-.g-label { background: #FCE500; border-color: #FCE500; color: #212322; }
-.g-tag-red { background: #FCE500; border-color: #FCE500; color: #212322; }
-.g-story-ch { border-left: 4px solid #FCE500; }
-.g-week { border-left-color: rgba(33,35,34,.25); }
-.g-week::before { background: #FCE500; box-shadow: 0 0 0 2px #212322, 0 0 0 7px rgba(252,229,0,.35); }
-.gl .g-week-n { background: #FCE500; border-color: #FCE500; color: #212322; }
-.g-week-t p + p { margin-top: 12px; }
-.g-fakty li::before { background: #FCE500; box-shadow: 0 0 0 1.5px #212322; }
-.g-planshet-badge { background: #212322; color: #fff; box-shadow: 0 18px 30px -12px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.2); }
-.g-planshet-badge b { color: #FCE500; }
-.pe-cena-h { margin: 12px 0 0 !important; font-size: 16px; font-weight: 600; color: rgba(255,255,255,.8); }
-[data-h2-top] .pe-cena-h { text-align: center; }
-/* тариф: жёлтая сцена, одна карточка по центру */
-.g-red { background: #FCE500; color: #212322; }
-.g-light .g-ink { color: #212322; }
-.pe-tarify { max-width: 560px; margin: 0 auto; grid-template-columns: 1fr !important; }
-.g-tarif-head { background: #212322; box-shadow: none; }
-.gl .g-tarif-h { color: #FCE500; }
-.g-cena-new { color: #FCE500; }
-.pe-pay { display: grid; gap: 12px; margin-top: 16px; }
-.pe-pay .g-btn { margin: 0; max-width: none; min-height: 68px; line-height: 1.3; }
-#tarify .g-tarify.pe-tarify > .g-tarif .g-cena p.g-cena-val { color: rgba(255,255,255,.75) !important; }
-.eur-link { font: inherit; font-size: 17px; font-weight: 700; color: #212322; background: none; border: 0; padding: 10px 0; min-height: 44px;
-  cursor: pointer; text-decoration: underline; text-decoration-color: #FCE500; text-decoration-thickness: 3px; text-underline-offset: .2em; text-decoration-skip-ink: none; }
-.pe-ip { margin: 10px 6px 0 !important; font-size: 15px; line-height: 1.5; color: #55505A; }
-/* site.css красит абзацы последнего блока #tarify в белый: в белой карточке возвращаем тёмный */
-#tarify .g-tarify.pe-tarify > .g-tarif > p, #tarify .g-tarify.pe-tarify > .g-tarif > p a { color: #212322 !important; }
-#tarify .g-tarify.pe-tarify > .g-tarif > p.pe-ip { color: #55505A !important; }
-/* «О программе» в левой половине панели (как описание на /zayavka/) */
-.pe-o-t { display: none; }
-.pe-o-t p + p { margin-top: 14px; }
-@media (max-width: 759px) {
-  .g-panel-l.pe-o { display: block; margin-bottom: 34px; }
-  .pe-o .g-panel-lh { display: block; }
-  .pe-o-t { display: block; margin-bottom: 26px; }
-}
-@media (min-width: 760px) { .pe-o-t { display: block; margin-bottom: 30px; font-size: 18px; line-height: 1.6; } }
-.ft a:hover { text-decoration-color: #FCE500; }
-/* окно перед оплатой: как на /bf/ */
-.lead-dlg { --r: 28px; --text: #212322; --muted: #535353; --pink-dark: #212322; --black: #212322;
-  --prata: 'Bebas Neue', 'Arial Narrow', sans-serif; --golos: 'Golos Text', system-ui, sans-serif; font-family: var(--golos); font-size: 17px; line-height: 1.5; }
-.lead-dlg .lead-h { font-size: 2rem; letter-spacing: .01em; text-transform: uppercase; }
-.lead-dlg p { margin: 0; }
-.lead-dlg .btn { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 60px; padding: .8rem 1.4rem;
-  background: #FCE500; color: #212322; border: 0; border-radius: 18px; font: 800 16px/1.2 var(--golos); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+/* /pe/: поправки к стилям /zayavka/ под порядок блоков этой страницы */
+.pe-cena-h { margin: 14px 0 0 !important; font-size: 16px; font-weight: 600; color: rgba(250,249,248,.86); }
+[data-h2-top] .pe-cena-h { text-align: center; padding: 0 16px; }
+/* панель «О программе и цели» стоит после «Об авторе», а не на первом экране */
+.pe-goals .g-panel { margin-top: 0 !important; }
+.pe-goals .g-panel-l, .pe-goals .g-panel-lh, .pe-goals .g-panel-lt { display: block; }
+.pe-goals .g-panel-lt { margin-bottom: 0 !important; }
+.pe-goals .g-panel-lt + .g-panel-lt { margin-top: 14px !important; }
+.pe-goals .g-panel-l { margin-bottom: 34px; }
+.pe-goals .g-checks li span { font-size: 16.5px; margin-top: 4px; }
+@media (min-width: 760px) { .pe-goals .g-panel-l { margin-bottom: 0; } }
+/* «Техники темы» сворачиваются, стрелка как у вопросов */
+.pe-tech > summary { cursor: pointer; list-style: none; position: relative; padding-right: 36px; margin-bottom: 0 !important; }
+.pe-tech > summary::-webkit-details-marker { display: none; }
+.pe-tech > summary::after { content: ""; position: absolute; right: 6px; top: 1px; width: 8px; height: 8px;
+  border: solid var(--red); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); transition: transform .2s ease; }
+.pe-tech[open] > summary::after { transform: rotate(-135deg); top: 6px; }
+.pe-tech[open] > summary { margin-bottom: 16px !important; }
+.pe-tech { padding-top: 18px !important; padding-bottom: 18px !important; }
+/* истории: начало истории мелко, под «Читать историю целиком» */
+.pe-more { margin-top: 18px; }
+.pe-more > summary { cursor: pointer; font-weight: 700; font-size: 15.5px; color: var(--red); text-decoration: underline; text-underline-offset: .2em; }
+.pe-more p { font-size: 15.5px; color: var(--soft); }
+.pe-more .g-tag { font-size: 12px; }
+/* одна карточка цены по центру, две равные кнопки */
+.pe-one { max-width: 560px; margin: 0 auto; grid-template-columns: 1fr !important; }
+.pe-one .g-tarif-l { margin-top: 10px !important; }
+.pe-one .g-btn + .g-btn { margin-top: 12px; }
+.g-bar-posle { margin: 0 !important; }
+a.g-bar-btn { display: inline-flex; align-items: center; text-decoration: none; }
+body.g-bar-on { padding-bottom: 80px !important; }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">К основному содержанию</a>
-<main id="main" data-glavnaya="1"><section style="background: linear-gradient(160deg, #212322 0%, #212322 45%, #121413 100%); color: #FAF9F8; padding: 0;" aria-label="Первый экран" data-blok="Первый экран">
+<main id="main" data-glavnaya="1"><section style="background: linear-gradient(160deg, #D6223A 0%, #B51228 45%, #7E0A1A 100%); color: #FAF9F8; padding: 0;" aria-label="Первый экран" data-blok="Первый экран">
   <div style="width: 100%; margin: 0 auto; display: flex; flex-direction: column;">
-    <div data-h2=""><div data-h2-top=""><div data-h2-chips=""><span><i>Длительность:</i><b>6&nbsp;недель</b></span></div><p data-h2-title="" role="heading" aria-level="1" style="--bukv: 10;">Прикладная <br>эмпатия</p><p data-h2-sub="">6-недельная программа Виолы Маро для эмпатов</p><a class="s55f03b1" href="#tarif" role="button" data-zayavka="Первый экран" data-btn="primary" style="pointer-events: auto; display: inline-flex; white-space: nowrap; flex: 0 0 auto; flex: 0 0 auto; align-items: center; gap: 14px; background: #FCE500; color: #212322; text-decoration: none; font-weight: 700; font-size: clamp(18px, 1.9vw, 22px); letter-spacing: .01em; padding: 23px 34px 23px 48px; border-radius: 999px; box-shadow: 0 16px 30px -14px rgba(0,0,0,.6); transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;">Получить доступ<span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: #212322; color: #FCE500; font-size: 16px; line-height: 1;">→</span></a><p class="pe-cena-h">14&nbsp;900&nbsp;₽ · доступ навсегда</p></div><div data-h2-photo=""><img data-h2-fon="" src="/assets/img/terrasa.jpg?v=eada1fa6" alt="" width="900" height="1000" decoding="async"><img data-h2-viola="" src="/assets/img/viola.webp?v=e2a4cb88" alt="Виола Маро" width="901" height="1202" fetchpriority="high" decoding="async"><ul class="g-fakty g-fakty-h2" aria-label="Регалии Виолы Маро"><li><b>Психолог (СПбГУ)</b>, психотерапевт</li><li><b>25 лет</b> профессиональной практики</li></ul></div><div data-h2-card=""><p data-h2-def="" class="g-offer">Научитесь вместе с Виолой пользоваться своей эмпатией, чтобы <b>перестать спасать всех, уступать и терпеть тех, кто вами пользуется</b>, и <b>начать себя любить, ценить и уважать</b></p></div></div><div data-hero-stage="" style="position: relative; overflow: hidden; height: clamp(600px, 94vh, 960px);">
+    <div data-h2=""><div data-h2-top=""><p data-h2-title="" role="heading" aria-level="1" style="--bukv: 10;">Прикладная <br>эмпатия</p><p data-h2-sub="">Программа Виолы Маро для эмпатов</p><a class="s55f03b1" href="#tarify" role="button" data-zayavka="Первый экран" data-btn="primary" style="pointer-events: auto; display: inline-flex; white-space: nowrap; flex: 0 0 auto; flex: 0 0 auto; align-items: center; gap: 14px; background: linear-gradient(135deg, #D6223A 0%, #A30F23 100%); color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: clamp(18px, 1.9vw, 22px); letter-spacing: .01em; padding: 23px 34px 23px 48px; border-radius: 999px; box-shadow: 0 16px 30px -14px rgba(196,20,44,.62); transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;">Получить доступ<span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: rgba(140,12,30,.9); color: #F8ECCB; font-size: 16px; line-height: 1;">→</span></a><p class="pe-cena-h">14&nbsp;900&nbsp;₽ · доступ ко всем материалам сразу после оплаты</p></div><div data-h2-photo=""><img data-h2-fon="" src="/assets/img/terrasa.jpg?v=eada1fa6" alt="" width="900" height="1000" decoding="async"><img data-h2-viola="" src="/assets/img/viola.webp?v=e2a4cb88" alt="Виола Маро" width="901" height="1202" fetchpriority="high" decoding="async"><ul class="g-fakty g-fakty-h2" aria-label="Регалии Виолы Маро"><li><b>25 лет</b> практики психолога и психотерапевта</li><li><b>СПбГУ и Sapienza</b>: психологическое образование, Санкт-Петербург и Рим</li><li>Спикер <b>ООН</b> на Специальной сессии по вопросам детей и молодёжи</li><li><b>713 000</b> подписчиков в YouTube, TikTok и Instagram</li></ul></div><div data-h2-card=""><p data-h2-def="" class="g-offer">Этот курс станет первым важным шагом для того, чтобы ваша эмпатия стала вашей <b>силой</b>, а не постоянной слабостью.</p></div></div><div data-hero-stage="" style="position: relative; overflow: hidden; height: clamp(600px, 94vh, 960px);">
       <div data-hero-photo="" style="position: absolute; inset: 0;">
-        <img class="pe-viola" src="/assets/img/viola.webp" alt="Виола Маро" width="901" height="1202" decoding="async">
+        <picture>
+          <source media="(max-width: 760px)" type="image/webp"
+                  srcset="/assets/img/hero-mob-sm.webp?v=a28d22e6 620w, /assets/img/hero-mob.webp?v=93cc1685 900w"
+                  sizes="100vw">
+          <source media="(max-width: 760px)" type="image/jpeg"
+                  srcset="/assets/img/hero-mob-sm.jpg?v=01b25fde 620w, /assets/img/hero-mob.jpg?v=5beb704d 900w"
+                  sizes="100vw">
+          <source type="image/webp"
+                  srcset="/assets/img/hero-sm.webp?v=126d02da 1200w, /assets/img/hero.webp?v=cbdbb2f5 1672w"
+                  sizes="100vw">
+          <img src="/assets/img/hero.jpg?v=fd644bff"
+               srcset="/assets/img/hero-sm.jpg?v=dde6201b 1200w, /assets/img/hero.jpg?v=fd644bff 1672w"
+               sizes="100vw"
+               alt="Виола Маро сидит в кресле"
+               width="1672" height="941"
+               loading="lazy" decoding="async">
+        </picture>
       </div>
-      <div data-hero-veil="" style="position: absolute; inset: 0; background: linear-gradient(100deg, rgba(18,20,19,.94) 0%, rgba(18,20,19,.86) 26%, rgba(18,20,19,.55) 46%, rgba(18,20,19,0) 66%); pointer-events: none;"></div>
-      <div data-hero-veil="" style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(18,20,19,.88) 0%, rgba(18,20,19,.5) 28%, rgba(18,20,19,0) 56%); pointer-events: none;"></div>
-      <ul class="g-fakty g-fakty-stage" aria-label="Регалии Виолы Маро"><li><b>Психолог (СПбГУ)</b>, психотерапевт</li><li><b>25 лет</b> профессиональной практики</li></ul>
+      <div data-hero-veil="" style="position: absolute; inset: 0; background: linear-gradient(100deg, rgba(126,10,26,.94) 0%, rgba(126,10,26,.86) 26%, rgba(126,10,26,.55) 46%, rgba(126,10,26,0) 66%); pointer-events: none;"></div>
+      <div data-hero-veil="" style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(126,10,26,.88) 0%, rgba(126,10,26,.5) 28%, rgba(126,10,26,0) 56%); pointer-events: none;"></div>
+      <ul class="g-fakty g-fakty-stage" aria-label="Регалии Виолы Маро"><li><b>25 лет</b> практики психолога и психотерапевта</li><li><b>СПбГУ и Sapienza</b>: психологическое образование, Санкт-Петербург и Рим</li><li>Спикер <b>ООН</b> на Специальной сессии по вопросам детей и молодёжи</li><li><b>713 000</b> подписчиков в YouTube, TikTok и Instagram</li></ul>
       <div data-hero-copy="" style="position: absolute; inset: 0; width: min(1240px, 100%); margin: 0 auto; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(26px, 5vw, 60px) clamp(20px, 4.5vw, 56px) clamp(24px, 4vw, 48px); pointer-events: none;"><div data-hero-card="">
         <div style="max-width: min(62%, 620px);">
-          <div style="font-size: clamp(10px, 1.7vw, 12.5px); letter-spacing: .2em; text-transform: uppercase; color: #FCE500; line-height: 1.5;">6-недельная программа Виолы Маро для эмпатов</div>
-          <h1 style="font-family: 'Prata', Georgia, serif; font-weight: 400; letter-spacing: -.01em; font-size: clamp(34px, 4.4vw, 64px); line-height: 1.05; margin: 18px 0 0; text-wrap: balance; text-shadow: 0 2px 28px rgba(18,20,19,.55);">Прикладная <br>эмпатия</h1>
+          <div style="font-size: clamp(10px, 1.7vw, 12.5px); letter-spacing: .2em; text-transform: uppercase; color: #E5BE73; line-height: 1.5;">Программа Виолы Маро для эмпатов</div>
+          <h1 style="font-family: 'Prata', Georgia, serif; font-weight: 400; letter-spacing: -.01em; font-size: clamp(34px, 4.4vw, 64px); line-height: 1.05; margin: 18px 0 0; text-wrap: balance; text-shadow: 0 2px 28px rgba(126,10,26,.55);">Прикладная <br>эмпатия</h1>
         </div>
         <div style="display: flex; flex-direction: column; align-items: flex-start; gap: clamp(16px, 2.6vw, 24px); max-width: min(92%, 620px);">
-          <p data-hero-def="" style="margin: 0; max-width: min(48vw, 560px); font-family: 'Golos Text', system-ui, sans-serif; font-weight: 500; letter-spacing: -.01em; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.5; color: #FAF9F8; text-shadow: 0 2px 22px rgba(18,20,19,.85);">Научитесь вместе с Виолой пользоваться своей эмпатией, чтобы <b>перестать спасать всех, уступать и терпеть тех, кто вами пользуется</b>, и <b>начать себя любить, ценить и уважать</b></p>
+          <p data-hero-def="" style="margin: 0; max-width: min(48vw, 560px); font-family: 'Golos Text', system-ui, sans-serif; font-weight: 500; letter-spacing: -.01em; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.5; color: #FAF9F8; text-shadow: 0 2px 22px rgba(126,10,26,.85);">Этот курс станет первым важным шагом для того, чтобы ваша эмпатия стала вашей <b>силой</b>, а не постоянной слабостью.</p>
           <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px 24px;">
-            <a class="s55f03b1" href="#tarif" role="button" data-zayavka="Первый экран" data-btn="primary" style="pointer-events: auto; display: inline-flex; white-space: nowrap; flex: 0 0 auto; flex: 0 0 auto; align-items: center; gap: 14px; background: #FCE500; color: #212322; text-decoration: none; font-weight: 700; font-size: clamp(18px, 1.9vw, 22px); letter-spacing: .01em; padding: 23px 34px 23px 48px; border-radius: 999px; box-shadow: 0 16px 30px -14px rgba(0,0,0,.6); transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;">Получить доступ<span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: #212322; color: #FCE500; font-size: 16px; line-height: 1;">→</span></a>
+            <a class="s55f03b1" href="#tarify" role="button" data-zayavka="Первый экран" data-btn="primary" style="pointer-events: auto; display: inline-flex; white-space: nowrap; flex: 0 0 auto; flex: 0 0 auto; align-items: center; gap: 14px; background: linear-gradient(135deg, #D6223A 0%, #A30F23 100%); color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: clamp(18px, 1.9vw, 22px); letter-spacing: .01em; padding: 23px 34px 23px 48px; border-radius: 999px; box-shadow: 0 16px 30px -14px rgba(196,20,44,.62); transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;">Получить доступ<span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: rgba(140,12,30,.9); color: #F8ECCB; font-size: 16px; line-height: 1;">→</span></a>
             
           </div>
-          <p class="pe-cena-h">14&nbsp;900&nbsp;₽ · доступ навсегда</p>
+          <p class="pe-cena-h">14&nbsp;900&nbsp;₽ · доступ ко всем материалам сразу после оплаты</p>
         </div>
       </div></div>
     </div>
   </div>
 </section><div class="gl">
-
-<section class="g-goals-sec" data-blok="О программе и цели">
+<section class="g-sec" id="o-viole" data-blok="Об авторе">
+  <div class="g-in g-about">
+    <div class="g-about-foto">
+      <picture>
+        <source type="image/webp" srcset="/assets/img/hero-mob.webp?v=93cc1685">
+        <img src="/assets/img/hero-mob.jpg?v=5beb704d" alt="Виола Маро" width="900" height="900" loading="lazy" decoding="async">
+      </picture>
+    </div>
+    <div class="g-about-text">
+      <h2 class="g-h2"><span class="g-ink">Об</span> <span class="g-acc">авторе</span></h2>
+      <p class="g-about-name">Виола Маро</p>
+      <ul class="g-checks g-about-list"><li>Дипломированный психолог (СПбГУ), психотерапевт по образованию и по призванию. 25 лет профессиональной практики.</li><li>Идеолог и популяризатор концепции практической эмпатии — это ключевое направление её работы и основа авторской линейки образовательных продуктов.</li><li>Создатель обучающих программ в области психологии отношений и самореализации.</li><li>Гуманист по призванию и «технарь» в психологии — совмещает глубокую эмпатию с чёткой, системной методологией.</li></ul>
+    </div>
+  </div>
+</section>
+<section class="g-sec g-grey g-goals-sec pe-goals" id="o-programme" data-blok="О программе и цели">
   <div class="g-in">
     <div class="g-panel">
-      <div class="g-panel-l pe-o">
-        <h2 class="g-h2 g-panel-lh"><span class="g-ink">О</span> <span class="g-acc">программе</span></h2>
-        <div class="pe-o-t"><p>Этот курс станет первым важным шагом для того, чтобы ваша эмпатия стала вашей силой, а не постоянной слабостью. Для кого-то он поможет выйти из позиции спасателя и поставить себя на первое место в своей жизни. Для кого-то он поможет сформировать важнейшие внутренние балансы и балансы в отношениях.</p><p>Его цель - помочь вам сформировать внутренние опоры, укрепить внутренний стержень личности, сформировать стабильную самооценку, личные границы и начать жизнь из позиции любви к себе, принятия своей эмпатии и понимания её ценности.</p><p>Этот курс вернёт вам ощущение себя в центре вашей жизни и даст вам практические методы и инструменты для того, чтобы расти и развиваться как качественно, так и количественно.</p></div>
-        <div class="g-planshet">
-        <img src="/pe/img/planshet.webp" alt="Программа «Прикладная эмпатия» на планшете: лекции, шесть тем, техники, медитации, ответы и методички" width="1100" height="766" loading="lazy" decoding="async">
-        <p class="g-planshet-badge"><span>14&nbsp;900&nbsp;₽</span><b>Доступ навсегда</b></p>
-      </div>
+      <div class="g-panel-l">
+        <h2 class="g-h2 g-panel-lh"><span class="g-acc">Прикладная эмпатия</span></h2>
+        <p class="g-panel-lt">Для кого-то этот курс поможет выйти из позиции спасателя и поставить себя на первое место в своей жизни. Для кого-то он поможет сформировать важнейшие внутренние балансы и балансы в отношениях.</p><p class="g-panel-lt">Его цель - помочь вам сформировать внутренние опоры, укрепить внутренний стержень личности, сформировать стабильную самооценку, личные границы и начать жизнь из позиции любви к себе, принятия своей эмпатии и понимания её ценности.</p><p class="g-panel-lt">Этот курс вернёт вам ощущение себя в центре вашей жизни и даст вам практические методы и инструменты для того, чтобы расти и развиваться как качественно, так и количественно.</p>
       </div>
       <div class="g-panel-r">
         <h2 class="g-h2"><span class="g-acc">Цели</span> <span class="g-ink">программы</span></h2>
-        <p class="g-label">Для каждого участника:</p>
-        <ul class="g-checks g-goals"><li>Выйти из позиции слабости и начать воспринимать свою эмпатию как силу, особенность личности, которая даёт вам возможность глубже видеть и понимать людей, распознавать манипуляции и токсичные формы поведения</li><li>Научиться выстраивать сбалансированные отношения с людьми, не попадая в эмоциональную зависимость, позицию спасателя или жертвы</li><li>Вы получите самые нужные и эксклюзивные инструменты для того, чтобы научиться защищать себя в ситуации, заземлять себя, инструменты осознанности и саморазвития, методики работы с эмпатией и интуицией</li><li>Вы сформируете внутренние защиты для того, чтобы не уносить чужую боль с собой через вашу эмпатию. На курсе вы научитесь отделять ваши чувства, вашу ответственность и ваше психологическое пространство от чужого</li><li>Вы вернёте себе внутреннее право жить с гордостью за вашу идентичность, ценить и уважать глубину своего внутреннего мира, настроите свой внутренний компас и научитесь им пользоваться в реальном мире</li><li>Вы получите ценнейшие инструменты работы с вашей эмпатией, интуицией, эмоциями и получите примеры того, как это применять на практике</li></ul>
-        <a class="g-btn" href="#tarif">Получить доступ</a>
+        <ul class="g-checks g-goals"><li><b>Эмпатия как сила.</b><span>Выйти из позиции слабости и начать воспринимать свою эмпатию как силу, особенность личности, которая даёт вам возможность глубже видеть и понимать людей, распознавать манипуляции и токсичные формы поведения.</span></li><li><b>Отношения без зависимости.</b><span>Научиться выстраивать сбалансированные отношения с людьми, не попадая в эмоциональную зависимость, позицию спасателя или жертвы.</span></li><li><b>Инструменты защиты.</b><span>Вы получите самые нужные и эксклюзивные инструменты для того, чтобы научиться защищать себя в ситуации, заземлять себя, инструменты осознанности и саморазвития, методики работы с эмпатией и интуицией.</span></li><li><b>Не уносить чужую боль.</b><span>Вы сформируете внутренние защиты для того, чтобы не уносить чужую боль с собой через вашу эмпатию. На курсе вы научитесь отделять ваши чувства, вашу ответственность и ваше психологическое пространство от чужого.</span></li><li><b>Свой внутренний компас.</b><span>Вы вернёте себе внутреннее право жить с гордостью за вашу идентичность, ценить и уважать глубину своего внутреннего мира, настроите свой внутренний компас и научитесь им пользоваться в реальном мире.</span></li><li><b>Практика, а не теория.</b><span>Вы получите ценнейшие инструменты работы с вашей эмпатией, интуицией, эмоциями и получите примеры того, как это применять на практике.</span></li></ul>
       </div>
     </div>
   </div>
 </section>
-<section class="g-sec g-grey" id="programma" data-blok="Шесть тем">
+<section class="g-sec" id="programma" data-blok="Программа">
   <div class="g-in">
     <h2 class="g-h2 g-center"><span class="g-ink">Шесть тем.</span> <span class="g-acc">Одна тема - одна сфера вашей жизни</span></h2>
     <div class="g-weeks">
     <article class="g-week">
       <p class="g-week-n">Тема 1.</p>
       <h3 class="g-week-h">Фигура эмпата</h3>
-      <div class="g-week-t"><p>Главная цель всех техник — сместить фокус внимания Эмпата с внешнего мира, других людей и их проблем на свой внутренний центр и тело.</p><p>Возможность видеть глубину, но не утонуть в том, что вы воспринимаете. Возможность проживать вашу эмпатию как дар, а не проклятие.</p></div>
-      <div class="g-week-box">
-        <p class="g-week-tr">Техники:</p>
+      <p class="g-week-t">Возможность видеть глубину, но не утонуть в том, что вы воспринимаете. Возможность проживать вашу эмпатию как дар, а не проклятие.</p>
+      <details class="g-week-box pe-tech">
+        <summary class="g-week-tr">Техники темы</summary>
         <ul class="g-checks g-checks-sm"><li>«Возврат в свой центр»</li><li>«Вижу, но не участвую»</li><li>«Растождествление с негативным фоном»</li></ul>
-      </div>
+      </details>
       
     </article>
     <article class="g-week">
       <p class="g-week-n">Тема 2.</p>
       <h3 class="g-week-h">Эмпат и отношения с людьми</h3>
-      <div class="g-week-t"><p>Здоровые отношения для Эмпата начинаются не с поиска «правильного» или «безопасного» партнера, а с выстраивания сильного внутреннего центра.</p><p>Ваша высокая чувствительность отныне — не ранимость и не уязвимость, а сверхточный и тонко настроенный барометр, мгновенно фильтрующий фальшь и защищающий ваше личное пространство.</p></div>
-      <div class="g-week-box">
-        <p class="g-week-tr">Техники:</p>
+      <p class="g-week-t">Здоровые отношения для Эмпата начинаются не с поиска «правильного» или «безопасного» партнера, а с выстраивания сильного внутреннего центра.</p>
+      <details class="g-week-box pe-tech">
+        <summary class="g-week-tr">Техники темы</summary>
         <ul class="g-checks g-checks-sm"><li>«Карта Автономии и Рассредоточения Энергии»</li><li>«Дезактивация Эмпатического Крючка»</li><li>«Коммуникация из Внутреннего Центра»</li><li>«Шесть Столпов Самооценки Эмпата»</li></ul>
-      </div>
+      </details>
       
     </article>
     <article class="g-week">
       <p class="g-week-n">Тема 3.</p>
       <h3 class="g-week-h">Эмпат-родители и эмпат-дети</h3>
-      <div class="g-week-t"><p>Это великий и прекрасный процесс сепарации и осознания себя взрослым и свободным.</p><p>Если вы прошли процесс сепарации, вы уже сможете воспитать своих детей с повышенной чувствительностью и помочь им сформировать здоровую эмпатию на основании ваших внутренних ощущений и интуиции.</p></div>
-      <div class="g-week-box">
-        <p class="g-week-tr">Техники:</p>
+      <p class="g-week-t">Это великий и прекрасный процесс сепарации и осознания себя взрослым и свободным.</p>
+      <details class="g-week-box pe-tech">
+        <summary class="g-week-tr">Техники темы</summary>
         <ul class="g-checks g-checks-sm"><li>«Заведите себе секрет: Комната во внутреннем доме»</li><li>«Интеллектуальное одиночество и магия масштаба: Умение желать и мечтать»</li><li>«Право передумать: Освобождение интуиции»</li><li>«Именование эмоционального спектра: Каталог чувств»</li><li>«Диалог с миром и преодоление экзистенциального одиночества»</li><li>«Кукла»</li></ul>
-      </div>
+      </details>
       
     </article>
     <article class="g-week">
       <p class="g-week-n">Тема 4.</p>
       <h3 class="g-week-h">Психосоматика у эмпата</h3>
-      <div class="g-week-t"><p>Ваше тело — это не бессмысленный механизм, который «ломается просто так». Это ваш самый верный и честный союзник.</p><p>Если вы хотите быть уверенными в себе, чтобы ваша самооценка стояла как гора, научитесь слушать и слышать вашу интуицию — тогда вы будете опираться на результаты, а не на обещания.</p></div>
-      <div class="g-week-box">
-        <p class="g-week-tr">Техники:</p>
+      <p class="g-week-t">Ваше тело — это не бессмысленный механизм, который «ломается просто так». Это ваш самый верный и честный союзник.</p>
+      <details class="g-week-box pe-tech">
+        <summary class="g-week-tr">Техники темы</summary>
         <ul class="g-checks g-checks-sm"><li>«Ежедневная Практика Доверия и Честности»</li><li>«Как снизить кортизол эмпату»</li><li>«Конверсия симптома»</li></ul>
-      </div>
+      </details>
       <p class="g-week-note">Программа не заменяет обследование и лечение у врача.</p>
     </article>
     <article class="g-week">
       <p class="g-week-n">Тема 5.</p>
       <h3 class="g-week-h">Самореализация людей с повышенной чувствительностью</h3>
-      <div class="g-week-t"><p>Найти свое предназначение — это найти свой смысл, проживать этот смысл через простые действия, через профессию, через творчество, через пользу и взаимодействие.</p><p>Вы не ищете себя вовне — вы собираете себя изнутри по пазлам своих интересов, смыслов и вдохновения.</p></div>
-      <div class="g-week-box">
-        <p class="g-week-tr">Техники:</p>
+      <p class="g-week-t">Вы не ищете себя вовне — вы собираете себя изнутри по пазлам своих интересов, смыслов и вдохновения.</p>
+      <details class="g-week-box pe-tech">
+        <summary class="g-week-tr">Техники темы</summary>
         <ul class="g-checks g-checks-sm"><li>«Физическое и ментальное расхламление: Свободное место для эмпата»</li><li>«Правила личных перемен и тишины: Меньше говорить — больше действовать»</li><li>«Тест целостной цели: Интегральный подход к целям эмпата»</li></ul>
-      </div>
+      </details>
       
     </article>
     <article class="g-week">
       <p class="g-week-n">Тема 6.</p>
       <h3 class="g-week-h">Психология наполненности и деньги</h3>
-      <div class="g-week-t"><p>Как только вы возвращаете фокус внимания на свои цели, на свои задачи и на свою ценность — меняется всё.</p><p>Вы перестаёте выживать и начинаете созидать.</p></div>
-      <div class="g-week-box">
-        <p class="g-week-tr">Техники:</p>
+      <p class="g-week-t">Вы перестаёте выживать и начинаете созидать.</p>
+      <details class="g-week-box pe-tech">
+        <summary class="g-week-tr">Техники темы</summary>
         <ul class="g-checks g-checks-sm"><li>«Инвентаризация чужих долгов»</li><li>«Калибровка финансового термостата»</li><li>«Карта уникальной ценности эмпата»</li><li>«Путь по крошкам вдохновения»</li></ul>
-      </div>
+      </details>
       
     </article>
     </div>
-    <a class="g-btn" href="#tarif">Получить доступ</a>
-  </div>
-</section>
-<section class="g-sec g-red" id="tarify" data-blok="Тариф">
-  <div class="g-in">
-    <h2 class="g-h2 g-center g-light"><span class="g-ink">Тариф</span></h2>
-    <div class="g-tarify pe-tarify">
-    <article class="g-tarif" id="tarif">
-      <div class="g-tarif-head">
-        <h3 class="g-tarif-h">Полная программа</h3>
-      </div>
-      <p class="g-tarif-l">Что входит:</p>
-      <ul class="g-checks g-checks-sm g-tarif-list"><li>6 лекций Виолы по шести сферам жизни, с таймкодами</li><li>больше 20 техник и практик</li><li>задание после каждой лекции</li><li>PDF-методички</li><li>аудиомедитации Виолы</li><li>база ответов Виолы на вопросы участниц</li><li>доступ ко всем материалам навсегда, в своём темпе</li></ul>
-      <div class="g-cena">
-        <p class="g-cena-new">14&nbsp;900&nbsp;₽</p>
-        <p class="g-cena-mes">или от 1&nbsp;242&nbsp;₽ в месяц</p>
-        <p class="g-cena-val">€160 зарубежной картой</p>
-      </div>
-      <div class="pe-pay">
-        <button type="button" class="g-btn" data-pay="pe" data-cur="rub">Оплатить рублями</button>
-        <button type="button" class="g-btn" data-pay="pe" data-cur="eur">Оплатить зарубежными методами в&nbsp;евро/долларах</button>
-      </div>
-      <p class="pe-ip">Оплата и чек от ИП Нижевясова А.&nbsp;С., продюсера программ Виолы Маро. Доступ ко всем материалам курса пришлём сразу после оплаты на ваш номер или в Телеграм. Пишем только с аккаунта <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>.</p>
-    </article>
-    </div>
+    <a class="g-btn" href="#tarify">Получить доступ</a>
   </div>
 </section>
 <section class="g-sec g-grey" id="istorii" data-blok="Истории участниц">
@@ -719,80 +655,59 @@ body { background: #fff; }
     <p class="g-lead">Участницы рассказали это сами. Имена остаются между ними и Виолой</p>
     <div class="g-stories">
     <article class="g-story">
-      <h3 class="g-story-h">Девушка, которая узнала своего партнёра в видео про нарциссов</h3>
+      <h3 class="g-story-h">«Я уже сейчас могу не реагировать, ставить блок на чужие эмоции»</h3>
       <p class="g-story-age">35–44 года</p>
-      <p class="g-tag">С чем пришла:</p>
-      <p>«Я устала от того, что мной манипулируют в отношениях, на работе, выжимают мои силы». Смотрела ролики на YouTube о нарциссах, и «по всем показателям совпало с моим партнёром». И ещё: «Я не понимала, как я лезу к людям и навязываю им заботу»</p>
-      
       <p class="g-tag g-tag-red">Что изменилось:</p>
       <p class="g-story-ch">«Уже сейчас, на третьей неделе, я поняла, что перестраиваю своё поведение, не лезу к людям и занимаюсь своей жизнью. Я рассталась с партнёром-нарциссом, на работе меньше болтаю о себе, стало намного лучше». «Я уже сейчас могу не реагировать, ставить блок на чужие эмоции»</p>
+      <details class="pe-more"><summary>Читать историю целиком</summary><p class="g-tag">С чем пришла:</p><p>«Я устала от того, что мной манипулируют в отношениях, на работе, выжимают мои силы». Смотрела ролики на YouTube о нарциссах, и «по всем показателям совпало с моим партнёром». И ещё: «Я не понимала, как я лезу к людям и навязываю им заботу»</p></details>
     </article>
     <article class="g-story">
-      <h3 class="g-story-h">Женщина, которая всё видела и всё равно оставалась</h3>
+      <h3 class="g-story-h">«Я становлюсь трезвой, сильной, уверенной»</h3>
       <p class="g-story-age">45–54 года</p>
-      <p class="g-tag">С чем пришла:</p>
-      <p>«Расставание с партнёром, он ушёл, обвинив меня в ревности. Но до этого я долго закрывала глаза на многие несовпадения его слов и поступков. Чувствовала многое, но терпела, боялась потерять, так как люблю». «Дальше так жить невозможно»</p>
-      <p class="g-tag">Что пробовала:</p>
-      <p>Психолога раз в неделю и курсы про любовь к себе</p>
       <p class="g-tag g-tag-red">Что изменилось:</p>
       <p class="g-story-ch">«Я поняла, откуда у меня эта неуверенность, сомнения, постоянные подозрения. Почему я, ясно видя и понимая всё, всё равно до последнего оставалась в токсичных отношениях. Я чувствую, что мои мозги встают на место, я становлюсь трезвой, сильной, уверенной»</p>
+      <details class="pe-more"><summary>Читать историю целиком</summary><p class="g-tag">С чем пришла:</p><p>«Расставание с партнёром, он ушёл, обвинив меня в ревности. Но до этого я долго закрывала глаза на многие несовпадения его слов и поступков. Чувствовала многое, но терпела, боялась потерять, так как люблю». «Дальше так жить невозможно»</p><p class="g-tag">Что пробовала:</p><p>Психолога раз в неделю и курсы про любовь к себе</p></details>
     </article>
     <article class="g-story">
-      <h3 class="g-story-h">Девушка, которую разбудила подруга-нарцисс</h3>
+      <h3 class="g-story-h">«Стала больше направлять фокус на свои интересы, желания»</h3>
       <p class="g-story-age">35–44 года</p>
-      <p class="g-tag">С чем пришла:</p>
-      <p>«Сильное отличие от других людей, болезненность во взаимоотношениях, влияние манипуляторов, полное непонимание, кто я. Точка отсчёта началась, когда у меня появилась подруга-нарцисс. Здесь я проснулась»</p>
-      <p class="g-tag">Что пробовала:</p>
-      <p>«Я ничего не пробовала, так как не понимала вообще, с чего начать»</p>
       <p class="g-tag g-tag-red">Что изменилось:</p>
       <p class="g-story-ch">«Я уже сейчас чувствую множество изменений. Снизился индекс тревоги, спасательства, стала больше направлять фокус на свои интересы, желания, стала замечать проблемы своей семьи, а не чужих людей»</p>
+      <details class="pe-more"><summary>Читать историю целиком</summary><p class="g-tag">С чем пришла:</p><p>«Сильное отличие от других людей, болезненность во взаимоотношениях, влияние манипуляторов, полное непонимание, кто я. Точка отсчёта началась, когда у меня появилась подруга-нарцисс. Здесь я проснулась»</p><p class="g-tag">Что пробовала:</p><p>«Я ничего не пробовала, так как не понимала вообще, с чего начать»</p></details>
     </article>
     <article class="g-story">
-      <h3 class="g-story-h">Женщина, которая всю жизнь угождала маме</h3>
+      <h3 class="g-story-h">«В первую очередь относиться к себе с трепетом. Любить себя»</h3>
       <p class="g-story-age">45–54 года</p>
-      <p class="g-tag">С чем пришла:</p>
-      <p>«Сложные отношения с матерью. Устала угождать, в ответ одни упрёки. В прошлом году сказала себе, что с меня хватит»</p>
-      
       <p class="g-tag g-tag-red">Что изменилось:</p>
       <p class="g-story-ch">«Я хочу быть другой. В первую очередь относиться к себе с трепетом. Любить себя. До встречи с Виолой думала, что это эгоизм». И после третьей недели: «Я просто в шоке от лекции. Вы заглянули внутрь моей жизни с токсичной матерью»</p>
+      <details class="pe-more"><summary>Читать историю целиком</summary><p class="g-tag">С чем пришла:</p><p>«Сложные отношения с матерью. Устала угождать, в ответ одни упрёки. В прошлом году сказала себе, что с меня хватит»</p></details>
     </article>
     <article class="g-story">
-      <h3 class="g-story-h">Женщина, которая уступала и терпела</h3>
+      <h3 class="g-story-h">«Я не жила, а сейчас, кажется, начну жить»</h3>
       <p class="g-story-age">55–64 года</p>
-      <p class="g-tag">С чем пришла:</p>
-      <p>«Я всё время либо уступаю и терплю, либо убегаю. Люди мне могут сказать что угодно, типа они шутят, а если я скажу, обижаются. Я поняла, что всю жизнь не уважала себя. Мне очень горько и <span class="g-nw">как-то</span> безнадёжно. Мне 60 лет, глупо это всё со стороны смотрится»</p>
-      <p class="g-tag">Что пробовала:</p>
-      <p>«Только читала книги. Всегда боялась выбрать не того специалиста, боялась, что будет ещё хуже»</p>
       <p class="g-tag g-tag-red">Что изменилось:</p>
       <p class="g-story-ch">«Такой конкретики и реальных практичных вещей я ни у кого не слышала! Я не жила, а сейчас, кажется, начну жить»</p>
+      <details class="pe-more"><summary>Читать историю целиком</summary><p class="g-tag">С чем пришла:</p><p>«Я всё время либо уступаю и терплю, либо убегаю. Люди мне могут сказать что угодно, типа они шутят, а если я скажу, обижаются. Я поняла, что всю жизнь не уважала себя. Мне очень горько и <span class="g-nw">как-то</span> безнадёжно. Мне 60 лет, глупо это всё со стороны смотрится»</p><p class="g-tag">Что пробовала:</p><p>«Только читала книги. Всегда боялась выбрать не того специалиста, боялась, что будет ещё хуже»</p></details>
     </article>
     </div>
-    <a class="g-btn" href="#tarif">Получить доступ</a>
   </div>
 </section>
-<section class="g-sec" id="o-viole" data-blok="Об авторе">
-  <div class="g-in g-about">
-    <div class="g-about-foto pe-foto"><img src="/assets/img/viola.webp" alt="Виола Маро" width="901" height="1202" loading="lazy" decoding="async"></div>
-    <div class="g-about-text">
-      <h2 class="g-h2"><span class="g-ink">Об</span> <span class="g-acc">авторе</span></h2>
-      <p class="g-about-name">Виола Маро</p>
-      <ul class="g-checks g-about-list"><li>Дипломированный психолог (СПбГУ), психотерапевт по образованию и по призванию. 25 лет профессиональной практики.</li><li>Идеолог и популяризатор концепции практической эмпатии — это ключевое направление её работы и основа авторской линейки образовательных продуктов.</li><li>Создатель обучающих программ в области психологии отношений и самореализации.</li><li>Гуманист по призванию и «технарь» в психологии — совмещает глубокую эмпатию с чёткой, системной методологией.</li></ul>
-      <a class="g-btn" href="#tarif">Получить доступ</a>
+<section class="g-sec g-red" id="tarify" data-blok="Что входит и цена">
+  <div class="g-in">
+    <h2 class="g-h2 g-center g-light"><span class="g-ink">Прикладная эмпатия.</span> <span class="g-acc">Полная программа</span></h2>
+    <div class="g-tarify pe-one">
+    <article class="g-tarif" id="tarif">
+      <p class="g-tarif-l">Что входит:</p>
+      <ul class="g-checks g-checks-sm g-tarif-list"><li>6 лекций Виолы по шести сферам жизни, с таймкодами</li><li>больше 20 техник и практик</li><li>задание после каждой лекции</li><li>PDF-методички</li><li>аудиомедитации Виолы</li><li>база ответов Виолы на вопросы участниц</li><li>доступ ко всем материалам навсегда, в своём темпе</li></ul>
+      <div class="g-cena">
+        <p class="g-cena-new">14&nbsp;900&nbsp;₽</p>
+        <p class="g-cena-mes">или от 1&nbsp;242&nbsp;₽ в месяц в рассрочку от банка</p>
+      </div>
+      <button type="button" class="g-btn" data-pay="pe" data-cur="rub">Оплатить картой РФ</button>
+      <button type="button" class="g-btn" data-pay="pe" data-cur="eur">Оплатить картой другой страны · 160&nbsp;€</button>
+    </article>
     </div>
-  </div>
-</section>
-<section class="g-sec" data-blok="Оплата из другой страны">
-  <div class="g-in g-narrow">
-    <h2 class="g-h2"><span class="g-ink">Оплата</span> <span class="g-acc">из другой страны</span></h2>
-    <div class="g-box"><p>Оплатить можно из любой страны: российской картой в рублях или зарубежной картой в евро. Деньги принимает ИП Нижевясова А. С., официальный организатор программ Виолы. Вопросы по оплате в службу заботы <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a></p></div>
-    <a class="g-btn" href="#tarif">Получить доступ</a>
-  </div>
-</section>
-<section class="g-sec" data-blok="Почему не помогли книги и психологи">
-  <div class="g-in g-narrow">
-    <h2 class="g-h2"><span class="g-ink">Почему не помогли</span> <span class="g-acc">книги и психологи</span></h2>
-    <p>Вы уже читали книги, ходили к психологу, проходили курсы. Становилось понятнее, но не легче. Никто не объяснил, почему вы так остро чувствуете людей и что делать в ту минуту, когда на вас давят</p><p class="g-p2">С этого программа и начинается. Виола объясняет, как вы устроены, и даёт техники на ситуации, которые с вами уже происходят</p>
-    <a class="g-btn" href="#tarif">Получить доступ</a>
+    <p class="g-pod">Оплата и чек от ИП Нижевясова А.&nbsp;С., продюсера программ Виолы Маро. Доступ ко всем материалам курса пришлём сразу после оплаты на ваш номер или в Телеграм. Пишем только с аккаунта <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>.</p>
   </div>
 </section>
 <section class="g-sec" id="voprosy" data-blok="Вопросы">
@@ -813,7 +728,7 @@ body { background: #fff; }
       </details>
       <details class="g-faq-i">
         <summary>Я живу за границей и боюсь платить онлайн</summary>
-        <p>Оплатить можно из любой страны. Оплату проводит менеджер <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>, после оплаты приходит чек. Если вам пишет кто-то другой и просит деньги, это не мы</p>
+        <p>Оплатить можно из любой страны. Оплату проводит менеджер <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>, после оплаты приходит чек. Если вам пишет <span class="g-nw">кто-то</span> другой и просит деньги, это не мы</p>
       </details>
       <details class="g-faq-i">
         <summary>Нужно ли быть на лекции в определённое время?</summary>
@@ -836,9 +751,37 @@ body { background: #fff; }
         <p>Сразу после оплаты пришлём доступ ко всем материалам курса на номер или в Телеграм, который вы указали в форме.</p>
       </details>
     </div>
-    <a class="g-btn" href="#tarif">Получить доступ</a>
   </div>
 </section>
+<div class="g-bar" id="g-bar" hidden>
+  <p class="g-bar-posle">Прикладная эмпатия · 14&nbsp;900&nbsp;₽</p>
+  <a class="g-bar-btn" id="bar-btn" href="#tarify">Получить доступ</a>
+</div>
+<div class="g-modal" id="lead" role="dialog" aria-modal="true" aria-labelledby="lead-h" hidden>
+  <div class="g-modal-box">
+    <button type="button" class="g-x" id="lead-x" aria-label="Закрыть">✕</button>
+    <form class="g-form" id="lead-form" novalidate>
+      <p class="g-modal-h" id="lead-h"><span class="g-ink">Оформление</span> <span class="g-acc">доступа</span></p>
+      <p class="g-modal-sub" id="lead-sub"></p>
+      <label class="g-hp" aria-hidden="true">Не заполняйте это поле <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      <label class="g-f">Имя
+        <input type="text" id="lead-name" name="name" autocomplete="name" required>
+      </label>
+      <label class="g-f">Номер телефона или Телеграм <span class="g-opt">сюда пришлём доступ ко всем материалам курса</span>
+        <input type="text" id="lead-contact" name="contact" autocomplete="tel" inputmode="text" placeholder="+7 900 000-00-00 или @имя" required>
+      </label>
+      <label class="g-cb"><input type="checkbox" name="accept_offer">
+        <span>Принимаю условия <a href="/offer/" target="_blank" rel="noopener">публичной оферты</a> и <a href="/offer-prilozhenie/" target="_blank" rel="noopener">приложения к ней</a> <em>Обязательно</em></span>
+      </label>
+      <label class="g-cb"><input type="checkbox" name="accept_pd">
+        <span>Даю <a href="/consent/" target="_blank" rel="noopener">согласие на обработку персональных данных</a> <em>Обязательно</em></span>
+      </label>
+      <p class="g-err" id="lead-err" role="alert" hidden></p>
+      <button type="submit" class="g-btn" id="lead-go">Перейти к оплате</button>
+      <p class="g-pod-dark" id="lead-note">Доступ ко всем материалам курса пришлём сразу после оплаты на этот номер или в Телеграм.</p>
+    </form>
+  </div>
+</div>
 </div></main>
 
 <footer class="ft" aria-label="Реквизиты и документы">
@@ -901,25 +844,20 @@ body { background: #fff; }
   <button type="button" id="cookie-ok">Хорошо</button>
 </div>
 
-<dialog class="lead-dlg" id="lead" aria-labelledby="lead-h">
-  <form id="lead-form" novalidate>
-    <button type="button" class="lead-x" id="lead-x" aria-label="Закрыть">×</button>
-    <p class="lead-h" id="lead-h">Оформление доступа</p>
-    <p class="lead-sub" id="lead-sub"></p>
-    <label class="f" for="lead-name">Имя</label>
-    <input type="text" id="lead-name" name="name" autocomplete="name" required>
-    <label class="f" for="lead-contact">Номер телефона или Телеграм<span class="f-hint" id="lead-hint">Сюда пришлём доступ ко всем материалам курса</span></label>
-    <input type="text" id="lead-contact" name="contact" autocomplete="tel" inputmode="text" placeholder="+7 900 000-00-00 или @имя" required>
-    <div class="hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
-    <label class="chk" id="chk-offer"><input type="checkbox" name="accept_offer"><span>Принимаю условия <a href="/offer/" target="_blank" rel="noopener">публичной оферты</a> и <a href="/offer-prilozhenie/" target="_blank" rel="noopener">приложения к ней</a></span></label>
-    <label class="chk"><input type="checkbox" name="accept_pd"><span>Даю <a href="/consent/" target="_blank" rel="noopener">согласие на обработку персональных данных</a></span></label>
-    <p class="err" id="lead-err" hidden></p>
-    <button type="submit" class="btn" id="lead-go">Перейти к оплате</button>
-    <p class="note-s" id="lead-note">Доступ ко всем материалам курса пришлём сразу после оплаты на этот номер или в Телеграм.</p>
-  </form>
-</dialog>
-
 <script>
+/* нижняя панель, как на /zayavka/: видна, когда кнопка первого экрана ушла вверх;
+   прячется, пока на экране блок с ценой и пока открыта форма */
+(function () {
+  var bar = document.getElementById('g-bar');
+  var heroBtn = [].filter.call(document.querySelectorAll('section[aria-label="Первый экран"] [data-btn="primary"]'),
+    function (b) { return b.offsetParent; })[0];
+  var tar = document.getElementById('tarify'), past = false, inTar = false;
+  function paint() { var on = past && !inTar; bar.classList.toggle('g-bar-off', !on); document.body.classList.toggle('g-bar-on', on); }
+  bar.hidden = false; paint();
+  if (!('IntersectionObserver' in window) || !heroBtn) { past = true; paint(); return; }
+  new IntersectionObserver(function (es) { es.forEach(function (e) { past = !e.isIntersecting && e.boundingClientRect.bottom <= 0; }); paint(); }).observe(heroBtn);
+  new IntersectionObserver(function (es) { es.forEach(function (e) { inTar = e.isIntersecting; }); paint(); }).observe(tar);
+})();
 /* полоса cookie, как на /zayavka/ */
 (function () {
   var bar = document.getElementById('cookie-bar'), ok = null;
@@ -993,13 +931,17 @@ document.addEventListener("click", e => {
   if (!b) return;
   pick = { k: b.dataset.pay, cur: b.dataset.cur };
   const t = TARIF[pick.k];
-  document.getElementById("lead-sub").textContent = t.name + ", " + (pick.cur === "eur" ? t.eur + " картой из-за рубежа" : t.rub);
+  document.getElementById("lead-sub").textContent = t.name + ", " + (pick.cur === "eur" ? t.eur + " картой другой страны" : t.rub);
   errBox.hidden = true; goBtn.disabled = false; goBtn.textContent = "Перейти к оплате";
-  if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+  lastFocus = b;
+  dlg.hidden = false; document.body.classList.add("g-lock");
   setTimeout(() => document.getElementById("lead-name").focus(), 50);
 });
-document.getElementById("lead-x").addEventListener("click", () => dlg.close ? dlg.close() : dlg.removeAttribute("open"));
-dlg.addEventListener("click", e => { if (e.target === dlg && dlg.close) dlg.close(); });
+let lastFocus = null;
+function closeLead() { dlg.hidden = true; document.body.classList.remove("g-lock"); if (lastFocus) try { lastFocus.focus(); } catch (e) {} }
+document.getElementById("lead-x").addEventListener("click", closeLead);
+dlg.addEventListener("click", e => { if (e.target === dlg) closeLead(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !dlg.hidden) closeLead(); });
 
 function fail(msg) { errBox.textContent = msg; errBox.hidden = false; }
 
