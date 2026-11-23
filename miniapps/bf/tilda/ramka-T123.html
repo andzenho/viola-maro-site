@@ -1,0 +1,11 @@
+<!-- Тильда, страница violamaro.com/bf, один блок T123 «HTML-код».
+     Внутри на весь экран показывается violamaro.ru/bf/, в адресной строке остаётся violamaro.com/bf.
+     Метки рекламы (?utm_…) передаются внутрь. -->
+<style>
+  html, body { overflow: hidden !important; height: 100%; }
+  #bf-frame { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; border: 0; z-index: 2147483000; background: #fff; }
+</style>
+<iframe id="bf-frame" title="Чёрная пятница от Виолы Маро" allow="payment; clipboard-write"></iframe>
+<script>
+  document.getElementById("bf-frame").src = "https://violamaro.ru/bf/" + location.search + location.hash;
+</script>

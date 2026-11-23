@@ -1280,7 +1280,7 @@ form.addEventListener("submit", e => {
     plan: "Чёрная пятница: " + t.name + (remind ? "" : ", " + (eur ? t.eur : t.rub)),
     readiness: remind ? "Напомнить" : (eur ? "Чёрная пятница, оплата в евро" : "Чёрная пятница, оплата в рублях"),
     accept_offer: !remind, accept_pd: true, accept_ads: false,
-    consent_ts: new Date().toISOString(), page: location.href, ua: navigator.userAgent
+    consent_ts: new Date().toISOString(), page: location.href + (window.top !== window ? " (в рамке на " + document.referrer + ")" : ""), ua: navigator.userAgent
   }, eur ? { doc_version_offer: "violamaro.com/oferta FZ-LLC", doc_version_annex: "", doc_version_consent: "violamaro.com/privacy FZ-LLC" } : DOC_VERSIONS);
   ["utm_source", "utm_medium", "utm_campaign", "utm_content", "src", "referrer"].forEach(k => payload[k] = attribution[k] || "");
 
@@ -1289,6 +1289,13 @@ form.addEventListener("submit", e => {
      и ответ 302 от Apps Script считается успехом */
   const req = fetch(LEAD_ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(payload), redirect: "manual", keepalive: true }).catch(() => "err");
+  /* страница показана внутри violamaro.com/bf (в рамке): оплату открываем во всём окне сразу,
+     пока действует нажатие, иначе браузер не даст рамке сменить адрес окна; заявка уходит с keepalive */
+  const payUrl = remind ? "" : PAY[pick.k][pick.cur];
+  if (payUrl && window.top !== window) {
+    try { window.top.location.href = payUrl; } catch (err) { window.open(payUrl, "_blank"); }
+    return;
+  }
   Promise.race([req, new Promise(r => setTimeout(r, 1500))]).then(() => {
     if (remind) { dlg.classList.add("done"); document.getElementById("lead-ok").hidden = false; return; }
     const url = PAY[pick.k][pick.cur];
