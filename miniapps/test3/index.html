@@ -48,7 +48,7 @@
   /* Тест 3.0. Вид как у страницы Чёрной пятницы (violamaro.ru/bf/,
      miniapps/bf/index.html): белый фон, тёмный текст #212322, жёлтый акцент
      #fce500 на кнопках, тёплые подложки #f4f4ee, скругления 28px,
-     заголовки Unbounded, текст Manrope. Реплики и голосовое Виолы
+     заголовки Unbounded, текст Manrope. Реплики Виолы
      на тёмных пузырях. */
   @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700&display=swap");
 
@@ -176,77 +176,16 @@
   .plate-label { font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
   .plate-name { font-family: var(--prata); font-weight: 700; font-size: 1.45rem; line-height: 1.2; color: var(--text); }
 
-  /* голосовое: как в Телеграме — аватарка, круглая кнопка, дорожка, время, скорость */
-  .voice {
-    display: grid; grid-template-columns: 36px 1fr; column-gap: .55rem; align-items: end;
+  /* текст результата: подзаголовок Unbounded, абзацы на тёплой подложке */
+  .res-block {
+    background: var(--soft); color: var(--text); border-radius: var(--r);
+    padding: 1.4rem 1.3rem 1.5rem;
+    display: flex; flex-direction: column; gap: .8rem;
   }
-  .voice-box {
-    background: var(--text); color: var(--on-dark);
-    border-radius: 22px 22px 22px 6px;
-    padding: .8rem .95rem .75rem;
-    display: grid; grid-template-columns: 2.8rem 1fr auto; gap: .35rem .75rem; align-items: center;
-  }
-  .play {
-    grid-row: span 2; width: 2.8rem; height: 2.8rem; border-radius: 50%;
-    background: var(--yellow); color: var(--text); border: 0;
-    display: flex; align-items: center; justify-content: center; padding: 0;
-  }
-  .play svg { width: 1.15rem; height: 1.15rem; }
-  .track { position: relative; height: 1.6rem; display: flex; align-items: center; cursor: pointer; }
-  .track-line { position: relative; width: 100%; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .25); overflow: hidden; }
-  .track-line i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--yellow); }
-  .speed {
-    grid-row: span 2; align-self: center;
-    background: none; border: 1px solid rgba(255, 255, 255, .4); border-radius: 999px;
-    color: var(--on-dark); font-size: .82rem; font-weight: 700; padding: .25rem .55rem; min-width: 3rem;
-  }
-  .time { font-size: .82rem; color: var(--on-dark); opacity: .75; font-variant-numeric: tabular-nums; }
-  .voice-wait { grid-column: 2 / 4; font-size: .95rem; }
-  .voice-box.off .play { opacity: .45; cursor: default; }
-
-  /* мини-оффер: тёплая подложка, как тарифы Чёрной пятницы */
-  .offer {
-    background: var(--soft); color: var(--text);
-    border-radius: var(--r);
-    padding: 1.6rem 1.4rem 1.6rem;
-    display: flex; flex-direction: column; gap: .9rem;
-  }
-  .offer h2 { font-family: var(--prata); font-weight: 700; letter-spacing: -.01em;
-    font-size: clamp(1.7rem, 7.6vw, 2.2rem); line-height: 1.12; color: var(--text); text-wrap: balance; }
-  .offer li { display: flex; gap: .65rem; align-items: baseline; }
-  .offer li::before { content: ""; flex: none; width: .5rem; height: .5rem; border-radius: 50%; background: var(--text); transform: translateY(-.1rem); }
-  .offer ul { display: flex; flex-direction: column; gap: .45rem; }
-  .offer-lead { font-size: 1.18rem; line-height: 1.4; font-weight: 700; text-wrap: pretty; }
-  .offer p { text-wrap: pretty; }
-  .offer-intro { margin-bottom: -.35rem; }
-
-  /* Первый экран результата на всю высоту: оффер начинается ниже, его видно
-     только после того, как человек пролистает по стрелке. */
-  #offer-box { scroll-margin-top: 1rem; }
-  .res-first { display: flex; flex-direction: column; gap: 1.3rem; min-height: calc(100vh - 2.7rem); }
-  @supports (height: 100svh) { .res-first { min-height: calc(100svh - 2.7rem); } }
-  .down {
-    margin-top: auto; align-self: center; padding: 1.2rem .5rem .2rem;
-    background: none; border: 0; color: var(--text); text-align: center;
-    display: flex; flex-direction: column; align-items: center; gap: .9rem;
-    font-size: 1.02rem; font-weight: 700; line-height: 1.4;
-  }
-  /* надпись жёлтой плашкой, как выделения Чёрной пятницы */
-  .down-text {
-    background: var(--yellow); border-radius: 18px;
-    padding: .85rem 1.3rem; max-width: 20rem; text-wrap: balance;
-  }
-  /* стрелка в круглой тёмной кнопке, мягко подпрыгивает */
-  .down-ico {
-    width: 3.1rem; height: 3.1rem; border-radius: 50%;
-    background: var(--text); color: var(--on-dark);
-    display: flex; align-items: center; justify-content: center;
-    animation: down 1.8s ease-in-out infinite;
-  }
-  .down-ico svg { width: 1.45rem; height: 1.45rem; }
-  @media (hover: hover) { .down:hover .down-ico { background: #404241; } }
-  @keyframes down { 0%, 100% { transform: none; } 50% { transform: translateY(6px); } }
-  @media (prefers-reduced-motion: reduce) { .down-ico { animation: none; } }
+  .res-block h2 { font-family: var(--prata); font-weight: 700; letter-spacing: -.01em;
+    font-size: clamp(1.3rem, 6vw, 1.6rem); line-height: 1.2; color: var(--text); text-wrap: balance; }
+  .res-block p { text-wrap: pretty; }
+  .res-close { font-weight: 700; font-size: 1.1rem; line-height: 1.45; text-wrap: pretty; }
 </style>
 
 <div class="wrap">
@@ -280,9 +219,6 @@ const CONFIG = {
   /* Кнопка «Мой Телеграм-канал» у «не эмпата»: открытый канал Виолы. */
   channelUrl: "https://t.me/violamaro1",
   docs: { privacy: "https://violamaro.ru/privacy/" },
-  /* Голосовые Виолы: miniapps/test3/audio/<имя>.mp3. Пока файла нет, ставьте
-     false: вместо плеера будет «Голосовое появится совсем скоро». */
-  audio: { start: false, donor: false, filter: false, sleeping: false, awake: false },
   /* Пороги черновые: проверить по первым 100 прохождениям (ТЗ, раздел 7). */
   porog: {
     neEmpat: 7,     // R не больше этого — «не эмпат»
@@ -305,7 +241,7 @@ const INTRO = {
     "Дорогие мои, больше всего мне задают один вопрос: эмпат ли я, если у меня повышенная чувствительность.",
     "Есть люди просто эмоциональные, и это не значит, что у них есть эмпатия. Если это тревожность, это тоже не эмпатия.",
     "Давайте разбираться. Здесь 29 утверждений, это три-четыре минуты.",
-    "Если вы эмпат, я скажу, какой именно. И в голосовом расскажу, как вы устроены и что с этим делать."
+    "Если вы эмпат, я скажу, какой именно, как вы устроены и что с этим делать."
   ]
 };
 const DISCLAIM = "Это не диагностика и не диагноз. Это способ посмотреть на себя со стороны.";
@@ -397,25 +333,78 @@ const AGES = ["до 35", "35–44", "45–54", "55–64", "65 и старше"];
 const RESULT = {
   yes: "Да, вы эмпат",
   label: "Ваш тип",
-  listen: "Что это значит и как вы устроены, я разобрала для вас в голосовом. Послушайте.",
-  down: "Информация для вас, если вы уже послушали голосовое",
-  wait: "Голосовое появится совсем скоро",
-  /* Мини-оффер (правка 11.11, заменяет прежние версии). Слова Виолы из её
-     ролика о курсе: не править и не сокращать. Цифр про лекции и техники
-     здесь нет, «Доступ сразу после оплаты» только под кнопкой. */
-  offer: {
-    title: "Прикладная эмпатия",
-    lead: "Сейчас ваша эмпатия стопорит и мешает вашей жизни. Она может стать вашим другом.",
-    text: "Вы слушали лекции, читали книжки. Но осталась одна проблема: как? Как это применить, чтобы жизнь стала легче?",
-    listIntro: "Эта программа про «как»:",
-    lines: [
-      "поставить себя в приоритет и перестать быть удобной(-ым)",
-      "найти свой источник энергии и никому его не отдавать",
-      "чтобы пришла та самая наполненность",
-    ],
-    btn: "Изучить программу",
-    note: "Доступ сразу после оплаты",
+  hResult: "Ваш результат",
+  hProblem: "В чём проблема",
+  hSolution: "Решение",
+  /* Тексты результата по типам (23.11): слово в слово, править только
+     с «да» Ильи. Каждая строка - отдельный абзац. */
+  types: {
+    donor: {
+      result: [
+        "Вы эмпат-донор. Вы всегда стараетесь быть рядом, помогать всем, кто нуждается, часто даже тем, кто не просит. Вы щедро делитесь любовью, порой безвозмездно и в избытке.",
+        "Часто те, кто отдают больше всего любви, сами никогда её по-настоящему не получали. В глубине души у них живёт ощущение, что они были обузой для тех, кто их растил. Чтобы не быть тяжестью, они привыкли подавлять свои чувства, скрывать свои желания и оставаться в тени, стараясь никого не потревожить.",
+        "Любовь, доверие, преданность, доброта - это золото нашей души. И если вы не осознаёте своих сильных сторон и внутреннего золота, вами легче манипулировать.",
+      ],
+      problem: [
+        "Погружаясь с головой в процесс отдачи, мы забываем о законе взаимного обмена в отношениях. Вы щедро раздаёте любовь, втайне надеясь, что кто-то отплатит вам тем же. А вместо взаимности сталкиваетесь с равнодушием.",
+        "Вина путается с заботой. Гиперответственность за чужое настроение мешает выставить границы. Почему вы говорите «да», когда на самом деле хотите сказать «нет»? Кто сказал вам, что проявлять свои потребности - это эгоизм?",
+      ],
+      solution: [
+        "Вы уже умеете любить других. Нужно открыть для себя искусство направлять эту любовь внутрь.",
+        "Начните сегодня с малого. Признайте одну свою потребность, которую вы долго игнорировали ради других, и удовлетворите её.",
+        "А как спокойно говорить «нет» без чувства вины, мы разбираем в Прикладной эмпатии.",
+      ],
+    },
+    filter: {
+      result: [
+        "Вы эмпат без фильтра. Эмпатия - это врождённая функция, способность видеть невидимое и чувствовать неосязаемое. Как эмпат, вы выросли с обнажённой душой.",
+        "Вы человек-орхидея. Это не слабость и неприспособленность. Это невероятная чуткость, хрупкость и красота. Если среда благоприятна, орхидеи расцветают. Только цветам не говорят «будь проще» или «не драматизируй».",
+      ],
+      problem: [
+        "Эмпаты склонны верить, что в каждом есть свет. Они пытаются отогреть холодного человека своей любовью. Поэтому после предательства вы снова открываетесь.",
+        "А от одного резкого слова у вас удар в живот. Если вас ранит мнение другого человека, значит, его мнение важнее вашей внутренней уверенности. Это не слабость, это сигнал. Точка роста.",
+      ],
+      solution: [
+        "Вы не обязаны спасать всех от негативных эмоций. Вы имеете право завершать контакт мгновенно, если чувствуете, что вас используют как эмоциональный контейнер. Ищите тех, кто способен на резонанс, а не на поглощение.",
+        "А как отделять своё от чужого и быстро возвращаться в себя после контакта, мы разбираем в Прикладной эмпатии.",
+      ],
+    },
+    sleeping: {
+      result: [
+        "Вы спящий эмпат. Ваш радар на месте, вы всё видите и понимаете про людей. Но научились делать вид, что не заметили.",
+        "Эмпатичный ребёнок тонко чувствует условность любви. «Меня любят, только когда я удобен». Если рядом жёсткий контроль, его природный дар сопереживания превращается в механизм выживания. Он начинает подстраиваться под нужды взрослых, теряя связь со своим «я». Сглаживает конфликты, поглощает чужую агрессию и работает эмоциональным клеем.",
+        "Наиболее тонкие, чувствительные и умные люди часто вырабатывают сложные внутренние защиты. Ваша защита - не чувствовать.",
+      ],
+      problem: [
+        "Эмоциональное онемение - это защитный механизм. Но он блокирует и боль, и радость. Поэтому вроде всё спокойно, а внутри тяжесть.",
+        "Почему вы улыбаетесь, когда внутри устаёте? Вы продолжаете играть роль удобного человека, даже когда объективной угрозы больше нет.",
+      ],
+      solution: [
+        "Вы не сломаны. Вы временно дезориентированы. Ваша внутренняя ценность не была разрушена, она была временно заблокирована.",
+        "Точно так же, как вы можете понять и считывать других людей, у вас есть способность развернуть этот фокус на самого себя. Если вы чувствуете дискомфорт, значит, он есть, даже если окружающие говорят «тебе показалось».",
+        "А как вернуть себе право чувствовать и контакт с собой, мы разбираем в Прикладной эмпатии.",
+      ],
+    },
+    awake: {
+      result: [
+        "Вы проснувшийся эмпат. Вы чувствуете глубоко, но выбираете. Реагируете осознанно, а не импульсивно. Переживаете боль, но не ломаетесь.",
+        "Люди чувствуют вашу устойчивость, даже если не понимают, как это происходит. Для тех, кто привык к вашим прежним реакциям, новая стабильность может казаться отстранённостью или холодностью. Отсюда и «ты стала(-л) холодной(-ым)».",
+        "Вы прошли через шторм и остались собой. Для эмпата это и есть успех - энергетическая свобода.",
+      ],
+      problem: [
+        "Если поддаться давлению и снова начать искать одобрения, вы вернётесь в привычный цикл страданий и борьбы за принятие.",
+        "И появляется ощущение, что вы переросли окружение. Знаете, как будто бы вы выросли из одежды и нужен новый гардероб. Это кризис. А кризис как рождение ребёнка, он не может не родиться.",
+      ],
+      solution: [
+        "Вы не изменяете себя. Вы изменяете стереотипы вашей жизни, которые уже не подходят к вашей новой версии.",
+        "Спросите себя. Что я хочу? Какие мои настоящие желания? Какие потребности важны для меня?",
+        "А как направить эту силу на себя, своё дело и деньги, мы разбираем в Прикладной эмпатии.",
+      ],
+    },
   },
+  close: "Вы слушали лекции, читали книжки. Но осталась одна проблема: как? Прикладная эмпатия - это программа про «как».",
+  btn: "Изучить программу",
+  note: "Доступ сразу после оплаты",
   no: "Вы не эмпат",
   noText: "По вашим ответам это чувствительность, а не эмпатия. Есть люди, которые очень остро отзываются на чужую боль, потому что у них самих болит в том же месте. Это со-чувствование, это не эмпатия.",
   noBtn: "Мой Телеграм-канал"
@@ -578,12 +567,6 @@ function istochnik_() {
   return String(s).replace(/[^\w\-]/g, "").slice(0, 40);
 }
 
-const ICON = {
-  play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>',
-  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v17M5 13l7 7 7-7"/></svg>',
-  pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5.5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14" y="4" width="4.5" height="16" rx="1.2"/></svg>'
-};
-
 /* ——— старт ——— */
 function intro() {
   stage = "intro";
@@ -591,7 +574,6 @@ function intro() {
     <div class="card">
       <h1 class="h1">${INTRO.title.split("<br>").map(l => `<span class="ln">${l}</span>`).join("<br>")}</h1>
       <p class="sub">${INTRO.sub}</p>
-      ${CONFIG.audio.start ? voiceHtml_("start") : ""}
       ${viola_(INTRO.words)}
       <div class="foot"><button class="go" id="start">Начать</button></div>
       <div class="fine">
@@ -599,7 +581,6 @@ function intro() {
         <p>Нажимая «Начать», вы соглашаетесь с <a href="${CONFIG.docs.privacy}" target="_blank" rel="noopener">Политикой обработки персональных данных</a>.</p>
       </div>
     </div>`);
-  if (CONFIG.audio.start) player_(n, "start");
   n.querySelector("#start").addEventListener("click", () => {
     idx = 0; answers.length = 0; razvilka = ""; letAns = ""; prob = []; age = "";
     startedAt = Date.now(); pid = newPid_(); src0 = istochnik_(); res = null;
@@ -614,12 +595,12 @@ function question() {
   stage = "q";
   const it = ALL[idx], b = BLOCKS[it.b];
   const prev = idx > 0 ? ALL[idx - 1] : null;
-  const voice = [];
-  if (prev && prev.re && answers[idx - 1] >= 2) voice.push(prev.re);   // реплика на прошлый ответ
-  if (it.i === 0) voice.push(b.intro);                                // вступление к блоку
+  const said = [];
+  if (prev && prev.re && answers[idx - 1] >= 2) said.push(prev.re);    // реплика на прошлый ответ
+  if (it.i === 0) said.push(b.intro);                                 // вступление к блоку
   const n = el(`
     <div class="card">
-      ${voice.length ? viola_(voice) : ""}
+      ${said.length ? viola_(said) : ""}
       <h2 class="q-text">${it.t}</h2>
       <div class="answers">
         ${SCALE.map((s, i) => `<button class="ans${answers[idx] === 3 - i ? " on" : ""}" data-v="${3 - i}">${s}</button>`).join("")}
@@ -780,82 +761,21 @@ function result() {
     return;
   }
   const t = TYPES[res.type];
+  const tx = RESULT.types[res.type];
+  const block = (h, paras) => `<div class="res-block"><h2>${h}</h2>${paras.map(p => `<p>${p}</p>`).join("")}</div>`;
   const n = el(`
     <div class="card">
-      <div class="res-first">
-        <h1 class="verdict">${RESULT.yes}</h1>
-        <div class="plate"><span class="plate-label">${RESULT.label}</span><span class="plate-name">${t.name}</span></div>
-        <p>${RESULT.listen}</p>
-        ${voiceHtml_(res.type)}
-        <button class="down" type="button" id="down"><span class="down-text">${RESULT.down}</span><span class="down-ico">${ICON.down}</span></button>
-      </div>
-      <div class="offer" id="offer-box">
-        <h2>${RESULT.offer.title}</h2>
-        <p class="offer-lead">${RESULT.offer.lead}</p>
-        <p>${RESULT.offer.text}</p>
-        <p class="offer-intro">${RESULT.offer.listIntro}</p>
-        <ul>${RESULT.offer.lines.map(l => `<li>${l}</li>`).join("")}</ul>
-      </div>
-      <div class="foot"><a class="go" id="offer" href="${CONFIG.offerUrl}" target="_blank" rel="noopener">${RESULT.offer.btn}</a>
-        <p class="fine center">${RESULT.offer.note}</p></div>
+      <h1 class="verdict">${RESULT.yes}</h1>
+      <div class="plate"><span class="plate-label">${RESULT.label}</span><span class="plate-name">${t.name}</span></div>
+      ${block(RESULT.hResult, tx.result)}
+      ${block(RESULT.hProblem, tx.problem)}
+      ${block(RESULT.hSolution, tx.solution)}
+      <p class="res-close">${RESULT.close}</p>
+      <div class="foot"><a class="go" id="offer" href="${CONFIG.offerUrl}" target="_blank" rel="noopener">${RESULT.btn}</a>
+        <p class="fine center">${RESULT.note}</p></div>
     </div>`);
-  player_(n, res.type);
   n.querySelectorAll('a[href="' + CONFIG.offerUrl + '"]').forEach(a => a.addEventListener("click", () => event_("offer_click")));
   render(n);
-  const box = n.querySelector("#offer-box");
-  n.querySelector("#down").addEventListener("click", () => {
-    const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-    box.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-  });
-}
-
-/* ——— голосовое: как в Телеграме ——— */
-function voiceHtml_(key) {
-  const on = !!CONFIG.audio[key];
-  return `
-    <div class="voice" data-voice="${key}">
-      <img class="ava" src="${AVATAR}" alt="" width="36" height="36">
-      <div class="voice-box${on ? "" : " off"}">
-        <button class="play" type="button" aria-label="Слушать голосовое Виолы"${on ? "" : " disabled"}>${ICON.play}</button>
-        ${on ? `
-        <div class="track" role="slider" aria-label="Перемотка" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="track-line"><i></i></div></div>
-        <button class="speed" type="button" aria-label="Скорость">1×</button>
-        <span class="time">0:00</span>
-        <audio preload="metadata" src="audio/${key}.mp3"></audio>` : `<p class="voice-wait">${RESULT.wait}</p>`}
-      </div>
-    </div>`;
-}
-function mmss_(s) { s = Math.max(0, Math.round(s || 0)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
-function player_(root, key) {
-  const box = root.querySelector('[data-voice="' + key + '"]');
-  const audio = box && box.querySelector("audio");
-  if (!audio) return;
-  const play = box.querySelector(".play"), line = box.querySelector(".track-line i"),
-        track = box.querySelector(".track"), time = box.querySelector(".time"), speed = box.querySelector(".speed");
-  const sent = {};
-  const once = name => { if (key === "start" || sent[name]) return; sent[name] = true; event_(name); };
-  const paint = () => {
-    const d = audio.duration || 0, c = audio.currentTime || 0;
-    line.style.width = d ? (c / d * 100) + "%" : "0";
-    track.setAttribute("aria-valuenow", d ? Math.round(c / d * 100) : 0);
-    time.textContent = audio.paused && !c ? mmss_(d) : mmss_(c) + " / " + mmss_(d);
-  };
-  play.addEventListener("click", () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
-  audio.addEventListener("play", () => { play.innerHTML = ICON.pause; play.setAttribute("aria-label", "Пауза"); once("audio_start"); });
-  audio.addEventListener("pause", () => { play.innerHTML = ICON.play; play.setAttribute("aria-label", "Слушать голосовое Виолы"); });
-  audio.addEventListener("loadedmetadata", paint);
-  audio.addEventListener("timeupdate", () => { paint(); if (audio.duration && audio.currentTime / audio.duration >= .5) once("audio_50"); });
-  audio.addEventListener("ended", () => { once("audio_end"); audio.currentTime = 0; paint(); });
-  track.addEventListener("click", e => {
-    if (!audio.duration) return;
-    const r = track.getBoundingClientRect();
-    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
-    paint();
-  });
-  speed.addEventListener("click", () => {
-    audio.playbackRate = audio.playbackRate === 1 ? 1.5 : 1;
-    speed.textContent = audio.playbackRate === 1 ? "1×" : "1,5×";
-  });
 }
 
 /* ——— отправка в таблицу ———
