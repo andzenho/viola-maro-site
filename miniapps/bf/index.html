@@ -356,6 +356,8 @@
   @media (min-width: 641px) { .pg-body { padding: 28px 28px 36px; } }
   .pg-bottom { flex: none; padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); background: #fff; border-top: 1px solid var(--line); }
   .pg-bottom .btn { max-width: none; }
+  .pg-body.pg-body-frame { padding: 0; overflow: hidden; }
+  .pg-frame { display: block; width: 100%; height: 100%; border: 0; }
   @media (max-width: 640px) { .pg-dlg { width: 100%; height: 100%; margin: 0; border-radius: 0; } }
   /* внутри окна: вводный абзац, разделы, белые карточки на сером */
   .pg-body { font-size: 16px; line-height: 1.5; font-weight: 500; }
@@ -1320,31 +1322,26 @@ const PROGRAMS = {
   manip:     "Аудиомарафон «Манипуляция & Абьюз: от распознавания до свободы»",
   neudobnye: "Терапевтический онлайн-уикенд «Неудобные»"
 };
+const PAGES = { klyuchi: "/bf/keys/" };
 const pdlg = document.getElementById("prog"), pbody = document.getElementById("prog-body");
 let pOpener = null, pScroll = 0;
-/* На violamaro.com/bf страница показана в рамке. Если блок Тильды сообщил, что умеет
-   открывать окна сам (bf-host), «Подробнее» для этих программ открывает окно
-   на уровне Тильды — там можно показать страницы violamaro.com. Иначе — наше окно с текстом. */
-let hostPopups = [];
-window.addEventListener("message", e => {
-  if (e.source !== window.parent || window.parent === window) return;
-  const d = e.data || {};
-  if (d.type === "bf-host" && Array.isArray(d.popups)) hostPopups = d.popups;
-});
-if (window.parent !== window) window.parent.postMessage({ type: "bf-ready" }, "*");
-
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-prog]");
   if (!b) return;
-  if (hostPopups.indexOf(b.dataset.prog) !== -1) {
-    window.parent.postMessage({ type: "bf-open", key: b.dataset.prog }, "*");
-    return;
-  }
   const key = b.dataset.prog, tpl = document.getElementById("tpl-" + key);
   if (!tpl) return;
   pOpener = b;
   document.getElementById("prog-h").textContent = PROGRAMS[key];
-  pbody.replaceChildren(tpl.content.cloneNode(true));
+  /* у «Ключей» в окне — копия страницы Виолы (/bf/keys/), у остальных — текст из шаблона */
+  const page = PAGES[key];
+  pbody.classList.toggle("pg-body-frame", !!page);
+  if (page) {
+    const f = document.createElement("iframe");
+    f.src = page; f.title = PROGRAMS[key]; f.className = "pg-frame";
+    pbody.replaceChildren(f);
+  } else {
+    pbody.replaceChildren(tpl.content.cloneNode(true));
+  }
   pbody.scrollTop = 0;
   /* страница под окном не прокручивается и остаётся на том же месте */
   pScroll = window.scrollY;

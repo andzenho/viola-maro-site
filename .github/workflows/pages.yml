@@ -123,6 +123,7 @@ jobs:
           mkdir -p site/bf
           cp miniapps/bf/index.html site/bf/index.html
           cp -r miniapps/bf/img site/bf/img
+          cp -r miniapps/bf/keys site/bf/keys
           python3 miniapps/bf/dokumenty.py site/bf
 
       # Прикладная эмпатия (/pe/): страница продажи, ведёт кнопка из теста 3.0.
