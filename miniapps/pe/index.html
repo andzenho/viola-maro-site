@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#212322">
+<title>Прикладная эмпатия: программа Виолы Маро</title>
+<meta name="description" content="Научитесь вместе с Виолой пользоваться своей эмпатией, чтобы перестать спасать всех, уступать и терпеть тех, кто вами пользуется, и начать себя любить, ценить и уважать">
+<meta property="og:title" content="Прикладная эмпатия: программа Виолы Маро">
+<meta property="og:description" content="Научитесь вместе с Виолой пользоваться своей эмпатией, чтобы перестать спасать всех, уступать и терпеть тех, кто вами пользуется, и начать себя любить, ценить и уважать">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://violamaro.ru/pe/">
+<meta property="og:site_name" content="Виола Маро">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" href="/pe/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/pe/img/apple-touch-icon.png">
+<style>
+  /* Стили один в один со страницы Чёрной пятницы (miniapps/bf/index.html).
+     Ниже исходный комментарий той страницы.
+     Чёрная пятница violamaro.ru/bf/ в стиле сайта Виолы (violamaro.com/audio-therapy),
+     аккуратнее (ТЗ 22.11): белый фон, малиновая шапка с фото, чёрные карточки программ,
+     розовые кнопки покупки. Один розовый (#ff1673) — только кнопки покупки и цены.
+     Белый текст на розовом — только крупный жирный; мелкий розовый — #c2125a.
+     Скругления: карточки 28px, кнопки полностью. Отступы между блоками 64/40px. */
+  @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700&display=swap");
+
+  :root {
+    --fon: #ffffff;          /* фон страницы */
+    --text: #212322;         /* основной текст (палитра melrobbins.com) */
+    --muted: #535353;        /* второстепенный */
+    --pink: #fce500;         /* жёлтый акцент: кнопки, выделения */
+    --pink-dark: #212322;    /* мелкий акцентный текст и рамки фокуса */
+    --akcent: #212322;       /* ссылки и отметки (для страниц документов тоже) */
+    --mag1: #212322;         /* тёмная шапка и блоки */
+    --mag2: #212322;
+    --black: #212322;        /* карточки программ */
+    --soft: #f4f4ee;         /* тёплые подложки: отзывы, окна, тарифы */
+    --line: #e6e6e1;         /* тонкие линии */
+    --wine: #fce500; --wine-text: #212322;
+    --r: 28px;               /* скругление карточек */
+    --gap: 40px;             /* отступ между блоками, телефон */
+    --prata: "Unbounded", "Manrope", system-ui, sans-serif;   /* заголовки */
+    --golos: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;  /* текст */
+  }
+  @media (min-width: 768px) { :root { --gap: 64px; } }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  body {
+    margin: 0; background: var(--fon); color: var(--text);
+    font-family: var(--golos); font-size: 18.5px; font-weight: 500; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (min-width: 768px) { body { font-size: 19px; } }
+  body.ended { padding-bottom: 0; }
+  p, h1, h2, h3, h4, ul, figure { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  a { color: inherit; }
+  img { max-width: 100%; }
+  :focus-visible { outline: 3px solid var(--pink-dark); outline-offset: 3px; }
+  [hidden] { display: none !important; }
+  .wrap p, .wrap li { max-width: 38rem; }
+  .num { font-variant-numeric: tabular-nums; }
+  .nw { white-space: nowrap; }
+  .muted { color: var(--muted); }
+
+  .wrap { max-width: 72rem; margin: 0 auto; padding: 0 20px; }
+  @media (min-width: 768px) { .wrap { padding: 0 32px; } }
+  .sec { padding-top: var(--gap); }
+
+  h1, h2, h3, h4 { font-family: var(--prata); font-weight: 700; letter-spacing: -.01em; text-wrap: balance; }
+  h1 { font-size: clamp(1.9rem, 7.4vw, 3.5rem); line-height: 1.12; }
+  h2 { font-size: clamp(1.5rem, 5.6vw, 2.4rem); line-height: 1.18; margin-bottom: 1.4rem; }
+  h3 { font-size: clamp(1.3rem, 4.8vw, 1.9rem); line-height: 1.2; font-weight: 600; }
+  h4 { font-size: 1.12rem; line-height: 1.3; font-weight: 600; }
+
+  /* кнопки: полностью скруглённые, не ниже 52px */
+  .btn {
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    width: 100%; max-width: 26rem; min-height: 56px; padding: .8rem 1.6rem;
+    background: var(--pink); color: var(--text); text-decoration: none; border: 0; border-radius: 999px;
+    font-family: var(--golos); font-weight: 800; font-size: 19px; line-height: 1.2; cursor: pointer;
+  }
+  .btn:hover { background: #fcee22; }
+  .btn-dark { background: var(--black); color: #fff; }
+  .btn-dark:hover { background: #404241; }
+  .btn.off { background: #ececec; color: #4d4d4d; cursor: default; }
+  /* неактивная кнопка оплаты: та же форма, розовый на 35%, не нажимается */
+  .btn.btn-wait, .btn.btn-wait:hover { background: #fdf3a6; color: #404241; cursor: default; white-space: nowrap; padding-left: 1rem; padding-right: 1rem; }
+  @media (max-width: 420px) { .btn.btn-long { font-size: 15px; } }
+
+  /* «Подробнее о программе»: белая таблетка с чёрным кругом и стрелкой справа */
+  .more {
+    display: inline-flex; align-items: center; justify-content: space-between; gap: .8rem;
+    min-height: 52px; padding: 6px 6px 6px 1.25rem; margin-top: auto;
+    background: #fff; color: var(--black); border: 1.5px solid #fff; border-radius: 999px;
+    font: inherit; font-weight: 700; font-size: 1rem; line-height: 1.2; cursor: pointer; text-align: left;
+  }
+  .more-i { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--black); color: #fff;
+    display: flex; align-items: center; justify-content: center; }
+  .more-i svg { width: 18px; height: 18px; }
+  .more:hover { border-color: #d6d6d6; }
+  .on-light .more { border-color: var(--black); }
+
+  /* 1. первый экран как у melrobbins.com: жёлтая полоса, тёмная шапка, фото слева, текст справа */
+  .topbar { display: block; background: var(--pink); color: var(--text); text-align: center; font-weight: 700; font-size: 15px; line-height: 1.3;
+    padding: 9px 16px; text-decoration: underline; text-underline-offset: .2em; }
+  .topbar:hover { text-decoration-thickness: 2px; }
+  @media (min-width: 768px) { .topbar { font-size: 17px; padding: 10px 16px; } }
+  .hero { position: relative; isolation: isolate; background: var(--mag1); color: #fff; overflow: hidden; }
+  /* мягкие размытые пятна: светлое за фото, тёплое жёлтое у текста */
+  .hero::before, .hero::after { content: ""; position: absolute; z-index: -1; border-radius: 50%; pointer-events: none; filter: blur(60px); }
+  .hero::before { width: 420px; height: 420px; left: 50%; top: 2%; margin-left: -210px;
+    background: radial-gradient(circle, rgba(255, 255, 255, .2), rgba(255, 255, 255, 0) 68%); }
+  .hero::after { width: 360px; height: 360px; right: -140px; bottom: -60px;
+    background: radial-gradient(circle, rgba(252, 229, 0, .2), rgba(252, 229, 0, 0) 70%); }
+  @media (min-width: 900px) {
+    .hero::before { width: 640px; height: 640px; left: 25%; top: auto; bottom: -140px; margin-left: -320px; filter: blur(80px);
+      background: radial-gradient(circle, rgba(255, 255, 255, .17), rgba(255, 255, 255, 0) 68%); }
+    .hero::after { width: 560px; height: 560px; right: -160px; top: -220px; bottom: auto; filter: blur(100px);
+      background: radial-gradient(circle, rgba(252, 229, 0, .15), rgba(252, 229, 0, 0) 70%); }
+  }
+  .hero-in { display: grid; grid-template-columns: 1fr; }
+  .hero-photo { justify-self: center; width: min(84vw, 320px); height: 262px; overflow: hidden; margin: 14px 0 0;
+    -webkit-mask-image: linear-gradient(#000 55%, transparent 100%), linear-gradient(to right, transparent 4%, #000 26%, #000 74%, transparent 96%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(#000 55%, transparent 100%), linear-gradient(to right, transparent 4%, #000 26%, #000 74%, transparent 96%);
+    mask-composite: intersect; }
+  .hero-photo img { display: block; width: 100%; height: auto; }
+  @media (max-width: 899px) {
+    .hero-text { text-align: center; margin: 0 auto; }
+    .hero .btn { margin-left: auto; margin-right: auto; }
+  }
+  .hero-text { padding: 0 0 36px; }
+  .hero h1 { font-size: clamp(1.55rem, 7.3vw, 2.75rem); line-height: 1.18; }
+  .hero .lead { font-size: 1.12rem; font-weight: 500; line-height: 1.5; margin-top: 1.1rem; color: rgba(255, 255, 255, .88); }
+  .who-line { margin-top: .6rem; font-size: .95rem; font-weight: 500; color: rgba(255, 255, 255, .62); }
+  .hero .dates { font-family: var(--prata); font-weight: 700; font-size: clamp(1.2rem, 4.6vw, 1.55rem); color: var(--pink); margin-top: 1.2rem; }
+  .countdown { margin-top: .8rem; }
+  .cd-label { font-size: .8rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: rgba(255, 255, 255, .85); }
+  .cd { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: .6rem; }
+  .cd-t { display: flex; flex-direction: column; align-items: center; padding: 10px 4px 8px; border-radius: 14px;
+    background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .16); }
+  .cd-t b { font-family: var(--prata); font-weight: 700; font-size: clamp(1.45rem, 6.6vw, 1.9rem); line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .cd-t i { font-style: normal; font-size: .78rem; color: rgba(255, 255, 255, .7); margin-top: 2px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .over { font-family: var(--prata); font-weight: 600; font-size: 1.4rem; margin-top: 1.2rem; }
+  .hero .btn { margin-top: 1.3rem; max-width: none; }
+  .hero-text { width: 100%; max-width: 32rem; }
+  .hero-text p { max-width: none; }
+  @media (min-width: 900px) {
+    .hero-in { grid-template-columns: minmax(0, 46%) minmax(0, 1fr); column-gap: 3rem; min-height: min(700px, calc(100svh - 44px)); }
+    .hero-photo { order: 0; align-self: end; justify-self: center; width: auto; height: auto; margin: 32px 0 0; overflow: visible; -webkit-mask-image: none; mask-image: none; }
+    .hero-photo img { width: auto; height: min(640px, calc(100svh - 110px)); max-width: 100%; object-fit: contain; object-position: bottom; -webkit-mask-image: none; mask-image: none; }
+    .hero .lead { margin-top: 1.3rem; }
+    .hero .dates { margin-top: 1.6rem; }
+    .hero .btn { margin-top: 1.7rem; }
+    .hero-text { align-self: center; padding: 56px 0 64px; }
+    }
+
+  /* 2. путь */
+  .path { font-size: clamp(1.08rem, 2.6vw, 1.25rem); line-height: 1.55; font-weight: 600; }
+
+  /* 4. тарифы */
+  /* тарифы 1 и 2 тоже карточками (как «Всё вместе», но на светло-сером) */
+  #tarify > .tarif:first-child { margin-top: 32px; }
+  @media (min-width: 768px) { #tarify > .tarif:first-child { margin-top: 48px; } }
+  .tarif { margin-top: var(--gap); background: var(--soft); border-radius: var(--r); padding: 16px 16px 20px; scroll-margin-top: 12px; }
+  @media (min-width: 768px) { .tarif { padding: 32px 36px 36px; } }
+  .tarif .inside li { border-top-color: #e2dcd4; }
+  /* тариф 2: чёрная карточка */
+  .tarif-dark { background: var(--black); color: #fff; }
+  .tarif-dark .t-desc { color: rgba(255, 255, 255, .82); }
+  .tarif-dark .p-old, .tarif-dark .p-eur { color: rgba(255, 255, 255, .66); }
+  .tarif-dark .p-new { color: #fff; }
+  .tarif-dark .pill { background: var(--pink); color: var(--text); }
+  .tarif-dark .pcard { background: #2e302f; border: 1px solid rgba(255, 255, 255, .1); }
+  .tarif-dark :focus-visible { outline-color: var(--pink); }
+  .t-head { display: grid; gap: 1.4rem; }
+  .t-label { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .8rem; margin-bottom: .6rem; }
+  .t-no { font-weight: 800; font-size: 1.05rem; }
+  .pill { display: inline-flex; align-items: center; min-height: 30px; padding: .2rem .85rem; border-radius: 999px;
+    background: var(--black); color: #fff; font-weight: 700; font-size: .9rem; }
+  .t-info .for { margin-top: .7rem; color: var(--muted); }
+  /* подзаголовок тарифа: строка полужирная, под ней описание */
+  .t-lead { margin-top: .6rem; font-size: 17.5px; font-weight: 600; line-height: 1.4; color: var(--text); }
+  .t-desc { margin-top: 7px; font-size: 18px; font-weight: 400; line-height: 1.5; color: var(--text); }
+  .t-info h3 + .t-desc { margin-top: 9px; }
+  .t-head > * { min-width: 0; }
+  @media (max-width: 340px) { .p-new { font-size: 2.1rem; } }
+  .price { margin-top: 1.2rem; }
+  .p-old { color: var(--muted); font-size: 1.02rem; display: flex; align-items: baseline; gap: .6rem; }
+  .p-old s { text-decoration-thickness: 1.5px; }
+  .p-pct { font-weight: 800; color: var(--text); background: var(--pink); padding: 0 .3em; border-radius: 4px; }
+  .p-new { font-family: var(--prata); font-weight: 700; color: var(--text); font-size: clamp(2.4rem, 10vw, 3.2rem); line-height: 1.05; margin-top: .15rem; white-space: nowrap; }
+  .p-eur { color: var(--muted); font-size: .98rem; margin-top: .3rem; }
+  .eur-link { font: inherit; color: inherit; background: none; border: 0; padding: 10px 0; margin: -10px 0; min-height: 44px; text-align: left; cursor: default; }
+  body.sale .eur-link { cursor: pointer; text-decoration: underline; text-underline-offset: .18em; }
+  .buy { margin-top: 1.1rem; }
+  .buy .left { margin-top: .6rem; color: var(--muted); font-size: .95rem; white-space: nowrap; }
+  /* вторая кнопка оплаты в конце тарифа: до 768 на всю ширину, дальше 360px по центру */
+  .buy-end { margin-top: 24px; }
+  .buy-end .btn { max-width: none; }
+  @media (min-width: 768px) { .buy-end .btn { width: 360px; max-width: 360px; margin: 0 auto; } }
+  .buy .over-t { font-family: var(--prata); font-weight: 600; font-size: 1.2rem; }
+
+  /* программы тарифа: чёрные карточки, на компьютере в ряд */
+  .t-sub { font-family: var(--prata); font-weight: 600; font-size: 1.1rem; margin: 2.2rem 0 1rem; }
+  .cards { display: grid; gap: 16px; }
+  /* сетка карточек программ: «Ключи» (.wide) всегда на всю ширину и первой;
+     768–1023 — по две, одиночная в ряду (.span-md) на всю ширину; от 1024 — по три */
+  @media (min-width: 768px) {
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .pcard.wide, .pcard.span-md { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1024px) {
+    .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .pcard.span-md { grid-column: auto; }
+    .pcard.wide { grid-column: 1 / -1; }
+  }
+  .pcard.wide .about { max-width: 720px; }
+
+  .pcard { background: var(--black); color: #fff; border-radius: var(--r); padding: 26px 22px 22px;
+    display: flex; flex-direction: column; gap: .55rem; }
+  .pcard .fmt { font-size: .92rem; font-weight: 700; color: #d9d9d9; }
+  .pcard .dur { font-size: .95rem; color: #d9d9d9; }
+  .pcard .about { color: #f0f0f0; }
+  .pcard .more { align-self: flex-start; margin-top: auto; }
+  /* плашки материалов: тонкая рамка, без заливки; от описания 12px, до кнопки 16px */
+  .plates { display: flex; flex-wrap: wrap; gap: 6px; margin: calc(12px - .55rem) 0 16px; padding: 0; list-style: none; }
+  .plates li { border: 1px solid rgba(255, 255, 255, .25); border-radius: 6px; padding: 4px 10px; font-size: 14.5px; font-weight: 400; line-height: 1.35; color: #ededed; max-width: none !important; }
+
+  /* тариф 3: блок «Всё вместе» на жёлтом */
+  .all { margin-top: var(--gap); background: var(--pink); color: var(--text); border-radius: var(--r); padding: 28px 16px 16px; scroll-margin-top: 12px; }
+  @media (min-width: 768px) { .all { padding: 44px 36px 36px; } }
+  .all > .t-label .t-no { color: var(--text); }
+  .all .pill-light { background: var(--text); color: #fff; }
+  .all h2 { margin: .2rem 0 .4rem; }
+  .all .all-name { font-weight: 700; font-size: 1.1rem; }
+  .all-card { background: #fff; color: var(--text); border-radius: var(--r); padding: 20px; margin-top: 1.4rem; }
+  @media (min-width: 768px) { .all-card { padding: 32px; } }
+  .all-list { margin-top: 1.8rem; border-top: 1px solid var(--line); }
+  .all-list li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .7rem 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); max-width: none !important; }
+  .all-list .nm { font-weight: 700; }
+  .all-list .dur { display: block; color: var(--muted); font-weight: 500; font-size: .95rem; }
+  .all .vs { margin-top: 1.2rem; font-weight: 700; }
+
+  /* «Что внутри»: цифра крупно, название рядом, цифры одной колонкой */
+  .inside { margin-top: 1.2rem; }
+  .inside-h { font-size: .95rem; font-weight: 600; color: var(--muted); margin-bottom: .2rem; }
+  .inside li { display: grid; grid-template-columns: 2.4rem 1fr; gap: .8rem; align-items: baseline; padding: .45rem 0; border-top: 1px solid #ece6df; font-size: 17px; line-height: 1.35; }
+  .inside li:first-child { border-top: 0; }
+  .inside li b { font-family: var(--prata); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--text); text-align: right; }
+  .opens { font-weight: 800; font-size: 1.08rem; }
+
+
+  /* 5. отзывы */
+  /* все отзывы одной пачкой: две колонки на ПК, одна на телефоне */
+  .reviews { columns: 1; column-gap: 20px; }
+  @media (min-width: 768px) { .reviews { columns: 2; } }
+  .reviews > figure { break-inside: avoid; margin: 0 0 16px; }
+  @media (min-width: 768px) { .reviews > figure { margin-bottom: 20px; } }
+  .review { background: var(--soft); border-radius: var(--r); padding: 26px 24px; }
+  .review p + p { margin-top: .7rem; }
+  .review .who { margin-top: 1rem; font-weight: 800; }
+  .rev-more { display: flex; margin: 8px auto 0; }
+  .rev-shot { background: var(--soft); border-radius: var(--r); padding: 12px; }
+  .rev-shot img { display: block; width: 100%; height: auto; border-radius: 16px; }
+
+  /* Кто такая Виола Маро: фото слева, текст справа; на телефоне фото сверху */
+  .about-v { display: grid; gap: 1.6rem; }
+  .about-photo { margin: 0; }
+  .about-photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 20%; border-radius: var(--r); }
+  .about-text { align-self: center; }
+  .about-text p + p { margin-top: .9rem; }
+  .about-lead { font-weight: 700; font-size: 1.1rem; }
+  @media (min-width: 768px) { .about-v { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 3.5rem; align-items: stretch; } .about-photo img { height: 100%; min-height: 26rem; aspect-ratio: auto; } }
+
+  /* Служба заботы */
+  .care { background: var(--soft); border-radius: var(--r); padding: 32px 22px; }
+  @media (min-width: 768px) { .care { padding: 44px 40px; } }
+  .care h2 { margin-bottom: .6rem; }
+  .care .btn { margin-top: 1.4rem; }
+  .care-h { margin-top: .8rem; color: var(--muted); font-size: .98rem; }
+
+  /* 6. кто ведёт, вопросы */
+  .text p + p { margin-top: 1rem; }
+  .faq { border-top: 1px solid var(--line); max-width: 46rem; }
+  details { border-bottom: 1px solid var(--line); }
+  summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr 2.4rem; gap: .9rem; padding: 1.1rem 0; align-items: center; min-height: 56px; }
+  summary::-webkit-details-marker { display: none; }
+  .s-name { font-weight: 700; font-size: 1.05rem; line-height: 1.4; }
+  .pm { position: relative; width: 2.4rem; height: 2.4rem; border-radius: 50%; background: var(--black); justify-self: end; }
+  .pm::before, .pm::after { content: ""; position: absolute; left: 30%; right: 30%; top: 50%; height: 2px; margin-top: -1px; background: #fff; }
+  .pm::after { transform: rotate(90deg); }
+  details[open] .pm::after { display: none; }
+  .d-body { padding: 0 0 1.3rem; }
+  .d-body a { display: inline-block; padding: 10px 0; margin: -10px 0; color: var(--pink-dark); }
+  .hint { color: var(--muted); font-size: 1rem; margin: -.8rem 0 1.2rem; }
+
+  /* подвал */
+  .ft { margin-top: var(--gap); border-top: 1px solid var(--line); padding-top: 2.4rem; padding-bottom: 2rem; font-size: .95rem; line-height: 1.5; color: var(--muted); }
+  .ft-grid { display: grid; gap: 1.6rem; }
+  @media (min-width: 768px) { .ft-grid { grid-template-columns: 1.3fr 1fr; column-gap: 2.4rem; } }
+  .ft-h { color: var(--text); font-weight: 700; margin-bottom: .3rem; }
+  .ft a { color: var(--muted); text-underline-offset: .18em; }
+  .ft a:hover { color: var(--text); }
+  .ft-docs a { display: flex; align-items: center; min-height: 44px; padding: .25rem 0; }
+  .ft p a { display: inline-block; padding: 11px 0; margin: -11px 0; }
+  .ft-small { margin-top: 1.8rem; font-size: .85rem; }
+  .ft-small + .ft-small { margin-top: .8rem; }
+
+  /* форма перед оплатой */
+  .lead-dlg { width: min(32rem, calc(100% - 1.5rem)); max-height: calc(100% - 1.5rem); overflow: auto;
+    padding: 0; border: 0; border-radius: var(--r); background: #fff; color: var(--text); }
+  .lead-dlg::backdrop { background: rgba(0, 0, 0, .55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .lead-dlg form { padding: 1.6rem 1.4rem 1.6rem; }
+  .lead-h { font-family: var(--prata); font-weight: 700; font-size: 1.45rem; line-height: 1.2; padding-right: 3rem; }
+  .lead-sub { margin-top: .5rem; font-weight: 700; color: var(--pink-dark); font-size: 1.05rem; }
+  .lead-x { position: absolute; top: .8rem; right: .8rem; width: 44px; height: 44px; border-radius: 50%;
+    border: 0; background: var(--black); color: #fff; cursor: pointer; font-size: 1.4rem; line-height: 1; font-family: var(--golos); }
+  .lead-dlg label.f { display: block; margin-top: 1.2rem; font-weight: 700; font-size: 1.05rem; }
+  .lead-dlg .f-hint { display: block; font-weight: 500; color: var(--muted); font-size: .95rem; margin-top: .1rem; }
+  .lead-dlg input[type=text] { display: block; width: 100%; margin-top: .45rem; padding: .85rem 1.1rem; min-height: 56px;
+    font: inherit; font-size: 1.1rem; color: var(--text); background: #fff; border: 1.5px solid #b9b9b9; border-radius: 16px; }
+  .lead-dlg input[type=text]:focus { outline: 3px solid var(--pink-dark); outline-offset: 1px; border-color: var(--pink-dark); }
+  .lead-dlg .chk { display: grid; grid-template-columns: 1.6rem 1fr; gap: .7rem; align-items: start; margin-top: 1rem; font-size: 1rem; line-height: 1.45; cursor: pointer; }
+  .lead-dlg .chk input { width: 1.45rem; height: 1.45rem; margin: .1rem 0 0; accent-color: var(--pink-dark); }
+  .lead-dlg .chk a { color: var(--pink-dark); }
+  .lead-dlg .err { color: #b3141f; font-weight: 700; margin-top: .9rem; }
+  .lead-dlg .btn { max-width: none; margin-top: 1.3rem; }
+  .lead-dlg .note-s { color: var(--muted); font-size: .92rem; margin-top: .7rem; }
+  .lead-dlg .lead-ok p { margin-top: 1.2rem; font-size: 1.15rem; font-weight: 700; line-height: 1.45; }
+  .lead-dlg.done label, .lead-dlg.done input, .lead-dlg.done .err, .lead-dlg.done #lead-go, .lead-dlg.done #lead-note { display: none; }
+  .lead-dlg .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  /* окно «Подробнее о программе» */
+  .pg-dlg { width: min(760px, calc(100% - 2rem)); height: calc(100% - 2rem); max-width: none; max-height: none;
+    padding: 0; border: 0; border-radius: var(--r); background: var(--soft); color: var(--text); overflow: hidden; }
+  .pg-dlg[open] { display: flex; flex-direction: column; }
+  .pg-dlg::backdrop { background: rgba(0, 0, 0, .55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .pg-top { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 10px 12px 10px 22px; background: #fff; border-bottom: 1px solid var(--line); }
+  .pg-h { font-family: var(--prata); font-weight: 600; font-size: 1rem; line-height: 1.3; min-width: 0; }
+  .pg-x { flex: none; display: inline-flex; align-items: center; gap: .45rem; min-height: 48px; padding: .5rem 1.1rem;
+    background: var(--black); color: #fff; border: 0; border-radius: 999px; font: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; }
+  .pg-x span { font-size: 1.3rem; line-height: 1; }
+  .pg-body { flex: 1; overflow: auto; overscroll-behavior: contain; padding: 20px 16px 28px; }
+  @media (min-width: 641px) { .pg-body { padding: 28px 28px 36px; } }
+  .pg-bottom { flex: none; padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); background: #fff; border-top: 1px solid var(--line); }
+  .pg-bottom .btn { max-width: none; }
+  @media (max-width: 640px) { .pg-dlg { width: 100%; height: 100%; margin: 0; border-radius: 0; } }
+  /* внутри окна: вводный абзац, разделы, белые карточки на сером */
+  .pg-body { font-size: 16px; line-height: 1.5; font-weight: 500; }
+  .pg-body p, .pg-body li { max-width: none; }
+  .pg-body p + p, .pg-body p + .pg-ul, .pg-body .pg-ul + p { margin-top: 12px; }
+  .pg-lead { font-size: 18px; line-height: 1.45; font-weight: 600; }
+  .pg-sec { margin-top: 32px; }
+  .pg-sh { font-family: var(--golos); font-weight: 700; font-size: 20px; line-height: 1.3; margin-bottom: 12px; }
+  .pg-grp { margin-top: 24px !important; font-weight: 800; }
+  .pg-grp + p { margin-top: 2px !important; }
+  .pg-ul { list-style: disc; padding-left: 1.25em; }
+  .pg-ul li + li { margin-top: 6px; }
+  .pg-ul li::marker { color: var(--text); }
+  .pg-card { margin-top: 12px; background: #fff; border-radius: 16px; padding: 20px; }
+  .pg-card + p, .pg-card + .pg-ul { margin-top: 16px; }
+  .pg-lbl { font-size: 14px; font-weight: 700; color: var(--muted); line-height: 1.3; }
+  .pg-card h4 { font-size: 17px; font-weight: 800; line-height: 1.35; margin: 4px 0 10px; }
+  .pg-card h4:last-child { margin-bottom: 0; }
+  .pg-card .pg-ul { margin-top: 0; }
+  .pg-card p + .pg-ul { margin-top: 8px; }
+  .pg-body b { font-weight: 800; }
+  @media (min-width: 641px) {
+    .pg-body { font-size: 17px; }
+    .pg-lead { font-size: 20px; }
+    .pg-sh { font-size: 22px; }
+    .pg-card h4 { font-size: 18px; }
+  }
+
+  html.locked { overflow: hidden; }
+  html.locked body { position: fixed; left: 0; right: 0; overflow: hidden; }
+
+  /* 7. нижняя панель */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: #fff; border-top: 1px solid var(--line);
+    padding: 10px 20px calc(10px + env(safe-area-inset-bottom, 0px)); }
+  .bar-in { max-width: 72rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: .9rem; }
+  .bar-t { line-height: 1.25; min-width: 0; }
+  .bar-t .label { display: block; color: var(--muted); font-size: .85rem; font-weight: 600; }
+  .bar-t .timer { font-weight: 800; font-size: 1.12rem; white-space: nowrap; }
+  .bar .btn { width: auto; min-height: 52px; padding: .6rem 1.3rem; font-size: 1rem; flex: none; }
+  /* мелкий белый текст на розовом — только на тёмном розовом (контраст 5,2 : 1) */
+  .btn-sm { background: var(--pink); color: var(--text); }
+  .btn-sm:hover { background: #fcee22; }
+  @media (max-width: 400px) {
+    .bar { padding-left: 14px; padding-right: 14px; }
+    .bar-in { gap: .75rem; }
+    .bar-t .label { font-size: .78rem; }
+    .bar-t .timer { font-size: 1rem; }
+    .bar .btn { padding: .55rem 1rem; font-size: .95rem; }
+  }
+  /* телефон: карточки программ внутри блока тарифа с ровными отступами */
+  @media (max-width: 767px) {
+    .pcard { padding: 24px 16px 18px; }
+    .plates li { font-size: 14px; }
+    .all { padding-left: 12px; padding-right: 12px; }
+    .all-card { padding: 16px 12px; }
+    .more { white-space: nowrap; font-size: 14.5px; gap: .5rem; padding-left: 1rem; }
+    .cards > .pcard { min-width: 0; }
+  }
+  @media (max-width: 370px) {
+    .more { white-space: normal; }
+  }
+  /* Единственное добавление для /pe/: плашки про Виолу в тёмной шапке жёлтым */
+  .hero .pill { background: var(--pink); color: var(--text); }
+</style>
+</head>
+<body class="sale">
+
+<!-- 1. Первый экран: как шапка /bf/, тексты с /zayavka/ в третьем лице -->
+<header class="hero">
+  <div class="wrap hero-in">
+    <figure class="hero-photo"><img src="img/viola.webp" alt="Виола Маро" width="560" height="660" fetchpriority="high"></figure>
+    <div class="hero-text">
+      <div class="t-label"><span class="pill">Психолог (СПбГУ), психотерапевт</span><span class="pill">25 лет профессиональной практики</span></div>
+      <h1>Прикладная эмпатия</h1>
+      <p class="lead">6-недельная программа Виолы Маро для эмпатов</p>
+      <p class="lead">Научитесь вместе с Виолой пользоваться своей эмпатией, чтобы перестать спасать всех, уступать и терпеть тех, кто вами пользуется, и начать себя любить, ценить и уважать</p>
+      <a class="btn" href="#tarif">Получить доступ</a>
+      <p class="who-line">14&nbsp;900&nbsp;₽ · доступ навсегда</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 2. О программе -->
+  <section class="sec text" id="o-programme">
+    <h2>О программе</h2>
+    <p>Этот курс станет первым важным шагом для того, чтобы ваша эмпатия стала вашей силой, а не постоянной слабостью. Для кого-то он поможет выйти из позиции спасателя и поставить себя на первое место в своей жизни. Для кого-то он поможет сформировать важнейшие внутренние балансы и балансы в отношениях.</p>
+    <p>Его цель - помочь вам сформировать внутренние опоры, укрепить внутренний стержень личности, сформировать стабильную самооценку, личные границы и начать жизнь из позиции любви к себе, принятия своей эмпатии и понимания её ценности.</p>
+    <p>Этот курс вернёт вам ощущение себя в центре вашей жизни и даст вам практические методы и инструменты для того, чтобы расти и развиваться как качественно, так и количественно.</p>
+  </section>
+
+  <!-- 3. Цели программы -->
+  <section class="sec" id="celi">
+    <h2>Цели программы</h2>
+    <ul class="all-list"><li>Выйти из позиции слабости и начать воспринимать свою эмпатию как силу, особенность личности, которая даёт вам возможность глубже видеть и понимать людей, распознавать манипуляции и токсичные формы поведения</li><li>Научиться выстраивать сбалансированные отношения с людьми, не попадая в эмоциональную зависимость, позицию спасателя или жертвы</li><li>Вы получите самые нужные и эксклюзивные инструменты для того, чтобы научиться защищать себя в ситуации, заземлять себя, инструменты осознанности и саморазвития, методики работы с эмпатией и интуицией</li><li>Вы сформируете внутренние защиты для того, чтобы не уносить чужую боль с собой через вашу эмпатию. На курсе вы научитесь отделять ваши чувства, вашу ответственность и ваше психологическое пространство от чужого</li><li>Вы вернёте себе внутреннее право жить с гордостью за вашу идентичность, ценить и уважать глубину своего внутреннего мира, настроите свой внутренний компас и научитесь им пользоваться в реальном мире</li><li>Вы получите ценнейшие инструменты работы с вашей эмпатией, интуицией, эмоциями и получите примеры того, как это применять на практике</li></ul>
+  </section>
+
+  <!-- 4. Программа: цитаты из kontent/programma-pe-po-nedelyam.md проекта -->
+  <section class="sec" id="programma">
+    <h2>Шесть тем. Одна тема - одна сфера вашей жизни</h2>
+    <div class="cards">
+        <div class="pcard"><span class="fmt">Тема 1</span><h4>Фигура эмпата</h4><p class="about">Главная цель всех техник — сместить фокус внимания Эмпата с внешнего мира, других людей и их проблем на свой внутренний центр и тело.</p><p class="about">Возможность видеть глубину, но не утонуть в том, что вы воспринимаете. Возможность проживать вашу эмпатию как дар, а не проклятие.</p><p class="fmt">Техники:</p><ul class="plates"><li>«Возврат в свой центр»</li><li>«Вижу, но не участвую»</li><li>«Растождествление с негативным фоном»</li></ul></div>
+        <div class="pcard"><span class="fmt">Тема 2</span><h4>Эмпат и отношения с людьми</h4><p class="about">Здоровые отношения для Эмпата начинаются не с поиска «правильного» или «безопасного» партнера, а с выстраивания сильного внутреннего центра.</p><p class="about">Ваша высокая чувствительность отныне — не ранимость и не уязвимость, а сверхточный и тонко настроенный барометр, мгновенно фильтрующий фальшь и защищающий ваше личное пространство.</p><p class="fmt">Техники:</p><ul class="plates"><li>«Карта Автономии и Рассредоточения Энергии»</li><li>«Дезактивация Эмпатического Крючка»</li><li>«Коммуникация из Внутреннего Центра»</li><li>«Шесть Столпов Самооценки Эмпата»</li></ul></div>
+        <div class="pcard"><span class="fmt">Тема 3</span><h4>Эмпат-родители и эмпат-дети</h4><p class="about">Это великий и прекрасный процесс сепарации и осознания себя взрослым и свободным.</p><p class="about">Если вы прошли процесс сепарации, вы уже сможете воспитать своих детей с повышенной чувствительностью и помочь им сформировать здоровую эмпатию на основании ваших внутренних ощущений и интуиции.</p><p class="fmt">Техники:</p><ul class="plates"><li>«Заведите себе секрет: Комната во внутреннем доме»</li><li>«Интеллектуальное одиночество и магия масштаба: Умение желать и мечтать»</li><li>«Право передумать: Освобождение интуиции»</li><li>«Именование эмоционального спектра: Каталог чувств»</li><li>«Диалог с миром и преодоление экзистенциального одиночества»</li><li>«Кукла»</li></ul></div>
+        <div class="pcard"><span class="fmt">Тема 4</span><h4>Психосоматика у эмпата</h4><p class="about">Ваше тело — это не бессмысленный механизм, который «ломается просто так». Это ваш самый верный и честный союзник.</p><p class="about">Если вы хотите быть уверенными в себе, чтобы ваша самооценка стояла как гора, научитесь слушать и слышать вашу интуицию — тогда вы будете опираться на результаты, а не на обещания.</p><p class="fmt">Техники:</p><ul class="plates"><li>«Ежедневная Практика Доверия и Честности»</li><li>«Как снизить кортизол эмпату»</li><li>«Конверсия симптома»</li></ul><p class="dur">Программа не заменяет обследование и лечение у врача.</p></div>
+        <div class="pcard"><span class="fmt">Тема 5</span><h4>Самореализация людей с повышенной чувствительностью</h4><p class="about">Найти свое предназначение — это найти свой смысл, проживать этот смысл через простые действия, через профессию, через творчество, через пользу и взаимодействие.</p><p class="about">Вы не ищете себя вовне — вы собираете себя изнутри по пазлам своих интересов, смыслов и вдохновения.</p><p class="fmt">Техники:</p><ul class="plates"><li>«Физическое и ментальное расхламление: Свободное место для эмпата»</li><li>«Правила личных перемен и тишины: Меньше говорить — больше действовать»</li><li>«Тест целостной цели: Интегральный подход к целям эмпата»</li></ul></div>
+        <div class="pcard"><span class="fmt">Тема 6</span><h4>Психология наполненности и деньги</h4><p class="about">Как только вы возвращаете фокус внимания на свои цели, на свои задачи и на свою ценность — меняется всё.</p><p class="about">Вы перестаёте выживать и начинаете созидать.</p><p class="fmt">Техники:</p><ul class="plates"><li>«Инвентаризация чужих долгов»</li><li>«Калибровка финансового термостата»</li><li>«Карта уникальной ценности эмпата»</li><li>«Путь по крошкам вдохновения»</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 5. Тариф -->
+  <section id="tarify">
+    <article class="tarif" id="tarif">
+      <div class="t-head">
+        <div class="t-info">
+          <h3>Полная программа</h3>
+          <ul class="all-list"><li>6 лекций Виолы по шести сферам жизни, с таймкодами</li><li>больше 20 техник и практик</li><li>задание после каждой лекции</li><li>PDF-методички</li><li>аудиомедитации Виолы</li><li>база ответов Виолы на вопросы участниц</li><li>доступ ко всем материалам навсегда, в своём темпе</li></ul>
+          <div class="price num">
+            <p class="p-new">14&nbsp;900&nbsp;₽</p>
+            <p class="p-eur">или от 1&nbsp;242&nbsp;₽ в месяц</p>
+          </div>
+          <div class="buy"><button type="button" class="btn" data-pay="pe" data-cur="rub">Оплатить российской картой</button></div>
+          <p class="p-eur"><button type="button" class="eur-link" data-pay="pe" data-cur="eur">или 160&nbsp;€ картой из-за рубежа</button></p>
+          <p class="t-desc muted">Оплата и чек от ИП Нижевясова А. С., продюсера программ Виолы Маро. Доступ ко всем материалам курса пришлём сразу после оплаты на ваш номер или в Телеграм. Пишем только с аккаунта <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>.</p>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- 6. Истории участниц: тексты с /zayavka/ слово в слово -->
+  <section class="sec" id="otzyvy">
+    <h2>Истории участниц</h2>
+    <p class="hint">Участницы рассказали это сами. Имена остаются между ними и Виолой</p>
+    <div class="reviews">
+        <figure class="review">
+        <h4>Девушка, которая узнала своего партнёра в видео про нарциссов</h4>
+        <p class="muted">35–44 года</p>
+        <p><b>С чем пришла:</b></p>
+        <p>«Я устала от того, что мной манипулируют в отношениях, на работе, выжимают мои силы». Смотрела ролики на YouTube о нарциссах, и «по всем показателям совпало с моим партнёром». И ещё: «Я не понимала, как я лезу к людям и навязываю им заботу»</p>
+        <p><b>Что изменилось:</b></p>
+        <p>«Уже сейчас, на третьей неделе, я поняла, что перестраиваю своё поведение, не лезу к людям и занимаюсь своей жизнью. Я рассталась с партнёром-нарциссом, на работе меньше болтаю о себе, стало намного лучше». «Я уже сейчас могу не реагировать, ставить блок на чужие эмоции»</p>
+        </figure>
+        <figure class="review">
+        <h4>Женщина, которая всё видела и всё равно оставалась</h4>
+        <p class="muted">45–54 года</p>
+        <p><b>С чем пришла:</b></p>
+        <p>«Расставание с партнёром, он ушёл, обвинив меня в ревности. Но до этого я долго закрывала глаза на многие несовпадения его слов и поступков. Чувствовала многое, но терпела, боялась потерять, так как люблю». «Дальше так жить невозможно»</p>
+        <p><b>Что пробовала:</b></p>
+        <p>Психолога раз в неделю и курсы про любовь к себе</p>
+        <p><b>Что изменилось:</b></p>
+        <p>«Я поняла, откуда у меня эта неуверенность, сомнения, постоянные подозрения. Почему я, ясно видя и понимая всё, всё равно до последнего оставалась в токсичных отношениях. Я чувствую, что мои мозги встают на место, я становлюсь трезвой, сильной, уверенной»</p>
+        </figure>
+        <figure class="review">
+        <h4>Девушка, которую разбудила подруга-нарцисс</h4>
+        <p class="muted">35–44 года</p>
+        <p><b>С чем пришла:</b></p>
+        <p>«Сильное отличие от других людей, болезненность во взаимоотношениях, влияние манипуляторов, полное непонимание, кто я. Точка отсчёта началась, когда у меня появилась подруга-нарцисс. Здесь я проснулась»</p>
+        <p><b>Что пробовала:</b></p>
+        <p>«Я ничего не пробовала, так как не понимала вообще, с чего начать»</p>
+        <p><b>Что изменилось:</b></p>
+        <p>«Я уже сейчас чувствую множество изменений. Снизился индекс тревоги, спасательства, стала больше направлять фокус на свои интересы, желания, стала замечать проблемы своей семьи, а не чужих людей»</p>
+        </figure>
+        <figure class="review">
+        <h4>Женщина, которая всю жизнь угождала маме</h4>
+        <p class="muted">45–54 года</p>
+        <p><b>С чем пришла:</b></p>
+        <p>«Сложные отношения с матерью. Устала угождать, в ответ одни упрёки. В прошлом году сказала себе, что с меня хватит»</p>
+        <p><b>Что изменилось:</b></p>
+        <p>«Я хочу быть другой. В первую очередь относиться к себе с трепетом. Любить себя. До встречи с Виолой думала, что это эгоизм». И после третьей недели: «Я просто в шоке от лекции. Вы заглянули внутрь моей жизни с токсичной матерью»</p>
+        </figure>
+        <figure class="review">
+        <h4>Женщина, которая уступала и терпела</h4>
+        <p class="muted">55–64 года</p>
+        <p><b>С чем пришла:</b></p>
+        <p>«Я всё время либо уступаю и терплю, либо убегаю. Люди мне могут сказать что угодно, типа они шутят, а если я скажу, обижаются. Я поняла, что всю жизнь не уважала себя. Мне очень горько и как-то безнадёжно. Мне 60 лет, глупо это всё со стороны смотрится»</p>
+        <p><b>Что пробовала:</b></p>
+        <p>«Только читала книги. Всегда боялась выбрать не того специалиста, боялась, что будет ещё хуже»</p>
+        <p><b>Что изменилось:</b></p>
+        <p>«Такой конкретики и реальных практичных вещей я ни у кого не слышала! Я не жила, а сейчас, кажется, начну жить»</p>
+        </figure>
+    </div>
+    <div class="buy"><a class="btn" href="#tarif">Получить доступ</a></div>
+  </section>
+
+  <!-- 7. Об авторе: фото как на /zayavka/ -->
+  <section class="sec about-v" id="viola">
+    <figure class="about-photo"><picture><source type="image/webp" srcset="/assets/img/hero-mob.webp"><img src="/assets/img/hero-mob.jpg" alt="Виола Маро" width="900" height="900" loading="lazy" decoding="async"></picture></figure>
+    <div class="about-text">
+      <h2>Об авторе</h2>
+      <p class="about-lead">Виола Маро</p>
+      <p>Дипломированный психолог (СПбГУ), психотерапевт по образованию и по призванию. 25 лет профессиональной практики.</p>
+      <p>Идеолог и популяризатор концепции практической эмпатии — это ключевое направление её работы и основа авторской линейки образовательных продуктов.</p>
+      <p>Создатель обучающих программ в области психологии отношений и самореализации.</p>
+      <p>Гуманист по призванию и «технарь» в психологии — совмещает глубокую эмпатию с чёткой, системной методологией.</p>
+    </div>
+  </section>
+
+  <!-- 8. Оплата из другой страны -->
+  <section class="sec text" id="oplata">
+    <h2>Оплата из другой страны</h2>
+    <p>Оплатить можно из любой страны: российской картой в рублях или зарубежной картой в евро. Деньги принимает ИП Нижевясова А. С., официальный организатор программ Виолы. Вопросы по оплате в службу заботы <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a></p>
+  </section>
+
+  <!-- 9. Почему не помогли книги и психологи -->
+  <section class="sec text">
+    <h2>Почему не помогли книги и психологи</h2>
+    <p>Вы уже читали книги, ходили к психологу, проходили курсы. Становилось понятнее, но не легче. Никто не объяснил, почему вы так остро чувствуете людей и что делать в ту минуту, когда на вас давят</p>
+    <p>С этого программа и начинается. Виола объясняет, как вы устроены, и даёт техники на ситуации, которые с вами уже происходят</p>
+    <div class="buy"><a class="btn" href="#tarif">Получить доступ</a></div>
+  </section>
+
+  <!-- 10. Вопросы -->
+  <section class="sec">
+    <h2>Вопросы</h2>
+    <p class="hint">Нажмите на вопрос, чтобы увидеть ответ.</p>
+    <div class="faq">
+      <details>
+        <summary><span class="s-name">А если я не эмпат, а просто очень чувствительная?</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>Если вы всё пропускаете через себя и после общения с людьми у вас не остаётся сил, программа про вас. Как это называть, не так важно: техники работают для любого человека, который чувствует других сильнее, чем хотел бы</p></div>
+      </details>
+      <details>
+        <summary><span class="s-name">Я уже читала книги и ходила к психологу. Чем это отличается?</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>Понимания у вас уже достаточно. Не хватает действия в ту минуту, когда на вас давят. Здесь каждая техника на конкретную сцену: мама обиделась на ваш отказ, коллега сливает на вас эмоции, партнёр снова давит на жалость</p></div>
+      </details>
+      <details>
+        <summary><span class="s-name">Мне уже поздно что-то менять</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>В программе есть участницы старше 65 лет. Менять то, как вы реагируете на людей, можно в любом возрасте</p></div>
+      </details>
+      <details>
+        <summary><span class="s-name">Я живу за границей и боюсь платить онлайн</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>Оплатить можно из любой страны. Оплату проводит менеджер <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>, после оплаты приходит чек. Если вам пишет кто-то другой и просит деньги, это не мы</p></div>
+      </details>
+      <details>
+        <summary><span class="s-name">Нужно ли быть на лекции в определённое время?</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>Нет. Все лекции, техники и методички открываются сразу после оплаты и остаются у вас навсегда. Проходите в своём темпе, из любой точки мира.</p></div>
+      </details>
+      <details>
+        <summary><span class="s-name">У меня Telegram открывается только с VPN. Я смогу участвовать?</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>Да. Ни одна часть программы не требует быть на связи в конкретную минуту: все материалы курса доступны, когда вам удобно</p></div>
+      </details>
+      <details>
+        <summary><span class="s-name">А если во время работы станет тяжело?</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>Так бывает, и об этом лучше знать заранее: когда начинаешь разбирать то, что годами лежало нетронутым, какое-то время может быть неспокойно. Темп здесь ваш, никто не подгоняет. Программа не заменяет очную психотерапию: если сейчас у вас острое состояние, сначала стоит опереться на своего специалиста</p></div>
+      </details>
+      <details>
+        <summary><span class="s-name">Можно ли задать вопрос Виоле?</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>В этой программе обратной связи нет. Всё, что нужно для самостоятельной работы, уже внутри: лекции, техники, медитации и база ответов.</p></div>
+      </details>
+      <details>
+        <summary><span class="s-name">Когда я получу доступ?</span><span class="pm" aria-hidden="true"></span></summary>
+        <div class="d-body"><p>Сразу после оплаты пришлём доступ ко всем материалам курса на номер или в Телеграм, который вы указали в форме.</p></div>
+      </details>
+    </div>
+  </section>
+</main>
+
+<!-- Подвал: реквизиты и документы. Как на /bf/, документы общие для сайта. -->
+<footer class="ft wrap" aria-label="Реквизиты и документы">
+  <div class="ft-grid">
+    <div>
+      <p class="ft-h">Организатор программ Виолы Маро</p>
+      <p>ИП Нижевясова Анна Станиславовна<br>ОГРНИП 321695200039136<br>ИНН 690503942107<br>Зарегистрирована Межрайонной ИФНС России №&nbsp;10 по&nbsp;Тверской области</p>
+      <p style="margin-top:1rem">e-mail: <a href="mailto:mg.ananizh@gmail.com">mg.ananizh@gmail.com</a></p>
+      <p style="margin-top:1rem">Служба заботы в&nbsp;Telegram: <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a><br>пн–пт, 10:00–18:00&nbsp;МСК</p>
+    </div>
+    <nav class="ft-docs" aria-label="Документы">
+      <p class="ft-h">Документы</p>
+      <a href="/offer/">Публичная оферта</a>
+      <a href="/offer-prilozhenie/">Приложение №&nbsp;1 к оферте</a>
+      <a href="/privacy/">Политика обработки персональных данных</a>
+      <a href="/consent/">Согласие на обработку персональных данных</a>
+      <a href="/consent-ads/">Согласие на рекламные и информационные сообщения</a>
+      <a href="/terms/">Пользовательское соглашение</a>
+    </nav>
+  </div>
+  <p class="ft-small">Информация на&nbsp;сайте носит информационно-просветительский характер, не&nbsp;является медицинской услугой и&nbsp;не&nbsp;заменяет консультацию специалиста. 18+</p>
+  <p class="ft-small">© Нижевясова А.&nbsp;С., 2026. Все права защищены. Любое использование или копирование материалов сайта, элементов дизайна и&nbsp;оформления допускается только с&nbsp;письменного разрешения правообладателя и&nbsp;со&nbsp;ссылкой на&nbsp;источник.</p>
+</footer>
+
+<dialog class="lead-dlg" id="lead" aria-labelledby="lead-h">
+  <form id="lead-form" novalidate>
+    <button type="button" class="lead-x" id="lead-x" aria-label="Закрыть">×</button>
+    <p class="lead-h" id="lead-h">Оформление доступа</p>
+    <p class="lead-sub" id="lead-sub"></p>
+    <label class="f" for="lead-name">Имя</label>
+    <input type="text" id="lead-name" name="name" autocomplete="name" required>
+    <label class="f" for="lead-contact">Номер телефона или Телеграм<span class="f-hint" id="lead-hint">Сюда пришлём доступ ко всем материалам курса</span></label>
+    <input type="text" id="lead-contact" name="contact" autocomplete="tel" inputmode="text" placeholder="+7 900 000-00-00 или @имя" required>
+    <div class="hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+    <label class="chk" id="chk-offer"><input type="checkbox" name="accept_offer"><span>Принимаю условия <a href="/offer/" target="_blank" rel="noopener">публичной оферты</a> и <a href="/offer-prilozhenie/" target="_blank" rel="noopener">приложения к ней</a></span></label>
+    <label class="chk"><input type="checkbox" name="accept_pd"><span>Даю <a href="/consent/" target="_blank" rel="noopener">согласие на обработку персональных данных</a></span></label>
+    <p class="err" id="lead-err" hidden></p>
+    <button type="submit" class="btn" id="lead-go">Перейти к оплате</button>
+    <p class="note-s" id="lead-note">Доступ ко всем материалам курса пришлём сразу после оплаты на этот номер или в Телеграм.</p>
+  </form>
+</dialog>
+
+<script>
+/* ═══ Ссылки на оплату: build.py, PAY["pay"]["plans"]["basic"] ═══
+   Сверено 23.11: GetPlatinum 14 900 RUB, Stripe 160,00 €. */
+const PAY = {
+  pe: { rub: "https://anny-nizh.getplatinum.ru/payment/JQqAJkS",   // 14 900 ₽
+        eur: "https://buy.stripe.com/aFa5kE7C69AX1bBbvo9Ve01" }    // 160 €
+};
+/* ═══════════════════════════════════════ */
+
+/* Неразрывные пробелы: короткое слово или число не остаются в конце строки (как на /bf/). */
+(function typograf() {
+  const w = document.createTreeWalker(document.querySelector("main"), NodeFilter.SHOW_TEXT);
+  const re = /(^|[\s«( ])([А-Яа-яЁё]{1,2}|\d+)[ \t\n]+(?=\S)/g;
+  let n;
+  while ((n = w.nextNode())) {
+    let t = n.nodeValue, was;
+    if (!/\S/.test(t)) continue;
+    do { was = t; t = t.replace(re, "$1$2 "); } while (t !== was);
+    if (t !== n.nodeValue) n.nodeValue = t;
+  }
+})();
+
+/* ═══ Форма перед оплатой (как на /bf/) ═══
+   Пишет заявку в таблицу «Заявки | Виола Маро», лист «Заявки на продукт»
+   (форма «оплата»), потом уводит на оплату. Не записалось за 1,5 с — на
+   оплату всё равно: продажу не блокируем. */
+const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycby3T-T1o2X9Y29957ZDDQs7r6vtltiKiyLkYT97cyin-roOagb3vUMBWWQoK0-P8Mzbsg/exec";
+const FORM_SECRET = "PxlGXL9bQSjc0dHcLoiCZJZWtNdfv9D8yY9SHBuJ";
+/* версии общих документов сайта, как в build-assets/site.js */
+const DOC_VERSIONS = { doc_version_offer: "2026-08-10", doc_version_annex: "2026-08-10", doc_version_consent: "2026-08-10" };
+const TARIF = { pe: { name: "Прикладная эмпатия: Полная программа", rub: "14 900 ₽", eur: "160 €" } };
+
+/* метки рекламы: из ссылки, хранятся на время визита */
+const attribution = (function () {
+  const keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "src"];
+  let saved = {};
+  try { saved = JSON.parse(sessionStorage.getItem("viola_attribution") || "{}"); } catch (e) {}
+  const q = new URLSearchParams(location.search);
+  keys.forEach(k => { if (!saved[k] && q.get(k)) saved[k] = q.get(k); });
+  if (!saved.referrer && document.referrer) saved.referrer = document.referrer;
+  try { sessionStorage.setItem("viola_attribution", JSON.stringify(saved)); } catch (e) {}
+  return saved;
+})();
+
+/* одно поле: телефон или Телеграм. Буквы или @ — Телеграм, иначе телефон. */
+function parseContact(v) {
+  v = v.trim();
+  const tg = v.replace(/^(https?:\/\/)?(t\.me\/|telegram\.me\/)/i, "").replace(/^@/, "");
+  if (/^@/.test(v) || /t\.me\//i.test(v) || /[a-z_]/i.test(tg)) {
+    return /^[a-z0-9_]{4,32}$/i.test(tg) ? { telegram: "@" + tg } : null;
+  }
+  const digits = v.replace(/\D/g, "");
+  return digits.length >= 10 && digits.length <= 15 ? { phone: v } : null;
+}
+
+const dlg = document.getElementById("lead"), form = document.getElementById("lead-form");
+const errBox = document.getElementById("lead-err"), goBtn = document.getElementById("lead-go");
+let pick = null;
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-pay]");
+  if (!b) return;
+  pick = { k: b.dataset.pay, cur: b.dataset.cur };
+  const t = TARIF[pick.k];
+  document.getElementById("lead-sub").textContent = t.name + ", " + (pick.cur === "eur" ? t.eur + " картой из-за рубежа" : t.rub);
+  errBox.hidden = true; goBtn.disabled = false; goBtn.textContent = "Перейти к оплате";
+  if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+  setTimeout(() => document.getElementById("lead-name").focus(), 50);
+});
+document.getElementById("lead-x").addEventListener("click", () => dlg.close ? dlg.close() : dlg.removeAttribute("open"));
+dlg.addEventListener("click", e => { if (e.target === dlg && dlg.close) dlg.close(); });
+
+function fail(msg) { errBox.textContent = msg; errBox.hidden = false; }
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const name = form.elements["name"].value.trim();   // form.name — это имя самой формы
+  const contact = parseContact(form.contact.value);
+  if (!name) return fail("Напишите, пожалуйста, имя.");
+  if (!contact) return fail("Напишите номер телефона с кодом страны или ник в Телеграме, например @violamaro.");
+  if (!form.accept_offer.checked) return fail("Без согласия с офертой оплата невозможна.");
+  if (!form.accept_pd.checked) return fail("Без согласия на обработку данных мы не сможем прислать доступ.");
+  errBox.hidden = true;
+  const t = TARIF[pick.k], eur = pick.cur === "eur";
+  const payload = Object.assign({
+    secret: FORM_SECRET, form: "оплата", website: form.website.value,
+    name: name, phone: contact.phone || "", telegram: contact.telegram || "",
+    plan: t.name + ", " + (eur ? t.eur : t.rub),
+    readiness: eur ? "Прикладная эмпатия, оплата в евро" : "Прикладная эмпатия, оплата в рублях",
+    accept_offer: true, accept_pd: true, accept_ads: false,
+    consent_ts: new Date().toISOString(), page: location.href, ua: navigator.userAgent
+  }, DOC_VERSIONS);
+  ["utm_source", "utm_medium", "utm_campaign", "utm_content", "src", "referrer"].forEach(k => payload[k] = attribution[k] || "");
+
+  goBtn.disabled = true; goBtn.textContent = "Сохраняем…";
+  /* text/plain и redirect: manual, как у форм оплаты сайта: без OPTIONS,
+     и ответ 302 от Apps Script считается успехом */
+  const req = fetch(LEAD_ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload), redirect: "manual", keepalive: true }).catch(() => "err");
+  Promise.race([req, new Promise(r => setTimeout(r, 1500))]).then(() => {
+    location.href = PAY[pick.k][pick.cur];
+  });
+});
+</script>
+</body>
+</html>
