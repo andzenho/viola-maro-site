@@ -1322,9 +1322,24 @@ const PROGRAMS = {
 };
 const pdlg = document.getElementById("prog"), pbody = document.getElementById("prog-body");
 let pOpener = null, pScroll = 0;
+/* На violamaro.com/bf страница показана в рамке. Если блок Тильды сообщил, что умеет
+   открывать окна сам (bf-host), «Подробнее» для этих программ открывает окно
+   на уровне Тильды — там можно показать страницы violamaro.com. Иначе — наше окно с текстом. */
+let hostPopups = [];
+window.addEventListener("message", e => {
+  if (e.source !== window.parent || window.parent === window) return;
+  const d = e.data || {};
+  if (d.type === "bf-host" && Array.isArray(d.popups)) hostPopups = d.popups;
+});
+if (window.parent !== window) window.parent.postMessage({ type: "bf-ready" }, "*");
+
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-prog]");
   if (!b) return;
+  if (hostPopups.indexOf(b.dataset.prog) !== -1) {
+    window.parent.postMessage({ type: "bf-open", key: b.dataset.prog }, "*");
+    return;
+  }
   const key = b.dataset.prog, tpl = document.getElementById("tpl-" + key);
   if (!tpl) return;
   pOpener = b;
