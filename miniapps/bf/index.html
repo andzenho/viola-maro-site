@@ -175,6 +175,14 @@
   .tarif { margin-top: var(--gap); background: var(--soft); border-radius: var(--r); padding: 16px 16px 20px; scroll-margin-top: 12px; }
   @media (min-width: 768px) { .tarif { padding: 32px 36px 36px; } }
   .tarif .inside li { border-top-color: #e2dcd4; }
+  /* тариф 2: чёрная карточка */
+  .tarif-dark { background: var(--black); color: #fff; }
+  .tarif-dark .t-desc { color: rgba(255, 255, 255, .82); }
+  .tarif-dark .p-old, .tarif-dark .p-eur { color: rgba(255, 255, 255, .66); }
+  .tarif-dark .p-new { color: #fff; }
+  .tarif-dark .pill { background: var(--pink); color: var(--text); }
+  .tarif-dark .pcard { background: #2e302f; border: 1px solid rgba(255, 255, 255, .1); }
+  .tarif-dark :focus-visible { outline-color: var(--pink); }
   .t-head { display: grid; gap: 1.4rem; }
   .t-label { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .8rem; margin-bottom: .6rem; }
   .t-no { font-weight: 800; font-size: 1.05rem; }
@@ -465,7 +473,7 @@
     </article>
 
     <!-- Тариф 2 -->
-    <article class="tarif" id="tarif-2">
+    <article class="tarif tarif-dark" id="tarif-2">
       <div class="t-head">
         <div class="t-info">
           <div class="t-label"><span class="t-no">Тариф 2</span><span class="pill">Главный продукт</span></div>
