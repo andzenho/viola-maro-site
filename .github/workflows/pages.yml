@@ -125,6 +125,14 @@ jobs:
           cp -r miniapps/bf/img site/bf/img
           python3 miniapps/bf/dokumenty.py site/bf
 
+      # Прикладная эмпатия (/pe/): страница продажи, ведёт кнопка из теста 3.0.
+      - name: Добавить страницу Прикладной эмпатии
+        run: |
+          mkdir -p site/pe
+          cp miniapps/pe/index.html site/pe/index.html
+          cp miniapps/pe/site.css site/pe/site.css
+          cp -r miniapps/pe/img site/pe/img
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3

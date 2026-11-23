@@ -2,8 +2,8 @@
 <html lang="ru">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#EFE3CC">
-<meta name="color-scheme" content="only dark">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="only light">
 <!-- Пока тексты не утверждены (Илья, затем Виола), страницу не индексируем. -->
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Эмпат вы или вам только кажется. 29 утверждений, три-четыре минуты.">
@@ -27,11 +27,11 @@
     if (!box) return;
     box.innerHTML =
       '<div style="max-width:32rem;margin:1.5rem auto;padding:1.4rem;font:16px/1.55 system-ui,-apple-system,sans-serif;' +
-      'color:#1F3532;background:#F3E6E3;border-radius:6px">' +
+      'color:#212322;background:#f4f4ee;border-radius:20px">' +
       '<p style="margin:0 0 .9rem;font-size:1.2rem">Тест не открылся с первого раза</p>' +
       '<p style="margin:0 0 .9rem">Так бывает: оборвалась связь или страница не догрузилась.</p>' +
       '<p style="margin:0 0 .9rem"><button onclick="location.reload()" ' +
-      'style="font:inherit;padding:.7rem 1.1rem;color:#F6E9E6;background:#7B1921;border:1px solid #B8935C;border-radius:6px">' +
+      'style="font:inherit;padding:.7rem 1.1rem;color:#212322;background:#fce500;border:0;border-radius:999px;font-weight:700">' +
       'Открыть заново</button></p>' +
       '<p style="margin:0;font-size:.8rem;opacity:.75">Если не помогло, пришлите нам эту строку: ' +
       String(msg).replace(/</g, "&lt;").slice(0, 200) + '</p></div>';
@@ -45,73 +45,55 @@
 })();
 </script>
 <style>
-  /* Тест 3.0. Вид как у страницы клуба «Опора» (violamaro.ru/opora/,
-     build-assets/opora/opora.css): изумрудный фон, заголовки Prata
-     прописными цветом --rose, светлые карточки с тонкой золотой рамкой
-     внутри, бордовые кнопки с золотой кромкой. Только цвета, фон и шрифты:
-     наклеек, фото и прочих деталей той страницы здесь нет. */
-  @font-face { font-family: "Prata"; font-style: normal; font-weight: 400; font-display: swap;
-    src: url(/assets/fonts/Prata-cyrillic.woff2) format("woff2"); unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
-  @font-face { font-family: "Prata"; font-style: normal; font-weight: 400; font-display: swap;
-    src: url(/assets/fonts/Prata-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122; }
-  @font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 700; font-display: swap;
-    src: url(/assets/fonts/GolosText-cyrillic.woff2) format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
-  @font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 700; font-display: swap;
-    src: url(/assets/fonts/GolosText-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD; }
+  /* Тест 3.0. Вид как у страницы Чёрной пятницы (violamaro.ru/bf/,
+     miniapps/bf/index.html): белый фон, тёмный текст #212322, жёлтый акцент
+     #fce500 на кнопках, тёплые подложки #f4f4ee, скругления 28px,
+     заголовки Unbounded, текст Manrope. Реплики Виолы
+     на тёмных пузырях. */
+  @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700&display=swap");
 
   :root {
-    --izumrud: #1F3532;     /* фон */
-    --barhat: #141C15;      /* шапка, плавающая кнопка */
-    --panel: #2D4240;       /* подложка кнопок ответа */
-    --rose: #E8C8CA;        /* заголовки */
-    --rose-muted: #B6928D;  /* подписи, мелкий текст */
-    --text: #EFE4E0;        /* основной текст */
-    --wine: #7B1921;        /* кнопки, акценты на светлом */
-    --wine-text: #F6E9E6;   /* текст на кнопках */
-    --gold: #B8935C;        /* линии, рамки */
-    --svetlyy: #F3E6E3;
-    --slonovaya: #EFE3CC;   /* фон страницы: бумага цвета слоновой кости, как на «Опоре» */
-    --bumaga: #FFFDF8;      /* карточки ответов и оффера на светлом */
-    --muted: #6A5651;       /* подписи на светлом, контраст 6,4 : 1 */
-    --prata: "Prata", Georgia, "Times New Roman", serif;
-    --golos: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --fon: #ffffff;         /* фон страницы */
+    --text: #212322;        /* основной текст, тёмные пузыри */
+    --muted: #535353;       /* подписи */
+    --yellow: #fce500;      /* кнопки, выделения */
+    --yellow-hover: #fcee22;
+    --soft: #f4f4ee;        /* карточки ответов, оффер, плашки */
+    --line: #e6e6e1;        /* тонкие линии */
+    --on-dark: #ffffff;
+    --r: 28px;
+    --prata: "Unbounded", "Manrope", system-ui, sans-serif;   /* заголовки */
+    --golos: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;  /* текст */
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body {
-    /* Светлая схема, как светлые экраны violamaro.ru/opora/: кремовый фон,
-       изумрудный текст, бордовые заголовки, золото только линиями. */
-    margin: 0; color: var(--izumrud);
-    /* та же плитка бумаги, что на светлых экранах «Опоры» (fon-bumaga.webp рядом) */
-    background: var(--slonovaya) url(fon-bumaga.webp) repeat; background-size: 620px auto;
-    /* Golos плотнее обычного (500). */
-    font-family: var(--golos); font-size: 17px; font-weight: 500; line-height: 1.5;
+    margin: 0; color: var(--text); background: var(--fon);
+    font-family: var(--golos); font-size: 17px; font-weight: 500; line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
   p, h1, h2, h3, ul { margin: 0; }
   ul { padding: 0; list-style: none; }
-  a { color: var(--wine); }
+  a { color: var(--text); }
   button { font: inherit; cursor: pointer; }
-  :focus-visible { outline: 2px solid var(--wine); outline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
   .nw { white-space: nowrap; }
 
   .wrap { max-width: 34rem; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
 
   /* шапка: аватарка, имя, где мы, полоса */
-  /* Шапка в цвет страницы, без тёмной плашки: на компьютере плашка висела
-     отдельным прямоугольником. Низ шапки и есть полоса прогресса. */
   .top {
     position: sticky; top: 0; z-index: 5;
-    background: rgba(239, 227, 204, .94);
+    background: rgba(255, 255, 255, .94);
     -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
     padding: .8rem 1rem 0;
   }
   .top[hidden] { display: none; }
   .brand { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
-  .brand-who { display: flex; align-items: center; gap: .55rem; font-weight: 600; color: var(--izumrud); }
-  #counter { font-size: .74rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--wine); text-align: right; }
-  .bar { margin: .75rem -1rem 0; height: 2px; background: rgba(184, 147, 92, .3); overflow: hidden; }
-  .bar i { display: block; height: 100%; width: 0; background: var(--gold); transition: width .3s; }
+  .brand-who { display: flex; align-items: center; gap: .55rem; font-weight: 700; color: var(--text); }
+  #counter { font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-align: right; }
+  .bar { margin: .75rem -1rem 0; height: 4px; background: var(--line); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--text); transition: width .3s; }
 
   main { flex: 1; padding: 1.4rem 1rem 2.5rem; }
   .card { display: flex; flex-direction: column; gap: 1.3rem; }
@@ -119,64 +101,60 @@
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) { .fade { animation: none; } .bar i { transition: none; } }
 
-  .ava { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; border: 1px solid var(--gold); }
+  .ava { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; }
 
-  /* заголовки как на «Опоре» */
   .h1 {
-    font-family: var(--prata); font-weight: 400; text-transform: uppercase;
-    letter-spacing: .035em; line-height: 1.12; color: var(--wine);
-    font-size: clamp(1.55rem, 7vw, 2.5rem);
+    font-family: var(--prata); font-weight: 700; letter-spacing: -.01em;
+    line-height: 1.15; color: var(--text); text-wrap: balance;
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
   }
   .h1 .ln { white-space: nowrap; }
-  .sub { color: var(--muted); font-style: italic; font-weight: 500; font-size: 1.1rem; margin-top: -.5rem; }
-  .q-text { font-size: 1.38rem; line-height: 1.36; font-weight: 700; color: var(--izumrud); text-wrap: pretty; }
+  .sub { color: var(--muted); font-weight: 500; font-size: 1.1rem; margin-top: -.5rem; }
+  .q-text { font-size: 1.38rem; line-height: 1.36; font-weight: 700; color: var(--text); text-wrap: pretty; }
   .soft { color: var(--muted); }
   .center { text-align: center; }
 
-  /* слова Виолы: аватарка, имя, изумрудный пузырь с золотой рамкой внутри
-     (на светлом фоне он отличается от белых карточек ответов) */
+  /* слова Виолы: аватарка, имя, тёмный пузырь */
   .msg { display: grid; grid-template-columns: 36px 1fr; column-gap: .55rem; align-items: end; }
   .bubble {
-    background: var(--izumrud); color: var(--text);
-    border-radius: 14px 14px 14px 4px;
-    outline: 1px solid var(--gold); outline-offset: -5px;
-    padding: .85rem 1.05rem .95rem;
+    background: var(--text); color: var(--on-dark);
+    border-radius: 22px 22px 22px 6px;
+    padding: .9rem 1.1rem 1rem;
     display: flex; flex-direction: column; gap: .6rem; min-width: 0;
   }
-  .who { font-size: .9rem; font-weight: 700; color: var(--rose); margin-bottom: -.35rem; }
+  .who { font-size: .9rem; font-weight: 800; color: var(--yellow); margin-bottom: -.35rem; }
   .bubble p { text-wrap: pretty; font-weight: 500; }
 
   /* ответы на утверждение и варианты вопросов */
   .answers { display: flex; flex-direction: column; gap: .6rem; }
   .ans {
     width: 100%; text-align: left;
-    padding: .95rem 1.1rem; min-height: 3.3rem;
-    background: var(--bumaga); color: var(--izumrud);
-    border: 1px solid rgba(184, 147, 92, .7); border-radius: 6px;
+    padding: .95rem 1.2rem; min-height: 3.3rem;
+    background: var(--soft); color: var(--text);
+    border: 1.5px solid transparent; border-radius: 18px;
     font-size: 1.06rem; font-weight: 600; line-height: 1.35;
     transition: background .15s, border-color .15s;
   }
   /* Подсветка наведения только для мыши: на телефоне она «залипала» после касания. */
-  @media (hover: hover) { .ans:hover { border-color: var(--gold); } }
-  .ans:active, .ans.on { background: var(--wine); border-color: var(--gold); color: var(--wine-text); }
+  @media (hover: hover) { .ans:hover { border-color: var(--text); } }
+  .ans:active, .ans.on { background: var(--text); border-color: var(--text); color: var(--on-dark); }
   .ans.multi { display: flex; gap: .75rem; align-items: center; }
   .ans.multi::before {
-    content: ""; flex: none; width: 1.15rem; height: 1.15rem; border-radius: 3px;
-    border: 1.5px solid var(--gold); background: transparent;
+    content: ""; flex: none; width: 1.15rem; height: 1.15rem; border-radius: 5px;
+    border: 1.5px solid currentColor; background: transparent;
   }
-  .ans.multi.on::before { background: var(--gold); box-shadow: inset 0 0 0 3px var(--wine); }
+  .ans.multi.on::before { background: var(--yellow); border-color: var(--yellow); }
 
-  /* главная кнопка: бордо, золотая кромка и тонкая рамка внутри */
+  /* главная кнопка: жёлтая таблетка, как «Купить» на Чёрной пятнице */
   .go {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 100%; min-height: 3.6rem; padding: .9rem 1.4rem;
-    background: var(--wine); color: var(--wine-text) !important;
-    border: 1px solid var(--gold); border-radius: 6px;
-    box-shadow: inset 0 0 0 4px var(--wine), inset 0 0 0 5px rgba(184, 147, 92, .75);
-    font-family: var(--golos); font-weight: 600; font-size: 1rem; line-height: 1.25;
-    letter-spacing: .1em; text-transform: uppercase; text-decoration: none; text-align: center;
+    width: 100%; min-height: 3.6rem; padding: .95rem 1.4rem;
+    background: var(--yellow); color: var(--text) !important;
+    border: 0; border-radius: 999px;
+    font-family: var(--golos); font-weight: 800; font-size: 1.12rem; line-height: 1.2;
+    text-decoration: none; text-align: center;
   }
-  .go:hover { background: #8E1F28; box-shadow: inset 0 0 0 4px #8E1F28, inset 0 0 0 5px rgba(184, 147, 92, .75); }
+  .go:hover { background: var(--yellow-hover); }
   .go:disabled { opacity: .55; cursor: default; }
   .ghost {
     align-self: flex-start; background: none; border: 0; padding: .3rem 0;
@@ -186,93 +164,27 @@
   .fine { font-size: .82rem; line-height: 1.5; color: var(--muted); }
   .fine a { color: var(--muted); }
   .hint { font-size: .9rem; color: var(--muted); margin-top: -.6rem; }
-  .err { color: var(--wine); font-size: .92rem; }
+  .err { color: #b3261e; font-size: .92rem; }
 
   /* результат */
-  .verdict { font-family: var(--prata); text-transform: uppercase; letter-spacing: .03em; line-height: 1.1;
-    color: var(--wine); font-size: clamp(2.1rem, 10vw, 3rem); text-wrap: balance; }
+  .verdict { font-family: var(--prata); font-weight: 700; letter-spacing: -.01em; line-height: 1.1;
+    color: var(--text); font-size: clamp(2.1rem, 10vw, 3rem); text-wrap: balance; }
   .plate {
-    background: var(--bumaga);
-    border: 1px solid var(--gold); border-radius: 6px; padding: 1rem 1.1rem 1.1rem;
+    background: var(--soft); border-radius: var(--r); padding: 1.2rem 1.3rem 1.3rem;
     display: flex; flex-direction: column; gap: .35rem;
   }
-  .plate-label { font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-  .plate-name { font-family: var(--prata); text-transform: uppercase; letter-spacing: .035em; font-size: 1.45rem; line-height: 1.2; color: var(--wine); }
+  .plate-label { font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .plate-name { font-family: var(--prata); font-weight: 700; font-size: 1.45rem; line-height: 1.2; color: var(--text); }
 
-  /* голосовое: как в Телеграме — аватарка, круглая кнопка, дорожка, время, скорость */
-  .voice {
-    display: grid; grid-template-columns: 36px 1fr; column-gap: .55rem; align-items: end;
+  /* текст результата: подзаголовок Unbounded, абзацы на тёплой подложке */
+  .res-block {
+    background: var(--soft); color: var(--text); border-radius: var(--r);
+    padding: 1.4rem 1.3rem 1.5rem;
+    display: flex; flex-direction: column; gap: .8rem;
   }
-  .voice-box {
-    background: var(--izumrud); color: var(--text);
-    border-radius: 14px 14px 14px 4px;
-    outline: 1px solid var(--gold); outline-offset: -5px;
-    padding: .8rem .95rem .75rem;
-    display: grid; grid-template-columns: 2.8rem 1fr auto; gap: .35rem .75rem; align-items: center;
-  }
-  .play {
-    grid-row: span 2; width: 2.8rem; height: 2.8rem; border-radius: 50%;
-    background: var(--wine); color: var(--wine-text); border: 1px solid var(--gold);
-    display: flex; align-items: center; justify-content: center; padding: 0;
-  }
-  .play svg { width: 1.15rem; height: 1.15rem; }
-  .track { position: relative; height: 1.6rem; display: flex; align-items: center; cursor: pointer; }
-  .track-line { position: relative; width: 100%; height: 4px; border-radius: 2px; background: rgba(239, 228, 224, .25); overflow: hidden; }
-  .track-line i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--gold); }
-  .speed {
-    grid-row: span 2; align-self: center;
-    background: none; border: 1px solid var(--gold); border-radius: 999px;
-    color: var(--rose); font-size: .82rem; font-weight: 700; padding: .25rem .55rem; min-width: 3rem;
-  }
-  .time { font-size: .82rem; color: var(--text); opacity: .75; font-variant-numeric: tabular-nums; }
-  .voice-wait { grid-column: 2 / 4; font-size: .95rem; }
-  .voice-box.off .play { opacity: .45; cursor: default; }
-
-  /* мини-оффер: светлая карточка, как на «Опоре» */
-  .offer {
-    background: var(--bumaga); color: var(--izumrud);
-    border-radius: 6px; outline: 1px solid var(--gold); outline-offset: -7px;
-    padding: 1.5rem 1.4rem 1.6rem;
-    display: flex; flex-direction: column; gap: .9rem;
-  }
-  .offer h2 { font-family: var(--prata); font-weight: 400; text-transform: uppercase; letter-spacing: .04em;
-    font-size: clamp(1.85rem, 8.4vw, 2.4rem); line-height: 1.1; color: var(--wine); }
-  .offer li { display: flex; gap: .65rem; align-items: baseline; }
-  .offer li::before { content: ""; flex: none; width: .45rem; height: .45rem; border-radius: 50%; background: var(--gold); transform: translateY(-.1rem); }
-  .offer ul { display: flex; flex-direction: column; gap: .45rem; }
-  .offer-lead { font-size: 1.18rem; line-height: 1.4; font-weight: 600; text-wrap: pretty; }
-  .offer p { text-wrap: pretty; }
-  .offer-intro { margin-bottom: -.35rem; }
-
-  /* Первый экран результата на всю высоту: оффер начинается ниже, его видно
-     только после того, как человек пролистает по стрелке. */
-  #offer-box { scroll-margin-top: 1rem; }
-  .res-first { display: flex; flex-direction: column; gap: 1.3rem; min-height: calc(100vh - 2.7rem); }
-  @supports (height: 100svh) { .res-first { min-height: calc(100svh - 2.7rem); } }
-  .down {
-    margin-top: auto; align-self: center; padding: 1.2rem .5rem .2rem;
-    background: none; border: 0; color: var(--izumrud); text-align: center;
-    display: flex; flex-direction: column; align-items: center; gap: .9rem;
-    font-size: 1.02rem; font-weight: 600; line-height: 1.4;
-  }
-  /* надпись плашкой, как карточки «Опоры»: белая, двойная золотая рамка */
-  .down-text {
-    background: var(--bumaga); border: 1px solid var(--gold); border-radius: 10px;
-    outline: 1px solid rgba(184, 147, 92, .4); outline-offset: -6px;
-    padding: .85rem 1.3rem; max-width: 20rem; text-wrap: balance;
-  }
-  /* стрелка в круглой бордовой кнопке, мягко подпрыгивает */
-  .down-ico {
-    width: 3.1rem; height: 3.1rem; border-radius: 50%;
-    background: var(--wine); color: var(--wine-text); border: 1px solid var(--gold);
-    box-shadow: inset 0 0 0 3px var(--wine), inset 0 0 0 4px rgba(184, 147, 92, .75);
-    display: flex; align-items: center; justify-content: center;
-    animation: down 1.8s ease-in-out infinite;
-  }
-  .down-ico svg { width: 1.45rem; height: 1.45rem; }
-  @media (hover: hover) { .down:hover .down-ico { background: #8E1F28; } }
-  @keyframes down { 0%, 100% { transform: none; } 50% { transform: translateY(6px); } }
-  @media (prefers-reduced-motion: reduce) { .down-ico { animation: none; } }
+  .res-block h2 { font-family: var(--prata); font-weight: 700; letter-spacing: -.01em;
+    font-size: clamp(1.3rem, 6vw, 1.6rem); line-height: 1.2; color: var(--text); text-wrap: balance; }
+  .res-block p { text-wrap: pretty; }
 </style>
 
 <div class="wrap">
@@ -301,21 +213,18 @@ const CONFIG = {
      Скрипт-таблицы-целиком.gs). Тест 3.0 он понимает с версии
      «2026-11-11 test3»: до её развёртывания записи ждут в буфере браузера. */
   sheetUrl: "https://script.google.com/macros/s/AKfycbznc7zwFhyc7t5FCkmm1gFIi2FH4ZcIeUeXQlCStxsVZ2npUFa4K_JipDzbCACG2WjSAQ/exec",
-  /* Кнопка «Изучить программу». Финальный адрес с оплатой даст Илья. */
-  offerUrl: "https://violamaro.ru",
+  /* Кнопка «Изучить программу»: страница программы с оплатой. */
+  offerUrl: "https://violamaro.ru/pe/",
   /* Кнопка «Мой Телеграм-канал» у «не эмпата»: открытый канал Виолы. */
   channelUrl: "https://t.me/violamaro1",
   docs: { privacy: "https://violamaro.ru/privacy/" },
-  /* Голосовые Виолы: miniapps/test3/audio/<имя>.mp3. Пока файла нет, ставьте
-     false: вместо плеера будет «Голосовое появится совсем скоро». */
-  audio: { start: false, donor: false, filter: false, sleeping: false, awake: false },
   /* Пороги черновые: проверить по первым 100 прохождениям (ТЗ, раздел 7). */
   porog: {
     neEmpat: 7,     // R не больше этого — «не эмпат»
     awake: 7,       // «проснувшийся» в кандидатах только при P не меньше этого
     low: 2          // максимум D, F, Z, P не больше этого — тип «без фильтра»
   },
-  /* Экран «Собираю ваш результат…» стоит не меньше этого времени. */
+  /* Экран «Собираем ваш результат…» стоит не меньше этого времени. */
   minSaveMs: 1800
 };
 
@@ -328,10 +237,10 @@ const INTRO = {
   title: "Эмпат ли вы<br>на самом деле?",
   sub: "Или вам только кажется",
   words: [
-    "Дорогие мои, больше всего мне задают один вопрос: эмпат ли я, если у меня повышенная чувствительность.",
+    "Чаще всего Виоле задают один вопрос: эмпат ли я, если у меня повышенная чувствительность.",
     "Есть люди просто эмоциональные, и это не значит, что у них есть эмпатия. Если это тревожность, это тоже не эмпатия.",
     "Давайте разбираться. Здесь 29 утверждений, это три-четыре минуты.",
-    "Если вы эмпат, я скажу, какой именно. И в голосовом расскажу, как вы устроены и что с этим делать."
+    "Если вы эмпат, тест покажет, какой именно, как вы устроены и что с этим делать."
   ]
 };
 const DISCLAIM = "Это не диагностика и не диагноз. Это способ посмотреть на себя со стороны.";
@@ -387,7 +296,7 @@ const BLOCKS = [
       { id: "Z3", s: "Z", t: "Вроде всё спокойно, а внутри тяжесть и давление.", re: "Вроде тихо, вроде спокойно, а солнышка нет." },
       { id: "P3", s: "P", t: "Вам говорили: «Ты стала(-л) холодной(-ым)».", re: "У вас просто разбились иллюзии." }
     ],
-    after: () => "Какой вы эмпат, мне уже видно. Осталось немного." },
+    after: () => "Какой вы эмпат, уже видно. Осталось немного." },
   { key: "Q", name: "Сферы",
     intro: "Теперь посмотрим, где это стоит вам дороже всего.",
     items: [
@@ -423,28 +332,84 @@ const AGES = ["до 35", "35–44", "45–54", "55–64", "65 и старше"];
 const RESULT = {
   yes: "Да, вы эмпат",
   label: "Ваш тип",
-  listen: "Что это значит и как вы устроены, я разобрала для вас в голосовом. Послушайте.",
-  down: "Информация для вас, если вы уже послушали голосовое",
-  wait: "Голосовое появится совсем скоро",
-  /* Мини-оффер (правка 11.11, заменяет прежние версии). Слова Виолы из её
-     ролика о курсе: не править и не сокращать. Цифр про лекции и техники
-     здесь нет, «Доступ сразу после оплаты» только под кнопкой. */
-  offer: {
-    title: "Прикладная эмпатия",
-    lead: "Сейчас ваша эмпатия стопорит и мешает вашей жизни. Она может стать вашим другом.",
-    text: "Вы слушали лекции, читали книжки. Но осталась одна проблема: как? Как это применить, чтобы жизнь стала легче?",
-    listIntro: "Эта программа про «как»:",
-    lines: [
-      "поставить себя в приоритет и перестать быть удобной(-ым)",
-      "найти свой источник энергии и никому его не отдавать",
-      "чтобы пришла та самая наполненность",
-    ],
-    btn: "Изучить программу",
-    note: "Доступ сразу после оплаты",
+  hResult: "Ваш результат",
+  hProblem: "В чём проблема",
+  hSolution: "Решение",
+  /* Тексты результата по типам (23.11): слово в слово, править только
+     с «да» Ильи. Каждая строка - отдельный абзац. */
+  types: {
+    donor: {
+      result: [
+        "Вы эмпат-донор. Вы всегда стараетесь быть рядом, помогать всем, кто нуждается, часто даже тем, кто не просит. Вы щедро делитесь любовью, порой безвозмездно и в избытке.",
+        "Часто те, кто отдают больше всего любви, сами никогда её по-настоящему не получали. В глубине души у них живёт ощущение, что они были обузой для тех, кто их растил. Чтобы не быть тяжестью, они привыкли подавлять свои чувства, скрывать свои желания и оставаться в тени, стараясь никого не потревожить.",
+        "Любовь, доверие, преданность, доброта - это золото нашей души. И если вы не осознаёте своих сильных сторон и внутреннего золота, вами легче манипулировать.",
+      ],
+      problem: [
+        "Погружаясь с головой в процесс отдачи, мы забываем о законе взаимного обмена в отношениях. Вы щедро раздаёте любовь, втайне надеясь, что кто-то отплатит вам тем же. А вместо взаимности сталкиваетесь с равнодушием.",
+        "Вина путается с заботой. Гиперответственность за чужое настроение мешает выставить границы. Почему вы говорите «да», когда на самом деле хотите сказать «нет»? Кто сказал вам, что проявлять свои потребности - это эгоизм?",
+      ],
+      solution: [
+        "Вы уже умеете любить других. Нужно открыть для себя искусство направлять эту любовь внутрь.",
+        "Начните сегодня с малого. Признайте одну свою потребность, которую вы долго игнорировали ради других, и удовлетворите её.",
+        "А как спокойно говорить «нет» без чувства вины, мы разбираем в Прикладной эмпатии.",
+      ],
+    },
+    filter: {
+      result: [
+        "Вы эмпат без фильтра. Эмпатия - это врождённая функция, способность видеть невидимое и чувствовать неосязаемое. Как эмпат, вы выросли с обнажённой душой.",
+        "Вы человек-орхидея. Это не слабость и неприспособленность. Это невероятная чуткость, хрупкость и красота. Если среда благоприятна, орхидеи расцветают. Только цветам не говорят «будь проще» или «не драматизируй».",
+      ],
+      problem: [
+        "Эмпаты склонны верить, что в каждом есть свет. Они пытаются отогреть холодного человека своей любовью. Поэтому после предательства вы снова открываетесь.",
+        "А от одного резкого слова у вас удар в живот. Если вас ранит мнение другого человека, значит, его мнение важнее вашей внутренней уверенности. Это не слабость, это сигнал. Точка роста.",
+      ],
+      solution: [
+        "Вы не обязаны спасать всех от негативных эмоций. Вы имеете право завершать контакт мгновенно, если чувствуете, что вас используют как эмоциональный контейнер. Ищите тех, кто способен на резонанс, а не на поглощение.",
+        "А как отделять своё от чужого и быстро возвращаться в себя после контакта, мы разбираем в Прикладной эмпатии.",
+      ],
+    },
+    sleeping: {
+      result: [
+        "Вы спящий эмпат. Ваш радар на месте, вы всё видите и понимаете про людей. Но научились делать вид, что не заметили.",
+        "Эмпатичный ребёнок тонко чувствует условность любви. «Меня любят, только когда я удобен». Если рядом жёсткий контроль, его природный дар сопереживания превращается в механизм выживания. Он начинает подстраиваться под нужды взрослых, теряя связь со своим «я». Сглаживает конфликты, поглощает чужую агрессию и работает эмоциональным клеем.",
+        "Наиболее тонкие, чувствительные и умные люди часто вырабатывают сложные внутренние защиты. Ваша защита - не чувствовать.",
+      ],
+      problem: [
+        "Эмоциональное онемение - это защитный механизм. Но он блокирует и боль, и радость. Поэтому вроде всё спокойно, а внутри тяжесть.",
+        "Почему вы улыбаетесь, когда внутри устаёте? Вы продолжаете играть роль удобного человека, даже когда объективной угрозы больше нет.",
+      ],
+      solution: [
+        "Вы не сломаны. Вы временно дезориентированы. Ваша внутренняя ценность не была разрушена, она была временно заблокирована.",
+        "Точно так же, как вы можете понять и считывать других людей, у вас есть способность развернуть этот фокус на самого себя. Если вы чувствуете дискомфорт, значит, он есть, даже если окружающие говорят «тебе показалось».",
+        "А как вернуть себе право чувствовать и контакт с собой, мы разбираем в Прикладной эмпатии.",
+      ],
+    },
+    awake: {
+      result: [
+        "Вы проснувшийся эмпат. Вы чувствуете глубоко, но выбираете. Реагируете осознанно, а не импульсивно. Переживаете боль, но не ломаетесь.",
+        "Люди чувствуют вашу устойчивость, даже если не понимают, как это происходит. Для тех, кто привык к вашим прежним реакциям, новая стабильность может казаться отстранённостью или холодностью. Отсюда и «ты стала(-л) холодной(-ым)».",
+        "Вы прошли через шторм и остались собой. Для эмпата это и есть успех - энергетическая свобода.",
+      ],
+      problem: [
+        "Если поддаться давлению и снова начать искать одобрения, вы вернётесь в привычный цикл страданий и борьбы за принятие.",
+        "И появляется ощущение, что вы переросли окружение. Знаете, как будто бы вы выросли из одежды и нужен новый гардероб. Это кризис. А кризис как рождение ребёнка, он не может не родиться.",
+      ],
+      solution: [
+        "Вы не изменяете себя. Вы изменяете стереотипы вашей жизни, которые уже не подходят к вашей новой версии.",
+        "Спросите себя. Что я хочу? Какие мои настоящие желания? Какие потребности важны для меня?",
+        "А как направить эту силу на себя, своё дело и деньги, мы разбираем в Прикладной эмпатии.",
+      ],
+    },
   },
+  close: {
+    title: "Прикладная эмпатия",
+    text: "Этот курс станет первым важным шагом для того, чтобы ваша эмпатия стала вашей силой, а не постоянной слабостью. Для кого-то он поможет выйти из позиции спасателя и поставить себя на первое место в своей жизни. Для кого-то он поможет сформировать важнейшие внутренние балансы и балансы в отношениях."
+  },
+  btn: "Изучить программу",
+  note: "Доступ ко всем материалам курса сразу после оплаты",
   no: "Вы не эмпат",
   noText: "По вашим ответам это чувствительность, а не эмпатия. Есть люди, которые очень остро отзываются на чужую боль, потому что у них самих болит в том же месте. Это со-чувствование, это не эмпатия.",
-  noBtn: "Мой Телеграм-канал"
+  noBtn: "Телеграм-канал Виолы"
 };
 
 /* ——— состояние ———
@@ -604,12 +569,6 @@ function istochnik_() {
   return String(s).replace(/[^\w\-]/g, "").slice(0, 40);
 }
 
-const ICON = {
-  play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>',
-  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v17M5 13l7 7 7-7"/></svg>',
-  pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5.5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14" y="4" width="4.5" height="16" rx="1.2"/></svg>'
-};
-
 /* ——— старт ——— */
 function intro() {
   stage = "intro";
@@ -617,7 +576,6 @@ function intro() {
     <div class="card">
       <h1 class="h1">${INTRO.title.split("<br>").map(l => `<span class="ln">${l}</span>`).join("<br>")}</h1>
       <p class="sub">${INTRO.sub}</p>
-      ${CONFIG.audio.start ? voiceHtml_("start") : ""}
       ${viola_(INTRO.words)}
       <div class="foot"><button class="go" id="start">Начать</button></div>
       <div class="fine">
@@ -625,7 +583,6 @@ function intro() {
         <p>Нажимая «Начать», вы соглашаетесь с <a href="${CONFIG.docs.privacy}" target="_blank" rel="noopener">Политикой обработки персональных данных</a>.</p>
       </div>
     </div>`);
-  if (CONFIG.audio.start) player_(n, "start");
   n.querySelector("#start").addEventListener("click", () => {
     idx = 0; answers.length = 0; razvilka = ""; letAns = ""; prob = []; age = "";
     startedAt = Date.now(); pid = newPid_(); src0 = istochnik_(); res = null;
@@ -640,12 +597,12 @@ function question() {
   stage = "q";
   const it = ALL[idx], b = BLOCKS[it.b];
   const prev = idx > 0 ? ALL[idx - 1] : null;
-  const voice = [];
-  if (prev && prev.re && answers[idx - 1] >= 2) voice.push(prev.re);   // реплика на прошлый ответ
-  if (it.i === 0) voice.push(b.intro);                                // вступление к блоку
+  const said = [];
+  if (prev && prev.re && answers[idx - 1] >= 2) said.push(prev.re);    // реплика на прошлый ответ
+  if (it.i === 0) said.push(b.intro);                                 // вступление к блоку
   const n = el(`
     <div class="card">
-      ${voice.length ? viola_(voice) : ""}
+      ${said.length ? viola_(said) : ""}
       <h2 class="q-text">${it.t}</h2>
       <div class="answers">
         ${SCALE.map((s, i) => `<button class="ans${answers[idx] === 3 - i ? " on" : ""}" data-v="${3 - i}">${s}</button>`).join("")}
@@ -777,14 +734,14 @@ function ageScreen() {
   render(n);
 }
 
-/* ——— «Собираю ваш результат…» ———
+/* ——— «Собираем ваш результат…» ———
    Пока прохождение уходит в таблицу, и не меньше CONFIG.minSaveMs. Таблица
    не ответила за 8 секунд — результат всё равно показываем, запись остаётся
    в очереди браузера и уйдёт при следующем открытии. */
 function finish_() {
   res = score_();
   stage = "saving"; saveState();
-  render(el(`<div class="card"><p class="soft center" style="margin-top:3rem">Собираю ваш результат…</p></div>`));
+  render(el(`<div class="card"><p class="soft center" style="margin-top:3rem">Собираем ваш результат…</p></div>`));
   const p = resultPayload_(res);
   const wait = new Promise(r => setTimeout(r, CONFIG.minSaveMs));
   const save = Promise.race([saveResult_(p), new Promise(r => setTimeout(r, 8000))]);
@@ -806,82 +763,21 @@ function result() {
     return;
   }
   const t = TYPES[res.type];
+  const tx = RESULT.types[res.type];
+  const block = (h, paras) => `<div class="res-block"><h2>${h}</h2>${paras.map(p => `<p>${p}</p>`).join("")}</div>`;
   const n = el(`
     <div class="card">
-      <div class="res-first">
-        <h1 class="verdict">${RESULT.yes}</h1>
-        <div class="plate"><span class="plate-label">${RESULT.label}</span><span class="plate-name">${t.name}</span></div>
-        <p>${RESULT.listen}</p>
-        ${voiceHtml_(res.type)}
-        <button class="down" type="button" id="down"><span class="down-text">${RESULT.down}</span><span class="down-ico">${ICON.down}</span></button>
-      </div>
-      <div class="offer" id="offer-box">
-        <h2>${RESULT.offer.title}</h2>
-        <p class="offer-lead">${RESULT.offer.lead}</p>
-        <p>${RESULT.offer.text}</p>
-        <p class="offer-intro">${RESULT.offer.listIntro}</p>
-        <ul>${RESULT.offer.lines.map(l => `<li>${l}</li>`).join("")}</ul>
-      </div>
-      <div class="foot"><a class="go" id="offer" href="${CONFIG.offerUrl}" target="_blank" rel="noopener">${RESULT.offer.btn}</a>
-        <p class="fine center">${RESULT.offer.note}</p></div>
+      <h1 class="verdict">${RESULT.yes}</h1>
+      <div class="plate"><span class="plate-label">${RESULT.label}</span><span class="plate-name">${t.name}</span></div>
+      ${block(RESULT.hResult, tx.result)}
+      ${block(RESULT.hProblem, tx.problem)}
+      ${block(RESULT.hSolution, tx.solution)}
+      ${block(RESULT.close.title, [RESULT.close.text])}
+      <div class="foot"><a class="go" id="offer" href="${CONFIG.offerUrl}" target="_blank" rel="noopener">${RESULT.btn}</a>
+        <p class="fine center">${RESULT.note}</p></div>
     </div>`);
-  player_(n, res.type);
   n.querySelectorAll('a[href="' + CONFIG.offerUrl + '"]').forEach(a => a.addEventListener("click", () => event_("offer_click")));
   render(n);
-  const box = n.querySelector("#offer-box");
-  n.querySelector("#down").addEventListener("click", () => {
-    const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-    box.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-  });
-}
-
-/* ——— голосовое: как в Телеграме ——— */
-function voiceHtml_(key) {
-  const on = !!CONFIG.audio[key];
-  return `
-    <div class="voice" data-voice="${key}">
-      <img class="ava" src="${AVATAR}" alt="" width="36" height="36">
-      <div class="voice-box${on ? "" : " off"}">
-        <button class="play" type="button" aria-label="Слушать голосовое Виолы"${on ? "" : " disabled"}>${ICON.play}</button>
-        ${on ? `
-        <div class="track" role="slider" aria-label="Перемотка" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="track-line"><i></i></div></div>
-        <button class="speed" type="button" aria-label="Скорость">1×</button>
-        <span class="time">0:00</span>
-        <audio preload="metadata" src="audio/${key}.mp3"></audio>` : `<p class="voice-wait">${RESULT.wait}</p>`}
-      </div>
-    </div>`;
-}
-function mmss_(s) { s = Math.max(0, Math.round(s || 0)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
-function player_(root, key) {
-  const box = root.querySelector('[data-voice="' + key + '"]');
-  const audio = box && box.querySelector("audio");
-  if (!audio) return;
-  const play = box.querySelector(".play"), line = box.querySelector(".track-line i"),
-        track = box.querySelector(".track"), time = box.querySelector(".time"), speed = box.querySelector(".speed");
-  const sent = {};
-  const once = name => { if (key === "start" || sent[name]) return; sent[name] = true; event_(name); };
-  const paint = () => {
-    const d = audio.duration || 0, c = audio.currentTime || 0;
-    line.style.width = d ? (c / d * 100) + "%" : "0";
-    track.setAttribute("aria-valuenow", d ? Math.round(c / d * 100) : 0);
-    time.textContent = audio.paused && !c ? mmss_(d) : mmss_(c) + " / " + mmss_(d);
-  };
-  play.addEventListener("click", () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
-  audio.addEventListener("play", () => { play.innerHTML = ICON.pause; play.setAttribute("aria-label", "Пауза"); once("audio_start"); });
-  audio.addEventListener("pause", () => { play.innerHTML = ICON.play; play.setAttribute("aria-label", "Слушать голосовое Виолы"); });
-  audio.addEventListener("loadedmetadata", paint);
-  audio.addEventListener("timeupdate", () => { paint(); if (audio.duration && audio.currentTime / audio.duration >= .5) once("audio_50"); });
-  audio.addEventListener("ended", () => { once("audio_end"); audio.currentTime = 0; paint(); });
-  track.addEventListener("click", e => {
-    if (!audio.duration) return;
-    const r = track.getBoundingClientRect();
-    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
-    paint();
-  });
-  speed.addEventListener("click", () => {
-    audio.playbackRate = audio.playbackRate === 1 ? 1.5 : 1;
-    speed.textContent = audio.playbackRate === 1 ? "1×" : "1,5×";
-  });
 }
 
 /* ——— отправка в таблицу ———
@@ -1003,7 +899,7 @@ function boot() {
 }
 
 /* Аватарка Виолы: та же, что в тесте 2.0, вшита в файл. */
-const AVATAR = "data:image/jpeg;base64,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";
+const AVATAR = "viola.webp"; /* фото Виолы 192×192, лицо крупно */
 
 try { boot(); } catch (e) { if (window.__fallback) window.__fallback(e && e.message ? e.message : e); }
 </script>
