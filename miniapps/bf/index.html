@@ -573,7 +573,7 @@
     <div class="faq">
       <details>
         <summary><span class="s-name">Как я получу доступ?</span><span class="pm" aria-hidden="true"></span></summary>
-        <div class="d-body"><p>После оплаты команда пришлёт доступ к записям. Если что-то не пришло, напишите в поддержку <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>.</p></div>
+        <div class="d-body"><p>Сразу после оплаты вы получите ссылки на доступ к записям. Если что-то не найдёте, напишите команде <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>.</p></div>
       </details>
       <details>
         <summary><span class="s-name">Сколько действует доступ?</span><span class="pm" aria-hidden="true"></span></summary>
@@ -1082,7 +1082,7 @@
     <label class="chk"><input type="checkbox" name="accept_pd"><span data-docs="rub">Даю <a href="/consent/" target="_blank" rel="noopener">согласие на обработку персональных данных</a></span><span data-docs="eur" hidden>Соглашаюсь с <a href="https://violamaro.com/privacy" target="_blank" rel="noopener">политикой конфиденциальности Viola Maro FZ-LLC</a></span></label>
     <p class="err" id="lead-err" hidden></p>
     <button type="submit" class="btn" id="lead-go">Перейти к оплате</button>
-    <p class="note-s" id="lead-note">После оплаты команда пришлёт доступ на этот номер или в Телеграм.</p>
+    <p class="note-s" id="lead-note">Сразу после оплаты вы получите ссылки на доступ к записям.</p>
     <div class="lead-ok" id="lead-ok" hidden>
       <p>Готово. 27 ноября в 9:00 по Москве мы напишем вам, когда откроется оплата.</p>
       <button type="button" class="btn" id="lead-ok-x">Закрыть</button>
@@ -1250,7 +1250,7 @@ document.addEventListener("click", e => {
   const euro = pick.cur === "eur";
   document.querySelectorAll("#lead [data-docs]").forEach(el => el.hidden = (el.dataset.docs === "eur") !== euro);
   document.getElementById("lead-hint").textContent = remind ? "Сюда напишем, когда откроется оплата" : "Сюда пришлём доступ к записям";
-  document.getElementById("lead-note").textContent = remind ? "Напишем на этот номер или в Телеграм." : "После оплаты команда пришлёт доступ на этот номер или в Телеграм.";
+  document.getElementById("lead-note").textContent = remind ? "Напишем на этот номер или в Телеграм." : "Сразу после оплаты вы получите ссылки на доступ к записям.";
   document.getElementById("lead-ok").hidden = true; dlg.classList.remove("done");
   errBox.hidden = true; goBtn.disabled = false; goBtn.textContent = remind ? "Напомнить мне" : "Перейти к оплате";
   if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
