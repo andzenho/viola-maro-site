@@ -2,8 +2,8 @@
 <html lang="ru">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#EFE3CC">
-<meta name="color-scheme" content="only dark">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="only light">
 <!-- Пока тексты не утверждены (Илья, затем Виола), страницу не индексируем. -->
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Эмпат вы или вам только кажется. 29 утверждений, три-четыре минуты.">
@@ -27,11 +27,11 @@
     if (!box) return;
     box.innerHTML =
       '<div style="max-width:32rem;margin:1.5rem auto;padding:1.4rem;font:16px/1.55 system-ui,-apple-system,sans-serif;' +
-      'color:#1F3532;background:#F3E6E3;border-radius:6px">' +
+      'color:#212322;background:#f4f4ee;border-radius:20px">' +
       '<p style="margin:0 0 .9rem;font-size:1.2rem">Тест не открылся с первого раза</p>' +
       '<p style="margin:0 0 .9rem">Так бывает: оборвалась связь или страница не догрузилась.</p>' +
       '<p style="margin:0 0 .9rem"><button onclick="location.reload()" ' +
-      'style="font:inherit;padding:.7rem 1.1rem;color:#F6E9E6;background:#7B1921;border:1px solid #B8935C;border-radius:6px">' +
+      'style="font:inherit;padding:.7rem 1.1rem;color:#212322;background:#fce500;border:0;border-radius:999px;font-weight:700">' +
       'Открыть заново</button></p>' +
       '<p style="margin:0;font-size:.8rem;opacity:.75">Если не помогло, пришлите нам эту строку: ' +
       String(msg).replace(/</g, "&lt;").slice(0, 200) + '</p></div>';
@@ -45,73 +45,55 @@
 })();
 </script>
 <style>
-  /* Тест 3.0. Вид как у страницы клуба «Опора» (violamaro.ru/opora/,
-     build-assets/opora/opora.css): изумрудный фон, заголовки Prata
-     прописными цветом --rose, светлые карточки с тонкой золотой рамкой
-     внутри, бордовые кнопки с золотой кромкой. Только цвета, фон и шрифты:
-     наклеек, фото и прочих деталей той страницы здесь нет. */
-  @font-face { font-family: "Prata"; font-style: normal; font-weight: 400; font-display: swap;
-    src: url(/assets/fonts/Prata-cyrillic.woff2) format("woff2"); unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
-  @font-face { font-family: "Prata"; font-style: normal; font-weight: 400; font-display: swap;
-    src: url(/assets/fonts/Prata-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122; }
-  @font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 700; font-display: swap;
-    src: url(/assets/fonts/GolosText-cyrillic.woff2) format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
-  @font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 700; font-display: swap;
-    src: url(/assets/fonts/GolosText-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD; }
+  /* Тест 3.0. Вид как у страницы Чёрной пятницы (violamaro.ru/bf/,
+     miniapps/bf/index.html): белый фон, тёмный текст #212322, жёлтый акцент
+     #fce500 на кнопках, тёплые подложки #f4f4ee, скругления 28px,
+     заголовки Unbounded, текст Manrope. Реплики и голосовое Виолы
+     на тёмных пузырях. */
+  @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700&display=swap");
 
   :root {
-    --izumrud: #1F3532;     /* фон */
-    --barhat: #141C15;      /* шапка, плавающая кнопка */
-    --panel: #2D4240;       /* подложка кнопок ответа */
-    --rose: #E8C8CA;        /* заголовки */
-    --rose-muted: #B6928D;  /* подписи, мелкий текст */
-    --text: #EFE4E0;        /* основной текст */
-    --wine: #7B1921;        /* кнопки, акценты на светлом */
-    --wine-text: #F6E9E6;   /* текст на кнопках */
-    --gold: #B8935C;        /* линии, рамки */
-    --svetlyy: #F3E6E3;
-    --slonovaya: #EFE3CC;   /* фон страницы: бумага цвета слоновой кости, как на «Опоре» */
-    --bumaga: #FFFDF8;      /* карточки ответов и оффера на светлом */
-    --muted: #6A5651;       /* подписи на светлом, контраст 6,4 : 1 */
-    --prata: "Prata", Georgia, "Times New Roman", serif;
-    --golos: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --fon: #ffffff;         /* фон страницы */
+    --text: #212322;        /* основной текст, тёмные пузыри */
+    --muted: #535353;       /* подписи */
+    --yellow: #fce500;      /* кнопки, выделения */
+    --yellow-hover: #fcee22;
+    --soft: #f4f4ee;        /* карточки ответов, оффер, плашки */
+    --line: #e6e6e1;        /* тонкие линии */
+    --on-dark: #ffffff;
+    --r: 28px;
+    --prata: "Unbounded", "Manrope", system-ui, sans-serif;   /* заголовки */
+    --golos: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;  /* текст */
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body {
-    /* Светлая схема, как светлые экраны violamaro.ru/opora/: кремовый фон,
-       изумрудный текст, бордовые заголовки, золото только линиями. */
-    margin: 0; color: var(--izumrud);
-    /* та же плитка бумаги, что на светлых экранах «Опоры» (fon-bumaga.webp рядом) */
-    background: var(--slonovaya) url(fon-bumaga.webp) repeat; background-size: 620px auto;
-    /* Golos плотнее обычного (500). */
-    font-family: var(--golos); font-size: 17px; font-weight: 500; line-height: 1.5;
+    margin: 0; color: var(--text); background: var(--fon);
+    font-family: var(--golos); font-size: 17px; font-weight: 500; line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
   p, h1, h2, h3, ul { margin: 0; }
   ul { padding: 0; list-style: none; }
-  a { color: var(--wine); }
+  a { color: var(--text); }
   button { font: inherit; cursor: pointer; }
-  :focus-visible { outline: 2px solid var(--wine); outline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
   .nw { white-space: nowrap; }
 
   .wrap { max-width: 34rem; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
 
   /* шапка: аватарка, имя, где мы, полоса */
-  /* Шапка в цвет страницы, без тёмной плашки: на компьютере плашка висела
-     отдельным прямоугольником. Низ шапки и есть полоса прогресса. */
   .top {
     position: sticky; top: 0; z-index: 5;
-    background: rgba(239, 227, 204, .94);
+    background: rgba(255, 255, 255, .94);
     -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
     padding: .8rem 1rem 0;
   }
   .top[hidden] { display: none; }
   .brand { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
-  .brand-who { display: flex; align-items: center; gap: .55rem; font-weight: 600; color: var(--izumrud); }
-  #counter { font-size: .74rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--wine); text-align: right; }
-  .bar { margin: .75rem -1rem 0; height: 2px; background: rgba(184, 147, 92, .3); overflow: hidden; }
-  .bar i { display: block; height: 100%; width: 0; background: var(--gold); transition: width .3s; }
+  .brand-who { display: flex; align-items: center; gap: .55rem; font-weight: 700; color: var(--text); }
+  #counter { font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-align: right; }
+  .bar { margin: .75rem -1rem 0; height: 4px; background: var(--line); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--text); transition: width .3s; }
 
   main { flex: 1; padding: 1.4rem 1rem 2.5rem; }
   .card { display: flex; flex-direction: column; gap: 1.3rem; }
@@ -119,64 +101,60 @@
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) { .fade { animation: none; } .bar i { transition: none; } }
 
-  .ava { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; border: 1px solid var(--gold); }
+  .ava { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; }
 
-  /* заголовки как на «Опоре» */
   .h1 {
-    font-family: var(--prata); font-weight: 400; text-transform: uppercase;
-    letter-spacing: .035em; line-height: 1.12; color: var(--wine);
-    font-size: clamp(1.55rem, 7vw, 2.5rem);
+    font-family: var(--prata); font-weight: 700; letter-spacing: -.01em;
+    line-height: 1.15; color: var(--text); text-wrap: balance;
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
   }
   .h1 .ln { white-space: nowrap; }
-  .sub { color: var(--muted); font-style: italic; font-weight: 500; font-size: 1.1rem; margin-top: -.5rem; }
-  .q-text { font-size: 1.38rem; line-height: 1.36; font-weight: 700; color: var(--izumrud); text-wrap: pretty; }
+  .sub { color: var(--muted); font-weight: 500; font-size: 1.1rem; margin-top: -.5rem; }
+  .q-text { font-size: 1.38rem; line-height: 1.36; font-weight: 700; color: var(--text); text-wrap: pretty; }
   .soft { color: var(--muted); }
   .center { text-align: center; }
 
-  /* слова Виолы: аватарка, имя, изумрудный пузырь с золотой рамкой внутри
-     (на светлом фоне он отличается от белых карточек ответов) */
+  /* слова Виолы: аватарка, имя, тёмный пузырь */
   .msg { display: grid; grid-template-columns: 36px 1fr; column-gap: .55rem; align-items: end; }
   .bubble {
-    background: var(--izumrud); color: var(--text);
-    border-radius: 14px 14px 14px 4px;
-    outline: 1px solid var(--gold); outline-offset: -5px;
-    padding: .85rem 1.05rem .95rem;
+    background: var(--text); color: var(--on-dark);
+    border-radius: 22px 22px 22px 6px;
+    padding: .9rem 1.1rem 1rem;
     display: flex; flex-direction: column; gap: .6rem; min-width: 0;
   }
-  .who { font-size: .9rem; font-weight: 700; color: var(--rose); margin-bottom: -.35rem; }
+  .who { font-size: .9rem; font-weight: 800; color: var(--yellow); margin-bottom: -.35rem; }
   .bubble p { text-wrap: pretty; font-weight: 500; }
 
   /* ответы на утверждение и варианты вопросов */
   .answers { display: flex; flex-direction: column; gap: .6rem; }
   .ans {
     width: 100%; text-align: left;
-    padding: .95rem 1.1rem; min-height: 3.3rem;
-    background: var(--bumaga); color: var(--izumrud);
-    border: 1px solid rgba(184, 147, 92, .7); border-radius: 6px;
+    padding: .95rem 1.2rem; min-height: 3.3rem;
+    background: var(--soft); color: var(--text);
+    border: 1.5px solid transparent; border-radius: 18px;
     font-size: 1.06rem; font-weight: 600; line-height: 1.35;
     transition: background .15s, border-color .15s;
   }
   /* Подсветка наведения только для мыши: на телефоне она «залипала» после касания. */
-  @media (hover: hover) { .ans:hover { border-color: var(--gold); } }
-  .ans:active, .ans.on { background: var(--wine); border-color: var(--gold); color: var(--wine-text); }
+  @media (hover: hover) { .ans:hover { border-color: var(--text); } }
+  .ans:active, .ans.on { background: var(--text); border-color: var(--text); color: var(--on-dark); }
   .ans.multi { display: flex; gap: .75rem; align-items: center; }
   .ans.multi::before {
-    content: ""; flex: none; width: 1.15rem; height: 1.15rem; border-radius: 3px;
-    border: 1.5px solid var(--gold); background: transparent;
+    content: ""; flex: none; width: 1.15rem; height: 1.15rem; border-radius: 5px;
+    border: 1.5px solid currentColor; background: transparent;
   }
-  .ans.multi.on::before { background: var(--gold); box-shadow: inset 0 0 0 3px var(--wine); }
+  .ans.multi.on::before { background: var(--yellow); border-color: var(--yellow); }
 
-  /* главная кнопка: бордо, золотая кромка и тонкая рамка внутри */
+  /* главная кнопка: жёлтая таблетка, как «Купить» на Чёрной пятнице */
   .go {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 100%; min-height: 3.6rem; padding: .9rem 1.4rem;
-    background: var(--wine); color: var(--wine-text) !important;
-    border: 1px solid var(--gold); border-radius: 6px;
-    box-shadow: inset 0 0 0 4px var(--wine), inset 0 0 0 5px rgba(184, 147, 92, .75);
-    font-family: var(--golos); font-weight: 600; font-size: 1rem; line-height: 1.25;
-    letter-spacing: .1em; text-transform: uppercase; text-decoration: none; text-align: center;
+    width: 100%; min-height: 3.6rem; padding: .95rem 1.4rem;
+    background: var(--yellow); color: var(--text) !important;
+    border: 0; border-radius: 999px;
+    font-family: var(--golos); font-weight: 800; font-size: 1.12rem; line-height: 1.2;
+    text-decoration: none; text-align: center;
   }
-  .go:hover { background: #8E1F28; box-shadow: inset 0 0 0 4px #8E1F28, inset 0 0 0 5px rgba(184, 147, 92, .75); }
+  .go:hover { background: var(--yellow-hover); }
   .go:disabled { opacity: .55; cursor: default; }
   .ghost {
     align-self: flex-start; background: none; border: 0; padding: .3rem 0;
@@ -186,61 +164,59 @@
   .fine { font-size: .82rem; line-height: 1.5; color: var(--muted); }
   .fine a { color: var(--muted); }
   .hint { font-size: .9rem; color: var(--muted); margin-top: -.6rem; }
-  .err { color: var(--wine); font-size: .92rem; }
+  .err { color: #b3261e; font-size: .92rem; }
 
   /* результат */
-  .verdict { font-family: var(--prata); text-transform: uppercase; letter-spacing: .03em; line-height: 1.1;
-    color: var(--wine); font-size: clamp(2.1rem, 10vw, 3rem); text-wrap: balance; }
+  .verdict { font-family: var(--prata); font-weight: 700; letter-spacing: -.01em; line-height: 1.1;
+    color: var(--text); font-size: clamp(2.1rem, 10vw, 3rem); text-wrap: balance; }
   .plate {
-    background: var(--bumaga);
-    border: 1px solid var(--gold); border-radius: 6px; padding: 1rem 1.1rem 1.1rem;
+    background: var(--soft); border-radius: var(--r); padding: 1.2rem 1.3rem 1.3rem;
     display: flex; flex-direction: column; gap: .35rem;
   }
-  .plate-label { font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-  .plate-name { font-family: var(--prata); text-transform: uppercase; letter-spacing: .035em; font-size: 1.45rem; line-height: 1.2; color: var(--wine); }
+  .plate-label { font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .plate-name { font-family: var(--prata); font-weight: 700; font-size: 1.45rem; line-height: 1.2; color: var(--text); }
 
   /* голосовое: как в Телеграме — аватарка, круглая кнопка, дорожка, время, скорость */
   .voice {
     display: grid; grid-template-columns: 36px 1fr; column-gap: .55rem; align-items: end;
   }
   .voice-box {
-    background: var(--izumrud); color: var(--text);
-    border-radius: 14px 14px 14px 4px;
-    outline: 1px solid var(--gold); outline-offset: -5px;
+    background: var(--text); color: var(--on-dark);
+    border-radius: 22px 22px 22px 6px;
     padding: .8rem .95rem .75rem;
     display: grid; grid-template-columns: 2.8rem 1fr auto; gap: .35rem .75rem; align-items: center;
   }
   .play {
     grid-row: span 2; width: 2.8rem; height: 2.8rem; border-radius: 50%;
-    background: var(--wine); color: var(--wine-text); border: 1px solid var(--gold);
+    background: var(--yellow); color: var(--text); border: 0;
     display: flex; align-items: center; justify-content: center; padding: 0;
   }
   .play svg { width: 1.15rem; height: 1.15rem; }
   .track { position: relative; height: 1.6rem; display: flex; align-items: center; cursor: pointer; }
-  .track-line { position: relative; width: 100%; height: 4px; border-radius: 2px; background: rgba(239, 228, 224, .25); overflow: hidden; }
-  .track-line i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--gold); }
+  .track-line { position: relative; width: 100%; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .25); overflow: hidden; }
+  .track-line i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--yellow); }
   .speed {
     grid-row: span 2; align-self: center;
-    background: none; border: 1px solid var(--gold); border-radius: 999px;
-    color: var(--rose); font-size: .82rem; font-weight: 700; padding: .25rem .55rem; min-width: 3rem;
+    background: none; border: 1px solid rgba(255, 255, 255, .4); border-radius: 999px;
+    color: var(--on-dark); font-size: .82rem; font-weight: 700; padding: .25rem .55rem; min-width: 3rem;
   }
-  .time { font-size: .82rem; color: var(--text); opacity: .75; font-variant-numeric: tabular-nums; }
+  .time { font-size: .82rem; color: var(--on-dark); opacity: .75; font-variant-numeric: tabular-nums; }
   .voice-wait { grid-column: 2 / 4; font-size: .95rem; }
   .voice-box.off .play { opacity: .45; cursor: default; }
 
-  /* мини-оффер: светлая карточка, как на «Опоре» */
+  /* мини-оффер: тёплая подложка, как тарифы Чёрной пятницы */
   .offer {
-    background: var(--bumaga); color: var(--izumrud);
-    border-radius: 6px; outline: 1px solid var(--gold); outline-offset: -7px;
-    padding: 1.5rem 1.4rem 1.6rem;
+    background: var(--soft); color: var(--text);
+    border-radius: var(--r);
+    padding: 1.6rem 1.4rem 1.6rem;
     display: flex; flex-direction: column; gap: .9rem;
   }
-  .offer h2 { font-family: var(--prata); font-weight: 400; text-transform: uppercase; letter-spacing: .04em;
-    font-size: clamp(1.85rem, 8.4vw, 2.4rem); line-height: 1.1; color: var(--wine); }
+  .offer h2 { font-family: var(--prata); font-weight: 700; letter-spacing: -.01em;
+    font-size: clamp(1.7rem, 7.6vw, 2.2rem); line-height: 1.12; color: var(--text); text-wrap: balance; }
   .offer li { display: flex; gap: .65rem; align-items: baseline; }
-  .offer li::before { content: ""; flex: none; width: .45rem; height: .45rem; border-radius: 50%; background: var(--gold); transform: translateY(-.1rem); }
+  .offer li::before { content: ""; flex: none; width: .5rem; height: .5rem; border-radius: 50%; background: var(--text); transform: translateY(-.1rem); }
   .offer ul { display: flex; flex-direction: column; gap: .45rem; }
-  .offer-lead { font-size: 1.18rem; line-height: 1.4; font-weight: 600; text-wrap: pretty; }
+  .offer-lead { font-size: 1.18rem; line-height: 1.4; font-weight: 700; text-wrap: pretty; }
   .offer p { text-wrap: pretty; }
   .offer-intro { margin-bottom: -.35rem; }
 
@@ -251,26 +227,24 @@
   @supports (height: 100svh) { .res-first { min-height: calc(100svh - 2.7rem); } }
   .down {
     margin-top: auto; align-self: center; padding: 1.2rem .5rem .2rem;
-    background: none; border: 0; color: var(--izumrud); text-align: center;
+    background: none; border: 0; color: var(--text); text-align: center;
     display: flex; flex-direction: column; align-items: center; gap: .9rem;
-    font-size: 1.02rem; font-weight: 600; line-height: 1.4;
+    font-size: 1.02rem; font-weight: 700; line-height: 1.4;
   }
-  /* надпись плашкой, как карточки «Опоры»: белая, двойная золотая рамка */
+  /* надпись жёлтой плашкой, как выделения Чёрной пятницы */
   .down-text {
-    background: var(--bumaga); border: 1px solid var(--gold); border-radius: 10px;
-    outline: 1px solid rgba(184, 147, 92, .4); outline-offset: -6px;
+    background: var(--yellow); border-radius: 18px;
     padding: .85rem 1.3rem; max-width: 20rem; text-wrap: balance;
   }
-  /* стрелка в круглой бордовой кнопке, мягко подпрыгивает */
+  /* стрелка в круглой тёмной кнопке, мягко подпрыгивает */
   .down-ico {
     width: 3.1rem; height: 3.1rem; border-radius: 50%;
-    background: var(--wine); color: var(--wine-text); border: 1px solid var(--gold);
-    box-shadow: inset 0 0 0 3px var(--wine), inset 0 0 0 4px rgba(184, 147, 92, .75);
+    background: var(--text); color: var(--on-dark);
     display: flex; align-items: center; justify-content: center;
     animation: down 1.8s ease-in-out infinite;
   }
   .down-ico svg { width: 1.45rem; height: 1.45rem; }
-  @media (hover: hover) { .down:hover .down-ico { background: #8E1F28; } }
+  @media (hover: hover) { .down:hover .down-ico { background: #404241; } }
   @keyframes down { 0%, 100% { transform: none; } 50% { transform: translateY(6px); } }
   @media (prefers-reduced-motion: reduce) { .down-ico { animation: none; } }
 </style>
