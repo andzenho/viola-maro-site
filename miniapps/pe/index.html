@@ -484,14 +484,6 @@ body.g-lock { overflow: hidden; }
 .pe-goals .g-panel-l { margin-bottom: 34px; }
 .pe-goals .g-checks li span { font-size: 16.5px; margin-top: 4px; }
 @media (min-width: 760px) { .pe-goals .g-panel-l { margin-bottom: 0; } }
-/* «Техники темы» сворачиваются, стрелка как у вопросов */
-.pe-tech > summary { cursor: pointer; list-style: none; position: relative; padding-right: 36px; margin-bottom: 0 !important; }
-.pe-tech > summary::-webkit-details-marker { display: none; }
-.pe-tech > summary::after { content: ""; position: absolute; right: 6px; top: 1px; width: 8px; height: 8px;
-  border: solid var(--red); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); transition: transform .2s ease; }
-.pe-tech[open] > summary::after { transform: rotate(-135deg); top: 6px; }
-.pe-tech[open] > summary { margin-bottom: 16px !important; }
-.pe-tech { padding-top: 18px !important; padding-bottom: 18px !important; }
 /* истории: начало истории мелко, под «Читать историю целиком» */
 .pe-more { margin-top: 18px; }
 .pe-more > summary { cursor: pointer; font-weight: 700; font-size: 15.5px; color: var(--red); text-decoration: underline; text-underline-offset: .2em; }
@@ -549,21 +541,6 @@ body.g-bar-on { padding-bottom: 80px !important; }
     </div>
   </div>
 </section><div class="gl">
-<section class="g-sec" id="o-viole" data-blok="Об авторе">
-  <div class="g-in g-about">
-    <div class="g-about-foto">
-      <picture>
-        <source type="image/webp" srcset="/assets/img/hero-mob.webp?v=93cc1685">
-        <img src="/assets/img/hero-mob.jpg?v=5beb704d" alt="Виола Маро" width="900" height="900" loading="lazy" decoding="async">
-      </picture>
-    </div>
-    <div class="g-about-text">
-      <h2 class="g-h2"><span class="g-ink">Об</span> <span class="g-acc">авторе</span></h2>
-      <p class="g-about-name">Виола Маро</p>
-      <ul class="g-checks g-about-list"><li>Дипломированный психолог (СПбГУ), психотерапевт по образованию и по призванию. 25 лет профессиональной практики.</li><li>Идеолог и популяризатор концепции практической эмпатии — это ключевое направление её работы и основа авторской линейки образовательных продуктов.</li><li>Создатель обучающих программ в области психологии отношений и самореализации.</li><li>Гуманист по призванию и «технарь» в психологии — совмещает глубокую эмпатию с чёткой, системной методологией.</li></ul>
-    </div>
-  </div>
-</section>
 <section class="g-sec g-grey g-goals-sec pe-goals" id="o-programme" data-blok="О программе и цели">
   <div class="g-in">
     <div class="g-panel">
@@ -586,60 +563,60 @@ body.g-bar-on { padding-bottom: 80px !important; }
       <p class="g-week-n">Тема 1.</p>
       <h3 class="g-week-h">Фигура эмпата</h3>
       <p class="g-week-t">Возможность видеть глубину, но не утонуть в том, что вы воспринимаете. Возможность проживать вашу эмпатию как дар, а не проклятие.</p>
-      <details class="g-week-box pe-tech">
-        <summary class="g-week-tr">Техники темы</summary>
+      <div class="g-week-box">
+        <p class="g-week-tr">Техники темы</p>
         <ul class="g-checks g-checks-sm"><li>«Возврат в свой центр»</li><li>«Вижу, но не участвую»</li><li>«Растождествление с негативным фоном»</li></ul>
-      </details>
+      </div>
       
     </article>
     <article class="g-week">
       <p class="g-week-n">Тема 2.</p>
       <h3 class="g-week-h">Эмпат и отношения с людьми</h3>
       <p class="g-week-t">Здоровые отношения для Эмпата начинаются не с поиска «правильного» или «безопасного» партнера, а с выстраивания сильного внутреннего центра.</p>
-      <details class="g-week-box pe-tech">
-        <summary class="g-week-tr">Техники темы</summary>
+      <div class="g-week-box">
+        <p class="g-week-tr">Техники темы</p>
         <ul class="g-checks g-checks-sm"><li>«Карта Автономии и Рассредоточения Энергии»</li><li>«Дезактивация Эмпатического Крючка»</li><li>«Коммуникация из Внутреннего Центра»</li><li>«Шесть Столпов Самооценки Эмпата»</li></ul>
-      </details>
+      </div>
       
     </article>
     <article class="g-week">
       <p class="g-week-n">Тема 3.</p>
       <h3 class="g-week-h">Эмпат-родители и эмпат-дети</h3>
       <p class="g-week-t">Это великий и прекрасный процесс сепарации и осознания себя взрослым и свободным.</p>
-      <details class="g-week-box pe-tech">
-        <summary class="g-week-tr">Техники темы</summary>
+      <div class="g-week-box">
+        <p class="g-week-tr">Техники темы</p>
         <ul class="g-checks g-checks-sm"><li>«Заведите себе секрет: Комната во внутреннем доме»</li><li>«Интеллектуальное одиночество и магия масштаба: Умение желать и мечтать»</li><li>«Право передумать: Освобождение интуиции»</li><li>«Именование эмоционального спектра: Каталог чувств»</li><li>«Диалог с миром и преодоление экзистенциального одиночества»</li><li>«Кукла»</li></ul>
-      </details>
+      </div>
       
     </article>
     <article class="g-week">
       <p class="g-week-n">Тема 4.</p>
       <h3 class="g-week-h">Психосоматика у эмпата</h3>
       <p class="g-week-t">Ваше тело — это не бессмысленный механизм, который «ломается просто так». Это ваш самый верный и честный союзник.</p>
-      <details class="g-week-box pe-tech">
-        <summary class="g-week-tr">Техники темы</summary>
+      <div class="g-week-box">
+        <p class="g-week-tr">Техники темы</p>
         <ul class="g-checks g-checks-sm"><li>«Ежедневная Практика Доверия и Честности»</li><li>«Как снизить кортизол эмпату»</li><li>«Конверсия симптома»</li></ul>
-      </details>
+      </div>
       <p class="g-week-note">Программа не заменяет обследование и лечение у врача.</p>
     </article>
     <article class="g-week">
       <p class="g-week-n">Тема 5.</p>
       <h3 class="g-week-h">Самореализация людей с повышенной чувствительностью</h3>
       <p class="g-week-t">Вы не ищете себя вовне — вы собираете себя изнутри по пазлам своих интересов, смыслов и вдохновения.</p>
-      <details class="g-week-box pe-tech">
-        <summary class="g-week-tr">Техники темы</summary>
+      <div class="g-week-box">
+        <p class="g-week-tr">Техники темы</p>
         <ul class="g-checks g-checks-sm"><li>«Физическое и ментальное расхламление: Свободное место для эмпата»</li><li>«Правила личных перемен и тишины: Меньше говорить — больше действовать»</li><li>«Тест целостной цели: Интегральный подход к целям эмпата»</li></ul>
-      </details>
+      </div>
       
     </article>
     <article class="g-week">
       <p class="g-week-n">Тема 6.</p>
       <h3 class="g-week-h">Психология наполненности и деньги</h3>
       <p class="g-week-t">Вы перестаёте выживать и начинаете созидать.</p>
-      <details class="g-week-box pe-tech">
-        <summary class="g-week-tr">Техники темы</summary>
+      <div class="g-week-box">
+        <p class="g-week-tr">Техники темы</p>
         <ul class="g-checks g-checks-sm"><li>«Инвентаризация чужих долгов»</li><li>«Калибровка финансового термостата»</li><li>«Карта уникальной ценности эмпата»</li><li>«Путь по крошкам вдохновения»</li></ul>
-      </details>
+      </div>
       
     </article>
     </div>
@@ -706,6 +683,21 @@ body.g-bar-on { padding-bottom: 80px !important; }
     </article>
     </div>
     <p class="g-pod">Оплата и чек от ИП Нижевясова А.&nbsp;С., продюсера программ Виолы Маро. Доступ ко всем материалам курса пришлём сразу после оплаты на ваш номер или в Телеграм. Пишем только с аккаунта <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>.</p>
+  </div>
+</section>
+<section class="g-sec" id="o-viole" data-blok="Об авторе">
+  <div class="g-in g-about">
+    <div class="g-about-foto">
+      <picture>
+        <source type="image/webp" srcset="/assets/img/hero-mob.webp?v=93cc1685">
+        <img src="/assets/img/hero-mob.jpg?v=5beb704d" alt="Виола Маро" width="900" height="900" loading="lazy" decoding="async">
+      </picture>
+    </div>
+    <div class="g-about-text">
+      <h2 class="g-h2"><span class="g-ink">Об</span> <span class="g-acc">авторе</span></h2>
+      <p class="g-about-name">Виола Маро</p>
+      <ul class="g-checks g-about-list"><li>Дипломированный психолог (СПбГУ), психотерапевт по образованию и по призванию. 25 лет профессиональной практики.</li><li>Идеолог и популяризатор концепции практической эмпатии — это ключевое направление её работы и основа авторской линейки образовательных продуктов.</li><li>Создатель обучающих программ в области психологии отношений и самореализации.</li><li>Гуманист по призванию и «технарь» в психологии — совмещает глубокую эмпатию с чёткой, системной методологией.</li></ul>
+    </div>
   </div>
 </section>
 <section class="g-sec" id="voprosy" data-blok="Вопросы">
