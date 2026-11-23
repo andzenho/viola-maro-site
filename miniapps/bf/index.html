@@ -1078,8 +1078,8 @@
     <label class="f" for="lead-contact">Номер телефона или Телеграм<span class="f-hint" id="lead-hint">Сюда пришлём доступ к записям</span></label>
     <input type="text" id="lead-contact" name="contact" autocomplete="tel" inputmode="text" placeholder="+7 900 000-00-00 или @имя" required>
     <div class="hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
-    <label class="chk" id="chk-offer"><input type="checkbox" name="accept_offer"><span>Принимаю условия <a href="/bf/oferta/" target="_blank" rel="noopener">публичной оферты</a> и <a href="/bf/prilozhenie/" target="_blank" rel="noopener">приложения к ней</a></span></label>
-    <label class="chk"><input type="checkbox" name="accept_pd"><span>Даю <a href="/consent/" target="_blank" rel="noopener">согласие на обработку персональных данных</a></span></label>
+    <label class="chk" id="chk-offer"><input type="checkbox" name="accept_offer"><span data-docs="rub">Принимаю условия <a href="/bf/oferta/" target="_blank" rel="noopener">публичной оферты</a> и <a href="/bf/prilozhenie/" target="_blank" rel="noopener">приложения к ней</a></span><span data-docs="eur" hidden>Принимаю условия <a href="https://violamaro.com/oferta" target="_blank" rel="noopener">публичной оферты Viola Maro FZ-LLC</a></span></label>
+    <label class="chk"><input type="checkbox" name="accept_pd"><span data-docs="rub">Даю <a href="/consent/" target="_blank" rel="noopener">согласие на обработку персональных данных</a></span><span data-docs="eur" hidden>Соглашаюсь с <a href="https://violamaro.com/privacy" target="_blank" rel="noopener">политикой конфиденциальности Viola Maro FZ-LLC</a></span></label>
     <p class="err" id="lead-err" hidden></p>
     <button type="submit" class="btn" id="lead-go">Перейти к оплате</button>
     <p class="note-s" id="lead-note">После оплаты команда пришлёт доступ на этот номер или в Телеграм.</p>
@@ -1099,9 +1099,9 @@ const END   = "2026-11-30T20:59:59Z";   // 30.11, 23:59:59 по Москве
    (зарубежная карта). Пока заглушки: пусто, значит кнопка ведёт к своему
    тарифу на этой же странице. */
 const PAY = {
-  t1: { rub: "", eur: "" },   // 9 999 ₽  и 109 €
-  t2: { rub: "", eur: "" },   // 12 990 ₽ и 140 €
-  t3: { rub: "", eur: "" }    // 17 990 ₽ и 195 €
+  t1: { rub: "", eur: "https://buy.stripe.com/28E5kE4pU8wT07xbvo9Ve0e" },   // 9 999 ₽  и 109 €
+  t2: { rub: "", eur: "https://buy.stripe.com/eVqbJ27C628vg6v7f89Ve0f" },   // 12 990 ₽ и 140 €
+  t3: { rub: "", eur: "https://buy.stripe.com/4gMbJ2aOicN907xczs9Ve0g" }    // 17 990 ₽ и 195 €
 };
 /* ═══════════════════════════════════════ */
 
@@ -1246,6 +1246,9 @@ document.addEventListener("click", e => {
   document.getElementById("lead-h").textContent = remind ? "Напомнить об открытии" : "Оформление доступа";
   document.getElementById("lead-sub").textContent = remind ? t.name : t.name + ", " + (pick.cur === "eur" ? t.eur + " картой из-за рубежа" : t.rub);
   document.getElementById("chk-offer").hidden = remind;
+  /* в евро продавец Viola Maro FZ-LLC: её оферта и политика; в рублях и для «Напомнить» — документы ИП */
+  const euro = pick.cur === "eur";
+  document.querySelectorAll("#lead [data-docs]").forEach(el => el.hidden = (el.dataset.docs === "eur") !== euro);
   document.getElementById("lead-hint").textContent = remind ? "Сюда напишем, когда откроется оплата" : "Сюда пришлём доступ к записям";
   document.getElementById("lead-note").textContent = remind ? "Напишем на этот номер или в Телеграм." : "После оплаты команда пришлёт доступ на этот номер или в Телеграм.";
   document.getElementById("lead-ok").hidden = true; dlg.classList.remove("done");
@@ -1278,7 +1281,7 @@ form.addEventListener("submit", e => {
     readiness: remind ? "Напомнить" : (eur ? "Чёрная пятница, оплата в евро" : "Чёрная пятница, оплата в рублях"),
     accept_offer: !remind, accept_pd: true, accept_ads: false,
     consent_ts: new Date().toISOString(), page: location.href, ua: navigator.userAgent
-  }, DOC_VERSIONS);
+  }, eur ? { doc_version_offer: "violamaro.com/oferta FZ-LLC", doc_version_annex: "", doc_version_consent: "violamaro.com/privacy FZ-LLC" } : DOC_VERSIONS);
   ["utm_source", "utm_medium", "utm_campaign", "utm_content", "src", "referrer"].forEach(k => payload[k] = attribution[k] || "");
 
   goBtn.disabled = true; goBtn.textContent = "Сохраняем…";
