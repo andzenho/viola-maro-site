@@ -114,7 +114,19 @@
     padding: 9px 16px; text-decoration: underline; text-underline-offset: .2em; }
   .topbar:hover { text-decoration-thickness: 2px; }
   @media (min-width: 768px) { .topbar { font-size: 17px; padding: 10px 16px; } }
-  .hero { background: radial-gradient(ellipse 60% 70% at 26% 62%, #3a3c3b 0, rgba(33, 35, 34, 0) 70%), var(--mag1); color: #fff; overflow: hidden; }
+  .hero { position: relative; isolation: isolate; background: var(--mag1); color: #fff; overflow: hidden; }
+  /* мягкие размытые пятна: светлое за фото, тёплое жёлтое у текста */
+  .hero::before, .hero::after { content: ""; position: absolute; z-index: -1; border-radius: 50%; pointer-events: none; filter: blur(60px); }
+  .hero::before { width: 420px; height: 420px; left: 50%; top: 2%; margin-left: -210px;
+    background: radial-gradient(circle, rgba(255, 255, 255, .2), rgba(255, 255, 255, 0) 68%); }
+  .hero::after { width: 360px; height: 360px; right: -140px; bottom: -60px;
+    background: radial-gradient(circle, rgba(252, 229, 0, .2), rgba(252, 229, 0, 0) 70%); }
+  @media (min-width: 900px) {
+    .hero::before { width: 640px; height: 640px; left: 25%; top: auto; bottom: -140px; margin-left: -320px; filter: blur(80px);
+      background: radial-gradient(circle, rgba(255, 255, 255, .17), rgba(255, 255, 255, 0) 68%); }
+    .hero::after { width: 560px; height: 560px; right: -160px; top: -220px; bottom: auto; filter: blur(100px);
+      background: radial-gradient(circle, rgba(252, 229, 0, .15), rgba(252, 229, 0, 0) 70%); }
+  }
   .hero-in { display: grid; grid-template-columns: 1fr; }
   .hero-photo { justify-self: center; width: min(84vw, 320px); height: 262px; overflow: hidden; margin: 14px 0 0;
     -webkit-mask-image: linear-gradient(#000 55%, transparent 100%), linear-gradient(to right, transparent 4%, #000 26%, #000 74%, transparent 96%);
