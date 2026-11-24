@@ -475,35 +475,89 @@ body.g-lock { overflow: hidden; }
 }
 .g-p2 { margin-top: 16px !important; }</style>
 <style>
-/* /pe/: поправки к стилям /zayavka/ под порядок блоков этой страницы */
+/* ═══ /pe/ ниже первого экрана: простой стиль (просьба 24.11: ближе к timochko.ru/primer, проще и читаемее) ═══
+   Чередуются светлые и тёмные блоки, белые карточки с коротким текстом, одна форма кнопки. Первый экран не меняем. */
+.gl { --ink: #1C1A1D; --red: #C4142C; }
+.pe-sec { padding: 64px 0; }
+.pe-grey { background: #F3F2F0; color: #1C1A1D; }
+.pe-dark { background: #1C1A1D; color: #fff; }
+.pe-white { background: #fff; color: #1C1A1D; }
+.pe-in { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+.pe-narrow { max-width: 820px; }
+.gl .pe-h2 { font-family: 'Golos Text', system-ui, sans-serif !important; font-weight: 800 !important; font-size: clamp(32px, 8.4vw, 58px) !important;
+  line-height: 1.05 !important; letter-spacing: -.025em; margin: 0 0 32px !important; text-transform: none !important; text-wrap: balance; color: inherit; }
+.gl .pe-center { text-align: center; }
+/* цвет заголовков: светлые блоки тёмным, тёмные и бордовые белым (общие стили сайта красят h2 сами) */
+.gl .pe-h2, .gl .pe-h2::first-line { color: #1C1A1D !important; }
+.gl .pe-dark .pe-h2, .gl .pe-dark .pe-h2::first-line, .gl .g-red .pe-h2, .gl .g-red .pe-h2::first-line { color: #fff !important; }
+.pe-lead { margin: -12px 0 32px !important; font-size: 18px; color: #55505A; }
+.pe-dark .pe-lead { color: rgba(255,255,255,.75); }
+/* кнопка: одна форма везде, плоская */
+.gl .pe-btn { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 420px; min-height: 60px; margin: 36px auto 0; padding: 14px 24px;
+  border: 0; border-radius: 16px; background: #C4142C; color: #fff; text-decoration: none; text-align: center; cursor: pointer;
+  font: 800 16px/1.25 'Golos Text', system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; transition: background .15s ease; }
+.gl .pe-btn:hover { background: #A30F23; color: #fff; }
+.gl .pe-btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; box-shadow: 0 0 0 6px #C4142C; }
+/* карточки */
+.pe-grid { display: grid; gap: 16px; }
+@media (min-width: 760px) { .pe-sec { padding: 96px 0; } .pe-g2 { grid-template-columns: 1fr 1fr; gap: 20px; } .pe-g3 { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+.pe-card { background: #fff; color: #1C1A1D; border-radius: 24px; padding: 26px 24px; }
+.pe-card p { margin: 0; font-size: 17.5px; line-height: 1.6; }
+.pe-card p + p { margin-top: 12px; }
+.pe-card b { font-weight: 800; }
+.pe-num { display: block; margin-bottom: 14px; font: 800 34px/1 'Golos Text', system-ui, sans-serif; color: #C4142C; }
+.gl .pe-card .pe-big, .gl p.pe-big { font-size: 20px; line-height: 1.5; }
+.pe-narrow p.pe-big { margin: 0 0 20px; }
+/* какая цель */
+.pe-cel { display: grid; gap: 36px; align-items: center; }
+.pe-cel-t p { margin: 0 0 16px; font-size: 19px; line-height: 1.65; color: rgba(255,255,255,.9); }
+.pe-cel .g-planshet { margin: 0 0 26px; }
+.pe-cel .g-planshet-badge { width: 46%; max-width: 230px; }
+.pe-cel .g-planshet-badge span { white-space: normal; text-align: center; }
+@media (min-width: 760px) { .pe-cel { grid-template-columns: 1fr 1fr; gap: 56px; } .pe-cel .g-planshet { margin: 0; } }
+/* темы */
+.gl .pe-theme h3 { margin: 0 0 12px; font: 800 24px/1.2 'Golos Text', system-ui, sans-serif; letter-spacing: -.01em; }
+.pe-tn { margin: 0 0 10px !important; font: 800 13px/1 'Golos Text', system-ui, sans-serif !important; letter-spacing: .12em; text-transform: uppercase; color: #C4142C; }
+.pe-tech { margin-top: 18px; border-top: 1px solid #E6E1DA; padding-top: 14px; }
+.pe-tech > summary, .pe-q > summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-weight: 700; }
+.pe-tech > summary::-webkit-details-marker, .pe-q > summary::-webkit-details-marker { display: none; }
+.pe-tech > summary::after, .pe-q > summary::after { content: "+"; flex: none; font: 400 28px/1 'Golos Text', system-ui, sans-serif; color: #C4142C; }
+.pe-tech[open] > summary::after, .pe-q[open] > summary::after { content: "−"; }
+.pe-tech > summary:focus-visible, .pe-q > summary:focus-visible { outline: 3px solid #C4142C; outline-offset: 4px; border-radius: 6px; }
+.pe-list { margin: 14px 0 0; padding: 0; list-style: none; }
+.pe-list li { color: #1C1A1D; position: relative; padding-left: 20px; margin-top: 10px; font-size: 17px; line-height: 1.5; }
+.pe-list li::before { content: ""; position: absolute; left: 0; top: .55em; width: 7px; height: 7px; border-radius: 50%; background: #C4142C; }
+.gl .pe-card .pe-note { margin-top: 14px; font-size: 14.5px; color: #55505A; font-style: italic; }
+.gl .pe-pod { margin: 32px 0 0; padding: 24px; border-radius: 24px; background: #2A272B; color: rgba(255,255,255,.92); font-size: 17.5px; line-height: 1.6; }
+/* истории */
+.gl .pe-story h3 { margin: 0; font: 800 22px/1.25 'Golos Text', system-ui, sans-serif; letter-spacing: -.01em; }
+.pe-age { margin-top: 6px !important; color: #55505A; font-size: 15px !important; }
+.pe-lab { margin-top: 16px !important; font: 800 12.5px/1.2 'Golos Text', system-ui, sans-serif !important; letter-spacing: .1em; text-transform: uppercase; color: #77717C; }
+.pe-lab-r { color: #C4142C; }
+.pe-lab + p { margin-top: 6px !important; }
+.pe-ch { padding-left: 14px; border-left: 3px solid #C4142C; }
+/* об авторе */
+.pe-about { display: grid; gap: 32px; align-items: center; }
+.pe-foto-ph { aspect-ratio: 1 / 1; border-radius: 24px; background: #2A272B; }
+.gl .pe-name { margin: 0 0 18px; font: 800 28px/1.2 'Golos Text', system-ui, sans-serif; }
+.pe-about-t .pe-list li { font-size: 18px; line-height: 1.55; color: rgba(255,255,255,.92); margin-top: 14px; }
+@media (min-width: 760px) { .pe-about { grid-template-columns: 420px 1fr; gap: 56px; } }
+/* вопросы */
+.pe-faq { background: #F3F2F0; border-radius: 24px; padding: 4px 24px; }
+.pe-q { border-top: 1px solid #DDD8D1; padding: 20px 0; }
+.pe-q:first-child { border-top: 0; }
+.pe-q > summary { font-size: 18px; line-height: 1.4; }
+.pe-q p { margin: 14px 0 0; padding-right: 36px; font-size: 17px; line-height: 1.6; color: #3A363C; }
+.pe-q a { color: #C4142C; }
+/* блок «Что входит»: бордовая сцена как на /zayavka/, карточка по центру */
+.pe-one { max-width: 560px; margin: 0 auto; grid-template-columns: 1fr !important; }
+.pe-one .g-tarif-t + .g-tarif-list { margin-top: 18px !important; }
+.pe-one .pe-btn { margin-top: 16px; max-width: none; }
+.pe-one .pe-btn + .pe-btn { margin-top: 12px; }
+.pe-one .pe-btn { background: #C4142C; }
 /* плашка с ценой на первом экране телефона: длинная строка переносится, а не обрезается */
 [data-h2-chips] span { white-space: normal !important; text-align: center; border-radius: 18px !important; margin: 0 16px; }
 @media (max-width: 759px) { .g-bar-posle { font-size: 13px; line-height: 1.25; } }
-/* «Для кого этот курс»: две карточки рядом */
-.pe-for li.g-box { align-items: center; }
-@media (min-width: 760px) { .pe-for { grid-template-columns: 1fr 1fr; gap: 20px; } .pe-for li.g-box { padding: 28px 26px; } }
-/* «Какая цель»: текст слева, планшет справа */
-.pe-cel { display: grid; gap: 36px; align-items: center; }
-.pe-cel-t p { margin: 0; }
-.pe-cel-t p + p { margin-top: 16px; }
-.pe-cel .g-planshet { margin-bottom: 26px; }
-.pe-cel .g-planshet-badge { width: 46%; max-width: 230px; }
-.pe-cel .g-planshet-badge span { white-space: normal; text-align: center; }
-@media (min-width: 760px) { .pe-cel { grid-template-columns: 1fr 1fr; gap: 56px; } .pe-cel .g-planshet { margin: 0 -10px 0 0; } }
-/* техники темы свёрнуты, стрелка как у вопросов */
-.pe-tech > summary { cursor: pointer; list-style: none; position: relative; padding-right: 36px; margin-bottom: 0 !important; }
-.pe-tech > summary::-webkit-details-marker { display: none; }
-.pe-tech > summary::after { content: ""; position: absolute; right: 6px; top: 1px; width: 8px; height: 8px;
-  border: solid var(--red); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); transition: transform .2s ease; }
-.pe-tech[open] > summary::after { transform: rotate(-135deg); top: 6px; }
-.pe-tech[open] > summary { margin-bottom: 16px !important; }
-.pe-tech { padding-top: 18px !important; padding-bottom: 18px !important; }
-/* место под фото автора */
-.g-about-foto.pe-foto-ph { aspect-ratio: 1 / 1; border-radius: 24px; background: #E6E1DA; }
-/* одна карточка цены по центру */
-.pe-one .g-tarif-t + .g-tarif-list { margin-top: 18px !important; }
-.pe-one { max-width: 560px; margin: 0 auto; grid-template-columns: 1fr !important; }
-.pe-one .g-btn + .g-btn { margin-top: 12px; }
 .g-bar-posle { margin: 0 !important; }
 a.g-bar-btn { display: inline-flex; align-items: center; text-decoration: none; }
 body.g-bar-on { padding-bottom: 80px !important; }
@@ -553,168 +607,66 @@ body.g-bar-on { padding-bottom: 80px !important; }
     </div>
   </div>
 </section><div class="gl">
-<section class="g-sec" id="dlya-kogo" data-blok="Для кого этот курс">
-  <div class="g-in">
-    <h2 class="g-h2"><span class="g-ink">Для кого</span> <span class="g-acc">этот курс</span></h2>
-    <ol class="g-nums pe-for"><li class="g-box"><span class="g-num">01</span><span>Для кого-то этот курс поможет выйти из позиции спасателя и поставить себя на первое место в своей жизни</span></li><li class="g-box"><span class="g-num">02</span><span>Для кого-то он поможет сформировать важнейшие внутренние балансы и балансы в отношениях</span></li></ol>
-  </div>
-</section>
-<section class="g-sec g-grey" id="cel" data-blok="Какая цель программы">
-  <div class="g-in pe-cel">
-    <div class="pe-cel-t">
-      <h2 class="g-h2"><span class="g-ink">Какая цель</span> <span class="g-acc">программы?</span></h2>
-      <p>Помочь вам сформировать внутренние опоры, укрепить внутренний стержень личности, сформировать стабильную самооценку, личные границы и начать жизнь из позиции любви к себе, принятия своей эмпатии и понимания её ценности.</p><p>Этот курс вернёт вам ощущение себя в центре вашей жизни и даст вам практические методы и инструменты для того, чтобы расти и развиваться как качественно, так и количественно.</p>
-    </div>
-    <div class="g-planshet">
+<section class="pe-sec pe-grey" id="dlya-kogo" data-blok="Для кого этот курс"><div class="pe-in"><h2 class="pe-h2">Для кого этот курс</h2><div class="pe-grid pe-g2"><div class="pe-card"><span class="pe-num">01</span><p class="pe-big">Для кого-то этот курс поможет выйти из позиции спасателя и поставить себя на первое место в своей жизни</p></div><div class="pe-card"><span class="pe-num">02</span><p class="pe-big">Для кого-то он поможет сформировать важнейшие внутренние балансы и балансы в отношениях</p></div></div></div></section>
+<section class="pe-sec pe-dark" id="cel" data-blok="Какая цель программы"><div class="pe-in"><div class="pe-cel"><div class="pe-cel-t"><h2 class="pe-h2">Какая цель программы?</h2><p>Помочь вам сформировать внутренние опоры, укрепить внутренний стержень личности, сформировать стабильную самооценку, личные границы и начать жизнь из позиции любви к себе, принятия своей эмпатии и понимания её ценности.</p><p>Этот курс вернёт вам ощущение себя в центре вашей жизни и даст вам практические методы и инструменты для того, чтобы расти и развиваться как качественно, так и количественно.</p></div><div class="g-planshet">
         <img src="/assets/img/planshet-1280.webp?v=c20c643a" srcset="/assets/img/planshet-720.webp?v=31efa5d1 720w, /assets/img/planshet-1280.webp?v=c20c643a 1280w" sizes="(max-width: 900px) 100vw, 560px"
              alt="Программа «Прикладная эмпатия» на планшете: лекции, шесть недель, техники, медитации, ответы и методички" width="1280" height="853" loading="lazy" decoding="async">
         <p class="g-planshet-badge"><span>Доступ сразу после оплаты</span><b>Навсегда</b></p>
-      </div>
-  </div>
-</section>
-<section class="g-sec" id="poluchite" data-blok="Что вы получите на программе">
-  <div class="g-in">
-    <h2 class="g-h2"><span class="g-ink">Что вы получите</span> <span class="g-acc">на программе</span></h2>
-    <ul class="g-checks g-checks-2 g-goals"><li>Вы <b>выйдете из позиции слабости</b> и начнёте воспринимать свою эмпатию как силу, особенность личности, которая даёт вам возможность глубже видеть и понимать людей, распознавать манипуляции и токсичные формы поведения</li><li>Вы <b>научитесь выстраивать сбалансированные отношения</b> с людьми, не попадая в эмоциональную зависимость, позицию спасателя или жертвы</li><li>Вы <b>получите самые нужные и эксклюзивные инструменты</b> для того, чтобы научиться защищать себя в ситуации, заземлять себя, инструменты осознанности и саморазвития, методики работы с эмпатией и интуицией</li><li>Вы <b>сформируете внутренние защиты</b> для того, чтобы не уносить чужую боль с собой через вашу эмпатию. Вы научитесь отделять ваши чувства, вашу ответственность и ваше психологическое пространство от чужого</li><li>Вы <b>вернёте себе внутреннее право жить с гордостью</b> за вашу идентичность, ценить и уважать глубину своего внутреннего мира, настроите свой внутренний компас и научитесь им пользоваться в реальном мире</li></ul>
-    <a class="g-btn" href="#tarify">Получить доступ</a>
-  </div>
-</section>
-<section class="g-sec g-grey" id="programma" data-blok="Как проходит программа">
-  <div class="g-in">
-    <h2 class="g-h2"><span class="g-ink">Как проходит</span> <span class="g-acc">программа</span></h2>
-    <div class="g-weeks">
-    <article class="g-week">
-      <p class="g-week-n">Тема 1.</p>
-      <h3 class="g-week-h">Фигура эмпата</h3>
-      <p class="g-week-t">Возможность видеть глубину, но не утонуть в том, что вы воспринимаете. Возможность проживать вашу эмпатию как дар, а не проклятие.</p>
-      <details class="g-week-box pe-tech">
-        <summary class="g-week-tr">Техники темы</summary>
-        <ul class="g-checks g-checks-sm"><li>Возврат в свой центр</li><li>Вижу, но не участвую</li><li>Растождествление с негативным фоном</li></ul>
-      </details>
-      
-    </article>
-    <article class="g-week">
-      <p class="g-week-n">Тема 2.</p>
-      <h3 class="g-week-h">Эмпат и отношения с людьми</h3>
-      <p class="g-week-t">Здоровые отношения для Эмпата начинаются не с поиска «правильного» или «безопасного» партнера, а с выстраивания сильного внутреннего центра.</p>
-      <details class="g-week-box pe-tech">
-        <summary class="g-week-tr">Техники темы</summary>
-        <ul class="g-checks g-checks-sm"><li>Карта автономии</li><li>Дезактивация эмпатического крючка</li><li>Коммуникация из внутреннего центра</li><li>Шесть столпов самооценки</li></ul>
-      </details>
-      
-    </article>
-    <article class="g-week">
-      <p class="g-week-n">Тема 3.</p>
-      <h3 class="g-week-h">Эмпат-родители и эмпат-дети</h3>
-      <p class="g-week-t">Это великий и прекрасный процесс сепарации и осознания себя взрослым и свободным.</p>
-      <details class="g-week-box pe-tech">
-        <summary class="g-week-tr">Техники темы</summary>
-        <ul class="g-checks g-checks-sm"><li>Комната во внутреннем доме</li><li>Право передумать</li><li>Кукла</li><li>Каталог чувств</li><li>Интеллектуальное одиночество и магия масштаба</li><li>Диалог с миром</li></ul>
-      </details>
-      
-    </article>
-    <article class="g-week">
-      <p class="g-week-n">Тема 4.</p>
-      <h3 class="g-week-h">Психосоматика у эмпата</h3>
-      <p class="g-week-t">Ваше тело — это не бессмысленный механизм, который «ломается просто так». Это ваш самый верный и честный союзник.</p>
-      <details class="g-week-box pe-tech">
-        <summary class="g-week-tr">Техники темы</summary>
-        <ul class="g-checks g-checks-sm"><li>Ежедневная практика доверия и честности</li><li>Как снизить кортизол эмпату</li><li>Конверсия симптома</li></ul>
-      </details>
-      <p class="g-week-note">Программа не заменяет обследование и лечение у врача</p>
-    </article>
-    <article class="g-week">
-      <p class="g-week-n">Тема 5.</p>
-      <h3 class="g-week-h">Самореализация людей с повышенной чувствительностью</h3>
-      <p class="g-week-t">Вы не ищете себя вовне — вы собираете себя изнутри по пазлам своих интересов, смыслов и вдохновения.</p>
-      <details class="g-week-box pe-tech">
-        <summary class="g-week-tr">Техники темы</summary>
-        <ul class="g-checks g-checks-sm"><li>Свободное место для эмпата</li><li>Меньше говорить — больше действовать</li><li>Тест целостной цели</li></ul>
-      </details>
-      
-    </article>
-    <article class="g-week">
-      <p class="g-week-n">Тема 6.</p>
-      <h3 class="g-week-h">Психология наполненности и деньги</h3>
-      <p class="g-week-t">Вы перестаёте выживать и начинаете созидать.</p>
-      <details class="g-week-box pe-tech">
-        <summary class="g-week-tr">Техники темы</summary>
-        <ul class="g-checks g-checks-sm"><li>Инвентаризация чужих долгов</li><li>Калибровка финансового термостата</li><li>Карта уникальной ценности эмпата</li><li>Путь по крошкам вдохновения</li></ul>
-      </details>
-      
-    </article>
-    </div>
-    <p class="g-weeks-pod">В каждой теме лекция Виолы с таймкодами, техники на конкретные ситуации, задание и PDF-методичка. Техниками можно пользоваться прямо в тот момент, когда ситуация происходит. Все материалы открываются сразу после оплаты, доступ навсегда.</p>
-    <a class="g-btn" href="#tarify">Получить доступ</a>
-  </div>
-</section>
-<section class="g-sec" id="istorii" data-blok="Истории участниц">
-  <div class="g-in">
-    <h2 class="g-h2"><span class="g-ink">Истории участниц</span> <span class="g-acc">первого потока</span></h2>
-    <p class="g-lead">Участницы рассказали это сами. Имена остаются между ними и Виолой</p>
-    <div class="g-stories">
-    <article class="g-story">
-      <h3 class="g-story-h">«Я уже сейчас могу не реагировать, ставить блок на чужие эмоции»</h3>
-      <p class="g-story-age">35–44 года</p>
-      <p class="g-tag">С чем пришла:</p><p>«Я устала от того, что мной манипулируют в отношениях, на работе, выжимают мои силы». Смотрела ролики на YouTube о нарциссах, и «по всем показателям совпало с моим партнёром». И ещё: «Я не понимала, как я лезу к людям и навязываю им заботу»</p>
-      <p class="g-tag g-tag-red">Что изменилось:</p>
-      <p class="g-story-ch">«Уже сейчас, на третьей неделе, я поняла, что перестраиваю своё поведение, не лезу к людям и занимаюсь своей жизнью. Я рассталась с партнёром-нарциссом, на работе меньше болтаю о себе, стало намного лучше»</p>
-    </article>
-    <article class="g-story">
-      <h3 class="g-story-h">«Я становлюсь трезвой, сильной, уверенной»</h3>
-      <p class="g-story-age">45–54 года</p>
-      <p class="g-tag">С чем пришла:</p><p>«Расставание с партнёром, он ушёл, обвинив меня в ревности. Но до этого я долго закрывала глаза на многие несовпадения его слов и поступков. Чувствовала многое, но терпела, боялась потерять, так как люблю». «Дальше так жить невозможно»</p><p class="g-tag">Что пробовала:</p><p>Психолога раз в неделю и курсы про любовь к себе</p>
-      <p class="g-tag g-tag-red">Что изменилось:</p>
-      <p class="g-story-ch">«Я поняла, откуда у меня эта неуверенность, сомнения, постоянные подозрения. Почему я, ясно видя и понимая всё, всё равно до последнего оставалась в токсичных отношениях. Я чувствую, что мои мозги встают на место, я становлюсь трезвой, сильной, уверенной»</p>
-    </article>
-    <article class="g-story">
-      <h3 class="g-story-h">«Стала больше направлять фокус на свои интересы, желания»</h3>
-      <p class="g-story-age">35–44 года</p>
-      <p class="g-tag">С чем пришла:</p><p>«Сильное отличие от других людей, болезненность во взаимоотношениях, влияние манипуляторов, полное непонимание, кто я. Точка отсчёта началась, когда у меня появилась подруга-нарцисс. Здесь я проснулась»</p><p class="g-tag">Что пробовала:</p><p>«Я ничего не пробовала, так как не понимала вообще, с чего начать»</p>
-      <p class="g-tag g-tag-red">Что изменилось:</p>
-      <p class="g-story-ch">«Я уже сейчас чувствую множество изменений. Снизился индекс тревоги, спасательства, стала больше направлять фокус на свои интересы, желания, стала замечать проблемы своей семьи, а не чужих людей»</p>
-    </article>
-    <article class="g-story">
-      <h3 class="g-story-h">«В первую очередь относиться к себе с трепетом. Любить себя»</h3>
-      <p class="g-story-age">45–54 года</p>
-      <p class="g-tag">С чем пришла:</p><p>«Сложные отношения с матерью. Устала угождать, в ответ одни упрёки. В прошлом году сказала себе, что с меня хватит»</p>
-      <p class="g-tag g-tag-red">Что изменилось:</p>
-      <p class="g-story-ch">«Я хочу быть другой. В первую очередь относиться к себе с трепетом. Любить себя. До встречи с Виолой думала, что это эгоизм». И после третьей недели: «Я просто в шоке от лекции. Вы заглянули внутрь моей жизни с токсичной матерью»</p>
-    </article>
-    <article class="g-story">
-      <h3 class="g-story-h">«Я не жила, а сейчас, кажется, начну жить»</h3>
-      <p class="g-story-age">55–64 года</p>
-      <p class="g-tag">С чем пришла:</p><p>«Я всё время либо уступаю и терплю, либо убегаю. Люди мне могут сказать что угодно, типа они шутят, а если я скажу, обижаются. Я поняла, что всю жизнь не уважала себя. Мне очень горько и как-то безнадёжно. Мне 60 лет, глупо это всё со стороны смотрится»</p><p class="g-tag">Что пробовала:</p><p>«Только читала книги. Всегда боялась выбрать не того специалиста, боялась, что будет ещё хуже»</p>
-      <p class="g-tag g-tag-red">Что изменилось:</p>
-      <p class="g-story-ch">«Такой конкретики и реальных практичных вещей я ни у кого не слышала! Я не жила, а сейчас, кажется, начну жить»</p>
-    </article>
-    </div>
-    <a class="g-btn" href="#tarify">Получить доступ</a>
-  </div>
-</section>
-<section class="g-sec g-grey" id="o-viole" data-blok="Об авторе">
-  <div class="g-in g-about">
-    <!-- ФОТО: место под другое фото Виолы (пришлёт Илья). Заменить div на
-         <picture><img src="..." alt="Виола Маро" width="900" height="900" loading="lazy" decoding="async"></picture> -->
-    <div class="g-about-foto pe-foto-ph" role="img" aria-label="Место под фото Виолы Маро"></div>
-    <div class="g-about-text">
-      <h2 class="g-h2"><span class="g-ink">Об</span> <span class="g-acc">авторе</span></h2>
-      <p class="g-about-name">Виола Маро</p>
-      <ul class="g-checks g-about-list"><li>Дипломированный психолог (СПбГУ), психотерапевт по образованию и по призванию. 25 лет профессиональной практики.</li><li>Идеолог и популяризатор концепции практической эмпатии — это ключевое направление её работы и основа авторской линейки образовательных продуктов.</li><li>Создатель обучающих программ в области психологии отношений и самореализации.</li><li>Гуманист по призванию и «технарь» в психологии — совмещает глубокую эмпатию с чёткой, системной методологией.</li></ul>
-    </div>
-  </div>
-</section>
-<section class="g-sec" id="pochemu" data-blok="Почему не помогли книги и психологи">
-  <div class="g-in g-narrow">
-    <h2 class="g-h2"><span class="g-ink">Почему не помогли</span> <span class="g-acc">книги и психологи</span></h2>
-    <p>Вы уже читали книги, ходили к психологу, проходили курсы. Становилось понятнее, но не легче. Никто не объяснил, почему вы так остро чувствуете людей и что делать в ту минуту, когда на вас давят</p>
-    <p class="g-p2">С этого программа и начинается. Виола объясняет, как вы устроены, и даёт техники на ситуации, которые с вами уже происходят</p>
-    <a class="g-btn" href="#tarify">Получить доступ</a>
-  </div>
-</section>
-<section class="g-sec g-red" id="tarify" data-blok="Что входит">
-  <div class="g-in">
-    <h2 class="g-h2 g-center g-light"><span class="g-ink">Что входит</span></h2>
+      </div></div></div></section>
+<section class="pe-sec pe-grey" id="poluchite" data-blok="Что вы получите на программе"><div class="pe-in"><h2 class="pe-h2">Что вы получите на программе</h2><div class="pe-grid pe-g3"><div class="pe-card"><p>Вы <b>выйдете из позиции слабости</b> и начнёте воспринимать свою эмпатию как силу, особенность личности, которая даёт вам возможность глубже видеть и понимать людей, распознавать манипуляции и токсичные формы поведения</p></div><div class="pe-card"><p>Вы <b>научитесь выстраивать сбалансированные отношения</b> с людьми, не попадая в эмоциональную зависимость, позицию спасателя или жертвы</p></div><div class="pe-card"><p>Вы <b>получите самые нужные и эксклюзивные инструменты</b> для того, чтобы научиться защищать себя в ситуации, заземлять себя, инструменты осознанности и саморазвития, методики работы с эмпатией и интуицией</p></div><div class="pe-card"><p>Вы <b>сформируете внутренние защиты</b> для того, чтобы не уносить чужую боль с собой через вашу эмпатию. Вы научитесь отделять ваши чувства, вашу ответственность и ваше психологическое пространство от чужого</p></div><div class="pe-card"><p>Вы <b>вернёте себе внутреннее право жить с гордостью</b> за вашу идентичность, ценить и уважать глубину своего внутреннего мира, настроите свой внутренний компас и научитесь им пользоваться в реальном мире</p></div></div><a class="pe-btn" href="#tarify">Получить доступ</a></div></section>
+<section class="pe-sec pe-dark" id="programma" data-blok="Как проходит программа"><div class="pe-in"><h2 class="pe-h2">Как проходит программа</h2><div class="pe-grid pe-g2"><article class="pe-card pe-theme">
+  <p class="pe-tn">Тема 1</p><h3>Фигура эмпата</h3><p>Возможность видеть глубину, но не утонуть в том, что вы воспринимаете. Возможность проживать вашу эмпатию как дар, а не проклятие.</p>
+  <details class="pe-tech"><summary>Техники темы</summary><ul class="pe-list "><li>Возврат в свой центр</li><li>Вижу, но не участвую</li><li>Растождествление с негативным фоном</li></ul></details>
+  
+</article><article class="pe-card pe-theme">
+  <p class="pe-tn">Тема 2</p><h3>Эмпат и отношения с людьми</h3><p>Здоровые отношения для Эмпата начинаются не с поиска «правильного» или «безопасного» партнера, а с выстраивания сильного внутреннего центра.</p>
+  <details class="pe-tech"><summary>Техники темы</summary><ul class="pe-list "><li>Карта автономии</li><li>Дезактивация эмпатического крючка</li><li>Коммуникация из внутреннего центра</li><li>Шесть столпов самооценки</li></ul></details>
+  
+</article><article class="pe-card pe-theme">
+  <p class="pe-tn">Тема 3</p><h3>Эмпат-родители и эмпат-дети</h3><p>Это великий и прекрасный процесс сепарации и осознания себя взрослым и свободным.</p>
+  <details class="pe-tech"><summary>Техники темы</summary><ul class="pe-list "><li>Комната во внутреннем доме</li><li>Право передумать</li><li>Кукла</li><li>Каталог чувств</li><li>Интеллектуальное одиночество и магия масштаба</li><li>Диалог с миром</li></ul></details>
+  
+</article><article class="pe-card pe-theme">
+  <p class="pe-tn">Тема 4</p><h3>Психосоматика у эмпата</h3><p>Ваше тело — это не бессмысленный механизм, который «ломается просто так». Это ваш самый верный и честный союзник.</p>
+  <details class="pe-tech"><summary>Техники темы</summary><ul class="pe-list "><li>Ежедневная практика доверия и честности</li><li>Как снизить кортизол эмпату</li><li>Конверсия симптома</li></ul></details>
+  <p class="pe-note">Программа не заменяет обследование и лечение у врача</p>
+</article><article class="pe-card pe-theme">
+  <p class="pe-tn">Тема 5</p><h3>Самореализация людей с повышенной чувствительностью</h3><p>Вы не ищете себя вовне — вы собираете себя изнутри по пазлам своих интересов, смыслов и вдохновения.</p>
+  <details class="pe-tech"><summary>Техники темы</summary><ul class="pe-list "><li>Свободное место для эмпата</li><li>Меньше говорить — больше действовать</li><li>Тест целостной цели</li></ul></details>
+  
+</article><article class="pe-card pe-theme">
+  <p class="pe-tn">Тема 6</p><h3>Психология наполненности и деньги</h3><p>Вы перестаёте выживать и начинаете созидать.</p>
+  <details class="pe-tech"><summary>Техники темы</summary><ul class="pe-list "><li>Инвентаризация чужих долгов</li><li>Калибровка финансового термостата</li><li>Карта уникальной ценности эмпата</li><li>Путь по крошкам вдохновения</li></ul></details>
+  
+</article></div><p class="pe-pod">В каждой теме лекция Виолы с таймкодами, техники на конкретные ситуации, задание и PDF-методичка. Техниками можно пользоваться прямо в тот момент, когда ситуация происходит. Все материалы открываются сразу после оплаты, доступ навсегда.</p><a class="pe-btn" href="#tarify">Получить доступ</a></div></section>
+<section class="pe-sec pe-grey" id="istorii" data-blok="Истории участниц"><div class="pe-in"><h2 class="pe-h2">Истории участниц первого потока</h2><p class="pe-lead">Участницы рассказали это сами. Имена остаются между ними и Виолой</p><div class="pe-grid pe-g2"><article class="pe-card pe-story">
+  <h3>«Я уже сейчас могу не реагировать, ставить блок на чужие эмоции»</h3><p class="pe-age">35–44 года</p>
+  <p class="pe-lab">С чем пришла:</p><p>«Я устала от того, что мной манипулируют в отношениях, на работе, выжимают мои силы». Смотрела ролики на YouTube о нарциссах, и «по всем показателям совпало с моим партнёром». И ещё: «Я не понимала, как я лезу к людям и навязываю им заботу»</p>
+  <p class="pe-lab pe-lab-r">Что изменилось:</p><p class="pe-ch">«Уже сейчас, на третьей неделе, я поняла, что перестраиваю своё поведение, не лезу к людям и занимаюсь своей жизнью. Я рассталась с партнёром-нарциссом, на работе меньше болтаю о себе, стало намного лучше»</p>
+</article><article class="pe-card pe-story">
+  <h3>«Я становлюсь трезвой, сильной, уверенной»</h3><p class="pe-age">45–54 года</p>
+  <p class="pe-lab">С чем пришла:</p><p>«Расставание с партнёром, он ушёл, обвинив меня в ревности. Но до этого я долго закрывала глаза на многие несовпадения его слов и поступков. Чувствовала многое, но терпела, боялась потерять, так как люблю». «Дальше так жить невозможно»</p><p class="pe-lab">Что пробовала:</p><p>Психолога раз в неделю и курсы про любовь к себе</p>
+  <p class="pe-lab pe-lab-r">Что изменилось:</p><p class="pe-ch">«Я поняла, откуда у меня эта неуверенность, сомнения, постоянные подозрения. Почему я, ясно видя и понимая всё, всё равно до последнего оставалась в токсичных отношениях. Я чувствую, что мои мозги встают на место, я становлюсь трезвой, сильной, уверенной»</p>
+</article><article class="pe-card pe-story">
+  <h3>«Стала больше направлять фокус на свои интересы, желания»</h3><p class="pe-age">35–44 года</p>
+  <p class="pe-lab">С чем пришла:</p><p>«Сильное отличие от других людей, болезненность во взаимоотношениях, влияние манипуляторов, полное непонимание, кто я. Точка отсчёта началась, когда у меня появилась подруга-нарцисс. Здесь я проснулась»</p><p class="pe-lab">Что пробовала:</p><p>«Я ничего не пробовала, так как не понимала вообще, с чего начать»</p>
+  <p class="pe-lab pe-lab-r">Что изменилось:</p><p class="pe-ch">«Я уже сейчас чувствую множество изменений. Снизился индекс тревоги, спасательства, стала больше направлять фокус на свои интересы, желания, стала замечать проблемы своей семьи, а не чужих людей»</p>
+</article><article class="pe-card pe-story">
+  <h3>«В первую очередь относиться к себе с трепетом. Любить себя»</h3><p class="pe-age">45–54 года</p>
+  <p class="pe-lab">С чем пришла:</p><p>«Сложные отношения с матерью. Устала угождать, в ответ одни упрёки. В прошлом году сказала себе, что с меня хватит»</p>
+  <p class="pe-lab pe-lab-r">Что изменилось:</p><p class="pe-ch">«Я хочу быть другой. В первую очередь относиться к себе с трепетом. Любить себя. До встречи с Виолой думала, что это эгоизм». И после третьей недели: «Я просто в шоке от лекции. Вы заглянули внутрь моей жизни с токсичной матерью»</p>
+</article><article class="pe-card pe-story">
+  <h3>«Я не жила, а сейчас, кажется, начну жить»</h3><p class="pe-age">55–64 года</p>
+  <p class="pe-lab">С чем пришла:</p><p>«Я всё время либо уступаю и терплю, либо убегаю. Люди мне могут сказать что угодно, типа они шутят, а если я скажу, обижаются. Я поняла, что всю жизнь не уважала себя. Мне очень горько и как-то безнадёжно. Мне 60 лет, глупо это всё со стороны смотрится»</p><p class="pe-lab">Что пробовала:</p><p>«Только читала книги. Всегда боялась выбрать не того специалиста, боялась, что будет ещё хуже»</p>
+  <p class="pe-lab pe-lab-r">Что изменилось:</p><p class="pe-ch">«Такой конкретики и реальных практичных вещей я ни у кого не слышала! Я не жила, а сейчас, кажется, начну жить»</p>
+</article></div><a class="pe-btn" href="#tarify">Получить доступ</a></div></section>
+<section class="pe-sec pe-dark" id="o-viole" data-blok="Об авторе"><div class="pe-in"><div class="pe-about"><!-- ФОТО: место под другое фото Виолы (пришлёт Илья). Заменить div на
+         <img src="..." alt="Виола Маро" width="900" height="900" loading="lazy" decoding="async"> -->
+<div class="pe-foto-ph" role="img" aria-label="Место под фото Виолы Маро"></div><div class="pe-about-t"><h2 class="pe-h2">Об авторе</h2><p class="pe-name">Виола Маро</p><ul class="pe-list "><li>Дипломированный психолог (СПбГУ), психотерапевт по образованию и по призванию. 25 лет профессиональной практики.</li><li>Идеолог и популяризатор концепции практической эмпатии — это ключевое направление её работы и основа авторской линейки образовательных продуктов.</li><li>Создатель обучающих программ в области психологии отношений и самореализации.</li><li>Гуманист по призванию и «технарь» в психологии — совмещает глубокую эмпатию с чёткой, системной методологией.</li></ul></div></div></div></section>
+<section class="pe-sec pe-grey" id="pochemu" data-blok="Почему не помогли книги и психологи"><div class="pe-in pe-narrow"><h2 class="pe-h2">Почему не помогли книги и психологи</h2><p class="pe-big">Вы уже читали книги, ходили к психологу, проходили курсы. Становилось понятнее, но не легче. Никто не объяснил, почему вы так остро чувствуете людей и что делать в ту минуту, когда на вас давят</p><p class="pe-big">С этого программа и начинается. Виола объясняет, как вы устроены, и даёт техники на ситуации, которые с вами уже происходят</p><a class="pe-btn" href="#tarify">Получить доступ</a></div></section>
+<section class="pe-sec g-red" id="tarify" data-blok="Что входит">
+  <div class="pe-in">
+    <h2 class="pe-h2 pe-center">Что входит</h2>
     <div class="g-tarify pe-one">
     <article class="g-tarif" id="tarif">
       <div class="g-tarif-head">
@@ -727,74 +679,15 @@ body.g-bar-on { padding-bottom: 80px !important; }
         <p class="g-cena-mes">или от 1&nbsp;242&nbsp;₽ в месяц</p>
         <p class="g-cena-val">€160 зарубежной картой</p>
       </div>
-      <button type="button" class="g-btn g-btn-red" data-pay="pe" data-cur="rub">Оплатить картой РФ</button>
-      <button type="button" class="g-btn g-btn-red" data-pay="pe" data-cur="eur">Оплатить картой другой страны</button>
+      <button type="button" class="pe-btn" data-pay="pe" data-cur="rub">Оплатить картой РФ</button>
+      <button type="button" class="pe-btn" data-pay="pe" data-cur="eur">Оплатить картой другой страны</button>
     </article>
     </div>
     <p class="g-rass">Рассрочка на 3, 6 или 12 месяцев без процентов, первый платёж через месяц. Рассрочка банка доступна гражданам стран СНГ по паспорту, 18+</p>
     <p class="g-pod">Сразу после оплаты вы получите доступ в закрытый канал с материалами, в Телеграме и в MAX. Доступ продублируется на вашу почту. Оплата и чек от ИП Нижевясова А.&nbsp;С., официального организатора программ Виолы.</p>
   </div>
 </section>
-<section class="g-sec" id="voprosy" data-blok="Вопросы">
-  <div class="g-in g-narrow">
-    <h2 class="g-h2"><span class="g-acc">Вопросы</span></h2>
-    <div class="g-faq">
-      <details class="g-faq-i">
-        <summary>А если я не эмпат, а просто очень чувствительная?</summary>
-        <p>Если вы всё пропускаете через себя и после общения с людьми у вас не остаётся сил, программа про вас. Как это называть, не так важно: техники работают для любого человека, который чувствует других сильнее, чем хотел бы</p>
-      </details>
-      <details class="g-faq-i">
-        <summary>Где проходит обучение?</summary>
-        <p>Все материалы лежат в закрытом канале, в Телеграме и в MAX, выбирайте, где удобнее. Ссылка на канал придёт сразу после оплаты и продублируется на почту</p>
-      </details>
-      <details class="g-faq-i">
-        <summary>Когда я получу доступ?</summary>
-        <p>Сразу после оплаты, автоматически. Ссылка продублируется на вашу почту</p>
-      </details>
-      <details class="g-faq-i">
-        <summary>Это дорого</summary>
-        <p>Есть рассрочка без процентов, от 1 242 ₽ в месяц. Одна личная консультация Виолы стоит 200 €. Вся программа стоит дешевле одной такой встречи</p>
-      </details>
-      <details class="g-faq-i">
-        <summary>У меня нет времени: работа, семья</summary>
-        <p>Темп ваш. В каждой теме одна лекция, задание и техники. Смотрите, когда удобно, хоть по 15 минут. Доступ ко всем материалам навсегда</p>
-      </details>
-      <details class="g-faq-i">
-        <summary>У меня совсем нет сил</summary>
-        <p>Программа рассчитана на уставших: одна лекция за раз и техники маленькими шагами, по 10–15 минут в день. Первые перемены участницы замечают уже в первой теме</p>
-      </details>
-      <details class="g-faq-i">
-        <summary>Мне уже поздно что-то менять</summary>
-        <p>Менять то, как вы реагируете на людей, можно в любом возрасте</p>
-      </details>
-      <details class="g-faq-i">
-        <summary>Я боюсь стать жёсткой. Близкие скажут, что я изменилась</summary>
-        <p>Вы останетесь такой же доброй. Просто перестанете отдавать себя тем, кто этого не ценит. Что отвечать на «ты изменилась» и «ты думаешь только о себе», разбирается отдельно, в третьей теме</p>
-      </details>
-      <details class="g-faq-i">
-        <summary>Нужно ли быть на лекции в определённое время?</summary>
-        <p>Нет. Все лекции, техники и методички открываются сразу после оплаты и остаются у вас навсегда. Проходите в своём темпе, из любой точки мира</p>
-      </details>
-      <details class="g-faq-i">
-        <summary>Можно ли задать вопрос Виоле?</summary>
-        <p>В этой программе обратной связи нет. Всё, что нужно для самостоятельной работы, уже внутри: лекции, техники, медитации и база ответов</p>
-      </details>
-      <details class="g-faq-i">
-        <summary>Я живу за границей и боюсь платить онлайн</summary>
-        <p>Оплатить можно из любой страны картой другой страны, 160 €. Доступ откроется сразу после оплаты, на почту придут ссылка и чек. Если вам пишет кто-то и просит перевести деньги, это не мы. Вопросы по оплате в службу заботы <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a></p>
-      </details>
-      <details class="g-faq-i">
-        <summary>У меня Telegram открывается только с VPN. Я смогу участвовать?</summary>
-        <p>Да. Все материалы есть и в MAX. Ни одна часть программы не требует быть на связи в конкретную минуту</p>
-      </details>
-      <details class="g-faq-i">
-        <summary>А если во время работы станет тяжело?</summary>
-        <p>Так бывает, и об этом лучше знать заранее: когда начинаешь разбирать то, что годами лежало нетронутым, какое-то время может быть неспокойно. Темп здесь ваш, никто не подгоняет. Программа не заменяет очную психотерапию: если сейчас у вас острое состояние, сначала стоит опереться на своего специалиста</p>
-      </details>
-    </div>
-    <a class="g-btn" href="#tarify">Получить доступ</a>
-  </div>
-</section>
+<section class="pe-sec pe-white" id="voprosy" data-blok="Вопросы"><div class="pe-in pe-narrow"><h2 class="pe-h2">Вопросы</h2><div class="pe-faq"><details class="pe-q"><summary>А если я не эмпат, а просто очень чувствительная?</summary><p>Если вы всё пропускаете через себя и после общения с людьми у вас не остаётся сил, программа про вас. Как это называть, не так важно: техники работают для любого человека, который чувствует других сильнее, чем хотел бы</p></details><details class="pe-q"><summary>Где проходит обучение?</summary><p>Все материалы лежат в закрытом канале, в Телеграме и в MAX, выбирайте, где удобнее. Ссылка на канал придёт сразу после оплаты и продублируется на почту</p></details><details class="pe-q"><summary>Когда я получу доступ?</summary><p>Сразу после оплаты, автоматически. Ссылка продублируется на вашу почту</p></details><details class="pe-q"><summary>Это дорого</summary><p>Есть рассрочка без процентов, от 1 242 ₽ в месяц. Одна личная консультация Виолы стоит 200 €. Вся программа стоит дешевле одной такой встречи</p></details><details class="pe-q"><summary>У меня нет времени: работа, семья</summary><p>Темп ваш. В каждой теме одна лекция, задание и техники. Смотрите, когда удобно, хоть по 15 минут. Доступ ко всем материалам навсегда</p></details><details class="pe-q"><summary>У меня совсем нет сил</summary><p>Программа рассчитана на уставших: одна лекция за раз и техники маленькими шагами, по 10–15 минут в день. Первые перемены участницы замечают уже в первой теме</p></details><details class="pe-q"><summary>Мне уже поздно что-то менять</summary><p>Менять то, как вы реагируете на людей, можно в любом возрасте</p></details><details class="pe-q"><summary>Я боюсь стать жёсткой. Близкие скажут, что я изменилась</summary><p>Вы останетесь такой же доброй. Просто перестанете отдавать себя тем, кто этого не ценит. Что отвечать на «ты изменилась» и «ты думаешь только о себе», разбирается отдельно, в третьей теме</p></details><details class="pe-q"><summary>Нужно ли быть на лекции в определённое время?</summary><p>Нет. Все лекции, техники и методички открываются сразу после оплаты и остаются у вас навсегда. Проходите в своём темпе, из любой точки мира</p></details><details class="pe-q"><summary>Можно ли задать вопрос Виоле?</summary><p>В этой программе обратной связи нет. Всё, что нужно для самостоятельной работы, уже внутри: лекции, техники, медитации и база ответов</p></details><details class="pe-q"><summary>Я живу за границей и боюсь платить онлайн</summary><p>Оплатить можно из любой страны картой другой страны, 160 €. Доступ откроется сразу после оплаты, на почту придут ссылка и чек. Если вам пишет кто-то и просит перевести деньги, это не мы. Вопросы по оплате в службу заботы <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a></p></details><details class="pe-q"><summary>У меня Telegram открывается только с VPN. Я смогу участвовать?</summary><p>Да. Все материалы есть и в MAX. Ни одна часть программы не требует быть на связи в конкретную минуту</p></details><details class="pe-q"><summary>А если во время работы станет тяжело?</summary><p>Так бывает, и об этом лучше знать заранее: когда начинаешь разбирать то, что годами лежало нетронутым, какое-то время может быть неспокойно. Темп здесь ваш, никто не подгоняет. Программа не заменяет очную психотерапию: если сейчас у вас острое состояние, сначала стоит опереться на своего специалиста</p></details></div><a class="pe-btn" href="#tarify">Получить доступ</a></div></section>
 <div class="g-bar" id="g-bar" hidden>
   <p class="g-bar-posle">Прикладная эмпатия · 14 900 ₽ · доступ сразу после оплаты</p>
   <a class="g-bar-btn" id="bar-btn" href="#tarify">Получить доступ</a>
