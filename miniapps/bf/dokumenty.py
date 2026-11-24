@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Страницы документов чёрной пятницы: /bf/oferta/ и /bf/prilozhenie/.
+"""Страницы документов чёрной пятницы: /bf/<адрес>/ (список в DOCS).
+
+Две ветки оплаты, документы не пересекаются: рубли — ИП Нижевясова (ru-…),
+евро — Viola Maro FZ-LLC (eur-…). Исходники: Страницы-к-публикации/bf-docs/*.md,
+рядом .html, сделанные pandoc'ом:
+
+    cd Страницы-к-публикации/bf-docs && for f in *.md; do pandoc "$f" -o "${f%.md}.html"; done
+
 
 Тексты: Страницы-к-публикации/bf-oferta.md и bf-prilozhenie.md (исходник),
 рядом .html, сделанные из них pandoc'ом (как у остальных документов сайта):
@@ -25,12 +32,31 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
-LEGAL = os.path.join(ROOT, "Страницы-к-публикации")
+LEGAL = os.path.join(ROOT, "Страницы-к-публикации", "bf-docs")
 
+# (исходник, адрес /bf/<адрес>/, заголовок страницы, ветка оплаты)
+# rub — продавец ИП Нижевясова, рубли, право РФ; eur — Viola Maro FZ-LLC, евро, право ОАЭ.
 DOCS = [
-    ("bf-oferta", "oferta", "Публичная оферта"),
-    ("bf-prilozhenie", "prilozhenie", "Приложение № 1 к Публичной оферте"),
+    ("ru-oferta", "oferta", "Публичная оферта", "rub"),
+    ("ru-prilozhenie", "prilozhenie", "Приложение № 1 к Публичной оферте", "rub"),
+    ("ru-politika", "politika", "Политика обработки персональных данных", "rub"),
+    ("ru-soglasie", "soglasie", "Согласие на обработку персональных данных", "rub"),
+    ("ru-rassylka", "rassylka", "Согласие на рекламные и информационные сообщения", "rub"),
+    ("ru-soglashenie", "soglashenie", "Пользовательское соглашение", "rub"),
+    ("eur-oferta", "eur-oferta", "Публичная оферта Viola Maro FZ-LLC", "eur"),
+    ("eur-usloviya", "eur-usloviya", "Приложение № 1 к Публичной оферте Viola Maro FZ-LLC", "eur"),
+    ("eur-privacy", "eur-privacy", "Политика конфиденциальности Viola Maro FZ-LLC", "eur"),
 ]
+
+FOOTERS = {
+    "rub": """<footer class="ft wrap"><p class="ft-h">Продавец</p>
+<p>ИП Нижевясова Анна Станиславовна, ОГРНИП 321695200039136, ИНН 690503942107<br>
+e-mail: <a href="mailto:mg.ananizh@gmail.com">mg.ananizh@gmail.com</a> · Telegram: <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a></p></footer>""",
+    "eur": """<footer class="ft wrap"><p class="ft-h">Seller</p>
+<p>Viola Maro FZ-LLC, Ras Al Khaimah Economic Zone (RAKEZ), United Arab Emirates<br>
+License No. 47038543 · Corporate Tax TRN 105638855400001<br>
+e-mail: <a href="mailto:violamaropsy@gmail.com">violamaropsy@gmail.com</a> · Telegram: <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a></p></footer>""",
+}
 
 DOC_CSS = """
   body { padding-bottom: 0; }
@@ -53,6 +79,8 @@ DOC_CSS = """
   .doc th { font-weight: 650; }
   .doc mark.todo { background: #F2D27A; color: #141C15; padding: 0 .2em; border-radius: 2px; }
   .doc code { font-family: inherit; }
+  html.embed .doc-top { display: none; }
+  html.embed .doc { padding-top: 1.2rem; }
 """
 
 
@@ -70,9 +98,8 @@ def write(path, text):
 def main(out):
     page = read(os.path.join(HERE, "index.html"))
     style = re.search(r"<style>(.*?)</style>", page, re.S).group(1)
-    footer = re.search(r'<footer class="ft wrap".*?</footer>', page, re.S).group(0)
-
-    for slug, url, title in DOCS:
+    for slug, url, title, branch in DOCS:
+        footer = FOOTERS[branch]
         src = os.path.join(LEGAL, slug + ".html")
         if not os.path.exists(src):
             # текста ещё нет: страницу не собираем, публикация не падает
@@ -96,9 +123,9 @@ def main(out):
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#141C15">
-<title>%(name)s. Чёрная пятница от Виолы Маро</title>
-<meta name="description" content="%(title)s. ИП Нижевясова А. С., организатор программ Виолы Маро.">
+<title>%(name)s. Черная пятница от Виолы Маро</title>
 <style>%(style)s%(css)s</style>
+<script>if (window.top !== window) document.documentElement.classList.add("embed");</script>
 </head>
 <body>
 <header class="doc-top"><div class="wrap"><a href="/bf/">Чёрная пятница от Виолы Маро</a></div></header>

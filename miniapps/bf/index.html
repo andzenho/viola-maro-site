@@ -312,6 +312,7 @@
   .ft-h { color: var(--text); font-weight: 700; margin-bottom: .3rem; }
   .ft a { color: var(--muted); text-underline-offset: .18em; }
   .ft a:hover { color: var(--text); }
+  .ft-docs { margin-top: .6rem; }
   .ft-docs a { display: flex; align-items: center; min-height: 44px; padding: .25rem 0; }
   .ft p a { display: inline-block; padding: 11px 0; margin: -11px 0; }
   .ft-small { margin-top: 1.8rem; font-size: .85rem; }
@@ -615,21 +616,28 @@
 <footer class="ft wrap" aria-label="Реквизиты и документы">
   <div class="ft-grid">
     <div>
-      <p class="ft-h">Организатор программ Виолы Маро</p>
-      <p>ИП Нижевясова Анна Станиславовна<br>ОГРНИП 321695200039136<br>ИНН 690503942107<br>Зарегистрирована Межрайонной ИФНС России №&nbsp;10 по&nbsp;Тверской области</p>
-      <p style="margin-top:1rem">e-mail: <a href="mailto:mg.ananizh@gmail.com">mg.ananizh@gmail.com</a></p>
-      <p style="margin-top:1rem">Служба заботы в&nbsp;Telegram: <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a><br>пн–пт, 10:00–18:00&nbsp;МСК</p>
+      <p class="ft-h">При оплате в рублях</p>
+      <p>Продавец: ИП Нижевясова Анна Станиславовна<br>ОГРНИП 321695200039136<br>ИНН 690503942107<br>e-mail: <a href="mailto:mg.ananizh@gmail.com">mg.ananizh@gmail.com</a></p>
+      <nav class="ft-docs" aria-label="Документы для оплаты в рублях">
+        <a href="/bf/oferta/" data-doc>Публичная оферта</a>
+        <a href="/bf/prilozhenie/" data-doc>Приложение №&nbsp;1 к оферте</a>
+        <a href="/bf/politika/" data-doc>Политика обработки персональных данных</a>
+        <a href="/bf/soglasie/" data-doc>Согласие на обработку персональных данных</a>
+        <a href="/bf/rassylka/" data-doc>Согласие на рекламные и информационные сообщения</a>
+        <a href="/bf/soglashenie/" data-doc>Пользовательское соглашение</a>
+      </nav>
     </div>
-    <nav class="ft-docs" aria-label="Документы">
-      <p class="ft-h">Документы</p>
-      <a href="/bf/oferta/">Публичная оферта</a>
-      <a href="/bf/prilozhenie/">Приложение №&nbsp;1 к оферте</a>
-      <a href="/privacy/">Политика обработки персональных данных</a>
-      <a href="/consent/">Согласие на обработку персональных данных</a>
-      <a href="/consent-ads/">Согласие на рекламные и информационные сообщения</a>
-      <a href="/terms/">Пользовательское соглашение</a>
-    </nav>
+    <div>
+      <p class="ft-h">При оплате в евро</p>
+      <p>Продавец: Viola Maro FZ-LLC<br>Ras Al Khaimah Economic Zone (RAKEZ), ОАЭ<br>License No. 47038543<br>Corporate Tax TRN 105638855400001<br>e-mail: <a href="mailto:violamaropsy@gmail.com">violamaropsy@gmail.com</a></p>
+      <nav class="ft-docs" aria-label="Документы для оплаты в евро">
+        <a href="/bf/eur-oferta/" data-doc>Публичная оферта Viola Maro FZ-LLC</a>
+        <a href="/bf/eur-usloviya/" data-doc>Условия акции «Черная пятница»</a>
+        <a href="/bf/eur-privacy/" data-doc>Политика конфиденциальности</a>
+      </nav>
+    </div>
   </div>
+  <p style="margin-top:1.6rem">Служба заботы в&nbsp;Telegram: <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>, пн–пт, 10:00–18:00&nbsp;МСК</p>
   <p class="ft-small">Информация на&nbsp;сайте носит информационно-просветительский характер, не&nbsp;является медицинской услугой и&nbsp;не&nbsp;заменяет консультацию специалиста. 18+</p>
   <p class="ft-small">© Нижевясова А.&nbsp;С., 2026. Все права защищены. Любое использование или копирование материалов сайта, элементов дизайна и&nbsp;оформления допускается только с&nbsp;письменного разрешения правообладателя и&nbsp;со&nbsp;ссылкой на&nbsp;источник.</p>
 </footer>
@@ -1084,8 +1092,8 @@
     <label class="f" for="lead-contact">Номер телефона или Телеграм<span class="f-hint" id="lead-hint">Сюда пришлём доступ к записям</span></label>
     <input type="text" id="lead-contact" name="contact" autocomplete="tel" inputmode="text" placeholder="+7 900 000-00-00 или @имя" required>
     <div class="hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
-    <label class="chk" id="chk-offer"><input type="checkbox" name="accept_offer"><span data-docs="rub">Принимаю условия <a href="/bf/oferta/" target="_blank" rel="noopener">публичной оферты</a> и <a href="/bf/prilozhenie/" target="_blank" rel="noopener">приложения к ней</a></span><span data-docs="eur" hidden>Принимаю условия <a href="https://violamaro.com/oferta" target="_blank" rel="noopener">публичной оферты Viola Maro FZ-LLC</a></span></label>
-    <label class="chk"><input type="checkbox" name="accept_pd"><span data-docs="rub">Даю <a href="/consent/" target="_blank" rel="noopener">согласие на обработку персональных данных</a></span><span data-docs="eur" hidden>Соглашаюсь с <a href="https://violamaro.com/privacy" target="_blank" rel="noopener">политикой конфиденциальности Viola Maro FZ-LLC</a></span></label>
+    <label class="chk" id="chk-offer"><input type="checkbox" name="accept_offer"><span data-docs="rub">Принимаю условия <a href="/bf/oferta/" data-doc>публичной оферты</a> и <a href="/bf/prilozhenie/" data-doc>приложения к ней</a></span><span data-docs="eur" hidden>Принимаю условия <a href="/bf/eur-oferta/" data-doc>публичной оферты Viola Maro FZ-LLC</a> и <a href="/bf/eur-usloviya/" data-doc>условий акции «Черная пятница»</a></span></label>
+    <label class="chk"><input type="checkbox" name="accept_pd"><span data-docs="rub">Даю <a href="/bf/soglasie/" data-doc>согласие на обработку персональных данных</a></span><span data-docs="eur" hidden>Соглашаюсь с <a href="/bf/eur-privacy/" data-doc>политикой конфиденциальности Viola Maro FZ-LLC</a></span></label>
     <p class="err" id="lead-err" hidden></p>
     <button type="submit" class="btn" id="lead-go">Перейти к оплате</button>
     <p class="note-s" id="lead-note">Сразу после оплаты вы получите ссылки на доступ к записям.</p>
@@ -1207,7 +1215,7 @@ function tick() {
    продажу не блокируем. */
 const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycby3T-T1o2X9Y29957ZDDQs7r6vtltiKiyLkYT97cyin-roOagb3vUMBWWQoK0-P8Mzbsg/exec";
 const FORM_SECRET = "PxlGXL9bQSjc0dHcLoiCZJZWtNdfv9D8yY9SHBuJ";
-const DOC_VERSIONS = { doc_version_offer: "2026-11-19 bf", doc_version_annex: "2026-11-19 bf", doc_version_consent: "2026-08-10" };
+const DOC_VERSIONS = { doc_version_offer: "2026-11-24 bf", doc_version_annex: "2026-11-24 bf", doc_version_consent: "2026-08-10" };
 const TARIF = {
   t1: { name: "Тариф 1 «Два марафона и „Неудобные“»", rub: "9 999 ₽", eur: "109 €" },
   t2: { name: "Тариф 2 «Ключи к вашей реальности»", rub: "12 990 ₽", eur: "140 €" },
@@ -1287,7 +1295,7 @@ form.addEventListener("submit", e => {
     readiness: remind ? "Напомнить" : (eur ? "Чёрная пятница, оплата в евро" : "Чёрная пятница, оплата в рублях"),
     accept_offer: !remind, accept_pd: true, accept_ads: false,
     consent_ts: new Date().toISOString(), page: location.href + (window.top !== window ? " (в рамке на " + document.referrer + ")" : ""), ua: navigator.userAgent
-  }, eur ? { doc_version_offer: "violamaro.com/oferta FZ-LLC", doc_version_annex: "", doc_version_consent: "violamaro.com/privacy FZ-LLC" } : DOC_VERSIONS);
+  }, eur ? { doc_version_offer: "2026-11-24 bf eur-oferta FZ-LLC", doc_version_annex: "2026-11-24 bf eur-usloviya", doc_version_consent: "2026-11-24 bf eur-privacy" } : DOC_VERSIONS);
   ["utm_source", "utm_medium", "utm_campaign", "utm_content", "src", "referrer"].forEach(k => payload[k] = attribution[k] || "");
 
   goBtn.disabled = true; goBtn.textContent = "Сохраняем…";
@@ -1324,6 +1332,13 @@ const PROGRAMS = {
   neudobnye: "Терапевтический онлайн-уикенд «Неудобные»"
 };
 const PAGES = { klyuchi: "/bf/keys/" };
+const DOC_TITLES = {
+  "/bf/oferta/": "Публичная оферта", "/bf/prilozhenie/": "Приложение № 1 к оферте",
+  "/bf/politika/": "Политика обработки персональных данных", "/bf/soglasie/": "Согласие на обработку персональных данных",
+  "/bf/rassylka/": "Согласие на рекламные сообщения", "/bf/soglashenie/": "Пользовательское соглашение",
+  "/bf/eur-oferta/": "Публичная оферта Viola Maro FZ-LLC", "/bf/eur-usloviya/": "Условия акции «Черная пятница»",
+  "/bf/eur-privacy/": "Политика конфиденциальности Viola Maro FZ-LLC"
+};
 const pdlg = document.getElementById("prog"), pbody = document.getElementById("prog-body");
 let pOpener = null, pScroll = 0;
 document.addEventListener("click", e => {
@@ -1331,15 +1346,24 @@ document.addEventListener("click", e => {
   if (!b) return;
   const key = b.dataset.prog, tpl = document.getElementById("tpl-" + key);
   if (!tpl) return;
-  pOpener = b;
-  document.getElementById("prog-h").textContent = PROGRAMS[key];
   /* у «Ключей» в окне — копия страницы Виолы (/bf/keys/), у остальных — текст из шаблона */
-  const page = PAGES[key];
+  openWin(b, PROGRAMS[key], PAGES[key], tpl, !!PAGES[key]);
+});
+/* документы (оферты, политики) — тоже в окне, чтобы на violamaro.com/bf не уходить на другой адрес */
+document.addEventListener("click", e => {
+  const a = e.target.closest("a[data-doc]");
+  if (!a) return;
+  e.preventDefault();
+  openWin(a, DOC_TITLES[a.getAttribute("href")] || a.textContent.trim(), a.getAttribute("href"), null, false);
+});
+function openWin(opener, title, page, tpl, wide) {
+  pOpener = opener;
+  document.getElementById("prog-h").textContent = title;
   pbody.classList.toggle("pg-body-frame", !!page);
-  pdlg.classList.toggle("pg-wide", !!page);
+  pdlg.classList.toggle("pg-wide", wide);
   if (page) {
     const f = document.createElement("iframe");
-    f.src = page; f.title = PROGRAMS[key]; f.className = "pg-frame";
+    f.src = page; f.title = title; f.className = "pg-frame";
     pbody.replaceChildren(f);
   } else {
     pbody.replaceChildren(tpl.content.cloneNode(true));
@@ -1349,9 +1373,9 @@ document.addEventListener("click", e => {
   pScroll = window.scrollY;
   document.body.style.top = -pScroll + "px";
   document.documentElement.classList.add("locked");
-  if (pdlg.showModal) pdlg.showModal(); else pdlg.setAttribute("open", "");
+  if (pdlg.showModal) { if (!pdlg.open) pdlg.showModal(); } else pdlg.setAttribute("open", "");
   pdlg.querySelector(".pg-x").focus();
-});
+}
 function closeProg() { if (pdlg.open) { if (pdlg.close) pdlg.close(); else { pdlg.removeAttribute("open"); onProgClosed(); } } }
 function onProgClosed() {
   document.documentElement.classList.remove("locked");
