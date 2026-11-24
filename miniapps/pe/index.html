@@ -571,15 +571,14 @@ body.g-lock { overflow: hidden; }
 /* «Что входит» (25.11): тёмная сцена, коробка с подсветкой, объём цифрами, цена с якорем */
 .pe-offer { display: grid; gap: 28px; align-items: center; }
 .pe-offer-l { position: relative; text-align: center; padding: 10px 0; }
-.pe-offer-l::before { content: ""; position: absolute; left: 50%; top: 50%; width: 100%; max-width: 100vw; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%;
-  background: radial-gradient(circle, rgba(196,20,44,.55) 0%, rgba(196,20,44,0) 62%); pointer-events: none; }
 .pe-box { position: relative; display: inline-block; width: min(260px, 70vw); height: auto; filter: drop-shadow(0 30px 40px rgba(0,0,0,.55)); }
 @media (min-width: 900px) { .pe-offer { grid-template-columns: 5fr 7fr; gap: 56px; } .pe-box { width: 100%; max-width: 420px; } }
 .pe-stats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .pe-stats li { padding: 18px 16px 16px; border-radius: 20px; background: #2A272B; }
 .pe-stats b { display: block; font: 700 54px/1 'Golos Text', system-ui, sans-serif; letter-spacing: -.03em; color: #fff; }
 .pe-stats span { display: block; margin-top: 8px; font-size: 15px; line-height: 1.35; color: rgba(255,255,255,.78); }
-.pe-plus { list-style: none; margin: 18px 0 0; padding: 0; }
+.pe-plus { list-style: none; margin: 0; padding: 0; }
+.pe-plus li:first-child { border-top: 0; }
 .pe-plus li { position: relative; padding: 10px 0 10px 30px; font-size: 16px; line-height: 1.4; color: rgba(255,255,255,.92); border-top: 1px solid rgba(255,255,255,.1); }
 .pe-plus li::before { content: "+"; position: absolute; left: 4px; top: 6px; font: 700 22px/1.2 'Golos Text', system-ui, sans-serif; color: #E2283F; }
 .pe-pricebox { margin-top: 26px; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.18); }
@@ -693,8 +692,7 @@ body.g-bar-on { padding-bottom: 80px !important; }
       <div class="pe-offer-l"><img class="pe-box" src="img/box.webp" alt="Коробка курса «Прикладная Эмпатия»" width="600" height="748"></div>
       <div class="pe-offer-r">
         <h2 class="pe-h2">Что входит</h2>
-        <ul class="pe-stats"><li><b>6</b><span>лекций Виолы с таймкодами</span></li><li><b>23</b><span>прикладные техники на конкретные ситуации</span></li><li><b>6</b><span>заданий, чтобы отработать техники на своей ситуации</span></li><li><b>6</b><span>PDF-методичек</span></li></ul>
-        <ul class="pe-plus"><li>Аудиомедитации Виолы</li><li>База ответов Виолы на реальные ситуации участниц прошлых потоков: что ответить мужу, маме, начальнику</li><li>Все материалы в закрытом Телеграм-канале и в MAX, доступ навсегда</li></ul>
+        <ul class="pe-plus"><li>6 лекций Виолы с таймкодами</li><li>23 прикладные техники на конкретные ситуации</li><li>6 заданий, чтобы отработать техники на своей ситуации</li><li>6 PDF-методичек</li><li>Аудиомедитации Виолы</li><li>База ответов Виолы на реальные ситуации участниц прошлых потоков: что ответить мужу, маме, начальнику</li><li>Все материалы в закрытом Телеграм-канале и в MAX, доступ навсегда</li></ul>
         <div class="pe-pricebox">
           <p class="pe-p1">14&nbsp;900&nbsp;₽ <span class="pe-pill">или от 1&nbsp;242&nbsp;₽ в месяц</span></p>
           <p class="pe-p2">€160 зарубежной картой</p>
