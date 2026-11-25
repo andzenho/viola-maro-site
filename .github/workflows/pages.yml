@@ -132,6 +132,7 @@ jobs:
           mkdir -p site/pe
           cp miniapps/pe/index.html site/pe/index.html
           cp -r miniapps/pe/img site/pe/img
+          python3 miniapps/pe/dokumenty.py site/pe
 
       - uses: actions/configure-pages@v5
 

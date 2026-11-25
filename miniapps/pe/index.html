@@ -607,6 +607,14 @@ body.g-lock { overflow: hidden; }
 /* плашка с ценой на первом экране телефона: длинная строка переносится, а не обрезается */
 [data-h2-chips] span { white-space: normal !important; text-align: center; border-radius: 18px !important; margin: 0 16px; }
 @media (max-width: 759px) { .g-bar-posle { font-size: 13px; line-height: 1.25; } }
+/* окно документа и строка продавца в форме */
+.pe-docwin { z-index: 120; }
+.pe-docbox { max-width: 860px; padding-bottom: 8px; }
+.gl .pe-doch, .pe-doch { font-size: 22px !important; margin: 0 48px 12px 0 !important; line-height: 1.2; }
+.pe-docbox iframe { display: block; width: 100%; height: min(72vh, 760px); border: 0; border-radius: 12px; background: #fff; }
+.g-seller { margin: 4px 0 6px; font-size: 14.5px; line-height: 1.4; color: #55505A; }
+.g-seller:empty { display: none; }
+.ft-docs a[data-doc], .g-cb a[data-doc] { cursor: pointer; }
 .g-bar-posle { margin: 0 !important; }
 a.g-bar-btn { display: inline-flex; align-items: center; text-decoration: none; }
 body.g-bar-on { padding-bottom: 80px !important; }
@@ -730,11 +738,14 @@ body.g-bar-on { padding-bottom: 80px !important; }
       <label class="g-f">Почта
         <input type="email" id="lead-email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="name@mail.ru" required>
       </label>
+      <p class="g-seller" id="lead-seller"></p>
       <label class="g-cb"><input type="checkbox" name="accept_offer">
-        <span>Принимаю условия <a href="/offer/" target="_blank" rel="noopener">публичной оферты</a> и <a href="/offer-prilozhenie/" target="_blank" rel="noopener">приложения к ней</a> <em>Обязательно</em></span>
+        <span data-docs="rub">Принимаю условия <a href="/pe/oferta/" data-doc>публичной оферты</a> и <a href="/pe/prilozhenie/" data-doc>приложения к ней</a> <em>Обязательно</em></span>
+        <span data-docs="eur" hidden>Принимаю условия <a href="/pe/eur-oferta/" data-doc>публичной оферты Viola Maro FZ-LLC</a> и <a href="/pe/eur-usloviya/" data-doc>приложения к ней</a> <em>Обязательно</em></span>
       </label>
       <label class="g-cb"><input type="checkbox" name="accept_pd">
-        <span>Даю <a href="/consent/" target="_blank" rel="noopener">согласие на обработку персональных данных</a> <em>Обязательно</em></span>
+        <span data-docs="rub">Даю <a href="/pe/soglasie/" data-doc>согласие на обработку персональных данных</a> <em>Обязательно</em></span>
+        <span data-docs="eur" hidden>Соглашаюсь с <a href="/pe/eur-privacy/" data-doc>политикой конфиденциальности Viola Maro FZ-LLC</a> <em>Обязательно</em></span>
       </label>
       <p class="g-err" id="lead-err" role="alert" hidden></p>
       <button type="submit" class="g-btn" id="lead-go">Перейти к оплате</button>
@@ -742,55 +753,47 @@ body.g-bar-on { padding-bottom: 80px !important; }
     </form>
   </div>
 </div>
+<div class="g-modal pe-docwin" id="docwin" role="dialog" aria-modal="true" aria-labelledby="docwin-h" hidden>
+  <div class="g-modal-box pe-docbox">
+    <button type="button" class="g-x" id="docwin-x" aria-label="Закрыть">✕</button>
+    <p class="g-modal-h pe-doch" id="docwin-h"></p>
+    <iframe id="docwin-f" title="Документ"></iframe>
+  </div>
+</div>
 </div></main>
 
 <footer class="ft" aria-label="Реквизиты и документы">
   <div class="ft-in">
     <div class="ft-grid">
-
       <div class="ft-col">
-        <p class="ft-org">Организатор программ Виолы&nbsp;Маро</p>
-        <p class="ft-legal">
-          ИП Нижевясова Анна Станиславовна<br>
-          ОГРНИП 321695200039136<br>
-          ИНН 690503942107<br>
-          Зарегистрирована Межрайонной ИФНС России №&nbsp;10 по&nbsp;Тверской области
-        </p>
+        <p class="ft-org">При оплате в рублях</p>
+        <p class="ft-legal">Продавец: ИП Нижевясова Анна Станиславовна<br>ОГРНИП 321695200039136<br>ИНН 690503942107<br>e-mail: <a href="mailto:mg.ananizh@gmail.com">mg.ananizh@gmail.com</a></p>
+        <nav class="ft-col ft-docs" aria-label="Документы для оплаты в рублях">
+          <a href="/pe/oferta/" data-doc>Публичная оферта</a>
+          <a href="/pe/prilozhenie/" data-doc>Приложение №&nbsp;1 к оферте</a>
+          <a href="/pe/politika/" data-doc>Политика обработки персональных данных</a>
+          <a href="/pe/soglasie/" data-doc>Согласие на обработку персональных данных</a>
+          <a href="/pe/rassylka/" data-doc>Согласие на рекламные и информационные сообщения</a>
+          <a href="/pe/soglashenie/" data-doc>Пользовательское соглашение</a>
+        </nav>
       </div>
-
       <div class="ft-col">
-        <p class="ft-label"><span class="ft-ico" aria-hidden="true">✉</span>e-mail</p>
-        <a href="mailto:mg.ananizh@gmail.com">mg.ananizh@gmail.com</a>
+        <p class="ft-org">При оплате в евро</p>
+        <p class="ft-legal">Продавец: Viola Maro FZ-LLC<br>Ras Al Khaimah Economic Zone (RAKEZ), ОАЭ<br>License No. 47038543<br>Corporate Tax TRN 105638855400001<br>e-mail: <a href="mailto:violamaropsy@gmail.com">violamaropsy@gmail.com</a></p>
+        <nav class="ft-col ft-docs" aria-label="Документы для оплаты в евро">
+          <a href="/pe/eur-oferta/" data-doc>Публичная оферта Viola Maro FZ-LLC</a>
+          <a href="/pe/eur-usloviya/" data-doc>Приложение №&nbsp;1 к оферте Viola Maro FZ-LLC</a>
+          <a href="/pe/eur-privacy/" data-doc>Политика конфиденциальности</a>
+        </nav>
       </div>
-
       <div class="ft-col">
         <p class="ft-label"><span class="ft-ico" aria-hidden="true">✈</span>Служба заботы в&nbsp;Telegram</p>
         <a href="https://t.me/violamaroteam" target="_blank" rel="noopener">@violamaroteam</a>
         <p class="ft-hours">пн–пт, 10:00–18:00&nbsp;МСК</p>
       </div>
-
-      <nav class="ft-col ft-docs" aria-label="Правовые документы">
-        <p class="ft-label">Документы</p>
-        <a href="/offer/">Публичная оферта</a>
-        <a href="/offer-prilozhenie/">Приложение № 1 к Публичной оферте</a>
-        <a href="/privacy/">Политика обработки персональных данных</a>
-        <a href="/consent/">Согласие на обработку персональных данных</a>
-        <a href="/consent-ads/">Согласие на рекламные и информационные сообщения</a>
-        <a href="/terms/">Пользовательское соглашение</a>
-      </nav>
-
     </div>
-
-    <p class="ft-disclaimer">
-      Информация на&nbsp;сайте носит информационно-просветительский характер,
-      не&nbsp;является медицинской услугой и&nbsp;не&nbsp;заменяет консультацию специалиста. 18+
-    </p>
-    <p class="ft-copy">
-      © Нижевясова А.&nbsp;С., 2026. Все права защищены. Любое использование или
-      копирование материалов сайта, элементов дизайна и&nbsp;оформления допускается
-      только с&nbsp;письменного разрешения правообладателя и&nbsp;со&nbsp;ссылкой на&nbsp;источник.
-    </p>
-    <p class="ft-note" id="meta-note">* Meta признана экстремистской организацией в&nbsp;России</p>
+    <p class="ft-disclaimer">Информация на&nbsp;сайте носит информационно-просветительский характер, не&nbsp;является медицинской услугой и&nbsp;не&nbsp;заменяет консультацию специалиста. 18+</p>
+    <p class="ft-copy">© Нижевясова А.&nbsp;С., 2026. Все права защищены. Любое использование или копирование материалов сайта, элементов дизайна и&nbsp;оформления допускается только с&nbsp;письменного разрешения правообладателя и&nbsp;со&nbsp;ссылкой на&nbsp;источник.</p>
   </div>
 </footer>
 
@@ -856,7 +859,8 @@ const PAY = {
 const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycby3T-T1o2X9Y29957ZDDQs7r6vtltiKiyLkYT97cyin-roOagb3vUMBWWQoK0-P8Mzbsg/exec";
 const FORM_SECRET = "PxlGXL9bQSjc0dHcLoiCZJZWtNdfv9D8yY9SHBuJ";
 /* версии общих документов сайта, как в build-assets/site.js */
-const DOC_VERSIONS = { doc_version_offer: "2026-08-10", doc_version_annex: "2026-08-10", doc_version_consent: "2026-08-10" };
+const DOC_VERSIONS = { doc_version_offer: "2026-11-25 pe oferta", doc_version_annex: "2026-11-25 pe prilozhenie", doc_version_consent: "2026-08-10" };
+const DOC_VERSIONS_EUR = { doc_version_offer: "2026-11-25 pe eur-oferta FZ-LLC", doc_version_annex: "2026-11-25 pe eur-usloviya", doc_version_consent: "2026-11-25 pe eur-privacy" };
 const TARIF = { pe: { name: "Прикладная эмпатия: Полная программа", rub: "14 900 ₽", eur: "160 €" } };
 
 /* метки рекламы: из ссылки, хранятся на время визита */
@@ -890,6 +894,9 @@ document.addEventListener("click", e => {
   const b = e.target.closest("[data-pay]");
   if (!b) return;
   pick = { k: b.dataset.pay, cur: b.dataset.cur };
+  const euro = pick.cur === "eur";
+  document.querySelectorAll("#lead [data-docs]").forEach(el => el.hidden = (el.dataset.docs === "eur") !== euro);
+  document.getElementById("lead-seller").textContent = euro ? "Продавец: Viola Maro FZ-LLC (ОАЭ), оплата в евро" : "Продавец: ИП Нижевясова А. С., оплата в рублях";
   const t = TARIF[pick.k];
   document.getElementById("lead-sub").textContent = t.name + ", " + (pick.cur === "eur" ? t.eur + " картой другой страны" : t.rub);
   errBox.hidden = true; goBtn.disabled = false; goBtn.textContent = "Перейти к оплате";
@@ -901,7 +908,23 @@ let lastFocus = null;
 function closeLead() { dlg.hidden = true; document.body.classList.remove("g-lock"); if (lastFocus) try { lastFocus.focus(); } catch (e) {} }
 document.getElementById("lead-x").addEventListener("click", closeLead);
 dlg.addEventListener("click", e => { if (e.target === dlg) closeLead(); });
-document.addEventListener("keydown", e => { if (e.key === "Escape" && !dlg.hidden) closeLead(); });
+document.addEventListener("keydown", e => { if (e.key !== "Escape") return; if (!docwin.hidden) closeDoc(); else if (!dlg.hidden) closeLead(); });
+/* документы (оферты, политики) открываются в окне поверх страницы, как на /bf/ */
+const docwin = document.getElementById("docwin"), docf = document.getElementById("docwin-f");
+let docOpener = null;
+function closeDoc() { docwin.hidden = true; docf.removeAttribute("src"); if (dlg.hidden) document.body.classList.remove("g-lock"); if (docOpener) try { docOpener.focus({ preventScroll: true }); } catch (e) {} }
+document.addEventListener("click", e => {
+  const a = e.target.closest("a[data-doc]");
+  if (!a) return;
+  e.preventDefault();
+  docOpener = a;
+  document.getElementById("docwin-h").textContent = a.textContent.trim();
+  docf.src = a.getAttribute("href");
+  docwin.hidden = false; document.body.classList.add("g-lock");
+  document.getElementById("docwin-x").focus();
+});
+document.getElementById("docwin-x").addEventListener("click", closeDoc);
+docwin.addEventListener("click", e => { if (e.target === docwin) closeDoc(); });
 
 function fail(msg) { errBox.textContent = msg; errBox.hidden = false; }
 
@@ -925,7 +948,7 @@ form.addEventListener("submit", e => {
     readiness: eur ? "Прикладная эмпатия, оплата в евро" : "Прикладная эмпатия, оплата в рублях",
     accept_offer: true, accept_pd: true, accept_ads: false,
     consent_ts: new Date().toISOString(), page: location.href, ua: navigator.userAgent
-  }, DOC_VERSIONS);
+  }, eur ? DOC_VERSIONS_EUR : DOC_VERSIONS);
   ["utm_source", "utm_medium", "utm_campaign", "utm_content", "src", "referrer"].forEach(k => payload[k] = attribution[k] || "");
 
   goBtn.disabled = true; goBtn.textContent = "Сохраняем…";
