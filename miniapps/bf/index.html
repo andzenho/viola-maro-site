@@ -204,6 +204,9 @@
   .eur-link { font: inherit; color: inherit; background: none; border: 0; padding: 10px 0; margin: -10px 0; min-height: 44px; text-align: left; cursor: default; }
   body.sale .eur-link { cursor: pointer; text-decoration: underline; text-underline-offset: .18em; }
   .buy { margin-top: 1.1rem; }
+  .buy .btn + .btn { margin-top: 12px; }
+  @media (max-width: 420px) { .buy .btn { font-size: 16px; padding-left: .6rem; padding-right: .6rem; white-space: nowrap; } }
+  @media (max-width: 380px) { .buy .btn { white-space: normal; line-height: 1.2; font-size: 15.5px; } }
   .buy .left { margin-top: .6rem; color: var(--muted); font-size: .95rem; white-space: nowrap; }
   /* вторая кнопка оплаты в конце тарифа: до 768 на всю ширину, дальше 360px по центру */
   .buy-end { margin-top: 24px; }
@@ -462,7 +465,7 @@
           <div class="price num">
             <p class="p-old"><s>20&nbsp;590&nbsp;₽</s><span class="p-pct">−51%</span></p>
             <p class="p-new">9&nbsp;999&nbsp;₽</p>
-            <p class="p-eur"><button type="button" class="eur-link" data-pay="t1" data-cur="eur">или 109&nbsp;€ картой из-за рубежа</button></p>
+            <p class="p-eur">или 109&nbsp;€ зарубежными методами</p>
           </div>
           <div class="buy" data-buy="t1" data-price="9&nbsp;999&nbsp;₽" data-eur="109&nbsp;€"></div>
         </div>
@@ -486,7 +489,7 @@
           <div class="price num">
             <p class="p-old"><s>19&nbsp;990&nbsp;₽</s><span class="p-pct">−35%</span></p>
             <p class="p-new">12&nbsp;990&nbsp;₽</p>
-            <p class="p-eur"><button type="button" class="eur-link" data-pay="t2" data-cur="eur">или 140&nbsp;€ картой из-за рубежа</button></p>
+            <p class="p-eur">или 140&nbsp;€ зарубежными методами</p>
           </div>
           <div class="buy" data-buy="t2" data-price="12&nbsp;990&nbsp;₽" data-eur="140&nbsp;€"></div>
         </div>
@@ -509,7 +512,7 @@
             <div class="price num">
               <p class="p-old"><s>40&nbsp;580&nbsp;₽</s><span class="p-pct">−56%</span></p>
               <p class="p-new">17&nbsp;990&nbsp;₽</p>
-              <p class="p-eur"><button type="button" class="eur-link" data-pay="t3" data-cur="eur">или 195&nbsp;€ картой из-за рубежа</button></p>
+              <p class="p-eur">или 195&nbsp;€ зарубежными методами</p>
             </div>
             <div class="buy" data-buy="t3" data-price="17&nbsp;990&nbsp;₽" data-eur="195&nbsp;€"></div>
           </div>
@@ -1177,8 +1180,9 @@ function render(st) {
         (ended ? 'Продажи закрыты' : 'Откроется 27 ноября в 9:00 МСК') + '</span>';
     } else {
       /* кнопки открывают форму (имя и контакт для выдачи доступа), после неё оплата */
-      /* одна кнопка в рублях; евро — строкой «или … € картой из-за рубежа» под ценой */
-      box.innerHTML = '<button type="button" class="btn" data-pay="' + k + '" data-cur="rub">Купить</button>';
+      /* две кнопки на каждом тарифе: рубли (GetPlatinum) и зарубежные методы в евро (Stripe) */
+      box.innerHTML = '<button type="button" class="btn" data-pay="' + k + '" data-cur="rub">Оплатить рублями</button>' +
+        '<button type="button" class="btn btn-2" data-pay="' + k + '" data-cur="eur">Оплатить зарубежными методами</button>';
     }
   });
 }
