@@ -128,7 +128,7 @@ def main(out):
 <script>if (window.top !== window) document.documentElement.classList.add("embed");</script>
 </head>
 <body>
-<header class="doc-top"><div class="wrap"><a href="/bf/">Чёрная пятница от Виолы Маро</a></div></header>
+<header class="doc-top"><div class="wrap"><a href="../">Чёрная пятница от Виолы Маро</a></div></header>
 <main class="doc wrap">
 <h1>%(name)s</h1>
 %(frag)s
